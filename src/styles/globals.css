@@ -197,3 +197,26 @@
 html {
   font-size: var(--font-size);
 }
+
+/* Backwards-compatible theme variables used by some CSS modules (Home.module.css) */
+:root {
+  /* spacing */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --spacing-2xl: 3rem;
+
+  /* font sizes */
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+
+  /* surface / colors */
+  --surface-color: var(--card);
+  --text-primary: var(--primary);
+  --text-secondary: var(--muted-foreground);
+
+  /* borders / radii */
+  --border-radius-lg: 0.75rem;
+}
