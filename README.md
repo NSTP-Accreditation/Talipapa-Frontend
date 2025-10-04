@@ -100,3 +100,9 @@ npm run format     # Format code with Prettier
 - Use consistent naming conventions throughout the project
 - Document complex logic with comments
 - Follow the established folder structure
+
+
+
+
+{Guideline Page References:
+https://www.figma.com/design/nGJvePcSR5YS8gKuze0bNL/Website-Builder.}
