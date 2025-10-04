@@ -1,6 +1,6 @@
 # Talipapa-Web
 
-A modern web application built with React for Barangay Talipapa hatdog
+A modern web application built with React for Barangay Talipapa 
 
 ## 📁 Project Structure
 
