@@ -18,8 +18,8 @@ export default function NavBar() {
           <Link to="/" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Home</Link>
           <Link to="/guidelines" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Guides</Link>
           <a href="#" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Services</a>
-          <a href="#" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Emergency</a>
-          <a href="#" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Contact</a>
+          <a href="#" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Trading</a>
+          <a href="#" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">About Us</a>
         </div>
 
         <div className="flex items-center space-x-3">
