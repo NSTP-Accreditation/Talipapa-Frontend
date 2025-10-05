@@ -124,9 +124,11 @@ export default function App() {
 
         {/* More Guides Button */}
         <div className="text-center">
-          <Button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded">
-            More Guides
-          </Button>
+          <Link to="/guidelines/more">
+            <Button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded">
+              More Guides
+            </Button>
+          </Link>
         </div>
       </main>
 
