@@ -1,15 +1,15 @@
 import './index.css';
 import {
-  Heart,
-  Zap,
-  Shield,
-  Briefcase,
-  Home,
+  FileText,
+  File,
+  Building2,
   Stethoscope,
-  Droplets,
   Waves,
   Mountain,
-  User,
+  House,
+  TrafficCone,
+  ThumbsUp,
+  CircleSlash,
 } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { useState, useEffect } from "react";
@@ -44,40 +44,40 @@ export default function App() {
 
   const guides = [
     {
-      icon: Heart,
-      title: "Quezon City Health Centers",
+      icon: FileText,
+      title: "Barangay Clearance",
     },
     {
-      icon: Zap,
-      title: "What to Do In Case of Tropical Cyclone",
+      icon: File,
+      title: "Certificate of Indigency",
     },
     {
-      icon: Shield,
-      title: "How to Avail of the Emergency Disaster Relief",
+      icon: House,
+      title: "Certificate of Residency",
     },
     {
-      icon: Briefcase,
-      title: "Preparing an Emergency Go Bag",
+      icon: Building2,
+      title: "Business Clearance",
     },
     {
-      icon: Home,
-      title: "Quezon City Evacuation Centers",
+      icon: TrafficCone,
+      title: "Traffic Clearance",
     },
     {
-      icon: Stethoscope,
-      title: "How to Request for Medical Assistance",
+      icon: ThumbsUp,
+      title: "Good Moral Character",
     },
     {
-      icon: Heart,
-      title: "Tips to Avoid Leptospirosis",
+      icon: CircleSlash,
+      title: "This is a Placeholder",
     },
     {
-      icon: Waves,
-      title: "What to Do In Case of Flood",
+      icon: CircleSlash,
+      title: "This is a Placeholder",
     },
     {
-      icon: Mountain,
-      title: "What to Do In Case of Landslide",
+      icon: CircleSlash,
+      title: "This is a Placeholder",
     },
   ];
 
@@ -98,7 +98,7 @@ export default function App() {
       <main className="max-w-7xl mx-auto py-16 px-6">
         <div className="text-center mb-12">
           <h1 className="text-4xl mb-8 text-gray-800 tracking-wider">
-            QCITIZEN GUIDES
+            TALIPAPA HOW TO GUIDES
           </h1>
         </div>
 
@@ -134,7 +134,7 @@ export default function App() {
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="mb-4">Palengke Talipapa</h3>
+            <h3 className="mb-4">Barangay Talipapa</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
               A green and sustainable community where nature and
               people thrive together.
@@ -175,9 +175,9 @@ export default function App() {
           <div>
             <h3 className="mb-4">Contact Information</h3>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li>Palengke Rd., Talipapa, Quezon City</li>
-              <li>(02) 123-4567</li>
-              <li>info@palengketalipapa.gov.ph</li>
+              <li>506 Quirino Hwy, Novaliches, Quezon City, 1116, Metro Manila</li>
+              <li>(63) 123-4567</li>
+              <li>info@talipapa.gov.ph</li>
             </ul>
           </div>
         </div>
