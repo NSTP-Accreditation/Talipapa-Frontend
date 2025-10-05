@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import NavBar from './components/NavBar';
-import GuidelinesApp from './pages/guidelines/App';
+import GuidelinesApp from './pages/guidelines/Guidelines';
 import MoreGuides from './pages/guidelines/MoreGuides';
 import './styles/globals.css';
 
