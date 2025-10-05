@@ -3,15 +3,15 @@ import {
   FileText,
   File,
   Building2,
-  Stethoscope,
-  Waves,
-  Mountain,
   House,
   TrafficCone,
   ThumbsUp,
   CircleSlash,
+  ScrollText,
+  IdCard,
 } from "lucide-react";
 import { Button } from "./components/ui/button";
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from "react";
 
 export default function App() {
@@ -68,16 +68,16 @@ export default function App() {
       title: "Good Moral Character",
     },
     {
-      icon: CircleSlash,
-      title: "This is a Placeholder",
+      icon: ScrollText,
+      title: "Barangay Affidavit",
     },
     {
-      icon: CircleSlash,
-      title: "This is a Placeholder",
+      icon: IdCard,
+      title: "Philsys ID",
     },
     {
-      icon: CircleSlash,
-      title: "This is a Placeholder",
+      icon: IdCard,
+      title: "Quezon City ID",
     },
   ];
 
