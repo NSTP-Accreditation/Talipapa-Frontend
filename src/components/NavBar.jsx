@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, User } from 'lucide-react';
+import { Leaf, User } from 'lucide-react';
 
 export default function NavBar() {
   return (
     <header className="bg-green-600 text-white py-4 px-6">
       <nav className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <Shield className="w-8 h-8" />
+          <Leaf className="w-8 h-8" />
           <div className="flex flex-col">
             <span className="text-xl tracking-wide">E-Talipapa</span>
             <span className="text-xs opacity-80">Barangay Talipapa CMS</span>
