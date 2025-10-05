@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/collapsible';
+export * from "@radix-ui/react-collapsible";
+

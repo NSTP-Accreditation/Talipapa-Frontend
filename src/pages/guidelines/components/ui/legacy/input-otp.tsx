@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/input-otp';
+export * from "input-otp";
+

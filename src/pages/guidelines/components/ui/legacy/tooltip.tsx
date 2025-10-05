@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/tooltip';
+export * from "@radix-ui/react-tooltip";
+

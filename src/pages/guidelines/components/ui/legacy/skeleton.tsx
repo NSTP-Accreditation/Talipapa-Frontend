@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/skeleton';
+export * from "@radix-ui/react-slot";
+

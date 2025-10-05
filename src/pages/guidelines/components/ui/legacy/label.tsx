@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/label';
+export * from "@radix-ui/react-label";
+

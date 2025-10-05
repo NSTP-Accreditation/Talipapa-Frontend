@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/menubar';
+export * from "@radix-ui/react-menubar";
+

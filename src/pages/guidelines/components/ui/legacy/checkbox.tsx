@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/checkbox';
+export * from "@radix-ui/react-checkbox";
+

@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/tabs';
+export * from "@radix-ui/react-tabs";
+

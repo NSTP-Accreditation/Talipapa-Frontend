@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/separator';
+export * from "@radix-ui/react-separator";
+

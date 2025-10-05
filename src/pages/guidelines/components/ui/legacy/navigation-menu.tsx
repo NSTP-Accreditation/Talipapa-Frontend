@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/navigation-menu';
+export * from "@radix-ui/react-navigation-menu";
+

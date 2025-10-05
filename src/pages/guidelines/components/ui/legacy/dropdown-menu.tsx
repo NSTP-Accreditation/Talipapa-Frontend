@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/dropdown-menu';
+export * from "@radix-ui/react-dropdown-menu";
+

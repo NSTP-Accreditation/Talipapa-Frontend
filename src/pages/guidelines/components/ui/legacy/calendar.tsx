@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/calendar';
+export * from "react-day-picker";
+

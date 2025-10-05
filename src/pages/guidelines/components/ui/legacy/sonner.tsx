@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/sonner';
+export * from "sonner";
+

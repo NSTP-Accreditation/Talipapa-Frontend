@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/select';
+export * from "@radix-ui/react-select";
+

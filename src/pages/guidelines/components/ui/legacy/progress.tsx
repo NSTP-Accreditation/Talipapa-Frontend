@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/progress';
+export * from "@radix-ui/react-progress";
+

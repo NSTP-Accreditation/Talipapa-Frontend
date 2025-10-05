@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/popover';
+export * from "@radix-ui/react-popover";
+

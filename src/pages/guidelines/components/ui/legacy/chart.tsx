@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/chart';
+export * from "recharts";
+

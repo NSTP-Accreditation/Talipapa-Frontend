@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/switch';
+export * from "@radix-ui/react-switch";
+

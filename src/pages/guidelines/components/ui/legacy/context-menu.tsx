@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/context-menu';
+export * from "@radix-ui/react-context-menu";
+

@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/dialog';
+export * from "@radix-ui/react-dialog";
+

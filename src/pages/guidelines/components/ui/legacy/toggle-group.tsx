@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/toggle-group';
+export * from "@radix-ui/react-toggle-group";
+

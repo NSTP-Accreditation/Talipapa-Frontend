@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/slider';
+export * from "@radix-ui/react-slider";
+

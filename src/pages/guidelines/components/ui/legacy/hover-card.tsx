@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/hover-card';
+export * from "@radix-ui/react-hover-card";
+

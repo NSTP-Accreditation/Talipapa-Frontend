@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/command';
+export * from "cmdk";
+

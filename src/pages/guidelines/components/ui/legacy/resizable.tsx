@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/resizable';
+export * from "react-resizable-panels";
+

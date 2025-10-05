@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/aspect-ratio';
+export * from "@radix-ui/react-aspect-ratio";
+

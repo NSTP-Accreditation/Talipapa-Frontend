@@ -1,1 +1,2 @@
-export * from '../../../figma/ui/alert-dialog';
+export * from "@radix-ui/react-alert-dialog";
+
