@@ -164,7 +164,7 @@ export default function App() {
 									value={selectedType}
 									onValueChange={setSelectedType}
 								>
-									<SelectTrigger className="bg-white border-green-300">
+									<SelectTrigger className="bg-white border-green-300 h-10 px-4 w-full">
 										<SelectValue placeholder="Choose recyclable type" />
 									</SelectTrigger>
 									<SelectContent>
@@ -178,7 +178,7 @@ export default function App() {
 							</div>
 
 							<div>
-								<label className="block text-sm text-green-700 mb-2">
+								<label className="block text-sm text-green-700 mb-3">
 									Enter weight (e.g., 2.5 kg):
 								</label>
 								<Input
@@ -186,13 +186,13 @@ export default function App() {
 									placeholder="2 KG"
 									value={weight}
 									onChange={(e) => setWeight(e.target.value)}
-									className="bg-white border-green-300"
+									className="bg-white border-green-300 h-9 px-4 w-full"
 								/>
 							</div>
 
 							<Button
 								onClick={handleConvert}
-								className="w-full bg-green-500 hover:bg-green-600 z-10"
+								className="w-full bg-green-500 hover:bg-green-600 z-10 h-12 text-base font-semibold mt-2"
 							>
 								Convert
 							</Button>
