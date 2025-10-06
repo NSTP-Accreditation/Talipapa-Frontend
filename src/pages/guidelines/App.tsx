@@ -110,8 +110,8 @@ export default function App() {
                 key={index}
                 className="border border-gray-200 rounded-lg p-8 text-center hover:shadow-lg transition-shadow cursor-pointer group"
               >
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-colors">
-                  <IconComponent className="w-8 h-8 text-green-600" />
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:opacity-90 transition-opacity" style={{backgroundColor: '#e8f5e9'}}>
+                  <IconComponent className="w-8 h-8" style={{color: '#1b4c2e'}} />
                 </div>
                 <h3 className="text-gray-700 leading-relaxed">
                   {guide.title}
@@ -124,7 +124,7 @@ export default function App() {
         {/* More Guides Button */}
         <div className="text-center">
           <Link to="/guidelines/more">
-            <Button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded">
+            <Button className="text-white px-8 py-3 rounded" style={{backgroundColor: '#1b4c2e'}}>
               More Guides
             </Button>
           </Link>

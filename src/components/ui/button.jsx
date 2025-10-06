@@ -2,8 +2,8 @@ import React from 'react';
 import { cn } from '../utils';
 
 const buttonVariants = {
-  default: "bg-green-500 text-white hover:bg-green-600 active:bg-green-700 shadow-md hover:shadow-lg",
-  secondary: "bg-white text-green-600 border border-green-500 hover:bg-green-50 active:bg-green-100 shadow-sm hover:shadow-md",
+  default: "text-white shadow-md hover:shadow-lg",
+  secondary: "bg-white border shadow-sm hover:shadow-md",
   outline: "border border-gray-300 bg-white hover:bg-gray-50 active:bg-gray-100 shadow-sm hover:shadow-md",
   ghost: "hover:bg-gray-100 active:bg-gray-200",
 };
