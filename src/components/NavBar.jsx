@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Store, User } from 'lucide-react';
 
 export default function NavBar() {
   const [currentDate, setCurrentDate] = useState('');
@@ -25,52 +26,30 @@ export default function NavBar() {
   }, []);
 
   return (
-    <header className="bg-[#1b4c2e] text-white w-full fixed top-0 left-0 right-0 z-50 pt-8">
-      {/* Center Barangay Talipapa Logo - Overlapping both bars */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 top-0 z-10">
-        <Link to="/" className="block">
-          <img 
-            src="/brgy talipapa.png" 
-            alt="Barangay Talipapa Lungsod Quezon Logo" 
-            className="h-[100px] w-[90px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
-          />
-        </Link>
-      </div>
-
-      {/* Top bar with date and time */}
-      <div className="bg-[#0d2617] px-6 py-2 flex justify-between items-center font-bold relative" style={{ fontSize: '16px' }}>
-        <span className="tracking-wide">{currentDate}</span>
-        <span className="tracking-wide">{currentTime}</span>
-      </div>
-      
-      
-      {/* Main navbar */}
-      <nav className="px-6 py-4 flex items-center justify-between" style={{ fontSize: '18px' }}>
-        <div className="flex items-center space-x-4">
-          <a href="https://quezoncity.gov.ph/" target="_blank" rel="noopener noreferrer" className="block">
-            <img 
-              src="/qc.png" 
-              alt="Lungsod Quezon Pilipinas Logo" 
-              className="h-[60px] w-[60px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
-            />
-          </a>
-          <a href="https://qcu.edu.ph/" target="_blank" rel="noopener noreferrer" className="block">
-            <img 
-              src="/qcu.png" 
-              alt="QCU Logo" 
-              className="h-[60px] w-[60px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
-            />
-          </a>
+    <header className="bg-green-600 text-white py-4 px-6">
+      <nav className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <Store className="w-8 h-8" />
+          <div className="flex flex-col">
+            <span className="text-xl tracking-wide">E-Talipapa</span>
+            <span className="text-xs opacity-80">Barangay Talipapa CMS</span>
+          </div>
         </div>
 
-        
+        <div className="flex items-center space-x-6">
+          <Link to="/" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Home</Link>
+          <Link to="/guidelines" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Guides</Link>
+          <a href="#" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Services</a>
+          <Link to="/trading" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Trading</Link>
+          <a href="#" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">About Us</a>
+        </div>
 
-        <div className="flex items-center space-x-8">
-          <Link to="/" className="hover:text-gray-200 px-4 py-2 transition-colors font-semibold" style={{ fontSize: '18px' }}>Home</Link>
-          <Link to="/guidelines" className="hover:text-gray-200 px-4 py-2 transition-colors font-semibold" style={{ fontSize: '18px' }}>Guides</Link>
-          <a href="#" className="hover:text-gray-200 px-4 py-2 transition-colors font-semibold" style={{ fontSize: '18px' }}>About Us</a>
-          <a href="#" className="hover:text-gray-200 px-4 py-2 transition-colors font-semibold" style={{ fontSize: '18px' }}>Services</a>
-          <Link to="/trading" className="hover:text-gray-200 px-4 py-2 transition-colors font-semibold" style={{ fontSize: '18px' }}>Trading</Link>
+        <div className="flex items-center space-x-3">
+          <button className="bg-white text-green-600 hover:bg-gray-50 px-4 py-2 rounded">Sign Up</button>
+          <button className="bg-green-700 hover:bg-green-800 px-4 py-2 rounded">Sign In</button>
+          <button className="bg-green-700 hover:bg-green-800 p-2 rounded-full ml-2">
+            <User className="w-5 h-5" />
+          </button>
         </div>
       </nav>
     </header>

@@ -4,7 +4,7 @@ import Home from './pages/Home';
 import NavBar from './components/NavBar';
 import GuidelinesApp from './pages/guidelines/Guidelines';
 import MoreGuides from './pages/guidelines/MoreGuides';
-import TradingAct from './pages/trading/TradingAct';
+import Trading from './pages/trading/Trading';
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/guidelines" element={<GuidelinesApp />} />
           <Route path="/guidelines/more" element={<MoreGuides />} />
-          <Route path="/trading" element={<TradingAct />} />
+          <Route path="/trading" element={<Trading />} />
         </Routes>
       </div>
     </Router>

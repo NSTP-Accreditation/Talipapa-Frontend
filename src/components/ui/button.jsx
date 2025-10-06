@@ -1,8 +1,41 @@
 import React from 'react';
+import { cn } from '../utils';
 
-export function Button({ children, className = '', ...props }) {
+const buttonVariants = {
+  default: "bg-green-500 text-white hover:bg-green-600 active:bg-green-700 shadow-md hover:shadow-lg",
+  secondary: "bg-white text-green-600 border border-green-500 hover:bg-green-50 active:bg-green-100 shadow-sm hover:shadow-md",
+  outline: "border border-gray-300 bg-white hover:bg-gray-50 active:bg-gray-100 shadow-sm hover:shadow-md",
+  ghost: "hover:bg-gray-100 active:bg-gray-200",
+};
+
+const buttonSizes = {
+  default: "h-11 px-6 py-2",
+  sm: "h-9 px-4 py-1.5 text-sm",
+  lg: "h-12 px-8 py-3 text-base",
+};
+
+export function Button({ 
+  children, 
+  className = '', 
+  variant = 'default', 
+  size = 'default',
+  disabled = false,
+  ...props 
+}) {
   return (
-    <button className={`${className} inline-block`} {...props}>
+    <button 
+      className={cn(
+        "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 relative",
+        "focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2",
+        "disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none pointer-events-auto",
+        "active:scale-[0.98] transform",
+        buttonVariants[variant],
+        buttonSizes[size],
+        className
+      )}
+      disabled={disabled}
+      {...props}
+    >
       {children}
     </button>
   );
