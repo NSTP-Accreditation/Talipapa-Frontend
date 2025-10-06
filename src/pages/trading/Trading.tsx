@@ -146,10 +146,10 @@ export default function App() {
 
 				<div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12">
 					{/* Input Panel */}
-					<Card className="bg-green-50 border-green-200">
+					<Card style={{backgroundColor: '#f1f8f4', borderColor: '#c8e6c9'}}>
 						<CardHeader>
-							<CardTitle className="flex items-center text-green-700">
-								<div className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-sm mr-2">
+							<CardTitle className="flex items-center" style={{color: '#1b4c2e'}}>
+								<div className="w-6 h-6 rounded-full text-white flex items-center justify-center text-sm mr-2" style={{backgroundColor: '#1b4c2e'}}>
 									♻
 								</div>
 								Input
@@ -157,14 +157,14 @@ export default function App() {
 						</CardHeader>
 						<CardContent className="space-y-4">
 							<div>
-								<label className="block text-sm text-green-700 mb-2">
+								<label className="block text-sm mb-2" style={{color: '#1b4c2e'}}>
 									Select Recyclable Type:
 								</label>
 								<Select
 									value={selectedType}
 									onValueChange={setSelectedType}
 								>
-									<SelectTrigger className="bg-white border-green-300 h-10 px-4 w-full">
+									<SelectTrigger className="bg-white h-10 px-4 w-full" style={{borderColor: '#a5d6a7'}}>
 										<SelectValue placeholder="Choose recyclable type" />
 									</SelectTrigger>
 									<SelectContent>
@@ -178,7 +178,7 @@ export default function App() {
 							</div>
 
 							<div>
-								<label className="block text-sm text-green-700 mb-3">
+								<label className="block text-sm mb-3" style={{color: '#1b4c2e'}}>
 									Enter weight (e.g., 2.5 kg):
 								</label>
 								<Input
@@ -186,13 +186,15 @@ export default function App() {
 									placeholder="2 KG"
 									value={weight}
 									onChange={(e) => setWeight(e.target.value)}
-									className="bg-white border-green-300 h-9 px-4 w-full"
+									className="bg-white h-9 px-4 w-full"
+									style={{borderColor: '#a5d6a7'}}
 								/>
 							</div>
 
 							<Button
 								onClick={handleConvert}
-								className="w-full bg-green-500 hover:bg-green-600 z-10 h-12 text-base font-semibold mt-2"
+								className="w-full z-10 h-12 text-base font-semibold mt-2"
+								style={{backgroundColor: '#1b4c2e'}}
 							>
 								Convert
 							</Button>
@@ -200,10 +202,10 @@ export default function App() {
 					</Card>
 
 					{/* Result Panel */}
-					<Card className="bg-green-50 border-green-200">
+					<Card style={{backgroundColor: '#f1f8f4', borderColor: '#c8e6c9'}}>
 						<CardHeader>
-							<CardTitle className="flex items-center text-green-700">
-								<div className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-sm mr-2">
+							<CardTitle className="flex items-center" style={{color: '#1b4c2e'}}>
+								<div className="w-6 h-6 rounded-full text-white flex items-center justify-center text-sm mr-2" style={{backgroundColor: '#1b4c2e'}}>
 									📊
 								</div>
 								Result
@@ -211,7 +213,7 @@ export default function App() {
 						</CardHeader>
 						<CardContent className="space-y-3">
 							<div>
-								<p className="text-center text-green-600 mb-4">
+								<p className="text-center mb-4" style={{color: '#1b4c2e'}}>
 									Conversion Result:
 								</p>
 
@@ -245,9 +247,9 @@ export default function App() {
 										</span>
 									</div>
 
-									<div className="flex justify-between items-center p-2 bg-green-50 rounded">
-										<span className="text-green-600">Estimated Value:</span>
-										<span className="text-green-600">
+									<div className="flex justify-between items-center p-2 rounded" style={{backgroundColor: '#f1f8f4'}}>
+										<span style={{color: '#1b4c2e'}}>Estimated Value:</span>
+										<span style={{color: '#1b4c2e'}}>
 											{result
 												? `${result.points} ${
 														result.points === 1
@@ -261,7 +263,7 @@ export default function App() {
 
 								<div className="mt-4 text-center">
 									<p className="text-gray-600 mb-2">TOTAL:</p>
-									<p className="text-2xl text-green-500">
+									<p className="text-2xl" style={{color: '#1b4c2e'}}>
 										{result
 											? `${result.points} ${
 													result.points === 1
@@ -278,15 +280,16 @@ export default function App() {
 
 				{/* Check Your Points */}
 				<div className="flex justify-center items-center bg-gray-50 py-12">
-					<div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full border border-green-200">
-						<h3 className="text-green-700 mb-4 text-lg font-semibold text-center">
+					<div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full border" style={{borderColor: '#c8e6c9'}}>
+						<h3 className="mb-4 text-lg font-semibold text-center" style={{color: '#1b4c2e'}}>
 							Check Your Record Points Here
 						</h3>
 						<div className="space-y-4">
 							<div>
 								<label
-									className="block text-green-700 text-sm mb-2"
+									className="block text-sm mb-2"
 									htmlFor="record-id"
+									style={{color: '#1b4c2e'}}
 								>
 									Record ID
 								</label>
@@ -294,13 +297,15 @@ export default function App() {
 									id="record-id"
 									type="text"
 									placeholder="BT-"
-									className="bg-white text-green-700 px-4 py-2 rounded border border-green-200 shadow-sm focus:ring focus:ring-green-300 w-full"
+									className="bg-white px-4 py-2 rounded border shadow-sm w-full"
+									style={{color: '#1b4c2e', borderColor: '#c8e6c9'}}
 								/>
 							</div>
 							<div>
 								<label
-									className="block text-green-700 text-sm mb-2"
+									className="block text-sm mb-2"
 									htmlFor="last-name"
+									style={{color: '#1b4c2e'}}
 								>
 									Last Name
 								</label>
@@ -308,11 +313,13 @@ export default function App() {
 									id="last-name"
 									type="text"
 									placeholder="Enter your last name"
-									className="bg-white text-green-700 px-4 py-2 rounded border border-green-200 shadow-sm focus:ring focus:ring-green-300 w-full"
+									className="bg-white px-4 py-2 rounded border shadow-sm w-full"
+									style={{color: '#1b4c2e', borderColor: '#c8e6c9'}}
 								/>
 							</div>
 							<Button
-								className="bg-green-500 text-white hover:bg-green-600 px-6 py-2 rounded shadow-md w-full transition-all"
+								className="text-white px-6 py-2 rounded shadow-md w-full transition-all"
+								style={{backgroundColor: '#1b4c2e'}}
 								onClick={() => alert('Check Record feature coming soon!')}
 							>
 								Check Record
@@ -322,14 +329,14 @@ export default function App() {
 				</div>
 
 				{/* TaliPanahATIN Program */}
-				<Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200 shadow-lg mt-8">
-					<CardHeader className="text-center bg-gradient-to-r from-green-500 to-green-600 text-white rounded-t-lg">
+				<Card className="shadow-lg mt-8" style={{background: 'linear-gradient(to bottom right, #f1f8f4, #e8f5e9)', borderColor: '#c8e6c9'}}>
+					<CardHeader className="text-center text-white rounded-t-lg" style={{background: 'linear-gradient(to right, #1b4c2e, #256d3f)'}}>
 						<CardTitle className="text-2xl">
 							"May Buhay sa Basura ng Barangay"
 							<br />
-							<span className="text-green-200 text-xl">TaliPaPaNatin</span>
+							<span className="text-xl opacity-80">TaliPaPaNatin</span>
 						</CardTitle>
-						<p className="text-green-100 mt-2">
+						<p className="mt-2 opacity-90">
 							Community Waste Management Programs
 						</p>
 					</CardHeader>
@@ -338,13 +345,14 @@ export default function App() {
 							{programCategories.map((category, index) => (
 								<div
 									key={index}
-									className="bg-white rounded-lg p-5 border border-green-200 shadow-sm hover:shadow-md transition-shadow duration-200"
+									className="bg-white rounded-lg p-5 border shadow-sm hover:shadow-md transition-shadow duration-200"
+									style={{borderColor: '#c8e6c9'}}
 								>
 									<div className="flex items-center mb-4">
-										<div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+										<div className="w-8 h-8 rounded-full flex items-center justify-center mr-3" style={{backgroundColor: '#1b4c2e'}}>
 											<span className="text-white text-sm">✓</span>
 										</div>
-										<h4 className="text-green-700 leading-tight">
+										<h4 className="leading-tight" style={{color: '#1b4c2e'}}>
 											{category.title}
 										</h4>
 									</div>
@@ -354,7 +362,7 @@ export default function App() {
 												key={itemIndex}
 												className="text-sm text-gray-700 flex items-start"
 											>
-												<span className="text-green-500 mr-2 mt-1 text-xs">
+												<span className="mr-2 mt-1 text-xs" style={{color: '#1b4c2e'}}>
 													●
 												</span>
 												<span className="leading-relaxed">{item}</span>
@@ -365,17 +373,17 @@ export default function App() {
 							))}
 						</div>
 
-						<div className="mt-8 text-center bg-white rounded-lg p-6 border border-green-200 shadow-sm">
+						<div className="mt-8 text-center bg-white rounded-lg p-6 border shadow-sm" style={{borderColor: '#c8e6c9'}}>
 							<div className="mb-4">
-								<h4 className="text-green-700 mb-2">Contact Information</h4>
+								<h4 className="mb-2" style={{color: '#1b4c2e'}}>Contact Information</h4>
 								<p className="text-gray-600 mb-1">📞 DESK OFFICER HOTLINE:</p>
-								<p className="text-green-600">
+								<p style={{color: '#1b4c2e'}}>
 									8-7110745 / 0917-5586735
 								</p>
 							</div>
 
-							<div className="border-t border-green-200 pt-4">
-								<p className="text-green-700">
+							<div className="border-t pt-4" style={{borderColor: '#c8e6c9'}}>
+								<p style={{color: '#1b4c2e'}}>
 									<span className="block">ATTY. ERIC JUAN & COUNCIL</span>
 								</p>
 							</div>
@@ -385,11 +393,11 @@ export default function App() {
 			</main>
 
 			{/* Footer */}
-			<footer className="bg-green-500 text-white py-8 mt-12">
+			<footer className="text-white py-8 mt-12" style={{backgroundColor: '#1b4c2e'}}>
 				<div className="container mx-auto px-4">
 					<div className="text-center mb-4">
 						<h3 className="mb-2">TaliSHAGATH Program</h3>
-						<p className="text-green-100">
+						<p className="opacity-90">
 							Harnesses TalaSHA - Promoting circular economy through sustainable
 							waste management
 						</p>
@@ -398,25 +406,25 @@ export default function App() {
 					<div className="flex justify-center space-x-8 text-sm">
 						<a
 							href="#"
-							className="text-green-100 hover:text-white transition-colors"
+							className="opacity-80 hover:opacity-100 transition-opacity"
 						>
 							Clean & Recycling
 						</a>
 						<a
 							href="#"
-							className="text-green-100 hover:text-white transition-colors"
+							className="opacity-80 hover:opacity-100 transition-opacity"
 						>
 							Circular Economy
 						</a>
 						<a
 							href="#"
-							className="text-green-100 hover:text-white transition-colors"
+							className="opacity-80 hover:opacity-100 transition-opacity"
 						>
 							Community Programs
 						</a>
 						<a
 							href="#"
-							className="text-green-100 hover:text-white transition-colors"
+							className="opacity-80 hover:opacity-100 transition-opacity"
 						>
 							Environmental Care
 						</a>

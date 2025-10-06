@@ -45,11 +45,11 @@
   --sidebar-ring: oklch(0.708 0 0);
   /* Colors used by the transferred guidelines page (migrated here so the
      page works without importing its compiled CSS). */
-  --color-green-100: oklch(.962 .044 156.743);
-  --color-green-200: oklch(.925 .084 155.995);
-  --color-green-600: oklch(.627 .194 149.214);
-  --color-green-700: oklch(.527 .154 150.069);
-  --color-green-800: oklch(.448 .119 151.328);
+  --color-green-100: #e8f5e9;
+  --color-green-200: #c8e6c9;
+  --color-green-600: #1b4c2e;
+  --color-green-700: #1b4c2e;
+  --color-green-800: #143722;
   --color-gray-50: oklch(.985 .002 247.839);
   --color-gray-200: oklch(.928 .006 264.531);
   --color-gray-400: oklch(.707 .022 261.325);
@@ -110,11 +110,11 @@
   --sidebar-ring: oklch(0.439 0 0);
 
   /* Ensure page-specific color tokens resolve in dark mode too. */
-  --color-green-100: oklch(.962 .044 156.743);
-  --color-green-200: oklch(.925 .084 155.995);
-  --color-green-600: oklch(.627 .194 149.214);
-  --color-green-700: oklch(.527 .154 150.069);
-  --color-green-800: oklch(.448 .119 151.328);
+  --color-green-100: #e8f5e9;
+  --color-green-200: #c8e6c9;
+  --color-green-600: #1b4c2e;
+  --color-green-700: #1b4c2e;
+  --color-green-800: #143722;
   --color-gray-50: oklch(.985 .002 247.839);
   --color-gray-200: oklch(.928 .006 264.531);
   --color-gray-400: oklch(.707 .022 261.325);
@@ -128,15 +128,15 @@
 @theme inline {
   /* Tailwind color system */
   --color-white: #fff;
-  --color-green-50: oklch(.982 .018 155.826);
-  --color-green-100: oklch(.962 .044 156.743);
-  --color-green-200: oklch(.925 .084 155.995);
-  --color-green-300: oklch(.871 .15 154.449);
-  --color-green-400: oklch(.792 .209 151.711);
-  --color-green-500: oklch(.723 .219 149.579);
-  --color-green-600: oklch(.627 .194 149.214);
-  --color-green-700: oklch(.527 .154 150.069);
-  --color-green-800: oklch(.448 .119 151.328);
+  --color-green-50: #f1f8f4;
+  --color-green-100: #e8f5e9;
+  --color-green-200: #c8e6c9;
+  --color-green-300: #a5d6a7;
+  --color-green-400: #256d3f;
+  --color-green-500: #1b4c2e;
+  --color-green-600: #1b4c2e;
+  --color-green-700: #1b4c2e;
+  --color-green-800: #143722;
   --color-gray-50: oklch(.985 .002 247.839);
   --color-gray-100: oklch(.967 .003 264.542);
   --color-gray-200: oklch(.928 .006 264.531);
