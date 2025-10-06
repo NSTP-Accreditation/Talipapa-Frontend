@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { HopOff, User } from 'lucide-react';
+import { Store, User } from 'lucide-react';
 
 export default function NavBar() {
   return (
     <header className="bg-green-600 text-white py-4 px-6">
       <nav className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <HopOff className="w-8 h-8" />
+          <Store className="w-8 h-8" />
           <div className="flex flex-col">
             <span className="text-xl tracking-wide">E-Talipapa</span>
             <span className="text-xs opacity-80">Barangay Talipapa CMS</span>
@@ -18,7 +18,7 @@ export default function NavBar() {
           <Link to="/" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Home</Link>
           <Link to="/guidelines" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Guides</Link>
           <a href="#" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Services</a>
-          <a href="#" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Trading</a>
+          <Link to="/trading" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">Trading</Link>
           <a href="#" className="hover:text-green-200 px-3 py-2 rounded hover:bg-green-700">About Us</a>
         </div>
 
