@@ -1,9 +1,11 @@
+import './index.css';
 import { useState } from 'react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { MapPin, Phone, User } from 'lucide-react';
+import { ImageWithFallback } from '../../components/ImageWithFallback';
 
 interface WasteType {
   value: string;
@@ -69,36 +71,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-green-500 text-white">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between py-4">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4" />
-                <span className="text-sm">Saturday, October 5, 2024</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Phone className="w-4 h-4" />
-                <span className="text-sm">1425 PM</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm">Tabligaon</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-6">
-              <Button
-                variant="secondary"
-                size="sm"
-                className="bg-white text-green-500 hover:bg-gray-100"
-              >
-                <User className="w-4 h-4 mr-1" />
-                Sign In
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
@@ -179,3 +151,14 @@ export default function App() {
     </div>
   );
 }
+
+module.exports = {
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}', // Adjust this path to match your project structure
+    './public/index.html',
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
