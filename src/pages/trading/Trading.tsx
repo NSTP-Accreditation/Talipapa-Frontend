@@ -113,6 +113,7 @@ export default function App() {
 	} | null>(null);
 
 	const handleConvert = () => {
+		console.log('Button clicked! selectedType:', selectedType, 'weight:', weight);
 		if (selectedType && weight) {
 			const wasteType = wasteTypes.find(
 				(type) => type.value === selectedType
@@ -125,6 +126,8 @@ export default function App() {
 					image: wasteType.image,
 				});
 			}
+		} else {
+			alert('Please select a recyclable type and enter weight!');
 		}
 	};
 
@@ -189,8 +192,7 @@ export default function App() {
 
 							<Button
 								onClick={handleConvert}
-								className="w-full bg-green-500 hover:bg-green-600"
-								disabled={!selectedType || !weight}
+								className="w-full bg-green-500 hover:bg-green-600 z-10"
 							>
 								Convert
 							</Button>
