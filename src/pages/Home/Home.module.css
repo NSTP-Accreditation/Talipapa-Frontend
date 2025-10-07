@@ -41,3 +41,10 @@
   font-size: var(--font-size-base);
   color: var(--text-secondary);
 }
+
+.footer {
+  background: #222;
+  color: #fff;
+  padding: 2rem;
+  text-align: center;
+}
