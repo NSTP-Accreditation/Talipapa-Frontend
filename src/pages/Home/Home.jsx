@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styles from './Home.module.css';
+import Carousel from './Carousel';
+import MissionVision from './MissionVision';
 
 const Home = () => {
   return (
@@ -14,19 +15,18 @@ const Home = () => {
         </div>
       </div>
       
-      <div className={styles.container}>
-        <header className={styles.header}>
+      <header className={styles.header}>
         <h1>Welcome to Talipapa Web</h1>
         <p>Your marketplace solution</p>
       </header>
-      
+      <Carousel />
+      <MissionVision />
       <main className={styles.main}>
         <section className={styles.hero}>
           <h2>Get Started</h2>
           <p>This is your home page. Start building your application here!</p>
         </section>
       </main>
-      </div>
     </>
   );
 };
