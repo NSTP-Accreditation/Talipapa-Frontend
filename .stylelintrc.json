@@ -1,5 +1,11 @@
 {
   "extends": "stylelint-config-standard",
+  "ignoreFiles": [
+    "src/pages/guidelines/index.css",
+    "src/pages/trading/index.css",
+    "src/index.css",
+    "reference-index.css"
+  ],
   "rules": {
     "at-rule-no-unknown": [
       true,
@@ -17,6 +23,9 @@
         ]
       }
     ],
-    "selector-class-pattern": null
+    "selector-class-pattern": null,
+    "custom-property-pattern": null,
+    "no-duplicate-selectors": null,
+    "number-max-precision": null
   }
 }

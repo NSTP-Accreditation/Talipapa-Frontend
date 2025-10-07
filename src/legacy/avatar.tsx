@@ -1,2 +1,1 @@
-export * from "@radix-ui/react-avatar";
-
+export * from '@radix-ui/react-avatar';

@@ -1,2 +1,1 @@
-export * from "cmdk";
-
+export * from 'cmdk';

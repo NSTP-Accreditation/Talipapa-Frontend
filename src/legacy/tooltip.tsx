@@ -1,2 +1,1 @@
-export * from "@radix-ui/react-tooltip";
-
+export * from '@radix-ui/react-tooltip';

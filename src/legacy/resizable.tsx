@@ -1,2 +1,1 @@
-export * from "react-resizable-panels";
-
+export * from 'react-resizable-panels';

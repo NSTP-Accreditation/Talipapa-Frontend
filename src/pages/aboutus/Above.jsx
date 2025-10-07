@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { Pencil, Target, Eye } from "lucide-react";
+import { Link } from 'react-router-dom';
+import { Pencil, Target, Eye } from 'lucide-react';
 
 export default function AboutBarangay() {
   return (
@@ -8,13 +8,15 @@ export default function AboutBarangay() {
       <div className="bg-gray-50 py-3 px-6 border-b border-gray-200">
         <div className="max-w-7xl mx-auto">
           <nav className="text-sm text-gray-600">
-            <Link to="/" className="hover:underline">Home</Link>
+            <Link to="/" className="hover:underline">
+              Home
+            </Link>
             <span className="mx-2">/</span>
             <span>About Us</span>
           </nav>
         </div>
       </div>
-      
+
       <div className="min-h-0 bg-white-50 p-[80px]">
         <div className="max-w-6xl mx-auto mb-[50px]">
           {/* Header with Edit button */}
@@ -27,7 +29,6 @@ export default function AboutBarangay() {
                 Manage barangay information and officials
               </p>
             </div>
-
           </div>
           <br></br>
           {/* Barangay Info Card 1 */}
@@ -38,18 +39,18 @@ export default function AboutBarangay() {
 
             <div>
               <p className="text-gray-800 text-base leading-relaxed text-justify">
-                Barangay San Isidro is a vibrant community dedicated to serving its
-                residents with excellence. Established in 1950, we have grown into a
-                progressive barangay that values unity, development, and sustainable
-                growth.
+                Barangay San Isidro is a vibrant community dedicated to serving
+                its residents with excellence. Established in 1950, we have
+                grown into a progressive barangay that values unity,
+                development, and sustainable growth.
               </p>
             </div>
           </div>
-          <br></br><br></br>
-          
+          <br></br>
+          <br></br>
+
           {/* Mission & Vision Section */}
           <section className="py-12">
-
             {/* Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-[100px] max-w-[1000px] mx-auto">
               {/* Mission */}
@@ -61,9 +62,9 @@ export default function AboutBarangay() {
                   Our Mission
                 </h3>
                 <p className="text-gray-700 text-justify">
-                  To provide efficient, transparent, and sustainable governance that
-                  promotes the welfare of all residents while preserving our
-                  environment for future generations.
+                  To provide efficient, transparent, and sustainable governance
+                  that promotes the welfare of all residents while preserving
+                  our environment for future generations.
                 </p>
               </div>
 
@@ -76,31 +77,32 @@ export default function AboutBarangay() {
                   Our Vision
                 </h3>
                 <p className="text-gray-700 text-justify">
-                  To be a model eco-friendly barangay that exemplifies sustainable
-                  living, where every resident enjoys a high quality of life in
-                  harmony with nature.
+                  To be a model eco-friendly barangay that exemplifies
+                  sustainable living, where every resident enjoys a high quality
+                  of life in harmony with nature.
                 </p>
               </div>
             </div>
-            <br></br><br></br><br></br><br></br>
-
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
 
             {/* Barangay Info Card 2 (duplicate for now) */}
-          <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-8 mx-5 my-6">
-            <h2 className="text-[30px] font-bold text-green-600 mb-6">
-              Barangay History
-            </h2>
-            <br></br>
-            <div>
-              <p className="text-gray-800 text-base leading-relaxed text-justify">
-                Barangay San Isidro is a vibrant community dedicated to serving its
-                residents with excellence. Established in 1950, we have grown into a
-                progressive barangay that values unity, development, and sustainable
-                growth.
-              </p>
+            <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-8 mx-5 my-6">
+              <h2 className="text-[30px] font-bold text-green-600 mb-6">
+                Barangay History
+              </h2>
+              <br></br>
+              <div>
+                <p className="text-gray-800 text-base leading-relaxed text-justify">
+                  Barangay San Isidro is a vibrant community dedicated to
+                  serving its residents with excellence. Established in 1950, we
+                  have grown into a progressive barangay that values unity,
+                  development, and sustainable growth.
+                </p>
+              </div>
             </div>
-          </div>
-
           </section>
         </div>
       </div>

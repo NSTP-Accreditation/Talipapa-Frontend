@@ -1,2 +1,1 @@
-export * from "@radix-ui/react-scroll-area";
-
+export * from '@radix-ui/react-scroll-area';

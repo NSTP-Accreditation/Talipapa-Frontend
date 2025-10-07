@@ -1,2 +1,1 @@
-export * from "@radix-ui/react-tabs";
-
+export * from '@radix-ui/react-tabs';

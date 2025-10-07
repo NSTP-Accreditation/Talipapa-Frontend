@@ -3,17 +3,21 @@
 ## Production Deployment
 
 ### Prerequisites
+
 - Node.js runtime environment
 - Web server (Nginx, Apache, or similar)
 - SSL certificate for HTTPS
 
 ### Build Process
+
 1. Install dependencies:
+
    ```bash
    npm install --production
    ```
 
 2. Build the application:
+
    ```bash
    npm run build
    ```
@@ -21,7 +25,9 @@
 3. The `build/` directory contains the production-ready files
 
 ### Environment Variables
+
 Create a `.env` file with production values:
+
 ```
 REACT_APP_API_URL=https://your-api-domain.com
 REACT_APP_AUTH_DOMAIN=your-auth-domain
@@ -31,6 +37,7 @@ REACT_APP_AUTH_DOMAIN=your-auth-domain
 ### Web Server Configuration
 
 #### Nginx Example
+
 ```nginx
 server {
     listen 80;
@@ -50,6 +57,7 @@ server {
 ```
 
 ### Docker Deployment
+
 ```dockerfile
 FROM node:16-alpine as build
 WORKDIR /app
@@ -65,7 +73,9 @@ CMD ["nginx", "-g", "daemon off;"]
 ```
 
 ## Development Deployment
+
 Use the development server for local testing:
+
 ```bash
 npm start
 ```

@@ -1,2 +1,1 @@
-export * from "@radix-ui/react-toggle";
-
+export * from '@radix-ui/react-toggle';

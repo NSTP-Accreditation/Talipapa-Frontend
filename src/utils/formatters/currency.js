@@ -28,6 +28,6 @@ export const parseCurrency = (currencyString) => {
 
   const cleanString = currencyString.replace(/[₱,\s]/g, '');
   const parsed = parseFloat(cleanString);
-  
+
   return isNaN(parsed) ? 0 : parsed;
 };

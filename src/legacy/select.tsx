@@ -1,2 +1,1 @@
-export * from "@radix-ui/react-select";
-
+export * from '@radix-ui/react-select';

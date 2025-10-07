@@ -1,2 +1,1 @@
-export * from "@radix-ui/react-checkbox";
-
+export * from '@radix-ui/react-checkbox';
