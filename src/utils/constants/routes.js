@@ -26,4 +26,17 @@ export const APP_ROUTES = {
   PROFILE: '/profile',
   PRODUCTS: '/products',
   PRODUCT_DETAIL: (id) => `/products/${id}`,
+  // Admin Routes
+  ADMIN: {
+    BASE: '/admin',
+    DASHBOARD: '/admin/dashboard',
+    ABOUT: '/admin/about',
+    SERVICES: '/admin/services',
+    RESOURCES: '/admin/resources',
+    TRADING: '/admin/trading',
+    NEWS: '/admin/news',
+    USERS: '/admin/users',
+    NOTIFICATIONS: '/admin/notifications',
+    SETTINGS: '/admin/settings',
+  },
 };
