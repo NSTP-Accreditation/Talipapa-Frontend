@@ -6,6 +6,7 @@ import GuidelinesApp from './pages/guidelines/Guidelines';
 import MoreGuides from './pages/guidelines/MoreGuides';
 import Trading from './pages/trading/Trading';
 import Footer from './components/Footer';
+import AboutUs from './pages/aboutus/AboutUs';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/guidelines" element={<GuidelinesApp />} />
           <Route path="/guidelines/more" element={<MoreGuides />} />
           <Route path="/trading" element={<Trading />} />
+          <Route path="/aboutus" element={<AboutUs />} />
         </Routes>
         <Footer />
       </div>

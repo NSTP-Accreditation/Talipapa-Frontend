@@ -66,8 +66,8 @@ export default function NavBar() {
           <Link to="/" className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold" style={{ fontSize: '16px' }}>Home</Link>
           <Link to="/guidelines" className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold" style={{ fontSize: '16px' }}>Guides</Link>
           <Link to="/trading" className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold" style={{ fontSize: '16px' }}>EcoCycle</Link>
-          <a href="#" className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold" style={{ fontSize: '16px' }}>Services</a>
-          <a href="#" className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold" style={{ fontSize: '16px' }}>About Us</a>
+          <a href="" className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold" style={{ fontSize: '16px' }}>Services</a>
+          <Link to="/aboutus" className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold" style={{ fontSize: '16px' }}>About Us</Link>
         </div>
       </nav>
     </header>
