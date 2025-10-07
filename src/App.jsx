@@ -5,6 +5,7 @@ import NavBar from './components/NavBar';
 import GuidelinesApp from './pages/guidelines/Guidelines';
 import MoreGuides from './pages/guidelines/MoreGuides';
 import Trading from './pages/trading/Trading';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/guidelines/more" element={<MoreGuides />} />
           <Route path="/trading" element={<Trading />} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );
