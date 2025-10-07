@@ -1,2 +1,1 @@
-export * from "@radix-ui/react-collapsible";
-
+export * from '@radix-ui/react-collapsible';

@@ -1,2 +1,1 @@
-export * from "@radix-ui/react-alert-dialog";
-
+export * from '@radix-ui/react-alert-dialog';

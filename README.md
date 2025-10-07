@@ -33,10 +33,12 @@ Talipapa-Web/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- 
-- 
+
+-
+-
 
 ### Installation
+
 1. Clone the repository
 2. Copy `.env.example` to `.env` and configure your environment variables
 3. Install dependencies:
@@ -45,17 +47,22 @@ Talipapa-Web/
    ```
 
 ### Development
+
 ```bash
-npm start          # Start development server
-npm run build      # Build for production
-npm test           # Run tests
-npm run lint       # Check code quality
-npm run format     # Format code with Prettier
+npm run dev              # Start development server
+npm run build            # Build for production
+npm run format           # Format code with Prettier
+npm run format:check     # Check formatting
+npm run lint:css         # Lint and fix CSS files
+npm run lint:css:check   # Check CSS for errors
 ```
+
+> **Note:** A major CSS refactoring was completed on October 7, 2025. See [REFACTOR.md](./REFACTOR.md) for details on the new structure, dark mode support, and migration guide.
 
 ## 📖 File Organization Guide
 
 ### Components (`src/components/`)
+
 - Place reusable UI components here
 - Use PascalCase for component names
 - Each component should have its own folder with:
@@ -64,30 +71,38 @@ npm run format     # Format code with Prettier
   - `index.js` - Export file
 
 ### Pages (`src/pages/`)
+
 - Full page components/views
 - Follow same naming convention as components
 - Organize by feature or route
 
 ### Styles (`src/styles/`)
-- `globals.css` - Global styles
-- `variables.css` - CSS custom properties
-- Component-specific styles go with components
+
+- `globals.css` - Main stylesheet (imports others)
+- `variables.css` - All CSS custom properties & theming (light/dark)
+- `tailwind.css` - Tailwind directives
+- Component-specific styles: use Tailwind utilities when possible
+- **Import alias:** Use `@/` for cleaner imports (e.g., `import Button from '@/components/ui/button'`)
 
 ### Utils (`src/utils/`)
+
 - Helper functions and utilities
 - Pure functions without side effects
 - Use camelCase naming
 
 ### Services (`src/services/`)
+
 - API calls and external service integrations
 - Authentication logic
 - Data fetching functions
 
 ### Hooks (`src/hooks/`)
+
 - Custom React hooks
 - Start with `use` prefix (e.g., `useAuth.js`)
 
 ### Context (`src/context/`)
+
 - React Context providers
 - Global state management
 - Theme and user context

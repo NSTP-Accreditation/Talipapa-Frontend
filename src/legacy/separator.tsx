@@ -1,2 +1,1 @@
-export * from "@radix-ui/react-separator";
-
+export * from '@radix-ui/react-separator';

@@ -1,2 +1,1 @@
-export * from "@radix-ui/react-progress";
-
+export * from '@radix-ui/react-progress';
