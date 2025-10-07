@@ -373,64 +373,12 @@ export default function App() {
 							))}
 						</div>
 
-						<div className="mt-8 text-center bg-white rounded-lg p-6 border shadow-sm" style={{borderColor: '#c8e6c9'}}>
-							<div className="mb-4">
-								<h4 className="mb-2" style={{color: '#1b4c2e'}}>Contact Information</h4>
-								<p className="text-gray-600 mb-1">📞 DESK OFFICER HOTLINE:</p>
-								<p style={{color: '#1b4c2e'}}>
-									8-7110745 / 0917-5586735
-								</p>
-							</div>
-
-							<div className="border-t pt-4" style={{borderColor: '#c8e6c9'}}>
-								<p style={{color: '#1b4c2e'}}>
-									<span className="block">ATTY. ERIC JUAN & COUNCIL</span>
-								</p>
-							</div>
-						</div>
+						
 					</CardContent>
 				</Card>
 			</main>
 
-			{/* Footer */}
-			<footer className="text-white py-8 mt-12" style={{backgroundColor: '#1b4c2e'}}>
-				<div className="container mx-auto px-4">
-					<div className="text-center mb-4">
-						<h3 className="mb-2">TaliSHAGATH Program</h3>
-						<p className="opacity-90">
-							Harnesses TalaSHA - Promoting circular economy through sustainable
-							waste management
-						</p>
-					</div>
-
-					<div className="flex justify-center space-x-8 text-sm">
-						<a
-							href="#"
-							className="opacity-80 hover:opacity-100 transition-opacity"
-						>
-							Clean & Recycling
-						</a>
-						<a
-							href="#"
-							className="opacity-80 hover:opacity-100 transition-opacity"
-						>
-							Circular Economy
-						</a>
-						<a
-							href="#"
-							className="opacity-80 hover:opacity-100 transition-opacity"
-						>
-							Community Programs
-						</a>
-						<a
-							href="#"
-							className="opacity-80 hover:opacity-100 transition-opacity"
-						>
-							Environmental Care
-						</a>
-					</div>
-				</div>
-			</footer>
+			
 		</div>
 	);
 }

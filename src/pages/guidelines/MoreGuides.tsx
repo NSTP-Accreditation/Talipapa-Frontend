@@ -112,50 +112,6 @@ export default function MoreGuides() {
           </Link>
         </div>
       </main>
-
-      {/* Footer — reuse same style as guidelines page */}
-      <footer className="bg-gray-900 text-white py-12 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="mb-4">Barangay Talipapa</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              A green and sustainable community where nature and people thrive together.
-            </p>
-            <div className="flex space-x-4 mt-4">
-              <div className="w-6 h-6 bg-gray-700 rounded"></div>
-              <div className="w-6 h-6 bg-gray-700 rounded"></div>
-              <div className="w-6 h-6 bg-gray-700 rounded"></div>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>
-                <a href="#" className="hover:text-white">About Us</a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">Services</a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">News & Updates</a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">Contact Us</a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="mb-4">Contact Information</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li>506 Quirino Hwy, Novaliches, Quezon City, 1116, Metro Manila</li>
-              <li>(63) 123-4567</li>
-              <li>info@talipapa.gov.ph</li>
-            </ul>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
