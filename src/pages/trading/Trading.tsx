@@ -1,5 +1,6 @@
 import './index.css';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
@@ -133,11 +134,21 @@ export default function App() {
 
 	return (
 		<div className="min-h-screen bg-gray-50">
+			{/* Breadcrumb */}
+			<div className="bg-gray-50 py-3 px-6 border-b border-gray-200">
+				<div className="max-w-7xl mx-auto">
+					<nav className="text-sm text-gray-600">
+						<Link to="/" className="hover:underline">Home</Link>
+						<span className="mx-2">/</span>
+						<span>EcoCycle</span>
+					</nav>
+				</div>
+			</div>
 
 			{/* Main Content */}
 			<main className="container mx-auto px-4 py-12">
 				<div className="text-center mb-8">
-					<h1 className="mb-2">Waste Conversion Calculator</h1>
+					<h1 className="mb-2">Eco Cycle</h1>
 					<p className="text-gray-600">
 						Calculate how much valuable product you can get from your recyclable
 						waste
