@@ -2,14 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { Card, CardHeader, CardContent, CardTitle } from '../../components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+} from '../../components/ui/card';
 import { APP_ROUTES } from '../../utils/constants/routes';
 import { useAuth } from '../../contexts/AuthContext';
 
 const AdminLogin: React.FC = () => {
   const [formData, setFormData] = useState({
     username: '',
-    password: ''
+    password: '',
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -20,22 +25,23 @@ const AdminLogin: React.FC = () => {
   // Redirect if already logged in
   useEffect(() => {
     if (isAuthenticated) {
-      const from = (location.state as any)?.from?.pathname || APP_ROUTES.ADMIN.DASHBOARD;
+      const from =
+        (location.state as any)?.from?.pathname || APP_ROUTES.ADMIN.DASHBOARD;
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, navigate, location]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: '',
       }));
     }
   };
@@ -68,19 +74,20 @@ const AdminLogin: React.FC = () => {
 
     try {
       const success = await login(formData.username, formData.password);
-      
+
       if (success) {
         // Redirect to the intended page or dashboard
-        const from = (location.state as any)?.from?.pathname || APP_ROUTES.ADMIN.DASHBOARD;
+        const from =
+          (location.state as any)?.from?.pathname || APP_ROUTES.ADMIN.DASHBOARD;
         navigate(from, { replace: true });
       } else {
         setErrors({
-          submit: 'Invalid username or password'
+          submit: 'Invalid username or password',
         });
       }
     } catch (error) {
       setErrors({
-        submit: 'Login failed. Please try again.'
+        submit: 'Login failed. Please try again.',
       });
     } finally {
       setIsLoading(false);
@@ -89,27 +96,29 @@ const AdminLogin: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-5 px-4">
-      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden" style={{maxWidth: '1000px', width: '90vw'}}>
+      <div
+        className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden"
+        style={{ maxWidth: '1000px', width: '90vw' }}
+      >
         <div className="flex min-h-[500px]">
-          
           {/* Left Column - Login Form */}
           <div className="w-1/2 p-12 flex flex-col justify-center">
             <div className="flex flex-col ml-8">
-              
               {/* Logo and Title Section */}
               <div className="text-center mb-8">
                 <div className="flex items-center justify-center w-24 h-24 mx-auto mb-4">
-                  <img 
-                    src="/brgy talipapa.png" 
-                    alt="Barangay Talipapa Logo" 
+                  <img
+                    src="/brgy talipapa.png"
+                    alt="Barangay Talipapa Logo"
                     className="h-[90px] w-[90px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
                   />
                 </div>
-               
               </div>
 
               {/* Login Text */}
-              <p className="text-gray-600 mb-6 text-center">Please login to your account</p>
+              <p className="text-gray-600 mb-6 text-center">
+                Please login to your account
+              </p>
 
               {/* Form */}
               <div className="max-w-md mx-auto">
@@ -127,7 +136,9 @@ const AdminLogin: React.FC = () => {
                       disabled={isLoading}
                     />
                     {errors.username && (
-                      <p className="text-sm text-red-600 mt-2">{errors.username}</p>
+                      <p className="text-sm text-red-600 mt-2">
+                        {errors.username}
+                      </p>
                     )}
                   </div>
 
@@ -144,7 +155,9 @@ const AdminLogin: React.FC = () => {
                       disabled={isLoading}
                     />
                     {errors.password && (
-                      <p className="text-sm text-red-600 mt-2">{errors.password}</p>
+                      <p className="text-sm text-red-600 mt-2">
+                        {errors.password}
+                      </p>
                     )}
                   </div>
 
@@ -171,13 +184,9 @@ const AdminLogin: React.FC = () => {
                         'Sign in'
                       )}
                     </Button>
-                    
-                
                   </div>
-
                 </form>
               </div>
-
             </div>
           </div>
 
@@ -186,13 +195,14 @@ const AdminLogin: React.FC = () => {
             <div className="px-6 py-8 text-center">
               <h4 className="text-3xl font-bold mb-6">Welcome Admin</h4>
               <p className="text-green-100 leading-relaxed">
-                Access the comprehensive Barangay Content Management System. Manage community services, 
-                resources, news, and user accounts efficiently. Your administrative dashboard provides 
-                complete control over the barangay's digital presence and community engagement platform.
+                Access the comprehensive Barangay Content Management System.
+                Manage community services, resources, news, and user accounts
+                efficiently. Your administrative dashboard provides complete
+                control over the barangay's digital presence and community
+                engagement platform.
               </p>
             </div>
           </div>
-
         </div>
       </div>
     </div>

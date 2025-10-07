@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
 
 interface User {
   username: string;
@@ -30,7 +36,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const authStatus = localStorage.getItem('isAdminAuthenticated');
         const userData = localStorage.getItem('adminUser');
-        
+
         if (authStatus === 'true' && userData) {
           const parsedUser = JSON.parse(userData);
           setIsAuthenticated(true);
@@ -49,27 +55,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuthStatus();
   }, []);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (
+    username: string,
+    password: string
+  ): Promise<boolean> => {
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       // For demo purposes, accept specific credentials
       // In a real app, you'd validate against your backend
       if (username === 'admin' && password === 'admin123') {
         const userData: User = {
           username,
-          loginTime: new Date().toISOString()
+          loginTime: new Date().toISOString(),
         };
 
         localStorage.setItem('isAdminAuthenticated', 'true');
         localStorage.setItem('adminUser', JSON.stringify(userData));
-        
+
         setIsAuthenticated(true);
         setUser(userData);
         return true;
       }
-      
+
       return false;
     } catch (error) {
       console.error('Login error:', error);
@@ -89,14 +98,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     user,
     login,
     logout,
-    loading
+    loading,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = (): AuthContextType => {
