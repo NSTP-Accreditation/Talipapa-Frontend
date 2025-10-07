@@ -30,43 +30,43 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
     {
       icon: <span className="text-lg">ℹ️</span>,
       label: 'About Us',
-      href: APP_ROUTES.ADMIN.ABOUT
+      href: APP_ROUTES.ADMIN.ABOUT,
     },
     {
       icon: <span className="text-lg">🏢</span>,
       label: 'Services',
-      href: APP_ROUTES.ADMIN.SERVICES
+      href: APP_ROUTES.ADMIN.SERVICES,
     },
     {
       icon: <span className="text-lg">📁</span>,
       label: 'Resources',
-      href: APP_ROUTES.ADMIN.RESOURCES
+      href: APP_ROUTES.ADMIN.RESOURCES,
     },
     {
       icon: <span className="text-lg">💹</span>,
       label: 'Trading',
-      href: APP_ROUTES.ADMIN.TRADING
+      href: APP_ROUTES.ADMIN.TRADING,
     },
     {
       icon: <span className="text-lg">📰</span>,
       label: 'News',
-      href: APP_ROUTES.ADMIN.NEWS
+      href: APP_ROUTES.ADMIN.NEWS,
     },
     {
       icon: <span className="text-lg">👥</span>,
       label: 'Users',
-      href: APP_ROUTES.ADMIN.USERS
+      href: APP_ROUTES.ADMIN.USERS,
     },
     {
       icon: <span className="text-lg">🔔</span>,
       label: 'Notifications',
-      href: APP_ROUTES.ADMIN.NOTIFICATIONS
+      href: APP_ROUTES.ADMIN.NOTIFICATIONS,
     },
     {
       icon: <span className="text-lg">⚙️</span>,
       label: 'Settings',
-      href: APP_ROUTES.ADMIN.SETTINGS
-    }
+      href: APP_ROUTES.ADMIN.SETTINGS,
+    },
   ];
 
   const handleItemClick = (item: MenuItem) => {
@@ -83,16 +83,18 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   };
 
   return (
-    <div className={cn(
-      "w-64 h-screen bg-green-600 text-white flex flex-col",
-      className
-    )}>
+    <div
+      className={cn(
+        'w-64 h-screen bg-green-600 text-white flex flex-col',
+        className
+      )}
+    >
       {/* Header */}
       <div className="px-6 pt-6 pb-2">
         <div className="flex items-center justify-center w-24 h-24 mx-auto mb-4">
-          <img 
-            src="/brgy talipapa.png" 
-            alt="Barangay Talipapa Logo" 
+          <img
+            src="/brgy talipapa.png"
+            alt="Barangay Talipapa Logo"
             className="h-[90px] w-[90px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
           />
         </div>
@@ -100,7 +102,6 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
           <h2 className="text-lg font-semibold">Barangay CMS</h2>
           <p className="text-sm text-green-100 opacity-75">Barangay Talipapa</p>
         </div>
-        
       </div>
 
       {/* Navigation Items */}
@@ -110,18 +111,14 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
             key={index}
             onClick={() => handleItemClick(item)}
             className={cn(
-              "w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-200 cursor-pointer transform hover:scale-105 hover:shadow-lg",
+              'w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-200 cursor-pointer transform hover:scale-105 hover:shadow-lg',
               location.pathname === item.href
-                ? "bg-green-700 text-white shadow-md" 
-                : "text-green-100 hover:bg-green-500 hover:text-white hover:shadow-green-300/20"
+                ? 'bg-green-700 text-white shadow-md'
+                : 'text-green-100 hover:bg-green-500 hover:text-white hover:shadow-green-300/20'
             )}
           >
-            <span className="flex-shrink-0">
-              {item.icon}
-            </span>
-            <span className="font-medium">
-              {item.label}
-            </span>
+            <span className="flex-shrink-0">{item.icon}</span>
+            <span className="font-medium">{item.label}</span>
           </button>
         ))}
       </nav>
