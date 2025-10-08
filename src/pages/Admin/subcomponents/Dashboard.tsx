@@ -5,39 +5,63 @@ import {
   CardContent,
   CardTitle,
 } from '../../../components/ui/card';
-import { 
-  Users, 
-  TrendingUp, 
-  Megaphone, 
+import {
+  Users,
+  TrendingUp,
+  Megaphone,
   FileText,
   ArrowUp,
   ArrowDown,
-  Newspaper
+  Newspaper,
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
   const recentTrades = [
-    { id: 'T001', name: 'Juan Dela Cruz', points: 150, date: '2025-10-01', trend: 'up' },
-    { id: 'T002', name: 'Maria Santos', points: 200, date: '2025-10-01', trend: 'up' },
-    { id: 'T003', name: 'Jose Reyes', points: 100, date: '2025-09-30', trend: 'down' },
-    { id: 'T004', name: 'Anna Garcia', points: 175, date: '2025-09-30', trend: 'up' },
+    {
+      id: 'T001',
+      name: 'Juan Dela Cruz',
+      points: 150,
+      date: '2025-10-01',
+      trend: 'up',
+    },
+    {
+      id: 'T002',
+      name: 'Maria Santos',
+      points: 200,
+      date: '2025-10-01',
+      trend: 'up',
+    },
+    {
+      id: 'T003',
+      name: 'Jose Reyes',
+      points: 100,
+      date: '2025-09-30',
+      trend: 'down',
+    },
+    {
+      id: 'T004',
+      name: 'Anna Garcia',
+      points: 175,
+      date: '2025-09-30',
+      trend: 'up',
+    },
   ];
 
   const latestAnnouncements = [
-    { 
-      title: 'Community Clean-up Drive', 
+    {
+      title: 'Community Clean-up Drive',
       date: '2025-10-05',
-      status: 'Published' 
+      status: 'Published',
     },
-    { 
-      title: 'Vaccination Program Schedule', 
+    {
+      title: 'Vaccination Program Schedule',
       date: '2025-10-03',
-      status: 'Published' 
+      status: 'Published',
     },
-    { 
-      title: 'Barangay Assembly Meeting', 
+    {
+      title: 'Barangay Assembly Meeting',
       date: '2025-10-02',
-      status: 'Pinned' 
+      status: 'Pinned',
     },
   ];
 
@@ -63,9 +87,7 @@ const Dashboard: React.FC = () => {
           </CardHeader>
           <CardContent className="px-6 pb-6">
             <div className="text-3xl font-bold text-gray-900 mb-1">1,245</div>
-            <p className="text-xs text-blue-600">
-              +12% from last month
-            </p>
+            <p className="text-xs text-blue-600">+12% from last month</p>
           </CardContent>
         </Card>
 
@@ -79,9 +101,7 @@ const Dashboard: React.FC = () => {
           </CardHeader>
           <CardContent className="px-6 pb-6">
             <div className="text-3xl font-bold text-gray-900 mb-1">89</div>
-            <p className="text-xs text-blue-600">
-              +23% from last month
-            </p>
+            <p className="text-xs text-blue-600">+23% from last month</p>
           </CardContent>
         </Card>
 
@@ -95,9 +115,7 @@ const Dashboard: React.FC = () => {
           </CardHeader>
           <CardContent className="px-6 pb-6">
             <div className="text-3xl font-bold text-gray-900 mb-1">45</div>
-            <p className="text-xs text-gray-500">
-              5 pending approval
-            </p>
+            <p className="text-xs text-gray-500">5 pending approval</p>
           </CardContent>
         </Card>
 
@@ -111,9 +129,7 @@ const Dashboard: React.FC = () => {
           </CardHeader>
           <CardContent className="px-6 pb-6">
             <div className="text-3xl font-bold text-gray-900 mb-1">342</div>
-            <p className="text-xs text-gray-500">
-              This month
-            </p>
+            <p className="text-xs text-gray-500">This month</p>
           </CardContent>
         </Card>
       </div>
@@ -130,15 +146,17 @@ const Dashboard: React.FC = () => {
           <CardContent className="px-6 py-0 pb-2">
             <div className="space-y-0">
               {recentTrades.map((trade, index) => (
-                <div 
-                  key={trade.id} 
+                <div
+                  key={trade.id}
                   className="flex items-center justify-between py-4 border-b border-gray-200 last:border-0"
                 >
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-gray-900 mb-1">
                       {trade.name}
                     </p>
-                    <p className="text-xs text-blue-600 font-medium">ID: {trade.id}</p>
+                    <p className="text-xs text-blue-600 font-medium">
+                      ID: {trade.id}
+                    </p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold text-gray-900 mb-1">
@@ -162,8 +180,8 @@ const Dashboard: React.FC = () => {
           <CardContent className="px-6 py-0 pb-2">
             <div className="space-y-0">
               {latestAnnouncements.map((announcement, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="flex items-center justify-between py-4 border-b border-gray-200 last:border-0"
                 >
                   <div className="flex-1 pr-4">
@@ -173,10 +191,10 @@ const Dashboard: React.FC = () => {
                     <p className="text-xs text-gray-500">{announcement.date}</p>
                   </div>
                   <div>
-                    <span 
+                    <span
                       className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-semibold ${
-                        announcement.status === 'Pinned' 
-                          ? 'bg-green-600 text-white' 
+                        announcement.status === 'Pinned'
+                          ? 'bg-green-600 text-white'
                           : 'bg-blue-600 text-white'
                       }`}
                     >

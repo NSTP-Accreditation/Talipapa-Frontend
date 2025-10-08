@@ -5,9 +5,9 @@ interface AdminHeaderProps {
   subtitle?: string;
 }
 
-const AdminHeader: React.FC<AdminHeaderProps> = ({ 
+const AdminHeader: React.FC<AdminHeaderProps> = ({
   title = 'Barangay Information System',
-  subtitle = 'Content Management System'
+  subtitle = 'Content Management System',
 }) => {
   return (
     <div className="bg-white border-b border-gray-200 px-8 py-4">
