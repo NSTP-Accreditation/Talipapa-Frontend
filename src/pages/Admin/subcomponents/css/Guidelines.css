@@ -125,11 +125,6 @@
 }
 
 /* Form Container */
-.guidelines-form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
 
 /* Delete Modal Specific Styles */
 .guidelines-delete-modal {
