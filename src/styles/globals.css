@@ -5,10 +5,10 @@
  */
 
 /* Import Tailwind directives */
-@import url('./tailwind.css');
+@import './tailwind.css';
 
 /* Import CSS variables */
-@import url('./variables.css');
+@import './variables.css';
 
 /* Base layer styles */
 @layer base {
