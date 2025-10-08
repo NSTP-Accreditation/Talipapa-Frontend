@@ -1,34 +1,90 @@
 # Talipapa-Web
 
-A modern web application built with React for Barangay Talipapa Test
+A Barangay Information System and Content Management Platform for Barangay Talipapa. Features an eco-friendly recycling trading system (EcoCycle) and comprehensive administrative tools for barangay operations.
+
+## 🌟 Key Features
+
+- **EcoCycle Trading** - Calculate recyclable waste points and exchange for community goods
+- **Admin Dashboard** - Real-time analytics and content management
+- **Community Portal** - Guides, news, and barangay information
+- **Secure Admin Panel** - Protected routes with authentication
 
 ## 📁 Project Structure
 
 ```
-Talipapa-Web/
-├── 📂 src/                    # Source code
-│   ├── 📂 components/         # Reusable UI components
-│   ├── 📂 pages/              # Page components/views
-│   ├── 📂 styles/             # CSS/SCSS stylesheets
-│   ├── 📂 utils/              # Utility functions
-│   ├── 📂 services/           # API calls and external services
-│   ├── 📂 hooks/              # Custom React hooks
-│   ├── 📂 context/            # React Context providers
-│   └── 📂 assets/             # Images, fonts, static files
-├── 📂 public/                 # Static public assets
-│   ├── 📂 images/             # Public images
-│   ├── 📂 icons/              # Icons and favicons
-│   ├── 📂 fonts/              # Font files
-│   └── index.html             # Main HTML template
-├── 📂 docs/                   # Documentation files
-├── 📂 config/                 # Configuration files
-├── 📂 tests/                  # Test files
-├── 📂 scripts/                # Build and deployment scripts
-├── package.json               # Dependencies and scripts
-├── .gitignore                 # Git ignore rules
-├── .env.example               # Environment variables template
-└── README.md                  # This file
+src/
+├── components/         # UI components (NavBar, Footer, UI kit)
+├── pages/             
+│   ├── Home/          # Landing page
+│   ├── aboutus/       # About page
+│   ├── guidelines/    # Community guides
+│   ├── trading/       # EcoCycle calculator
+│   └── Admin/         # Admin panel & subcomponents
+├── contexts/          # AuthContext
+├── styles/            # Global CSS & Tailwind
+├── utils/             # Routes & formatters
+└── App.jsx            # Main app
 ```
+
+## 🛠️ Tech Stack
+
+- **React 18** + **TypeScript** + **Vite** - Modern development
+- **Tailwind CSS** + **Radix UI** - Styled components
+- **React Router** - Navigation
+- **Lucide React** - Icons
+
+## �️ Routes
+
+**Public:** `/`, `/guidelines`, `/trading`, `/aboutus`
+
+**Admin (Protected):** `/admin/dashboard`, `/admin/trading`, `/admin/news`, `/admin/about`, `/admin/settings`
+
+## �️ Application Routes
+
+### Public Routes
+- `/` - Home page
+- `/guidelines` - How-to guides
+- `/guidelines/more` - Extended guides
+- `/trading` - EcoCycle trading calculator
+- `/aboutus` - About the barangay
+
+### Admin Routes (Protected)
+- `/admin/login` - Admin authentication
+- `/admin/dashboard` - Admin dashboard
+- `/admin/trading` - Trading management hub
+  - `/admin/trading/activity` - Activity logs
+  - `/admin/trading/earn-points` - Earn points logs
+  - `/admin/trading/swap` - Swap logs
+- `/admin/about` - About Us management
+- `/admin/about/achievements` - Achievements management
+- `/admin/news` - News management
+- `/admin/guidelines` - Guidelines management
+- `/admin/settings` - System settings
+
+## 🎨 Design System
+
+**Colors:** Primary Green `#1b4c2e`, Green accents `#16a34a`, Teal `#0d9488`
+
+**Components:** Tailwind utilities, Radix UI primitives, `@/` import alias
+
+## 🔧 Development
+
+- Use **PascalCase** for components
+- **Tailwind CSS** for styling
+- **AuthContext** for authentication
+- Responsive, mobile-first design
+
+## 📄 License
+
+This project is private and proprietary to Barangay Talipapa.
+
+## 👥 Contributors
+
+Developed for NSTP Accreditation - Barangay Talipapa Website Project
+
+---
+
+**Last Updated:** October 8, 2025
 
 ## 🚀 Getting Started
 
@@ -56,8 +112,6 @@ npm run format:check     # Check formatting
 npm run lint:css         # Lint and fix CSS files
 npm run lint:css:check   # Check CSS for errors
 ```
-
-> **Note:** A major CSS refactoring was completed on October 7, 2025. See [REFACTOR.md](./REFACTOR.md) for details on the new structure, dark mode support, and migration guide.
 
 ## 📖 File Organization Guide
 
