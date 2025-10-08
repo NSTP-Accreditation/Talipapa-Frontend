@@ -14,7 +14,7 @@ Barangay Information System with EcoCycle Trading Platform for Barangay Talipapa
 ```
 src/
 ├── components/         # UI components (NavBar, Footer, UI kit)
-├── pages/             
+├── pages/
 │   ├── Home/          # Landing page
 │   ├── aboutus/       # About page
 │   ├── guidelines/    # Community guides
@@ -28,7 +28,7 @@ src/
 ## 🛠️ Tech Stack
 
 - **React 18** + **TypeScript** + **Vite**
-- **Tailwind CSS** + **Radix UI** 
+- **Tailwind CSS** + **Radix UI**
 - **React Router** + **Lucide Icons**
 
 ## 🚀 Quick Start
