@@ -105,7 +105,9 @@
   border-radius: 8px;
   font-size: 14px;
   box-sizing: border-box;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .forms-form-input:focus,
@@ -412,25 +414,25 @@
     margin: 10px;
     max-width: calc(100vw - 20px);
   }
-  
+
   .forms-modal-body {
     padding: 16px;
   }
-  
+
   .forms-modal-header,
   .forms-delete-header {
     padding: 16px 16px 12px;
   }
-  
+
   .forms-modal-footer {
     padding: 12px 16px;
     flex-direction: column;
   }
-  
+
   .forms-btn {
     width: 100%;
   }
-  
+
   .forms-file-label {
     padding: 24px 12px;
   }

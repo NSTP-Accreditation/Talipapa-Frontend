@@ -52,7 +52,12 @@ interface StepFormData {
   tips: string;
 }
 
-const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSave }) => {
+const EditModal: React.FC<EditModalProps> = ({
+  guideline,
+  isOpen,
+  onClose,
+  onSave,
+}) => {
   const [formData, setFormData] = useState<Guideline>({
     id: guideline?.id || '',
     title: guideline?.title || '',
@@ -61,7 +66,7 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
     steps: guideline?.steps || [],
     totalEstimatedTime: guideline?.totalEstimatedTime || '',
     difficulty: guideline?.difficulty || 'Easy',
-    lastUpdated: guideline?.lastUpdated || new Date().toISOString()
+    lastUpdated: guideline?.lastUpdated || new Date().toISOString(),
   });
 
   const [editingStepIndex, setEditingStepIndex] = useState<number | null>(null);
@@ -71,7 +76,7 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
     location: '',
     requiredDocuments: '',
     estimatedTime: '',
-    tips: ''
+    tips: '',
   });
 
   React.useEffect(() => {
@@ -86,7 +91,7 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
         steps: [],
         totalEstimatedTime: '',
         difficulty: 'Easy' as const,
-        lastUpdated: new Date().toISOString()
+        lastUpdated: new Date().toISOString(),
       };
       setFormData(newGuideline);
     }
@@ -101,7 +106,7 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
       location: '',
       requiredDocuments: '',
       estimatedTime: '',
-      tips: ''
+      tips: '',
     });
   };
 
@@ -112,18 +117,24 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
       title: stepFormData.title,
       description: stepFormData.description,
       location: stepFormData.location || undefined,
-      requiredDocuments: stepFormData.requiredDocuments 
-        ? stepFormData.requiredDocuments.split(',').map(doc => doc.trim()).filter(doc => doc)
+      requiredDocuments: stepFormData.requiredDocuments
+        ? stepFormData.requiredDocuments
+            .split(',')
+            .map((doc) => doc.trim())
+            .filter((doc) => doc)
         : undefined,
       estimatedTime: stepFormData.estimatedTime || undefined,
-      tips: stepFormData.tips 
-        ? stepFormData.tips.split(',').map(tip => tip.trim()).filter(tip => tip)
-        : undefined
+      tips: stepFormData.tips
+        ? stepFormData.tips
+            .split(',')
+            .map((tip) => tip.trim())
+            .filter((tip) => tip)
+        : undefined,
     };
 
     setFormData({
       ...formData,
-      steps: [...formData.steps, newStep]
+      steps: [...formData.steps, newStep],
     });
     resetStepForm();
   };
@@ -137,7 +148,7 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
       location: step.location || '',
       requiredDocuments: step.requiredDocuments?.join(', ') || '',
       estimatedTime: step.estimatedTime || '',
-      tips: step.tips?.join(', ') || ''
+      tips: step.tips?.join(', ') || '',
     });
   };
 
@@ -150,13 +161,19 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
       title: stepFormData.title,
       description: stepFormData.description,
       location: stepFormData.location || undefined,
-      requiredDocuments: stepFormData.requiredDocuments 
-        ? stepFormData.requiredDocuments.split(',').map(doc => doc.trim()).filter(doc => doc)
+      requiredDocuments: stepFormData.requiredDocuments
+        ? stepFormData.requiredDocuments
+            .split(',')
+            .map((doc) => doc.trim())
+            .filter((doc) => doc)
         : undefined,
       estimatedTime: stepFormData.estimatedTime || undefined,
-      tips: stepFormData.tips 
-        ? stepFormData.tips.split(',').map(tip => tip.trim()).filter(tip => tip)
-        : undefined
+      tips: stepFormData.tips
+        ? stepFormData.tips
+            .split(',')
+            .map((tip) => tip.trim())
+            .filter((tip) => tip)
+        : undefined,
     };
 
     const updatedSteps = [...formData.steps];
@@ -164,9 +181,9 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
 
     setFormData({
       ...formData,
-      steps: updatedSteps
+      steps: updatedSteps,
     });
-    
+
     setEditingStepIndex(null);
     resetStepForm();
   };
@@ -176,76 +193,76 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
     // Renumber steps
     const renumberedSteps = updatedSteps.map((step, i) => ({
       ...step,
-      stepNumber: i + 1
+      stepNumber: i + 1,
     }));
 
     setFormData({
       ...formData,
-      steps: renumberedSteps
+      steps: renumberedSteps,
     });
   };
 
   const moveStep = (index: number, direction: 'up' | 'down') => {
     const steps = [...formData.steps];
     const newIndex = direction === 'up' ? index - 1 : index + 1;
-    
+
     if (newIndex < 0 || newIndex >= steps.length) return;
-    
+
     [steps[index], steps[newIndex]] = [steps[newIndex], steps[index]];
-    
+
     // Renumber steps
     const renumberedSteps = steps.map((step, i) => ({
       ...step,
-      stepNumber: i + 1
+      stepNumber: i + 1,
     }));
 
     setFormData({
       ...formData,
-      steps: renumberedSteps
+      steps: renumberedSteps,
     });
   };
 
   const handleSave = () => {
     // Enhanced validation
     const errors = [];
-    
+
     if (!formData.title.trim()) {
       errors.push('Title is required');
     }
-    
+
     if (!formData.description.trim()) {
       errors.push('Description is required');
     }
-    
+
     if (!formData.category.trim()) {
       errors.push('Category is required');
     }
-    
+
     if (formData.steps.length === 0) {
       errors.push('At least one step is required');
     }
-    
+
     if (!formData.totalEstimatedTime.trim()) {
       errors.push('Total estimated time is required');
     }
-    
+
     if (errors.length > 0) {
       alert('Please fix the following errors:\n\n• ' + errors.join('\n• '));
       return;
     }
-    
+
     const updatedGuideline = {
       ...formData,
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString(),
     };
-    
+
     onSave(updatedGuideline);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className="guidelines-modal-overlay"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -257,28 +274,27 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
           <h2 className="guidelines-modal-title">
             {guideline?.id ? 'Edit Guidelines' : 'Add New Guidelines'}
           </h2>
-          <button
-            onClick={onClose}
-            className="guidelines-modal-close-btn"
-          >
+          <button onClick={onClose} className="guidelines-modal-close-btn">
             ✕
           </button>
         </div>
-        
+
         {/* Form Content */}
         <div className="guidelines-modal-body">
           <div className="guidelines-form-container">
             {/* Basic Information */}
             <div className="guidelines-section">
               <h3 className="guidelines-section-title">Basic Information</h3>
-              
+
               <div className="guidelines-form-row">
                 <div className="guidelines-form-group">
                   <label className="guidelines-form-label">Title *</label>
                   <input
                     type="text"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     className="guidelines-form-input"
                     placeholder="e.g., How to Get a Barangay Clearance"
                   />
@@ -288,7 +304,9 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
                   <label className="guidelines-form-label">Category *</label>
                   <select
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
                     className="guidelines-form-select"
                   >
                     <option value="">Select Category</option>
@@ -305,7 +323,9 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
                 <label className="guidelines-form-label">Description *</label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   rows={3}
                   className="guidelines-form-textarea"
                   placeholder="Brief description of what this guideline covers"
@@ -314,10 +334,20 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
 
               <div className="guidelines-form-row">
                 <div className="guidelines-form-group">
-                  <label className="guidelines-form-label">Difficulty Level</label>
+                  <label className="guidelines-form-label">
+                    Difficulty Level
+                  </label>
                   <select
                     value={formData.difficulty}
-                    onChange={(e) => setFormData({ ...formData, difficulty: e.target.value as 'Easy' | 'Medium' | 'Hard' })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        difficulty: e.target.value as
+                          | 'Easy'
+                          | 'Medium'
+                          | 'Hard',
+                      })
+                    }
                     className="guidelines-form-select"
                   >
                     <option value="Easy">Easy</option>
@@ -327,11 +357,18 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
                 </div>
 
                 <div className="guidelines-form-group">
-                  <label className="guidelines-form-label">Total Estimated Time *</label>
+                  <label className="guidelines-form-label">
+                    Total Estimated Time *
+                  </label>
                   <input
                     type="text"
                     value={formData.totalEstimatedTime}
-                    onChange={(e) => setFormData({ ...formData, totalEstimatedTime: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        totalEstimatedTime: e.target.value,
+                      })
+                    }
                     className="guidelines-form-input"
                     placeholder="e.g., 2-3 hours"
                   />
@@ -342,19 +379,26 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
             {/* Steps Section */}
             <div className="guidelines-section">
               <h3 className="guidelines-section-title">Steps</h3>
-              
+
               {/* Add/Edit Step Form */}
               <div className="guidelines-step-form">
                 <h4 className="guidelines-step-form-title">
-                  {editingStepIndex !== null ? `Edit Step ${editingStepIndex + 1}` : `Add Step ${formData.steps.length + 1}`}
+                  {editingStepIndex !== null
+                    ? `Edit Step ${editingStepIndex + 1}`
+                    : `Add Step ${formData.steps.length + 1}`}
                 </h4>
-                
+
                 <div className="guidelines-form-group">
                   <label className="guidelines-form-label">Step Title *</label>
                   <input
                     type="text"
                     value={stepFormData.title}
-                    onChange={(e) => setStepFormData({ ...stepFormData, title: e.target.value })}
+                    onChange={(e) =>
+                      setStepFormData({
+                        ...stepFormData,
+                        title: e.target.value,
+                      })
+                    }
                     className="guidelines-form-input"
                     placeholder="e.g., Go to Barangay Hall"
                   />
@@ -364,7 +408,12 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
                   <label className="guidelines-form-label">Description *</label>
                   <textarea
                     value={stepFormData.description}
-                    onChange={(e) => setStepFormData({ ...stepFormData, description: e.target.value })}
+                    onChange={(e) =>
+                      setStepFormData({
+                        ...stepFormData,
+                        description: e.target.value,
+                      })
+                    }
                     rows={3}
                     className="guidelines-form-textarea"
                     placeholder="Detailed instructions for this step"
@@ -377,18 +426,30 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
                     <input
                       type="text"
                       value={stepFormData.location}
-                      onChange={(e) => setStepFormData({ ...stepFormData, location: e.target.value })}
+                      onChange={(e) =>
+                        setStepFormData({
+                          ...stepFormData,
+                          location: e.target.value,
+                        })
+                      }
                       className="guidelines-form-input"
                       placeholder="e.g., Barangay Hall, 2nd Floor"
                     />
                   </div>
 
                   <div className="guidelines-form-group">
-                    <label className="guidelines-form-label">Estimated Time</label>
+                    <label className="guidelines-form-label">
+                      Estimated Time
+                    </label>
                     <input
                       type="text"
                       value={stepFormData.estimatedTime}
-                      onChange={(e) => setStepFormData({ ...stepFormData, estimatedTime: e.target.value })}
+                      onChange={(e) =>
+                        setStepFormData({
+                          ...stepFormData,
+                          estimatedTime: e.target.value,
+                        })
+                      }
                       className="guidelines-form-input"
                       placeholder="e.g., 15 minutes"
                     />
@@ -396,22 +457,33 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
                 </div>
 
                 <div className="guidelines-form-group">
-                  <label className="guidelines-form-label">Required Documents (comma-separated)</label>
+                  <label className="guidelines-form-label">
+                    Required Documents (comma-separated)
+                  </label>
                   <input
                     type="text"
                     value={stepFormData.requiredDocuments}
-                    onChange={(e) => setStepFormData({ ...stepFormData, requiredDocuments: e.target.value })}
+                    onChange={(e) =>
+                      setStepFormData({
+                        ...stepFormData,
+                        requiredDocuments: e.target.value,
+                      })
+                    }
                     className="guidelines-form-input"
                     placeholder="e.g., Valid ID, Cedula, Proof of Residency"
                   />
                 </div>
 
                 <div className="guidelines-form-group">
-                  <label className="guidelines-form-label">Tips (comma-separated)</label>
+                  <label className="guidelines-form-label">
+                    Tips (comma-separated)
+                  </label>
                   <input
                     type="text"
                     value={stepFormData.tips}
-                    onChange={(e) => setStepFormData({ ...stepFormData, tips: e.target.value })}
+                    onChange={(e) =>
+                      setStepFormData({ ...stepFormData, tips: e.target.value })
+                    }
                     className="guidelines-form-input"
                     placeholder="e.g., Bring exact change, Come early to avoid lines"
                   />
@@ -424,7 +496,10 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
                         type="button"
                         onClick={handleUpdateStep}
                         className="guidelines-btn guidelines-btn-primary"
-                        disabled={!stepFormData.title.trim() || !stepFormData.description.trim()}
+                        disabled={
+                          !stepFormData.title.trim() ||
+                          !stepFormData.description.trim()
+                        }
                       >
                         Update Step
                       </button>
@@ -444,7 +519,10 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
                       type="button"
                       onClick={handleAddStep}
                       className="guidelines-btn guidelines-btn-primary"
-                      disabled={!stepFormData.title.trim() || !stepFormData.description.trim()}
+                      disabled={
+                        !stepFormData.title.trim() ||
+                        !stepFormData.description.trim()
+                      }
                     >
                       Add Step
                     </button>
@@ -455,7 +533,9 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
               {/* Steps List */}
               {formData.steps.length > 0 && (
                 <div className="guidelines-steps-list">
-                  <h4 className="guidelines-steps-list-title">Steps ({formData.steps.length})</h4>
+                  <h4 className="guidelines-steps-list-title">
+                    Steps ({formData.steps.length})
+                  </h4>
                   {formData.steps.map((step, index) => (
                     <div key={step.id} className="guidelines-step-item">
                       <div className="guidelines-step-header">
@@ -539,11 +619,16 @@ const EditModal: React.FC<EditModalProps> = ({ guideline, isOpen, onClose, onSav
   );
 };
 
-const DeleteModal: React.FC<DeleteModalProps> = ({ guideline, isOpen, onClose, onConfirm }) => {
+const DeleteModal: React.FC<DeleteModalProps> = ({
+  guideline,
+  isOpen,
+  onClose,
+  onConfirm,
+}) => {
   if (!isOpen || !guideline) return null;
 
   return (
-    <div 
+    <div
       className="guidelines-modal-overlay"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -554,27 +639,30 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ guideline, isOpen, onClose, o
         <div className="guidelines-delete-header">
           <div className="guidelines-delete-header-content">
             <div className="guidelines-delete-icon">
-              <svg className="guidelines-delete-icon-svg" fill="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="guidelines-delete-icon-svg"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
               </svg>
             </div>
             <div>
-              <h2 className="guidelines-delete-title">
-                Delete Guidelines
-              </h2>
+              <h2 className="guidelines-delete-title">Delete Guidelines</h2>
               <p className="guidelines-delete-subtitle">
                 This action cannot be undone
               </p>
             </div>
           </div>
         </div>
-        
+
         {/* Content */}
         <div className="guidelines-delete-body">
           <p className="guidelines-delete-message">
-            Are you sure you want to delete the guidelines <strong>"{guideline.title}"</strong>?
+            Are you sure you want to delete the guidelines{' '}
+            <strong>"{guideline.title}"</strong>?
           </p>
-          
+
           <div className="guidelines-delete-details">
             <h4 className="guidelines-delete-details-title">
               Guidelines Details:
@@ -595,11 +683,16 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ guideline, isOpen, onClose, o
 
           <div className="guidelines-delete-warning">
             <div className="guidelines-delete-warning-content">
-              <svg className="guidelines-delete-warning-icon" fill="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="guidelines-delete-warning-icon"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
               </svg>
               <p className="guidelines-delete-warning-text">
-                Warning: This will permanently remove these guidelines and all its steps from the system.
+                Warning: This will permanently remove these guidelines and all
+                its steps from the system.
               </p>
             </div>
           </div>
@@ -630,7 +723,8 @@ const Guidelines: React.FC = () => {
     {
       id: '1',
       title: 'How to Get a Barangay Clearance',
-      description: 'Step-by-step guide for obtaining a barangay clearance certificate',
+      description:
+        'Step-by-step guide for obtaining a barangay clearance certificate',
       category: 'Clearances',
       totalEstimatedTime: '1-2 hours',
       difficulty: 'Easy',
@@ -640,36 +734,46 @@ const Guidelines: React.FC = () => {
           id: '1-1',
           stepNumber: 1,
           title: 'Prepare Required Documents',
-          description: 'Gather all necessary documents before going to the barangay hall.',
+          description:
+            'Gather all necessary documents before going to the barangay hall.',
           requiredDocuments: ['Valid ID', 'Cedula', 'Proof of Residency'],
           estimatedTime: '15 minutes',
-          tips: ['Make photocopies of all documents', 'Bring originals for verification']
+          tips: [
+            'Make photocopies of all documents',
+            'Bring originals for verification',
+          ],
         },
         {
           id: '1-2',
           stepNumber: 2,
           title: 'Go to Barangay Hall',
-          description: 'Visit the barangay hall during office hours to submit your application.',
+          description:
+            'Visit the barangay hall during office hours to submit your application.',
           location: 'Barangay Hall, Ground Floor',
           estimatedTime: '30 minutes',
-          tips: ['Come early to avoid long lines', 'Bring exact change for fees']
+          tips: [
+            'Come early to avoid long lines',
+            'Bring exact change for fees',
+          ],
         },
         {
           id: '1-3',
           stepNumber: 3,
           title: 'Fill Out Application Form',
-          description: 'Complete the barangay clearance application form with accurate information.',
+          description:
+            'Complete the barangay clearance application form with accurate information.',
           location: 'Information Desk',
           estimatedTime: '10 minutes',
-          tips: ['Write clearly and legibly', 'Double-check all information']
+          tips: ['Write clearly and legibly', 'Double-check all information'],
         },
         {
           id: '1-4',
           stepNumber: 4,
           title: 'Submit Documents and Pay Fee',
-          description: 'Submit your completed form and documents, then pay the required fee.',
+          description:
+            'Submit your completed form and documents, then pay the required fee.',
           location: "Secretary's Office",
-          estimatedTime: '15 minutes'
+          estimatedTime: '15 minutes',
         },
         {
           id: '1-5',
@@ -677,9 +781,12 @@ const Guidelines: React.FC = () => {
           title: 'Claim Your Clearance',
           description: 'Return to claim your barangay clearance certificate.',
           estimatedTime: '5 minutes',
-          tips: ['Bring your receipt', 'Processing usually takes 1-2 working days']
-        }
-      ]
+          tips: [
+            'Bring your receipt',
+            'Processing usually takes 1-2 working days',
+          ],
+        },
+      ],
     },
     {
       id: '2',
@@ -695,42 +802,57 @@ const Guidelines: React.FC = () => {
           stepNumber: 1,
           title: 'Prepare Business Documents',
           description: 'Gather all required business registration documents.',
-          requiredDocuments: ['DTI Registration', 'SEC Registration (if corporation)', 'Valid ID', 'Barangay Clearance'],
-          estimatedTime: '30 minutes'
+          requiredDocuments: [
+            'DTI Registration',
+            'SEC Registration (if corporation)',
+            'Valid ID',
+            'Barangay Clearance',
+          ],
+          estimatedTime: '30 minutes',
         },
         {
           id: '2-2',
           stepNumber: 2,
           title: 'Complete Application Form',
-          description: 'Fill out the business permit application form completely.',
+          description:
+            'Fill out the business permit application form completely.',
           location: 'Business Permits Office',
-          estimatedTime: '20 minutes'
-        }
-      ]
-    }
+          estimatedTime: '20 minutes',
+        },
+      ],
+    },
   ]);
 
-  const [editingGuideline, setEditingGuideline] = useState<Guideline | null>(null);
-  const [deletingGuideline, setDeletingGuideline] = useState<Guideline | null>(null);
+  const [editingGuideline, setEditingGuideline] = useState<Guideline | null>(
+    null
+  );
+  const [deletingGuideline, setDeletingGuideline] = useState<Guideline | null>(
+    null
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedGuidelines, setSelectedGuidelines] = useState<Set<string>>(new Set());
+  const [selectedGuidelines, setSelectedGuidelines] = useState<Set<string>>(
+    new Set()
+  );
   const [showBulkActions, setShowBulkActions] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [filterDifficulty, setFilterDifficulty] = useState('');
 
   // Filter guidelines based on search term, category, and difficulty
-  const filteredGuidelines = guidelines.filter(guideline => {
-    const matchesSearch = guideline.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         guideline.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = filterCategory === '' || guideline.category === filterCategory;
-    const matchesDifficulty = filterDifficulty === '' || guideline.difficulty === filterDifficulty;
+  const filteredGuidelines = guidelines.filter((guideline) => {
+    const matchesSearch =
+      guideline.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      guideline.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      filterCategory === '' || guideline.category === filterCategory;
+    const matchesDifficulty =
+      filterDifficulty === '' || guideline.difficulty === filterDifficulty;
     return matchesSearch && matchesCategory && matchesDifficulty;
   });
 
   const handleEdit = (guidelineId: string) => {
-    const guideline = guidelines.find(g => g.id === guidelineId);
+    const guideline = guidelines.find((g) => g.id === guidelineId);
     if (guideline) {
       setEditingGuideline(guideline);
       setIsModalOpen(true);
@@ -738,7 +860,7 @@ const Guidelines: React.FC = () => {
   };
 
   const handleDelete = (guidelineId: string) => {
-    const guideline = guidelines.find(g => g.id === guidelineId);
+    const guideline = guidelines.find((g) => g.id === guidelineId);
     if (guideline) {
       setDeletingGuideline(guideline);
       setIsDeleteModalOpen(true);
@@ -747,10 +869,12 @@ const Guidelines: React.FC = () => {
 
   const handleConfirmDelete = () => {
     if (deletingGuideline) {
-      setGuidelines(guidelines.filter(g => g.id !== deletingGuideline.id));
+      setGuidelines(guidelines.filter((g) => g.id !== deletingGuideline.id));
       setIsDeleteModalOpen(false);
       setDeletingGuideline(null);
-      alert(`Guidelines "${deletingGuideline.title}" has been successfully deleted!`);
+      alert(
+        `Guidelines "${deletingGuideline.title}" has been successfully deleted!`
+      );
     }
   };
 
@@ -772,15 +896,19 @@ const Guidelines: React.FC = () => {
 
   const handleBulkDelete = () => {
     if (selectedGuidelines.size === 0) return;
-    
+
     const count = selectedGuidelines.size;
     const guidelineTitles = guidelines
-      .filter(g => selectedGuidelines.has(g.id))
-      .map(g => g.title)
+      .filter((g) => selectedGuidelines.has(g.id))
+      .map((g) => g.title)
       .join(', ');
 
-    if (confirm(`Are you sure you want to delete ${count} guideline${count > 1 ? 's' : ''}?\n\n${guidelineTitles}`)) {
-      setGuidelines(guidelines.filter(g => !selectedGuidelines.has(g.id)));
+    if (
+      confirm(
+        `Are you sure you want to delete ${count} guideline${count > 1 ? 's' : ''}?\n\n${guidelineTitles}`
+      )
+    ) {
+      setGuidelines(guidelines.filter((g) => !selectedGuidelines.has(g.id)));
       setSelectedGuidelines(new Set());
       setShowBulkActions(false);
       alert(`Successfully deleted ${count} guideline${count > 1 ? 's' : ''}.`);
@@ -795,36 +923,47 @@ const Guidelines: React.FC = () => {
   const handleSaveGuideline = (updatedGuideline: Guideline) => {
     // Check for duplicate titles (case insensitive)
     const existingTitles = guidelines
-      .filter(g => g.id !== updatedGuideline.id) // Exclude current guideline if editing
-      .map(g => g.title.toLowerCase().trim());
-    
+      .filter((g) => g.id !== updatedGuideline.id) // Exclude current guideline if editing
+      .map((g) => g.title.toLowerCase().trim());
+
     const newTitle = updatedGuideline.title.toLowerCase().trim();
-    
+
     if (existingTitles.includes(newTitle)) {
-      alert('A guideline with this title already exists. Please choose a different title.');
+      alert(
+        'A guideline with this title already exists. Please choose a different title.'
+      );
       return;
     }
-    
-    if (updatedGuideline.id && guidelines.find(g => g.id === updatedGuideline.id)) {
+
+    if (
+      updatedGuideline.id &&
+      guidelines.find((g) => g.id === updatedGuideline.id)
+    ) {
       // Update existing guideline
-      setGuidelines(guidelines.map(g => 
-        g.id === updatedGuideline.id ? updatedGuideline : g
-      ));
-      alert(`Guidelines "${updatedGuideline.title}" has been successfully updated!`);
+      setGuidelines(
+        guidelines.map((g) =>
+          g.id === updatedGuideline.id ? updatedGuideline : g
+        )
+      );
+      alert(
+        `Guidelines "${updatedGuideline.title}" has been successfully updated!`
+      );
     } else {
       // Add new guideline
       const newGuideline = {
         ...updatedGuideline,
         id: Date.now().toString(),
-        lastUpdated: new Date().toISOString()
+        lastUpdated: new Date().toISOString(),
       };
       setGuidelines([...guidelines, newGuideline]);
-      alert(`New guidelines "${updatedGuideline.title}" has been successfully created!`);
+      alert(
+        `New guidelines "${updatedGuideline.title}" has been successfully created!`
+      );
     }
-    
+
     setIsModalOpen(false);
     setEditingGuideline(null);
-    
+
     // Clear any selected items when adding/editing
     setSelectedGuidelines(new Set());
     setShowBulkActions(false);
@@ -837,14 +976,24 @@ const Guidelines: React.FC = () => {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'Easy': return 'bg-green-100 text-green-800';
-      case 'Medium': return 'bg-yellow-100 text-yellow-800';
-      case 'Hard': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'Easy':
+        return 'bg-green-100 text-green-800';
+      case 'Medium':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'Hard':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const categories = ['Clearances', 'Permits', 'Certificates', 'Applications', 'Services'];
+  const categories = [
+    'Clearances',
+    'Permits',
+    'Certificates',
+    'Applications',
+    'Services',
+  ];
   const difficulties = ['Easy', 'Medium', 'Hard'];
 
   return (
@@ -855,10 +1004,11 @@ const Guidelines: React.FC = () => {
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Guidelines</h1>
             <p className="text-gray-600 text-sm mt-1">
-              Step-by-step instructions for barangay services ({guidelines.length} total)
+              Step-by-step instructions for barangay services (
+              {guidelines.length} total)
             </p>
           </div>
-          
+
           {/* Bulk Actions */}
           {showBulkActions && (
             <div className="flex items-center gap-3 ml-8 px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
@@ -869,8 +1019,18 @@ const Guidelines: React.FC = () => {
                 onClick={handleBulkDelete}
                 className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm font-medium flex items-center gap-2"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
                 </svg>
                 Delete Selected
               </button>
@@ -878,7 +1038,7 @@ const Guidelines: React.FC = () => {
           )}
         </div>
 
-        <button 
+        <button
           onClick={handleAddGuideline}
           className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium"
         >
@@ -904,8 +1064,10 @@ const Guidelines: React.FC = () => {
           className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
         >
           <option value="">All Categories</option>
-          {categories.map(category => (
-            <option key={category} value={category}>{category}</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
           ))}
         </select>
         <select
@@ -914,8 +1076,10 @@ const Guidelines: React.FC = () => {
           className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
         >
           <option value="">All Difficulties</option>
-          {difficulties.map(difficulty => (
-            <option key={difficulty} value={difficulty}>{difficulty}</option>
+          {difficulties.map((difficulty) => (
+            <option key={difficulty} value={difficulty}>
+              {difficulty}
+            </option>
           ))}
         </select>
       </div>
@@ -923,7 +1087,10 @@ const Guidelines: React.FC = () => {
       {/* Guidelines Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredGuidelines.map((guideline) => (
-          <Card key={guideline.id} className="bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1">
+          <Card
+            key={guideline.id}
+            className="bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1"
+          >
             <CardHeader className="pb-4">
               <div className="flex items-start gap-3">
                 <div className="flex items-center">
@@ -935,8 +1102,18 @@ const Guidelines: React.FC = () => {
                   />
                 </div>
                 <div className="w-10 h-10 bg-green-100 rounded flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  <svg
+                    className="w-6 h-6 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                    />
                   </svg>
                 </div>
                 <div className="flex-1 min-w-0">
@@ -947,7 +1124,9 @@ const Guidelines: React.FC = () => {
                     <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
                       {guideline.category}
                     </span>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(guideline.difficulty)}`}>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(guideline.difficulty)}`}
+                    >
                       {guideline.difficulty}
                     </span>
                   </div>
@@ -963,20 +1142,29 @@ const Guidelines: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="font-medium text-gray-700">Steps:</p>
-                    <p className="text-gray-600">{guideline.steps.length} steps</p>
+                    <p className="text-gray-600">
+                      {guideline.steps.length} steps
+                    </p>
                   </div>
                   <div>
                     <p className="font-medium text-gray-700">Est. Time:</p>
-                    <p className="text-gray-600">{guideline.totalEstimatedTime}</p>
+                    <p className="text-gray-600">
+                      {guideline.totalEstimatedTime}
+                    </p>
                   </div>
                 </div>
 
                 {/* Steps Preview */}
                 <div className="bg-gray-50 rounded-lg p-3">
-                  <p className="text-xs font-medium text-gray-700 mb-2">Steps Preview:</p>
+                  <p className="text-xs font-medium text-gray-700 mb-2">
+                    Steps Preview:
+                  </p>
                   <div className="space-y-1">
                     {guideline.steps.slice(0, 3).map((step, index) => (
-                      <div key={step.id} className="text-xs text-gray-600 flex items-start gap-2">
+                      <div
+                        key={step.id}
+                        className="text-xs text-gray-600 flex items-start gap-2"
+                      >
                         <span className="bg-green-100 text-green-700 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0">
                           {step.stepNumber}
                         </span>
@@ -1000,9 +1188,24 @@ const Guidelines: React.FC = () => {
                     }}
                     className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-3 rounded text-sm font-medium transition-colors flex items-center justify-center gap-2"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                     View Step-by-Step Guide
                   </button>
@@ -1012,18 +1215,38 @@ const Guidelines: React.FC = () => {
                       onClick={() => handleEdit(guideline.id)}
                       className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 py-2 px-3 rounded text-sm font-medium transition-colors flex items-center justify-center gap-2"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
                       </svg>
                       Edit
                     </button>
-                    
+
                     <button
                       onClick={() => handleDelete(guideline.id)}
                       className="px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -1037,13 +1260,25 @@ const Guidelines: React.FC = () => {
       {/* Empty State */}
       {filteredGuidelines.length === 0 && (
         <div className="text-center py-12">
-          <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          <svg
+            className="mx-auto h-12 w-12 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+            />
           </svg>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No guidelines found</h3>
+          <h3 className="mt-2 text-sm font-medium text-gray-900">
+            No guidelines found
+          </h3>
           <p className="mt-1 text-sm text-gray-500">
-            {searchTerm || filterCategory || filterDifficulty 
-              ? 'Try adjusting your search or filter criteria.' 
+            {searchTerm || filterCategory || filterDifficulty
+              ? 'Try adjusting your search or filter criteria.'
               : 'Get started by creating your first step-by-step guideline.'}
           </p>
           {!searchTerm && !filterCategory && !filterDifficulty && (

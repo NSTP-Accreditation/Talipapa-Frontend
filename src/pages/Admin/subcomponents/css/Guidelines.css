@@ -92,7 +92,9 @@
   border-radius: 8px;
   font-size: 14px;
   box-sizing: border-box;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .guidelines-form-input:focus,
@@ -368,7 +370,9 @@
   width: 320px;
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid #e5e7eb;
   z-index: 50;
 }
@@ -504,25 +508,25 @@
     margin: 20px;
     max-width: none;
   }
-  
+
   .guidelines-template-dropdown {
     width: 280px;
   }
-  
+
   .guidelines-modal-form {
     padding: 16px;
   }
-  
+
   .guidelines-modal-header {
     padding: 16px;
   }
-  
+
   .guidelines-modal-footer {
     padding: 16px;
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .guidelines-btn-cancel,
   .guidelines-btn-save,
   .guidelines-btn-delete {
@@ -640,7 +644,7 @@
 }
 
 .guidelines-section-title::before {
-  content: "📋";
+  content: '📋';
   font-size: 20px;
 }
 
@@ -683,7 +687,7 @@
 }
 
 .guidelines-step-form-title::before {
-  content: "➕";
+  content: '➕';
   font-size: 16px;
 }
 
@@ -713,7 +717,7 @@
 }
 
 .guidelines-steps-list-title::before {
-  content: "📝";
+  content: '📝';
   font-size: 16px;
 }
 
@@ -882,37 +886,37 @@
     max-width: calc(100vw - 20px) !important;
     margin: 10px !important;
   }
-  
+
   .guidelines-section {
     padding: 16px;
     margin-bottom: 20px;
   }
-  
+
   .guidelines-step-form {
     padding: 16px;
   }
-  
+
   .guidelines-steps-list {
     padding: 16px;
   }
-  
+
   .guidelines-step-header {
     padding: 10px 12px;
     flex-wrap: wrap;
     gap: 8px;
   }
-  
+
   .guidelines-step-actions {
     order: 3;
     width: 100%;
     justify-content: flex-start;
     margin-top: 8px;
   }
-  
+
   .guidelines-step-form-actions {
     flex-direction: column;
   }
-  
+
   .guidelines-step-form-actions .guidelines-btn {
     width: 100%;
   }
@@ -950,7 +954,7 @@
 }
 
 .guidelines-step-preview-compact::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
