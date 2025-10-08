@@ -8,7 +8,16 @@ import Trading from '@/pages/trading/Trading';
 import Footer from '@/components/Footer';
 import AboutUs from '@/pages/aboutus/AboutUs';
 import AdminLayout from '@/pages/Admin/AdminLayout';
-import Dashboard from '@/pages/Admin/Dashboard';
+import Dashboard from '@/pages/Admin/subcomponents/Dashboard';
+import EcocycleTrading from '@/pages/Admin/subcomponents/Ecocycletrading';
+import Settings from '@/pages/Admin/subcomponents/Settings';
+import ActivityLogs from '@/pages/Admin/subcomponents/ActivityLogs';
+import EarnPointsLogs from '@/pages/Admin/subcomponents/EarnPointsLogs';
+import SwapLogs from '@/pages/Admin/subcomponents/SwapLogs';
+import Guidelines from '@/pages/Admin/subcomponents/Guidelines';
+import News from '@/pages/Admin/subcomponents/News';
+import AboutUsAdmin from '@/pages/Admin/subcomponents/AboutUs';
+import Achievements from '@/pages/Admin/subcomponents/Achievements';
 import AdminLogin from '@/pages/Admin/AdminLogin';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -30,80 +39,37 @@ function App() {
               </ProtectedRoute>
             }
           >
+            {/* Main Routes */}
             <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
-            <Route
-              path="about"
-              element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold">About Us Admin</h1>
-                  <p>Manage about us content here.</p>
-                </div>
-              }
-            />
-            <Route
-              path="services"
-              element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold">Services Admin</h1>
-                  <p>Manage services here.</p>
-                </div>
-              }
-            />
-            <Route
-              path="resources"
-              element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold">Resources Admin</h1>
-                  <p>Manage resources here.</p>
-                </div>
-              }
-            />
-            <Route
-              path="trading"
-              element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold">Trading Admin</h1>
-                  <p>Manage trading content here.</p>
-                </div>
-              }
-            />
-            <Route
-              path="news"
-              element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold">News Admin</h1>
-                  <p>Manage news articles here.</p>
-                </div>
-              }
-            />
-            <Route
-              path="users"
-              element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold">Users Admin</h1>
-                  <p>Manage users here.</p>
-                </div>
-              }
-            />
-            <Route
-              path="notifications"
-              element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold">Notifications Admin</h1>
-                  <p>Manage notifications here.</p>
-                </div>
-              }
-            />
-            <Route
-              path="settings"
-              element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold">Settings Admin</h1>
-                  <p>Manage settings here.</p>
-                </div>
-              }
-            />
+            
+            {/* Trading Routes */}
+            <Route path="trading" element={<EcocycleTrading />} />
+            <Route path="trading/activity" element={<ActivityLogs />} />
+            <Route path="trading/earn-points" element={<EarnPointsLogs />} />
+            <Route path="trading/swap" element={<SwapLogs />} />
+            
+            {/* Home Editables Routes */}
+            <Route path="about" element={<AboutUsAdmin />} />
+            <Route path="about/achievements" element={<Achievements />} />
+            <Route path="news" element={<News />} />
+            
+            {/* Guidelines Route (Admin version) */}
+            <Route path="guidelines" element={<Guidelines />} />
+            
+            {/* Logs Routes (same as trading but under notifications path) */}
+            <Route path="notifications" element={<div className="p-6"><h1 className="text-2xl font-bold">Logs Dashboard</h1><p>Select a log type from the menu.</p></div>} />
+            <Route path="notifications/activity" element={<ActivityLogs />} />
+            <Route path="notifications/earn-points" element={<EarnPointsLogs />} />
+            <Route path="notifications/swap" element={<SwapLogs />} />
+            
+            {/* Settings Route */}
+            <Route path="settings" element={<Settings />} />
+            
+            {/* Legacy/Placeholder Routes */}
+            <Route path="services" element={<div className="p-6"><h1 className="text-2xl font-bold">Services Admin</h1><p>Manage services here.</p></div>} />
+            <Route path="resources" element={<div className="p-6"><h1 className="text-2xl font-bold">Resources Admin</h1><p>Manage resources here.</p></div>} />
+            <Route path="users" element={<div className="p-6"><h1 className="text-2xl font-bold">Users Admin</h1><p>Manage users here.</p></div>} />
           </Route>
 
           {/* Public Routes - With NavBar/Footer */}
