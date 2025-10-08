@@ -14,6 +14,7 @@ import Settings from '@/pages/Admin/subcomponents/Settings';
 import ActivityLogs from '@/pages/Admin/subcomponents/ActivityLogs';
 import EarnPointsLogs from '@/pages/Admin/subcomponents/EarnPointsLogs';
 import SwapLogs from '@/pages/Admin/subcomponents/SwapLogs';
+import Forms from '@/pages/Admin/subcomponents/Forms';
 import Guidelines from '@/pages/Admin/subcomponents/Guidelines';
 import News from '@/pages/Admin/subcomponents/News';
 import AboutUsAdmin from '@/pages/Admin/subcomponents/AboutUs';
@@ -53,6 +54,9 @@ function App() {
             <Route path="about" element={<AboutUsAdmin />} />
             <Route path="about/achievements" element={<Achievements />} />
             <Route path="news" element={<News />} />
+
+            {/* Forms Route (Admin version) */}
+            <Route path="forms" element={<Forms />} />
 
             {/* Guidelines Route (Admin version) */}
             <Route path="guidelines" element={<Guidelines />} />
