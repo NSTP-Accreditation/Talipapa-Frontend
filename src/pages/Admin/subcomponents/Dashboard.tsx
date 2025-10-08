@@ -67,9 +67,9 @@ const Dashboard: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="mb-2">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-sm text-teal-600 mt-1">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
+        <p className="text-base text-teal-600">
           Overview of your Barangay Information System
         </p>
       </div>
