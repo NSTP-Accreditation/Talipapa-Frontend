@@ -8,15 +8,14 @@ import {
 import {
   Users,
   TrendingUp,
-  Megaphone,
   FileText,
-  ArrowUp,
-  ArrowDown,
-  Newspaper,
+  Eye,
+  Trophy,
+  Activity,
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const recentTrades = [
+  const recentActivity = [
     {
       id: 'T001',
       name: 'Juan Dela Cruz',
@@ -47,21 +46,21 @@ const Dashboard: React.FC = () => {
     },
   ];
 
-  const latestAnnouncements = [
+  const achievements = [
     {
       title: 'Community Clean-up Drive',
       date: '2025-10-05',
-      status: 'Published',
+      status: 'Completed',
     },
     {
       title: 'Vaccination Program Schedule',
       date: '2025-10-03',
-      status: 'Published',
+      status: 'Completed',
     },
     {
       title: 'Barangay Assembly Meeting',
       date: '2025-10-02',
-      status: 'Pinned',
+      status: 'Ongoing',
     },
   ];
 
@@ -77,6 +76,34 @@ const Dashboard: React.FC = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-4 gap-6">
+        {/* Today's Visits Card */}
+        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
+            <CardTitle className="text-sm font-bold text-gray-800">
+              Today's Visits
+            </CardTitle>
+            <Eye className="h-5 w-5 text-gray-500" />
+          </CardHeader>
+          <CardContent className="px-6 pb-6">
+            <div className="text-3xl font-bold text-gray-900 mb-1">324</div>
+            <p className="text-xs text-blue-600">+8% from yesterday</p>
+          </CardContent>
+        </Card>
+
+        {/* Total Visits Card */}
+        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
+            <CardTitle className="text-sm font-bold text-gray-800">
+              Total Visits
+            </CardTitle>
+            <TrendingUp className="h-5 w-5 text-gray-500" />
+          </CardHeader>
+          <CardContent className="px-6 pb-6">
+            <div className="text-3xl font-bold text-gray-900 mb-1">12,458</div>
+            <p className="text-xs text-blue-600">+15% from last month</p>
+          </CardContent>
+        </Card>
+
         {/* Total Users Card */}
         <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
@@ -91,78 +118,51 @@ const Dashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Active Trades Card */}
+        {/* Placeholder Card */}
         <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
-            <CardTitle className="text-sm font-bold text-gray-800">
-              Active Trades
+            <CardTitle className="text-sm font-bold text-gray-400">
+              Coming Soon
             </CardTitle>
-            <TrendingUp className="h-5 w-5 text-gray-500" />
+            <FileText className="h-5 w-5 text-gray-400" />
           </CardHeader>
           <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-900 mb-1">89</div>
-            <p className="text-xs text-blue-600">+23% from last month</p>
-          </CardContent>
-        </Card>
-
-        {/* Announcements Card */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
-            <CardTitle className="text-sm font-bold text-gray-800">
-              Announcements
-            </CardTitle>
-            <Megaphone className="h-5 w-5 text-gray-500" />
-          </CardHeader>
-          <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-900 mb-1">45</div>
-            <p className="text-xs text-gray-500">5 pending approval</p>
-          </CardContent>
-        </Card>
-
-        {/* Downloaded Forms Card */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
-            <CardTitle className="text-sm font-bold text-gray-800">
-              Downloaded Forms
-            </CardTitle>
-            <FileText className="h-5 w-5 text-gray-500" />
-          </CardHeader>
-          <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-900 mb-1">342</div>
-            <p className="text-xs text-gray-500">This month</p>
+            <div className="text-3xl font-bold text-gray-400 mb-1">---</div>
+            <p className="text-xs text-gray-400">Feature in development</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Bottom Section - Recent Trades and Latest Announcements */}
+      {/* Bottom Section - Recent Activity and Achievements */}
       <div className="grid grid-cols-2 gap-6 mt-8">
-        {/* Recent Trades */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
-          <CardHeader className="px-6 py-4">
+        {/* Recent Activity */}
+        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl gap-0">
+          <CardHeader className="px-6 py-3 pb-2 flex flex-row items-center gap-2">
+            <Activity className="h-5 w-5 text-green-600" />
             <CardTitle className="text-lg font-bold text-gray-800">
-              Recent Trades
+              Recent Activity
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-6 py-0 pb-2">
+          <CardContent className="px-6 py-0 pt-2 pb-2">
             <div className="space-y-0">
-              {recentTrades.map((trade, index) => (
+              {recentActivity.map((activity, index) => (
                 <div
-                  key={trade.id}
+                  key={activity.id}
                   className="flex items-center justify-between py-4 border-b border-gray-200 last:border-0"
                 >
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-gray-900 mb-1">
-                      {trade.name}
+                      {activity.name}
                     </p>
                     <p className="text-xs text-blue-600 font-medium">
-                      ID: {trade.id}
+                      ID: {activity.id}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold text-gray-900 mb-1">
-                      {trade.points} pts
+                      {activity.points} pts
                     </p>
-                    <p className="text-xs text-gray-500">{trade.date}</p>
+                    <p className="text-xs text-gray-500">{activity.date}</p>
                   </div>
                 </div>
               ))}
@@ -170,35 +170,36 @@ const Dashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Latest Announcements */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
-          <CardHeader className="px-6 py-4">
+        {/* Achievements */}
+        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl gap-0">
+          <CardHeader className="px-6 py-3 pb-2 flex flex-row items-center gap-2">
+            <Trophy className="h-5 w-5 text-green-600" />
             <CardTitle className="text-lg font-bold text-gray-800">
-              Latest Announcements
+              Achievements
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-6 py-0 pb-2">
+          <CardContent className="px-6 py-0 pt-2 pb-2">
             <div className="space-y-0">
-              {latestAnnouncements.map((announcement, index) => (
+              {achievements.map((achievement, index) => (
                 <div
                   key={index}
                   className="flex items-center justify-between py-4 border-b border-gray-200 last:border-0"
                 >
                   <div className="flex-1 pr-4">
                     <p className="text-sm font-semibold text-gray-900 mb-1">
-                      {announcement.title}
+                      {achievement.title}
                     </p>
-                    <p className="text-xs text-gray-500">{announcement.date}</p>
+                    <p className="text-xs text-gray-500">{achievement.date}</p>
                   </div>
                   <div>
                     <span
                       className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-semibold ${
-                        announcement.status === 'Pinned'
+                        achievement.status === 'Ongoing'
                           ? 'bg-green-600 text-white'
                           : 'bg-blue-600 text-white'
                       }`}
                     >
-                      {announcement.status}
+                      {achievement.status}
                     </span>
                   </div>
                 </div>
