@@ -68,7 +68,7 @@ const Dashboard: React.FC = () => {
     <div className="space-y-8">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
+        <h1 className="text-4xl font-bold text-gray-900 mb-2">Dashboard</h1>
         <p className="text-base text-teal-600">
           Overview of your Barangay Information System
         </p>
@@ -137,13 +137,13 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-2 gap-6 mt-8">
         {/* Recent Activity */}
         <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl gap-0">
-          <CardHeader className="px-6 py-2 pb-2 flex flex-row items-center gap-2 border-b border-gray-200">
+          <CardHeader className="px-6 py-2.5 pb-1.5 flex flex-row items-center gap-2 border-b border-gray-200">
             <Activity className="h-5 w-5 text-green-600" />
             <CardTitle className="text-lg font-bold text-gray-800">
               Recent Activity
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-6 py-0 pt-1 pb-2">
+          <CardContent className="px-6 py-0 pt-0.5 pb-2">
             <div className="space-y-0">
               {recentActivity.map((activity, index) => (
                 <div
@@ -172,13 +172,13 @@ const Dashboard: React.FC = () => {
 
         {/* Achievements */}
         <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl gap-0">
-          <CardHeader className="px-6 py-2 pb-2 flex flex-row items-center gap-2 border-b border-gray-200">
+          <CardHeader className="px-6 py-2.5 pb-1.5 flex flex-row items-center gap-2 border-b border-gray-200">
             <Trophy className="h-5 w-5 text-green-600" />
             <CardTitle className="text-lg font-bold text-gray-800">
               Achievements
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-6 py-0 pt-1 pb-2">
+          <CardContent className="px-6 py-0 pt-0.5 pb-2">
             <div className="space-y-0">
               {achievements.map((achievement, index) => (
                 <div
