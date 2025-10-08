@@ -36,7 +36,7 @@ interface MenuItem {
 const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
   const [expandedItems, setExpandedItems] = useState<string[]>(['Trading', 'Home Editables', 'Logs']);
 
   const menuItems: MenuItem[] = [
