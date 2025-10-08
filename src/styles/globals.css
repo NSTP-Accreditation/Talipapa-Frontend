@@ -5,10 +5,13 @@
  */
 
 /* Import Tailwind directives */
-@import url('./tailwind.css');
+@import './tailwind.css';
 
-/* Import CSS variables */
-@import url('./variables.css');
+/* Import CSS variables
+ * Contains theme variables for colors, spacing, typography, and other design tokens
+ * Used throughout the application for consistent styling
+ */
+@import './variables.css';
 
 /* Base layer styles */
 @layer base {
