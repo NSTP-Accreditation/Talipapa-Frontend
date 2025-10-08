@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import MenuBar from './MenuBar';
+import AdminHeader from './AdminHeader';
 
 const AdminLayout: React.FC = () => {
   return (
@@ -10,6 +11,9 @@ const AdminLayout: React.FC = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Admin Header */}
+        <AdminHeader />
+        
         {/* Content */}
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
