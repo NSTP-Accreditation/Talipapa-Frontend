@@ -8,6 +8,7 @@ import {
   TrendingUp,
   Home,
   BookOpen,
+  FileText,
   Newspaper,
   Users,
   FolderOpen,
@@ -76,6 +77,11 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       label: 'Home Editables',
       href: APP_ROUTES.ADMIN.ABOUT,
       submenu: [
+        {
+          icon: <FileText className="w-4 h-4" />,
+          label: 'Forms',
+          href: APP_ROUTES.ADMIN.BASE + '/forms',
+        },
         {
           icon: <BookOpen className="w-4 h-4" />,
           label: 'Guidelines',
@@ -153,7 +159,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'w-72 h-screen bg-green-600 text-white flex flex-col',
+        'w-96 h-screen bg-green-600 text-white flex flex-col',
         className
       )}
     >
