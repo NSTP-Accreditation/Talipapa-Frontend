@@ -44,7 +44,7 @@ npm run dev
 npm run build
 
 # Format & lint
-npm run format:check  #prettier
+npm run format:check  # prettier
 npm run lint:css
 ```
 
