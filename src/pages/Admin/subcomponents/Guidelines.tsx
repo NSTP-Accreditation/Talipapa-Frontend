@@ -11,7 +11,9 @@ const Guidelines: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Barangay Guidelines</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Barangay Guidelines
+        </h1>
         <p className="text-gray-600 mt-2">
           Manage and edit barangay rules and guidelines
         </p>
@@ -28,22 +30,24 @@ const Guidelines: React.FC = () => {
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium mb-2">Segregation Rules</h4>
                 <p className="text-sm text-gray-600">
-                  All residents must segregate waste into biodegradable, non-biodegradable, 
-                  and recyclable materials.
+                  All residents must segregate waste into biodegradable,
+                  non-biodegradable, and recyclable materials.
                 </p>
               </div>
-              
+
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium mb-2">Collection Schedule</h4>
                 <p className="text-sm text-gray-600">
-                  Waste collection happens every Monday, Wednesday, and Friday at 6:00 AM.
+                  Waste collection happens every Monday, Wednesday, and Friday
+                  at 6:00 AM.
                 </p>
               </div>
 
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium mb-2">Recycling Program</h4>
                 <p className="text-sm text-gray-600">
-                  Join our eco-cycle trading program to earn points for recyclable materials.
+                  Join our eco-cycle trading program to earn points for
+                  recyclable materials.
                 </p>
               </div>
             </div>

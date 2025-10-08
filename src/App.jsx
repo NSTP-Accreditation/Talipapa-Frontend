@@ -42,34 +42,69 @@ function App() {
             {/* Main Routes */}
             <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
-            
+
             {/* Trading Routes */}
             <Route path="trading" element={<EcocycleTrading />} />
             <Route path="trading/activity" element={<ActivityLogs />} />
             <Route path="trading/earn-points" element={<EarnPointsLogs />} />
             <Route path="trading/swap" element={<SwapLogs />} />
-            
+
             {/* Home Editables Routes */}
             <Route path="about" element={<AboutUsAdmin />} />
             <Route path="about/achievements" element={<Achievements />} />
             <Route path="news" element={<News />} />
-            
+
             {/* Guidelines Route (Admin version) */}
             <Route path="guidelines" element={<Guidelines />} />
-            
+
             {/* Logs Routes (same as trading but under notifications path) */}
-            <Route path="notifications" element={<div className="p-6"><h1 className="text-2xl font-bold">Logs Dashboard</h1><p>Select a log type from the menu.</p></div>} />
+            <Route
+              path="notifications"
+              element={
+                <div className="p-6">
+                  <h1 className="text-2xl font-bold">Logs Dashboard</h1>
+                  <p>Select a log type from the menu.</p>
+                </div>
+              }
+            />
             <Route path="notifications/activity" element={<ActivityLogs />} />
-            <Route path="notifications/earn-points" element={<EarnPointsLogs />} />
+            <Route
+              path="notifications/earn-points"
+              element={<EarnPointsLogs />}
+            />
             <Route path="notifications/swap" element={<SwapLogs />} />
-            
+
             {/* Settings Route */}
             <Route path="settings" element={<Settings />} />
-            
+
             {/* Legacy/Placeholder Routes */}
-            <Route path="services" element={<div className="p-6"><h1 className="text-2xl font-bold">Services Admin</h1><p>Manage services here.</p></div>} />
-            <Route path="resources" element={<div className="p-6"><h1 className="text-2xl font-bold">Resources Admin</h1><p>Manage resources here.</p></div>} />
-            <Route path="users" element={<div className="p-6"><h1 className="text-2xl font-bold">Users Admin</h1><p>Manage users here.</p></div>} />
+            <Route
+              path="services"
+              element={
+                <div className="p-6">
+                  <h1 className="text-2xl font-bold">Services Admin</h1>
+                  <p>Manage services here.</p>
+                </div>
+              }
+            />
+            <Route
+              path="resources"
+              element={
+                <div className="p-6">
+                  <h1 className="text-2xl font-bold">Resources Admin</h1>
+                  <p>Manage resources here.</p>
+                </div>
+              }
+            />
+            <Route
+              path="users"
+              element={
+                <div className="p-6">
+                  <h1 className="text-2xl font-bold">Users Admin</h1>
+                  <p>Manage users here.</p>
+                </div>
+              }
+            />
           </Route>
 
           {/* Public Routes - With NavBar/Footer */}

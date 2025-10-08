@@ -11,7 +11,9 @@ const AboutUs: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">About Barangay Talipapa</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          About Barangay Talipapa
+        </h1>
         <p className="text-gray-600 mt-2">
           Learn about our barangay's history, mission, and vision
         </p>
@@ -25,9 +27,9 @@ const AboutUs: React.FC = () => {
           </CardHeader>
           <CardContent>
             <p className="text-gray-700">
-              To create a sustainable, clean, and progressive community that promotes 
-              environmental awareness and responsible waste management through innovative 
-              programs and community participation.
+              To create a sustainable, clean, and progressive community that
+              promotes environmental awareness and responsible waste management
+              through innovative programs and community participation.
             </p>
           </CardContent>
         </Card>
@@ -38,9 +40,9 @@ const AboutUs: React.FC = () => {
           </CardHeader>
           <CardContent>
             <p className="text-gray-700">
-              A model eco-friendly barangay where residents actively participate in 
-              environmental conservation, waste reduction, and sustainable living practices 
-              for future generations.
+              A model eco-friendly barangay where residents actively participate
+              in environmental conservation, waste reduction, and sustainable
+              living practices for future generations.
             </p>
           </CardContent>
         </Card>
@@ -60,7 +62,7 @@ const AboutUs: React.FC = () => {
                   <p className="text-sm text-gray-600">Juan Dela Cruz</p>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                 <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
                   KC

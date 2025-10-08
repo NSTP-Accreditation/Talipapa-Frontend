@@ -28,17 +28,21 @@ const Settings: React.FC = () => {
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Points per Kg</h4>
-                  <p className="text-sm text-gray-600">Default points awarded per kilogram of recyclables</p>
+                  <p className="text-sm text-gray-600">
+                    Default points awarded per kilogram of recyclables
+                  </p>
                 </div>
                 <div className="text-right">
                   <span className="font-bold text-green-600">10 Points</span>
                 </div>
               </div>
-              
+
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Minimum Swap Amount</h4>
-                  <p className="text-sm text-gray-600">Minimum points required to make a swap</p>
+                  <p className="text-sm text-gray-600">
+                    Minimum points required to make a swap
+                  </p>
                 </div>
                 <div className="text-right">
                   <span className="font-bold text-blue-600">50 Points</span>
@@ -48,10 +52,14 @@ const Settings: React.FC = () => {
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Trading Hours</h4>
-                  <p className="text-sm text-gray-600">Daily operating hours for trading center</p>
+                  <p className="text-sm text-gray-600">
+                    Daily operating hours for trading center
+                  </p>
                 </div>
                 <div className="text-right">
-                  <span className="font-bold text-gray-800">8:00 AM - 5:00 PM</span>
+                  <span className="font-bold text-gray-800">
+                    8:00 AM - 5:00 PM
+                  </span>
                 </div>
               </div>
             </div>
@@ -67,13 +75,15 @@ const Settings: React.FC = () => {
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Total Registered Users</h4>
-                  <p className="text-sm text-gray-600">Active community members</p>
+                  <p className="text-sm text-gray-600">
+                    Active community members
+                  </p>
                 </div>
                 <div className="text-right">
                   <span className="font-bold text-green-600">1,247</span>
                 </div>
               </div>
-              
+
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Admin Users</h4>
@@ -87,7 +97,9 @@ const Settings: React.FC = () => {
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
                   <h4 className="font-medium">Pending Approvals</h4>
-                  <p className="text-sm text-gray-600">User registrations awaiting approval</p>
+                  <p className="text-sm text-gray-600">
+                    User registrations awaiting approval
+                  </p>
                 </div>
                 <div className="text-right">
                   <span className="font-bold text-yellow-600">12</span>

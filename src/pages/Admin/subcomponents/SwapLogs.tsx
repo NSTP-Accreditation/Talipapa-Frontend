@@ -35,7 +35,7 @@ const SwapLogs: React.FC = () => {
                   <p className="text-xs text-gray-500">1 hour ago</p>
                 </div>
               </div>
-              
+
               <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
                 <div>
                   <h4 className="font-medium">School Supplies</h4>
