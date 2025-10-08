@@ -69,7 +69,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
     {
       icon: <div className="w-3 h-3 bg-white"></div>,
       label: 'Guidelines',
-      href: '/guidelines',
+      href: APP_ROUTES.ADMIN.GUIDELINES,
     },
     {
       icon: <div className="w-3 h-3 bg-white"></div>,
