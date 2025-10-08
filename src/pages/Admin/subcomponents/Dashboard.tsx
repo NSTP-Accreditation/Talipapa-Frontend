@@ -136,7 +136,7 @@ const Dashboard: React.FC = () => {
       {/* Bottom Section - Recent Activity and Achievements */}
       <div className="grid grid-cols-2 gap-6 mt-8">
         {/* Recent Activity */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl gap-0">
+        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
           <CardHeader className="px-6 py-2.5 pb-1.5 flex flex-row items-center gap-2 border-b border-gray-200">
             <Activity className="h-5 w-5 text-green-600" />
             <CardTitle className="text-lg font-bold text-gray-800">
