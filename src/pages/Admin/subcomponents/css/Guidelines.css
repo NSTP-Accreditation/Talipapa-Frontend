@@ -148,16 +148,6 @@
   gap: 12px;
 }
 
-.guidelines-delete-icon {
-  width: 48px;
-  height: 48px;
-  background-color: #fee2e2;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .guidelines-delete-icon-svg {
   width: 24px;
   height: 24px;
