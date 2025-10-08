@@ -7,7 +7,7 @@ import {
 } from '../../../components/ui/card';
 import {
   Users,
-  TrendingUp,
+  SquareMousePointer,
   FileText,
   Eye,
   Trophy,
@@ -96,7 +96,7 @@ const Dashboard: React.FC = () => {
             <CardTitle className="text-sm font-bold text-gray-800">
               Total Visits
             </CardTitle>
-            <TrendingUp className="h-5 w-5 text-gray-500" />
+            <SquareMousePointer className="h-5 w-5 text-gray-500" />
           </CardHeader>
           <CardContent className="px-6 pb-6">
             <div className="text-3xl font-bold text-gray-900 mb-1">12,458</div>
