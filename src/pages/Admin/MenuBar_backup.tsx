@@ -82,7 +82,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       href: APP_ROUTES.ADMIN.ABOUT,
     },
     {
-      icon: <span className="text-base">�</span>,
+      icon: <span className="text-base">⬜</span>,
       label: 'Logs',
       href: APP_ROUTES.ADMIN.NOTIFICATIONS,
       submenu: [
