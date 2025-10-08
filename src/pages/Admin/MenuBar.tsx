@@ -3,21 +3,21 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../../components/utils';
 import { APP_ROUTES } from '../../utils/constants/routes';
 import { useAuth } from '../../contexts/AuthContext';
-import { 
-  LayoutDashboard, 
-  TrendingUp, 
-  Home, 
-  BookOpen, 
-  Newspaper, 
-  Users, 
-  FolderOpen, 
-  Settings, 
+import {
+  LayoutDashboard,
+  TrendingUp,
+  Home,
+  BookOpen,
+  Newspaper,
+  Users,
+  FolderOpen,
+  Settings,
   LogOut,
   ChevronDown,
   Activity,
   Plus,
   Repeat,
-  Trophy
+  Trophy,
 } from 'lucide-react';
 
 interface MenuBarProps {
@@ -37,7 +37,11 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
-  const [expandedItems, setExpandedItems] = useState<string[]>(['Trading', 'Home Editables', 'Logs']);
+  const [expandedItems, setExpandedItems] = useState<string[]>([
+    'Trading',
+    'Home Editables',
+    'Logs',
+  ]);
 
   const menuItems: MenuItem[] = [
     {
@@ -124,9 +128,9 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   ];
 
   const toggleExpanded = (label: string) => {
-    setExpandedItems(prev => 
-      prev.includes(label) 
-        ? prev.filter(item => item !== label)
+    setExpandedItems((prev) =>
+      prev.includes(label)
+        ? prev.filter((item) => item !== label)
         : [...prev, label]
     );
   };
@@ -178,8 +182,9 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
               onClick={() => handleItemClick(item)}
               className={cn(
                 'w-full flex items-center justify-between px-3 py-3 text-left transition-colors duration-200 text-xl',
-                location.pathname === item.href || 
-                (item.submenu && item.submenu.some(sub => location.pathname === sub.href))
+                location.pathname === item.href ||
+                  (item.submenu &&
+                    item.submenu.some((sub) => location.pathname === sub.href))
                   ? 'bg-green-700 text-white'
                   : 'text-white hover:bg-green-500/50'
               )}
@@ -189,13 +194,15 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
                 <span className="font-medium">{item.label}</span>
               </div>
               {item.submenu && (
-                <ChevronDown className={cn(
-                  'w-5 h-5 transition-transform duration-200',
-                  expandedItems.includes(item.label) ? 'rotate-180' : ''
-                )} />
+                <ChevronDown
+                  className={cn(
+                    'w-5 h-5 transition-transform duration-200',
+                    expandedItems.includes(item.label) ? 'rotate-180' : ''
+                  )}
+                />
               )}
             </button>
-            
+
             {/* Submenu */}
             {item.submenu && expandedItems.includes(item.label) && (
               <div className="space-y-1 mt-1 mb-1">

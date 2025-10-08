@@ -35,7 +35,7 @@ const ActivityLogs: React.FC = () => {
                   <p className="text-xs text-gray-500">2 hours ago</p>
                 </div>
               </div>
-              
+
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                 <div>
                   <h4 className="font-medium">Cardboard Collection</h4>

@@ -28,28 +28,40 @@ const News: React.FC = () => {
               <div className="p-4 border-l-4 border-blue-500 bg-blue-50 rounded-lg">
                 <h4 className="font-medium mb-2">Community Clean-up Drive</h4>
                 <p className="text-sm text-gray-600 mb-2">
-                  Join us this Saturday, October 12, 2025, for our monthly community clean-up drive. 
-                  Meet at the barangay hall at 7:00 AM.
+                  Join us this Saturday, October 12, 2025, for our monthly
+                  community clean-up drive. Meet at the barangay hall at 7:00
+                  AM.
                 </p>
-                <span className="text-xs text-gray-500">Published: October 8, 2025</span>
+                <span className="text-xs text-gray-500">
+                  Published: October 8, 2025
+                </span>
               </div>
-              
+
               <div className="p-4 border-l-4 border-green-500 bg-green-50 rounded-lg">
-                <h4 className="font-medium mb-2">Eco-Cycle Trading Program Launch</h4>
+                <h4 className="font-medium mb-2">
+                  Eco-Cycle Trading Program Launch
+                </h4>
                 <p className="text-sm text-gray-600 mb-2">
-                  Our new recycling rewards program is now live! Trade your recyclables for points 
-                  and redeem rewards at participating local stores.
+                  Our new recycling rewards program is now live! Trade your
+                  recyclables for points and redeem rewards at participating
+                  local stores.
                 </p>
-                <span className="text-xs text-gray-500">Published: October 5, 2025</span>
+                <span className="text-xs text-gray-500">
+                  Published: October 5, 2025
+                </span>
               </div>
 
               <div className="p-4 border-l-4 border-yellow-500 bg-yellow-50 rounded-lg">
-                <h4 className="font-medium mb-2">Water Service Interruption Notice</h4>
+                <h4 className="font-medium mb-2">
+                  Water Service Interruption Notice
+                </h4>
                 <p className="text-sm text-gray-600 mb-2">
-                  Water service will be temporarily interrupted on October 10, 2025, from 9:00 AM to 3:00 PM 
-                  for maintenance work.
+                  Water service will be temporarily interrupted on October 10,
+                  2025, from 9:00 AM to 3:00 PM for maintenance work.
                 </p>
-                <span className="text-xs text-gray-500">Published: October 7, 2025</span>
+                <span className="text-xs text-gray-500">
+                  Published: October 7, 2025
+                </span>
               </div>
             </div>
           </CardContent>

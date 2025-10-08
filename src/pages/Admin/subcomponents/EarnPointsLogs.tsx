@@ -28,18 +28,22 @@ const EarnPointsLogs: React.FC = () => {
               <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
                 <div>
                   <h4 className="font-medium">Recycling Bonus</h4>
-                  <p className="text-sm text-gray-600">Weekly recycling goal achieved</p>
+                  <p className="text-sm text-gray-600">
+                    Weekly recycling goal achieved
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="font-medium text-green-600">+100 Points</p>
                   <p className="text-xs text-gray-500">Today</p>
                 </div>
               </div>
-              
+
               <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
                 <div>
                   <h4 className="font-medium">Community Clean-up</h4>
-                  <p className="text-sm text-gray-600">Participated in neighborhood cleanup</p>
+                  <p className="text-sm text-gray-600">
+                    Participated in neighborhood cleanup
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="font-medium text-green-600">+150 Points</p>
@@ -50,7 +54,9 @@ const EarnPointsLogs: React.FC = () => {
               <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
                 <div>
                   <h4 className="font-medium">Eco-Challenge</h4>
-                  <p className="text-sm text-gray-600">Completed monthly eco-challenge</p>
+                  <p className="text-sm text-gray-600">
+                    Completed monthly eco-challenge
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="font-medium text-green-600">+200 Points</p>

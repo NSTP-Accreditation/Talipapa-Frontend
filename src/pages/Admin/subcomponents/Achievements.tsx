@@ -11,7 +11,9 @@ const Achievements: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Barangay Achievements</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Barangay Achievements
+        </h1>
         <p className="text-gray-600 mt-2">
           Our accomplishments and recognition in environmental initiatives
         </p>
@@ -30,20 +32,25 @@ const Achievements: React.FC = () => {
                   🏆
                 </div>
                 <div>
-                  <h4 className="font-medium">Most Eco-Friendly Barangay 2024</h4>
+                  <h4 className="font-medium">
+                    Most Eco-Friendly Barangay 2024
+                  </h4>
                   <p className="text-sm text-gray-600">
-                    Awarded by Quezon City LGU for outstanding environmental programs
+                    Awarded by Quezon City LGU for outstanding environmental
+                    programs
                   </p>
                   <span className="text-xs text-gray-500">December 2024</span>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
                 <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl">
                   🌱
                 </div>
                 <div>
-                  <h4 className="font-medium">Zero Waste Community Recognition</h4>
+                  <h4 className="font-medium">
+                    Zero Waste Community Recognition
+                  </h4>
                   <p className="text-sm text-gray-600">
                     Achieved 95% waste diversion rate through recycling programs
                   </p>
@@ -58,7 +65,8 @@ const Achievements: React.FC = () => {
                 <div>
                   <h4 className="font-medium">Best Recycling Program 2024</h4>
                   <p className="text-sm text-gray-600">
-                    Innovation award for the Eco-Cycle Trading Program implementation
+                    Innovation award for the Eco-Cycle Trading Program
+                    implementation
                   </p>
                   <span className="text-xs text-gray-500">June 2024</span>
                 </div>
@@ -82,7 +90,9 @@ const Achievements: React.FC = () => {
                 <div className="text-sm text-gray-600">Active Participants</div>
               </div>
               <div className="text-center p-4 bg-yellow-100 rounded-lg">
-                <div className="text-2xl font-bold text-yellow-600">50,000+</div>
+                <div className="text-2xl font-bold text-yellow-600">
+                  50,000+
+                </div>
                 <div className="text-sm text-gray-600">Points Distributed</div>
               </div>
               <div className="text-center p-4 bg-purple-100 rounded-lg">
