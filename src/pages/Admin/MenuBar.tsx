@@ -14,7 +14,6 @@ import {
   Settings, 
   LogOut,
   ChevronDown,
-  ChevronRight,
   Activity,
   Plus,
   Repeat,
