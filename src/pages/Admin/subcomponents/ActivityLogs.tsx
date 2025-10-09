@@ -140,3 +140,4 @@ const ResidentRecords: React.FC = () => {
 };
 
 export default ResidentRecords;
+ 

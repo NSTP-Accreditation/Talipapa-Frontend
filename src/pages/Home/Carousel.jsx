@@ -3,19 +3,12 @@ import { useState, useEffect } from 'react';
 const slides = [
   {
     image: 'https://placebear.com/800/300',
-    title: 'Sustainable Living',
-    description:
-      'Join us in building an eco-friendly community for future generations.',
   },
   {
     image: 'https://placebear.com/801/300',
-    title: 'Community Engagement',
-    description: 'Connect with neighbors and participate in local events.',
   },
   {
     image: 'https://placebear.com/802/300',
-    title: 'Marketplace',
-    description: 'Discover local products and services in your barangay.',
   },
 ];
 
@@ -34,14 +27,14 @@ export default function Carousel() {
   return (
     <div className="w-[1200px] max-w-4xl mx-auto mt-20 mb-20">
       <div className="relative rounded-lg overflow-hidden">
-        {/* Image */}
+        {/* Image */}<br></br><br></br><br></br>
         <img
           src={slides[current].image}
           alt="carousel slide"
-          className="w-full h-32 sm:h-40 md:h-48 lg:h-56 object-cover block"
+          className="w-full h-32 sm:h-40 md:h-48 lg:h-56 object-cover block relative z-0"
         />
 
-        {/* Text Overlay (bottom-left only) */}
+        {/* Text Overlay */}
         <div className="absolute bottom-2 left-2 bg-black bg-opacity-60 text-white p-3 rounded-lg max-w-[200px]">
           <h2 className="text-xl font-semibold">{slides[current].title}</h2>
           <p className="text-sm">{slides[current].description}</p>
@@ -50,7 +43,7 @@ export default function Carousel() {
         {/* Previous Button */}
         <button
           onClick={prevSlide}
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-70 hover:bg-opacity-90 text-white p-2 rounded-full"
+          className="opacity-0 hover:opacity-100 transition-opacity duration-300 absolute left-[10px] top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-70 hover:bg-opacity-100 text-white p-2 rounded-full z-20"
           aria-label="Previous"
         >
           <svg
@@ -63,11 +56,11 @@ export default function Carousel() {
             <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
-
+        <br></br><br></br><br></br>
         {/* Next Button */}
         <button
           onClick={nextSlide}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-70 hover:bg-opacity-90 text-white p-2 rounded-full"
+          className="opacity-0 hover:opacity-100 transition-opacity duration-300 absolute right-[10px] top-1/2 transform -translate-y-1/2 bg-gray-700 bg-opacity-70 hover:bg-opacity-100 text-white p-2 rounded-full z-20"
           aria-label="Next"
         >
           <svg
