@@ -48,12 +48,7 @@ export default function AboutBarangay() {
               <h2 className="text-[30px] font-bold text-green-600 mb-6">
                 Barangay Information
               </h2>
-              <p className="text-gray-800 text-base leading-relaxed text-justify">
-                Barangay San Isidro is a vibrant community dedicated to serving
-                its residents with excellence. Established in 1950, we have grown
-                into a progressive barangay that values unity, development, and
-                sustainable growth.
-              </p>
+
             </div>
           </div>
 
