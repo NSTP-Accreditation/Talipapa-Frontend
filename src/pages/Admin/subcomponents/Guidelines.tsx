@@ -1084,178 +1084,190 @@ const Guidelines: React.FC = () => {
         </select>
       </div>
 
-      {/* Guidelines Grid */}
+      {/* Guidelines Grid - */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredGuidelines.map((guideline) => (
-          <Card
-            key={guideline.id}
-            className="bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:transform hover:-translate-y-1"
-          >
-            <CardHeader className="pb-4">
-              <div className="flex items-start gap-3">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedGuidelines.has(guideline.id)}
-                    onChange={() => handleSelectGuideline(guideline.id)}
-                    className="mr-3 rounded border-gray-300 text-green-600 focus:ring-green-500"
-                  />
-                </div>
-                <div className="w-10 h-10 bg-green-100 rounded flex items-center justify-center flex-shrink-0">
-                  <svg
-                    className="w-6 h-6 text-green-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                    />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <CardTitle className="text-lg font-semibold text-gray-900 leading-tight mb-2">
-                    {guideline.title}
-                  </CardTitle>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
-                      {guideline.category}
-                    </span>
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(guideline.difficulty)}`}
-                    >
-                      {guideline.difficulty}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-2">
-              <div className="space-y-4">
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  {guideline.description}
-                </p>
+  {filteredGuidelines.map((guideline) => (
+    <Card
+      key={guideline.id}
+      className="bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+    >
+      <CardHeader className="pb-4">
+  {/* Flex container with checkbox on right */}
+  <div className="flex items-start justify-between gap-3">
+    
+    {/* Left side: Icon + title */}
+    <div className="flex items-start gap-3 pl-1">
 
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <p className="font-medium text-gray-700">Steps:</p>
-                    <p className="text-gray-600">
-                      {guideline.steps.length} steps
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-700">Est. Time:</p>
-                    <p className="text-gray-600">
-                      {guideline.totalEstimatedTime}
-                    </p>
-                  </div>
-                </div>
+      {/* Icon Container - fixed size alignment */}
+<div 
+  className="bg-green-100 p-1 rounded flex items-center justify-center flex-shrink-0 mr-2"
+  style={{ width: '32px', height: '32px' }}  // enlarged container
+>
+  <svg
+    className="text-green-700"
+    style={{ width: '24px', height: '24px' }} // balanced icon size
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+    />
+  </svg>
+</div>
 
-                {/* Steps Preview */}
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <p className="text-xs font-medium text-gray-700 mb-2">
-                    Steps Preview:
-                  </p>
-                  <div className="space-y-1">
-                    {guideline.steps.slice(0, 3).map((step, index) => (
-                      <div
-                        key={step.id}
-                        className="text-xs text-gray-600 flex items-start gap-2"
-                      >
-                        <span className="bg-green-100 text-green-700 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0">
-                          {step.stepNumber}
-                        </span>
-                        <span className="truncate">{step.title}</span>
-                      </div>
-                    ))}
-                    {guideline.steps.length > 3 && (
-                      <div className="text-xs text-gray-500 ml-7">
-                        +{guideline.steps.length - 3} more steps
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="space-y-3 pt-4 mt-4 border-t border-gray-100">
-                  <button
-                    onClick={() => {
-                      // In a real app, this would open a detailed view
-                      alert(`Opening detailed view for: ${guideline.title}`);
-                    }}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-3 rounded text-sm font-medium transition-colors flex items-center justify-center gap-2"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                    View Step-by-Step Guide
-                  </button>
-
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEdit(guideline.id)}
-                      className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 py-2 px-3 rounded text-sm font-medium transition-colors flex items-center justify-center gap-2"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                        />
-                      </svg>
-                      Edit
-                    </button>
-
-                    <button
-                      onClick={() => handleDelete(guideline.id)}
-                      className="px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      {/* Title and Tags */}
+      <div className="flex-1 min-w-0 pl-2">
+        <h3 className="text-lg font-semibold text-gray-900 leading-tight">
+          {guideline.title}
+        </h3>
+        <div className="flex items-center gap-2 mt-1">
+          <span className="text-sm text-gray-700 font-medium">
+            {guideline.category}
+          </span>
+          <span className="bg-green-100 text-green-700 text-xs font-medium px-2 py-0.5 rounded-full">
+            {guideline.difficulty}
+          </span>
+        </div>
       </div>
+    </div>
+
+    {/* Checkbox on right side */}
+    <input
+      type="checkbox"
+      checked={selectedGuidelines.has(guideline.id)}
+      onChange={() => handleSelectGuideline(guideline.id)}
+      className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+    />
+  </div>
+</CardHeader>
+
+      <CardContent className="pt-2">
+        <div className="space-y-4">
+          <p className="text-sm text-gray-600 leading-relaxed">
+            {guideline.description}
+          </p>
+
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="font-medium text-gray-700">Steps:</p>
+              <p className="text-gray-600">
+                {guideline.steps.length} steps
+              </p>
+            </div>
+            <div>
+              <p className="font-medium text-gray-700">Est. Time:</p>
+              <p className="text-gray-600">
+                {guideline.totalEstimatedTime}
+              </p>
+            </div>
+          </div>
+
+          {/* Steps Preview */}
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="text-xs font-medium text-gray-700 mb-2">
+              Steps Preview:
+            </p>
+            <div className="space-y-1">
+              {guideline.steps.slice(0, 3).map((step, index) => (
+                <div
+                  key={step.id}
+                  className="text-xs text-gray-600 flex items-start gap-2"
+                >
+                  <span className="bg-green-100 text-green-700 w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0">
+                    {step.stepNumber}
+                  </span>
+                  <span className="truncate">{step.title}</span>
+                </div>
+              ))}
+              {guideline.steps.length > 3 && (
+                <div className="text-xs text-gray-500 ml-7">
+                  +{guideline.steps.length - 3} more steps
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="space-y-3 pt-4 mt-4 border-t border-gray-100">
+            <button
+              onClick={() => {
+                // In a real app, this would open a detailed view
+                alert(`Opening detailed view for: ${guideline.title}`);
+              }}
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-3 rounded text-sm font-medium transition-colors flex items-center justify-center gap-2"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+              View Step-by-Step Guide
+            </button>
+
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleEdit(guideline.id)}
+                className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 py-2 px-3 rounded text-sm font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  />
+                </svg>
+                Edit
+              </button>
+
+              <button
+                onClick={() => handleDelete(guideline.id)}
+                className="px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  ))}
+</div>
 
       {/* Empty State */}
       {filteredGuidelines.length === 0 && (
