@@ -10,7 +10,7 @@ const AboutUs: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>~
+      <div>
         <h1 className="text-3xl font-bold text-gray-900">
           About Barangay Talipapa
         </h1>
