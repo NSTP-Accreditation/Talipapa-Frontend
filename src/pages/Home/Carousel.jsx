@@ -27,7 +27,10 @@ export default function Carousel() {
   return (
     <div className="w-[1200px] max-w-4xl mx-auto mt-20 mb-20">
       <div className="relative rounded-lg overflow-hidden">
-        {/* Image */}<br></br><br></br><br></br>
+        {/* Image */}<br></br>
+        <h1 className="text-[40px] font-bold text-green-800 text-center mb-6">
+          Welcome to Barangay Talipapa
+        </h1>
         <img
           src={slides[current].image}
           alt="carousel slide"
@@ -36,6 +39,8 @@ export default function Carousel() {
 
         {/* Text Overlay */}
         <div className="absolute bottom-2 left-2 bg-black bg-opacity-60 text-white p-3 rounded-lg max-w-[200px]">
+          <h2 className="text-xl font-semibold">{slides[current].title}</h2>
+          <p className="text-sm">{slides[current].description}</p>
         </div>
 
         {/* Previous Button */}
