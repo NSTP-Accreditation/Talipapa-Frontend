@@ -56,7 +56,7 @@ const mockMaterials: Material[] = [
   },
   {
     id: '7',
-    name: 'Paper/CardboardH',
+    name: 'Paper/Cardboard',
     pointsPerKg: 45,
   },
   {
