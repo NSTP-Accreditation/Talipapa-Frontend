@@ -102,12 +102,7 @@ function App() {
             />
             <Route
               path="resources"
-              element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold">Resources Admin</h1>
-                  <p>Manage resources here.</p>
-                </div>
-              }
+              element={<ActivityLogs />}
             />
             <Route
               path="users"

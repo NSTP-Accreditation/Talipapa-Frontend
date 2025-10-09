@@ -14,17 +14,17 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
       <div className="flex items-center justify-between">
         {/* Left Side - System Info */}
         <div>
-          <h1 className="text-xl font-bold text-gray-900">{title}</h1>
-          <p className="text-sm text-teal-600">{subtitle}</p>
+          <h1 className="text-2xl font-semibold text-gray-900 leading-tight">{title}</h1>
+          <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>
         </div>
 
         {/* Right Side - Admin User Info */}
         <div className="flex items-center gap-3">
           <div className="text-right">
-            <p className="text-sm font-semibold text-gray-900">Admin User</p>
+            <p className="text-sm font-medium text-gray-900 leading-tight">Admin User</p>
             <p className="text-xs text-gray-500">Super Admin</p>
           </div>
-          <div className="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center text-white font-semibold">
+          <div className="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center text-white text-sm font-semibold">
             A
           </div>
         </div>

@@ -47,15 +47,15 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       href: APP_ROUTES.ADMIN.DASHBOARD,
     },
     {
+      icon: <Users className="w-5 h-5" />,
+      label: 'Resident Records',
+      href: APP_ROUTES.ADMIN.RESOURCES,
+    },
+    {
       icon: <TrendingUp className="w-5 h-5" />,
       label: 'Trading',
       href: APP_ROUTES.ADMIN.TRADING,
       submenu: [
-        {
-          icon: <Activity className="w-4 h-4" />,
-          label: 'Activity Logs',
-          href: APP_ROUTES.ADMIN.TRADING + '/activity',
-        },
         {
           icon: <Plus className="w-4 h-4" />,
           label: 'Earn Points Logs',
