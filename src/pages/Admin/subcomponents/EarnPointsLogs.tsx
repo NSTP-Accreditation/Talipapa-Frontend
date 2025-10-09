@@ -1,74 +1,124 @@
-import React from 'react';
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardTitle,
-} from '../../../components/ui/card';
+import React, { useState } from "react";
 
-const EarnPointsLogs: React.FC = () => {
+const MATERIALS = [
+  "PET bottles",
+  "Soft and hard plastics",
+  "Candy and chichirya wrapper",
+  "Plastic bags and food wrapping",
+  "Food takeaway containers",
+  "Water cooler bottles, baby cups, fiberglass",
+  "Used cotton clothes",
+];
+
+export default function App() {
+  const [recordId, setRecordId] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [weights, setWeights] = useState(MATERIALS.map(() => 0));
+
+  function handleWeightChange(index, value) {
+    const newWeights = [...weights];
+    newWeights[index] = Number(value) || 0;
+    setWeights(newWeights);
+  }
+
+  const totalPoints = weights.reduce((a, b) => a + b, 0);
+
+  function handleConfirm(e) {
+    e.preventDefault();
+    alert(`Saved!\n${recordId} ${lastName}\nTotal Points: ${totalPoints}`);
+    console.log({ recordId, lastName, weights, totalPoints });
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Earn Points Logs</h1>
-        <p className="text-gray-600 mt-2">
-          Monitor all points earned through eco-friendly activities
+    <div className="min-h-screen bg-gray-50 p-10 flex flex-col items-center">
+      {/* Page Title */}
+      <h1 className="text-3xl font-bold text-emerald-800 self-start mb-1">
+        Earn Points
+      </h1>
+      <p className="text-sm text-gray-600 self-start mb-8">
+        Accumulate points of residents' record
+      </p>
+
+      {/* Form Container */}
+      <form
+        className="bg-white border border-gray-300 rounded shadow p-8 w-full max-w-4xl"
+        onSubmit={handleConfirm}
+      >
+        {/* Form Title */}
+        <h2 className="text-2xl font-bold text-emerald-800 mb-1">
+          Earn Points
+        </h2>
+        <p className="text-sm text-gray-600 mb-6">
+          Accumulate points of residents' record
         </p>
-      </div>
 
-      {/* Content */}
-      <div className="grid grid-cols-1 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Points Earning History</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <div>
-                  <h4 className="font-medium">Recycling Bonus</h4>
-                  <p className="text-sm text-gray-600">
-                    Weekly recycling goal achieved
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium text-green-600">+100 Points</p>
-                  <p className="text-xs text-gray-500">Today</p>
-                </div>
-              </div>
+        {/* Record ID and Last Name */}
+        <div className="mb-6">
+          <label className="block text-xs text-gray-500 mb-1">Record ID</label>
+          <input
+            value={recordId}
+            onChange={(e) => setRecordId(e.target.value)}
+            className="w-full px-3 py-2 border rounded bg-gray-100"
+            placeholder="Record ID"
+          />
 
-              <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <div>
-                  <h4 className="font-medium">Community Clean-up</h4>
-                  <p className="text-sm text-gray-600">
-                    Participated in neighborhood cleanup
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium text-green-600">+150 Points</p>
-                  <p className="text-xs text-gray-500">Yesterday</p>
-                </div>
-              </div>
+          <label className="block text-xs text-gray-500 mt-4 mb-1">
+            Last Name
+          </label>
+          <input
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            className="w-full px-3 py-2 border rounded bg-gray-100"
+            placeholder="Last Name"
+          />
+        </div>
 
-              <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <div>
-                  <h4 className="font-medium">Eco-Challenge</h4>
-                  <p className="text-sm text-gray-600">
-                    Completed monthly eco-challenge
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium text-green-600">+200 Points</p>
-                  <p className="text-xs text-gray-500">2 days ago</p>
-                </div>
-              </div>
+        {/* Table Headers */}
+        <div className="grid grid-cols-12 gap-4 text-xs font-semibold text-gray-600 mb-2">
+          <div className="col-span-6">Material</div>
+          <div className="col-span-3 ml-[10px]">Weight</div>
+          <div className="col-span-3 ml-[10px]">Unit</div>
+        </div>
+
+        {/* Rows */}
+        {MATERIALS.map((mat, idx) => (
+          <div
+            key={mat}
+            className="grid grid-cols-12 gap-[20px] items-center mb-3"
+          >
+            <div className="col-span-6">
+              <div className="text-sm bg-green-400 text-white p-2 rounded">{mat}</div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+
+            <div className="col-span-3">
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={weights[idx]}
+                onChange={(e) => handleWeightChange(idx, e.target.value)}
+                className="w-[330px] px-3 py-2 border rounded bg-gray-50"
+              />
+            </div>
+
+            <div className="col-span-3 text-right text-gray-600">
+              Kilogram
+            </div>
+          </div>
+        ))}
+        
+        {/* Footer: Total Points */}
+        <div className="flex items-center gap-2 mt-6 text-sm font-semibold">
+          <span>Total Points:</span>
+          <span className="text-emerald-700">{totalPoints}</span>
+        </div>
+
+        {/* Confirm Button */}
+        <div className="text-center mt-4"> 
+          <button type="submit" className="px-4 py-1 bg-green-400 text-white rounded text-sm flex justify-center"> 
+          Confirm </button> 
+        </div>
+      </form>
     </div>
   );
-};
-
-export default EarnPointsLogs;
+}
