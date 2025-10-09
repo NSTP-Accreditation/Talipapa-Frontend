@@ -22,6 +22,26 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Hide scrollbar for webkit browsers (Chrome, Safari, Edge) */
+  html, body {
+    overflow-x: hidden;
+  }
+
+  body {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  /* Hide scrollbar for any scrollable element */
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
 }
 
 /**

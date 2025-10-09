@@ -49,6 +49,11 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       href: APP_ROUTES.ADMIN.DASHBOARD,
     },
     {
+      icon: <Users className="w-5 h-5" />,
+      label: 'Resident Records',
+      href: APP_ROUTES.ADMIN.RESOURCES,
+    },
+    {
       icon: <TrendingUp className="w-5 h-5" />,
       label: 'Trading',
       href: APP_ROUTES.ADMIN.TRADING,
