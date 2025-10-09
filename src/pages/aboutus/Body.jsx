@@ -12,7 +12,7 @@ const officials = [
 
 const BarangayOfficials = () => {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-6 md:p-[70px] max-w-6xl mx-auto mb-6 shadow-sm">
+    <div className="bg-white border border-gray-200 rounded-lg p-[70px] mr-[50px] ml-[50px] mb-[10px] shadow-sm">
       <h2 className="text-[30px] font-semibold text-green-600 mb-6 pt-[20px] pb-[50px] text-center">
         Barangay Officials
       </h2>
