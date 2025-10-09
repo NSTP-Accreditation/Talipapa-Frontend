@@ -220,9 +220,9 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
                         'active:scale-95',
                         location.pathname === subItem.href
                           ? 'bg-green-700 text-white font-semibold scale-105 shadow-md'
-                          : 'text-green-100'
+                          : 'text-green-100',
+                        'pl-12'
                       )}
-                      style={{ paddingLeft: '3rem' }} 
                     >
                       <span className="flex-shrink-0">{subItem.icon}</span>
                       <span>{subItem.label}</span>
