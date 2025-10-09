@@ -24,7 +24,7 @@ export default function MissionVision() {
       </header>
 
       {/* Mission & Vision Cards */}
-      <div className="grid md:grid-cols-2 gap-[300px] max-w-5xl w-[1100px]">
+      <div className="grid md:grid-cols-2 gap-[100px] max-w-5xl w-[1100px]">
         {/* Mission */}
         <div className="border border-green-200 shadow-md rounded-lg bg-white p-8 flex flex-col items-center max-w-sm mx-auto">
           <Target className="text-green-600 mb-6" size={40} />{' '}
