@@ -41,10 +41,7 @@ export default function AboutBarangay() {
 
               <div>
                 <p className="text-gray-800 text-base leading-relaxed text-justify">
-                  Barangay San Isidro is a vibrant community dedicated to serving
-                  its residents with excellence. Established in 1950, we have
-                  grown into a progressive barangay that values unity,
-                  development, and sustainable growth.
+                  Barangay Talipapa was founded in 1854 by Lieutenant General Manuel Pavia y Marquez de Novaliches. He named the area after seeing a store called “Talipapa.” Sitios under this barrio are San Agustin, Sangandaan, Sauyo, Libis, and Kabaruhan. It is the birthplace of Melchora Aquino (Tandang Sora).
                 </p>
               </div>
             </div>
