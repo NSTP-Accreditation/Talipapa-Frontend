@@ -38,11 +38,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
-  const [expandedItems, setExpandedItems] = useState<string[]>([
-    'Trading',
-    'Home Editables',
-    'Logs',
-  ]);
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
   const menuItems: MenuItem[] = [
     {
@@ -159,7 +155,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'w-96 h-screen bg-green-600 text-white flex flex-col',
+        'w-[310px] min-h-screen bg-green-600 text-white flex flex-col',
         className
       )}
     >
@@ -174,20 +170,19 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
             />
           </div>
           <div>
-            <h2 className="text-white font-semibold text-xl">Barangay CMS</h2>
-            <p className="text-green-200 text-lg">Brgy. Talipapa</p>
+            <h1 className="text-white font-black text-2xl">Barangay Admin</h1>
           </div>
         </div>
       </div>
 
       {/* Navigation Items */}
-      <nav className="flex-1 px-4 py-4 space-y-1">
+      <nav className="flex-1 px-4 py-4 space-y-2">
         {menuItems.map((item, index) => (
           <div key={index}>
             <button
               onClick={() => handleItemClick(item)}
               className={cn(
-                'w-full flex items-center justify-between px-3 py-3 text-left transition-colors duration-200 text-xl',
+                'w-full flex items-center justify-between px-4 py-3 text-left transition-colors duration-200 text-base',
                 location.pathname === item.href ||
                   (item.submenu &&
                     item.submenu.some((sub) => location.pathname === sub.href))
@@ -211,21 +206,28 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
 
             {/* Submenu */}
             {item.submenu && expandedItems.includes(item.label) && (
-              <div className="space-y-1 mt-1 mb-1">
+              <div className="mt-3 mb-3 space-y-2">
                 {item.submenu.map((subItem, subIndex) => (
-                  <button
-                    key={subIndex}
-                    onClick={() => navigate(subItem.href!)}
-                    className={cn(
-                      'w-full flex items-center space-x-4 px-5 py-2 text-left transition-colors duration-200 text-lg',
-                      location.pathname === subItem.href
-                        ? 'bg-green-700 text-white'
-                        : 'text-white hover:bg-green-500/50'
+                  <div key={subIndex}>
+                    {subIndex > 0 && (
+                      <div className="border-t-2 border-green-300/60 my-2" style={{ marginLeft: '3rem', marginRight: '5rem' }} />
                     )}
-                  >
-                    <span className="flex-shrink-0">{subItem.icon}</span>
-                    <span>{subItem.label}</span>
-                  </button>
+                    <button
+                      onClick={() => navigate(subItem.href!)}
+                      className={cn(
+                        'w-full flex items-center space-x-3 pr-4 py-3 text-left transition-all duration-300 ease-in-out text-base rounded-md transform',
+                        'hover:scale-105 hover:shadow-lg hover:shadow-green-900/30 hover:bg-green-600/70 hover:text-white hover:font-semibold',
+                        'active:scale-95',
+                        location.pathname === subItem.href
+                          ? 'bg-green-700 text-white font-semibold scale-105 shadow-md'
+                          : 'text-green-100'
+                      )}
+                      style={{ paddingLeft: '3rem' }}
+                    >
+                      <span className="flex-shrink-0">{subItem.icon}</span>
+                      <span>{subItem.label}</span>
+                    </button>
+                  </div>
                 ))}
               </div>
             )}
@@ -237,7 +239,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       <div className="px-4 pb-4 border-t border-green-500 pt-4">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center space-x-3 px-3 py-3 text-left transition-colors duration-200 text-white hover:bg-green-500/50 text-xl"
+          className="w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors duration-200 text-white hover:bg-green-500/50 text-base"
         >
           <LogOut className="w-5 h-5 text-orange-400" />
           <span className="font-medium">Logout</span>
