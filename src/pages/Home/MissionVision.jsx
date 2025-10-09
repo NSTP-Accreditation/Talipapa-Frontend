@@ -47,7 +47,7 @@ export default function MissionVision() {
           <h3 className="text-lg font-semibold mb-4 text-center  pb-[5px]">
             Our Vision
           </h3>
-          <p className="text-gray-600 text-m mb-4 leading-relaxed text-justify">
+          <p className="text-gray-600 text-base mb-4 leading-relaxed text-justify">
             To be a model eco-friendly barangay that exemplifies sustainable
             living, where every resident enjoys a high quality of life in
             harmony with nature.
