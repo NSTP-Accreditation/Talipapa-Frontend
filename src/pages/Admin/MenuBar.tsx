@@ -210,7 +210,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
                 {item.submenu.map((subItem, subIndex) => (
                   <div key={subIndex}>
                     {subIndex > 0 && (
-                      <div className="border-t-2 border-green-300/60 my-2" style={{ marginLeft: '3rem', marginRight: '5rem' }} />
+                      <div className="border-t-2 border-green-300/60 my-2 ml-12 mr-20" />
                     )}
                     <button
                       onClick={() => navigate(subItem.href!)}
