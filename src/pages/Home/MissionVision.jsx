@@ -7,13 +7,12 @@ import {
   Award,
   ShieldCheck,
 } from 'lucide-react';
-
 export default function MissionVision() {
   return (
     <section className="bg-green-50 py-12 px-6 flex flex-col items-center">
       {/* Header */}
       <header className="max-w-2xl text-center mb-12">
-        <h2 className="text-4xl font-bold text-gray-800">
+        <h2 className="text-[32px] font-black text-gray-800">
           Our Mission & Vision
         </h2>
         <br />
