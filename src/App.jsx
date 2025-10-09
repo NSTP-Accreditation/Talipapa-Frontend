@@ -4,6 +4,15 @@ import Home from '@/pages/Home';
 import NavBar from '@/components/NavBar';
 import GuidelinesApp from '@/pages/guidelines/Guidelines';
 import MoreGuides from '@/pages/guidelines/MoreGuides';
+import BarangayClearanceGuide from '@/pages/guidelines/guides/BarangayClearanceGuide';
+import CertificateOfIndigencyGuide from '@/pages/guidelines/guides/CertificateOfIndigencyGuide';
+import CertificateOfResidencyGuide from '@/pages/guidelines/guides/CertificateOfResidencyGuide';
+import BusinessClearanceGuide from '@/pages/guidelines/guides/BusinessClearanceGuide';
+import GoodMoralCharacterGuide from '@/pages/guidelines/guides/GoodMoralCharacterGuide';
+import TrafficClearanceGuide from '@/pages/guidelines/guides/TrafficClearanceGuide';
+import BarangayAffidavitGuide from '@/pages/guidelines/guides/BarangayAffidavitGuide';
+import PhilsysIdGuide from '@/pages/guidelines/guides/PhilsysIdGuide';
+import QuezonCityIdGuide from '@/pages/guidelines/guides/QuezonCityIdGuide';
 import Trading from '@/pages/trading/Trading';
 import Footer from '@/components/Footer';
 import AboutUs from '@/pages/aboutus/AboutUs';
@@ -121,6 +130,15 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/guidelines" element={<GuidelinesApp />} />
                   <Route path="/guidelines/more" element={<MoreGuides />} />
+                  <Route path="/guidelines/barangay-clearance" element={<BarangayClearanceGuide />} />
+                  <Route path="/guidelines/certificate-of-indigency" element={<CertificateOfIndigencyGuide />} />
+                  <Route path="/guidelines/certificate-of-residency" element={<CertificateOfResidencyGuide />} />
+                  <Route path="/guidelines/business-clearance" element={<BusinessClearanceGuide />} />
+                  <Route path="/guidelines/good-moral-character" element={<GoodMoralCharacterGuide />} />
+                  <Route path="/guidelines/traffic-clearance" element={<TrafficClearanceGuide />} />
+                  <Route path="/guidelines/barangay-affidavit" element={<BarangayAffidavitGuide />} />
+                  <Route path="/guidelines/philsys-id" element={<PhilsysIdGuide />} />
+                  <Route path="/guidelines/quezon-city-id" element={<QuezonCityIdGuide />} />
                   <Route path="/trading" element={<Trading />} />
                   <Route path="/aboutus" element={<AboutUs />} />
                 </Routes>
