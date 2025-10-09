@@ -33,7 +33,7 @@ export default function MissionVision() {
           <h3 className="text-lg font-semibold mb-4 text-center pb-[5px]">
             Our Mission
           </h3>
-          <p className="text-gray-1000 text-m mb-4 leading-relaxed text-justify">
+          <p className="text-gray-900 text-m mb-4 leading-relaxed text-justify">
             To provide efficient, transparent, and sustainable governance that
             promotes the welfare of all residents while preserving our
             environment for future generations.
