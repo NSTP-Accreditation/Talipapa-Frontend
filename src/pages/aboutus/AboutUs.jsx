@@ -8,10 +8,12 @@ const AboutUs = () => {
       <AboutBarangay />
       
       {/* Consistent container for officials and map */}
-      <div className="flex justify-center p-6">
-        <div className="w-[1024px] flex-none space-y-6">
+      <div className="py-12">
+        <div className="max-w-7xl mx-auto px-6">
           <BarangayOfficials />
-          <BarangayMap />
+          <div className="mt-32">
+            <BarangayMap />
+          </div>
         </div>
       </div>
     </div>
