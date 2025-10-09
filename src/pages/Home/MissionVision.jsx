@@ -16,7 +16,7 @@ export default function MissionVision() {
         <h2 className="text-4xl font-bold text-gray-800">
           Our Mission & Vision
         </h2>
-        <br></br>
+        <br />
         <p className="mt-3 text-gray-600 text-base leading-relaxed">
           Guided by our commitment to sustainable development and community
           welfare, we strive to build a better future for all residents of
