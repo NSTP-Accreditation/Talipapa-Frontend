@@ -12,7 +12,7 @@ const officials = [
 
 const BarangayOfficials = () => {
   return (
-
+    <div>
       <h2 className="text-[30px] font-semibold text-green-600 mb-6 pt-[20px] pb-[50px] text-center">
         Barangay Officials
       </h2>
