@@ -59,19 +59,9 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       href: APP_ROUTES.ADMIN.TRADING,
       submenu: [
         {
-          icon: <FileBarChart className="w-4 h-4" />,
-          label: 'Records',
-          href: APP_ROUTES.ADMIN.TRADING + '/records',
-        },
-        {
           icon: <Coins className="w-4 h-4" />,
           label: 'Earn Points',
           href: APP_ROUTES.ADMIN.TRADING + '/earn-points',
-        },
-        {
-          icon: <ArrowRightLeft className="w-4 h-4" />,
-          label: 'Trade Points',
-          href: APP_ROUTES.ADMIN.TRADING + '/trade-points',
         },
       ],
     },
@@ -80,11 +70,6 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       label: 'Home Editables',
       href: APP_ROUTES.ADMIN.ABOUT,
       submenu: [
-        {
-          icon: <FileText className="w-4 h-4" />,
-          label: 'Forms',
-          href: APP_ROUTES.ADMIN.BASE + '/forms',
-        },
         {
           icon: <BookOpen className="w-4 h-4" />,
           label: 'Guidelines',
@@ -162,20 +147,23 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       )}
     >
       {/* Header */}
-      <div className="px-4 py-4 border-b border-green-500">
-        <div className="flex items-center space-x-3">
-          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+      <div className="px-4 py-4">
+        <div className="flex items-center justify-center space-x-3">
+          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0">
             <img
               src="/brgy talipapa.png"
               alt="Barangay Talipapa Logo"
-              className="w-14 h-14 object-contain"
+              className="w-10 h-10 object-contain"
             />
           </div>
           <div>
-            <h1 className="text-white font-black text-2xl">Barangay Admin</h1>
+            <h1 className="text-white font-black text-xl">Barangay Admin</h1>
           </div>
         </div>
       </div>
+
+      {/* Separator Line */}
+      <div className="border-t border-green-400/50 mx-4"></div>
 
       {/* Navigation Items */}
       <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-green-500 scrollbar-track-green-700">
