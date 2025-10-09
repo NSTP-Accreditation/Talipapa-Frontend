@@ -59,19 +59,9 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       href: APP_ROUTES.ADMIN.TRADING,
       submenu: [
         {
-          icon: <FileBarChart className="w-4 h-4" />,
-          label: 'Records',
-          href: APP_ROUTES.ADMIN.TRADING + '/records',
-        },
-        {
           icon: <Coins className="w-4 h-4" />,
           label: 'Earn Points',
           href: APP_ROUTES.ADMIN.TRADING + '/earn-points',
-        },
-        {
-          icon: <ArrowRightLeft className="w-4 h-4" />,
-          label: 'Trade Points',
-          href: APP_ROUTES.ADMIN.TRADING + '/trade-points',
         },
       ],
     },
@@ -80,11 +70,6 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       label: 'Home Editables',
       href: APP_ROUTES.ADMIN.ABOUT,
       submenu: [
-        {
-          icon: <FileText className="w-4 h-4" />,
-          label: 'Forms',
-          href: APP_ROUTES.ADMIN.BASE + '/forms',
-        },
         {
           icon: <BookOpen className="w-4 h-4" />,
           label: 'Guidelines',
