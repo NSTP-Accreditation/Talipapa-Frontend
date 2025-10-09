@@ -36,8 +36,6 @@ export default function Carousel() {
 
         {/* Text Overlay */}
         <div className="absolute bottom-2 left-2 bg-black bg-opacity-60 text-white p-3 rounded-lg max-w-[200px]">
-          <h2 className="text-xl font-semibold">{slides[current].title}</h2>
-          <p className="text-sm">{slides[current].description}</p>
         </div>
 
         {/* Previous Button */}
