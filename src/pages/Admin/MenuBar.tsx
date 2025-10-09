@@ -216,10 +216,12 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
                     <button
                       onClick={() => navigate(subItem.href!)}
                       className={cn(
-                        'w-full flex items-center space-x-3 pr-4 py-3 text-left transition-colors duration-200 text-base rounded-md',
+                        'w-full flex items-center space-x-3 pr-4 py-3 text-left transition-all duration-300 ease-in-out text-base rounded-md transform',
+                        'hover:scale-105 hover:shadow-lg hover:shadow-green-900/30 hover:bg-green-600/70 hover:text-white hover:font-semibold',
+                        'active:scale-95',
                         location.pathname === subItem.href
-                          ? 'bg-green-700 text-white'
-                          : 'text-green-100 hover:bg-green-500/50'
+                          ? 'bg-green-700 text-white font-semibold scale-105 shadow-md'
+                          : 'text-green-100'
                       )}
                       style={{ paddingLeft: '3rem' }} 
                     >
