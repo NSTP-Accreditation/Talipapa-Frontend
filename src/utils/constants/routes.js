@@ -37,6 +37,7 @@ export const APP_ROUTES = {
     NEWS: '/admin/news',
     USERS: '/admin/users',
     NOTIFICATIONS: '/admin/notifications',
+    INVENTORY: '/admin/inventory',
     SETTINGS: '/admin/settings',
   },
 };

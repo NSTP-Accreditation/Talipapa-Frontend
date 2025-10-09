@@ -30,6 +30,7 @@ import AboutUsAdmin from '@/pages/Admin/subcomponents/AboutUs';
 import Achievements from '@/pages/Admin/subcomponents/Achievements';
 import AdminLogin from '@/pages/Admin/AdminLogin';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import Inventory from '@/pages/Admin/subcomponents/Inventory';
 import { AuthProvider } from '@/contexts/AuthContext';
 
 function App() {
@@ -69,6 +70,9 @@ function App() {
 
             {/* Guidelines Route (Admin version) */}
             <Route path="guidelines" element={<Guidelines />} />
+
+            {/* Inventory Route */}
+            <Route path="inventory" element={<Inventory />} />
 
             {/* Logs Routes (same as trading but under notifications path) */}
             <Route
