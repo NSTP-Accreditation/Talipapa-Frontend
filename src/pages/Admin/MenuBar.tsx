@@ -155,7 +155,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'w-[310px] min-h-screen bg-green-600 text-white flex flex-col',
+        'w-[310px] h-screen bg-green-600 text-white flex flex-col fixed left-0 top-0 overflow-hidden',
         className
       )}
     >
@@ -176,7 +176,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       </div>
 
       {/* Navigation Items */}
-      <nav className="flex-1 px-4 py-4 space-y-2">
+      <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-green-500 scrollbar-track-green-700">
         {menuItems.map((item, index) => (
           <div key={index}>
             <button

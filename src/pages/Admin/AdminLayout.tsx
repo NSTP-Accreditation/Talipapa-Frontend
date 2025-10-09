@@ -5,12 +5,12 @@ import AdminHeader from './AdminHeader';
 
 const AdminLayout: React.FC = () => {
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Admin MenuBar */}
+    <div className="min-h-screen bg-gray-100">
+      {/* Fixed Admin MenuBar */}
       <MenuBar />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Main Content Area - offset by sidebar width */}
+      <div className="ml-[310px] flex flex-col min-h-screen">
         {/* Admin Header */}
         <AdminHeader />
 
