@@ -41,46 +41,46 @@ const achievements = [
     description:
       'Awarded for excellence in record keeping, transparency, and governance.',
     link: 'https://example.com/documentation-award',
-    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500',
+    image: '',
   },
 ];
 
 export default function Achievements() {
   return (
-    <section className="bg-white-50 py-16 px-6">
-      {/* Header */}
-      <header className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-green-800">Achievements</h2>
-      </header>
+    <section className="bg-white py-16 flex justify-center">
+  <div className="rounded-xl max-w-4xl w-64 mx-auto px-6 py-10">
+    <header className="text-center mb-12">
+      <h2 className="text-4xl font-bold text-green-800">Achievements</h2>
+    </header>
 
-      {/* Achievements Grid */}
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto mr-[100px] ml-[100px]">
-        {achievements.map((item, index) => (
-          <div
-            key={index}
-            className="bg-white p-6 rounded-xl flex flex-col items-center text-center border border-green-300"
-          >
-            {/* ✅ Fixed Image Display */}
-            <div className="w-full h-48 flex items-center justify-center rounded-md mb-4 overflow-hidden bg-white">
-              <img
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {achievements.map((item, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-xl flex flex-col items-center text-center border border-green-300 shadow-sm hover:shadow-lg transition"
+            >
+              {/* ✅ Removed white background around the image */}
+            <div className="flex items-center justify-center w-full h-48 mb-4 overflow-hidden rounded-md">
+            <img
                 src={item.image}
                 alt={item.title}
-                className="w-full h-full object-contain"
-              />
-            </div>
+                    className="w-full h-full object-cover"
+                />
+              </div>
 
-            <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-            <p className="text-gray-600 text-sm mb-3">{item.description}</p>
-            <a
-              href={item.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-green-700 text-sm font-medium hover:underline"
-            >
-              Learn more
-            </a>
-          </div>
-        ))}
+              <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
+              <p className="text-gray-600 text-sm mb-3">{item.description}</p>
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-700 text-sm font-medium hover:underline"
+              >
+                Learn more
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

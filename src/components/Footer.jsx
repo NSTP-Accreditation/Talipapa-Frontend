@@ -36,7 +36,7 @@ export default function Footer() {
             </a>
 
             <a
-              href="https://www.youtube.com/@QuezonCityGovernment"
+              href="https://www.youtube.com"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="YouTube"
@@ -57,7 +57,7 @@ export default function Footer() {
             </a>
 
             <a
-              href="https://talipapa.gov.ph"
+              href="https://quezoncity.gov.ph/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Official website"
