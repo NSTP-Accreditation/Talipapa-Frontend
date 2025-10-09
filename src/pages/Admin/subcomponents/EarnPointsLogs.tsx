@@ -30,14 +30,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-10 flex flex-col items-center">
-      {/* Page Title */}
-      <h1 className="text-3xl font-bold text-emerald-800 self-start mb-1">
-        Earn Points
-      </h1>
-      <p className="text-sm text-gray-600 self-start mb-8">
-        Accumulate points of residents' record
-      </p>
+    <div className="min-h-screen bg-gray-50 p-[100px] flex flex-col items-center">
 
       {/* Form Container */}
       <form
