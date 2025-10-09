@@ -6,7 +6,6 @@ import {
   House,
   TrafficCone,
   ThumbsUp,
-  CircleSlash,
   ScrollText,
   IdCard,
 } from 'lucide-react';
@@ -43,15 +42,15 @@ export default function Guidelines() {
   };
 
   const guides = [
-    { icon: FileText, title: 'Barangay Clearance' },
-    { icon: File, title: 'Certificate of Indigency' },
-    { icon: House, title: 'Certificate of Residency' },
-    { icon: Building2, title: 'Business Clearance' },
-    { icon: TrafficCone, title: 'Traffic Clearance' },
-    { icon: ThumbsUp, title: 'Good Moral Character' },
-    { icon: ScrollText, title: 'Barangay Affidavit' },
-    { icon: IdCard, title: 'Philsys ID' },
-    { icon: IdCard, title: 'Quezon City ID' },
+    { icon: FileText, title: 'Barangay Clearance', path: '/guidelines/barangay-clearance' },
+    { icon: File, title: 'Certificate of Indigency', path: '/guidelines/certificate-of-indigency' },
+    { icon: House, title: 'Certificate of Residency', path: '/guidelines/certificate-of-residency' },
+    { icon: Building2, title: 'Business Clearance', path: '/guidelines/business-clearance' },
+    { icon: TrafficCone, title: 'Traffic Clearance', path: '/guidelines/traffic-clearance' },
+    { icon: ThumbsUp, title: 'Good Moral Character', path: '/guidelines/good-moral-character' },
+    { icon: ScrollText, title: 'Barangay Affidavit', path: '/guidelines/barangay-affidavit' },
+    { icon: IdCard, title: 'Philsys ID', path: '/guidelines/philsys-id' },
+    { icon: IdCard, title: 'Quezon City ID', path: '/guidelines/quezon-city-id' },
   ];
 
   return (
@@ -79,21 +78,22 @@ export default function Guidelines() {
           {guides.map((guide, index) => {
             const IconComponent = guide.icon;
             return (
-              <div
-                key={index}
-                className="border border-gray-200 rounded-lg p-8 text-center hover:shadow-lg transition-shadow cursor-pointer group"
-              >
-                <div
-                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:opacity-90 transition-opacity"
-                  style={{ backgroundColor: '#e8f5e9' }}
-                >
-                  <IconComponent
-                    className="w-8 h-8"
-                    style={{ color: '#1b4c2e' }}
-                  />
+              <Link key={index} to={guide.path}>
+                <div className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-lg transition-all duration-300 cursor-pointer group hover:border-green-300 hover:bg-green-50">
+                  <div 
+                    className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300"
+                    style={{ backgroundColor: '#e8f5e9' }}
+                  >
+                    <IconComponent
+                      className="w-8 h-8"
+                      style={{ color: '#1b4c2e' }}
+                    />
+                  </div>
+                  <h3 className="text-gray-700 leading-relaxed group-hover:text-green-800 font-medium">
+                    {guide.title}
+                  </h3>
                 </div>
-                <h3 className="text-gray-700 leading-relaxed">{guide.title}</h3>
-              </div>
+              </Link>
             );
           })}
         </div>
