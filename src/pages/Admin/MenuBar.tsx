@@ -170,8 +170,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
             />
           </div>
           <div>
-            <h2 className="text-white font-semibold text-base">Barangay CMS</h2>
-            <p className="text-green-200 text-sm">Brgy. Talipapa</p>
+            <h1 className="text-white font-black text-2xl">Barangay Admin</h1>
           </div>
         </div>
       </div>
