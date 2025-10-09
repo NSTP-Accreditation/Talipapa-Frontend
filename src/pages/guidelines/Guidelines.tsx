@@ -6,7 +6,6 @@ import {
   House,
   TrafficCone,
   ThumbsUp,
-  CircleSlash,
   ScrollText,
   IdCard,
 } from 'lucide-react';
@@ -80,10 +79,8 @@ export default function Guidelines() {
             const IconComponent = guide.icon;
             return (
               <Link key={index} to={guide.path}>
-                <div
-                  className="border border-gray-200 rounded-lg p-8 text-center hover:shadow-lg transition-all duration-300 cursor-pointer group hover:border-green-300 hover:bg-green-50"
-                >
-                  <div
+                <div className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-lg transition-all duration-300 cursor-pointer group hover:border-green-300 hover:bg-green-50">
+                  <div 
                     className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300"
                     style={{ backgroundColor: '#e8f5e9' }}
                   >
