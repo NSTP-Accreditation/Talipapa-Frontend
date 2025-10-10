@@ -2,6 +2,7 @@ import React from 'react';
 import Carousel from './Carousel';
 import MissionVision from './MissionVision';
 import Achievements from './Achievement';
+import CalendarEvents from './CalendarEvents';
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
 
       <Carousel />
       <MissionVision />
+      <CalendarEvents />
       <Achievements />
     </div>
   );

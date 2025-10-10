@@ -13,11 +13,11 @@ const officials = [
 const BarangayOfficials = () => {
   return (
     <div>
-      <h2 className="text-[30px] font-semibold text-green-600 mb-6 pt-[20px] pb-[50px] text-center">
+      <h2 className="text-2xl font-bold text-green-600 mb-8 text-center">
         Barangay Officials
       </h2>
 
-      <div className="flex flex-wrap justify-center gap-6">
+      <div className="flex flex-wrap justify-center gap-6 mb-16">
         {officials.map((official, index) => (
           <OfficialCard key={index} official={official} />
         ))}

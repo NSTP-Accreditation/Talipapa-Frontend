@@ -13,10 +13,10 @@ const BarangayMap = () => {
   const googleMapsUrl = `https://www.google.com/maps?q=${barangayCoordinates.lat},${barangayCoordinates.lng}`;
 
   return (
-    <div className="mt-12 pt-8">
+    <div>
       {/* Header Section */}
       <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-semibold text-green-600 mb-4">
+        <h2 className="text-2xl font-bold text-green-600 mb-4">
           Find Our Barangay
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto">
@@ -24,20 +24,10 @@ const BarangayMap = () => {
         </p>
       </div>
 
-      {/* Long Map Container */}
-      <div 
-        className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden"
-        style={{ 
-          width: '100%', 
-          maxWidth: '1024px',
-          minWidth: '1024px'
-        }}
-      >
+      {/* Map Container */}
+      <div className="max-w-4xl mx-auto bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
         {/* Full Width Map */}
-        <div 
-          className="w-full overflow-hidden"
-          style={{ height: '400px' }}
-        >
+        <div className="w-full h-96 overflow-hidden">
           <iframe
             src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d965.2284682435453!2d121.02444617082957!3d14.687906698469316!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397ba0142bacae1%3A0x1d4df110b3ed21dd!2sTalipapa%20Barangay%20Hall!5e0!3m2!1sen!2sph!4v1697000000000!5m2!1sen!2sph`}
             width="100%"
