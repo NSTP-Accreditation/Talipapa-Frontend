@@ -7,15 +7,15 @@ import {
   Award,
   ShieldCheck,
 } from 'lucide-react';
+
 export default function MissionVision() {
   return (
     <section className="bg-green-50 py-12 px-6 flex flex-col items-center">
       {/* Header */}
       <header className="max-w-2xl text-center mb-12">
-        <h2 className="text-[32px] font-black text-gray-800">
+        <h2 className="text-2xl font-bold text-gray-800">
           Our Mission & Vision
         </h2>
-        <br />
         <p className="mt-3 text-gray-600 text-base leading-relaxed">
           Guided by our commitment to sustainable development and community
           welfare, we strive to build a better future for all residents of
@@ -24,15 +24,15 @@ export default function MissionVision() {
       </header>
 
       {/* Mission & Vision Cards */}
-      <div className="grid md:grid-cols-2 gap-[100px] max-w-5xl w-[1000px]">
+      <div className="grid md:grid-cols-2 gap-[300px] max-w-5xl w-[1100px]">
         {/* Mission */}
         <div className="border border-green-200 shadow-md rounded-lg bg-white p-8 flex flex-col items-center max-w-sm mx-auto">
           <Target className="text-green-600 mb-6" size={40} />{' '}
           {/* increased spacing */}
-          <h3 className="text-lg font-semibold mb-4 text-center pb-[5px]">
+          <h3 className="text-base font-semibold mb-4 text-center pb-[5px]">
             Our Mission
           </h3>
-          <p className="text-gray-900 text-m mb-4 leading-relaxed text-justify">
+          <p className="text-gray-1000 text-sm mb-4 leading-relaxed text-justify">
             To provide efficient, transparent, and sustainable governance that
             promotes the welfare of all residents while preserving our
             environment for future generations.
@@ -43,10 +43,10 @@ export default function MissionVision() {
         <div className="border border-green-200 shadow-md rounded-lg bg-white p-8 flex flex-col items-center max-w-sm mx-auto">
           <Eye className="text-green-600 mb-6" size={40} />{' '}
           {/* increased spacing */}
-          <h3 className="text-lg font-semibold mb-4 text-center  pb-[5px]">
+          <h3 className="text-base font-semibold mb-4 text-center  pb-[5px]">
             Our Vision
           </h3>
-          <p className="text-gray-600 text-base mb-4 leading-relaxed text-justify">
+          <p className="text-gray-600 text-sm mb-4 leading-relaxed text-justify">
             To be a model eco-friendly barangay that exemplifies sustainable
             living, where every resident enjoys a high quality of life in
             harmony with nature.

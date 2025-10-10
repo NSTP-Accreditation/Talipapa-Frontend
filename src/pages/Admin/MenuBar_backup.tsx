@@ -111,9 +111,9 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   ];
 
   const toggleExpanded = (label: string) => {
-    setExpandedItems((prev) =>
-      prev.includes(label)
-        ? prev.filter((item) => item !== label)
+    setExpandedItems(prev => 
+      prev.includes(label) 
+        ? prev.filter(item => item !== label)
         : [...prev, label]
     );
   };
@@ -165,9 +165,8 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
               onClick={() => handleItemClick(item)}
               className={cn(
                 'w-full flex items-center justify-between px-3 py-2.5 text-left transition-colors duration-200',
-                location.pathname === item.href ||
-                  (item.submenu &&
-                    item.submenu.some((sub) => location.pathname === sub.href))
+                location.pathname === item.href || 
+                (item.submenu && item.submenu.some(sub => location.pathname === sub.href))
                   ? 'bg-green-700 text-white'
                   : 'text-green-100 hover:bg-green-500/50 hover:text-white'
               )}
@@ -177,17 +176,15 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
                 <span className="text-sm font-medium">{item.label}</span>
               </div>
               {item.submenu && (
-                <span
-                  className={cn(
-                    'text-xs transition-transform duration-200',
-                    expandedItems.includes(item.label) ? 'rotate-90' : ''
-                  )}
-                >
+                <span className={cn(
+                  'text-xs transition-transform duration-200',
+                  expandedItems.includes(item.label) ? 'rotate-90' : ''
+                )}>
                   ▶
                 </span>
               )}
             </button>
-
+            
             {/* Submenu */}
             {item.submenu && expandedItems.includes(item.label) && (
               <div className="ml-6 mt-1 space-y-1">
@@ -202,9 +199,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
                         : 'text-green-200 hover:bg-green-500/50 hover:text-white'
                     )}
                   >
-                    <span className="flex-shrink-0 text-xs">
-                      {subItem.icon}
-                    </span>
+                    <span className="flex-shrink-0 text-xs">{subItem.icon}</span>
                     <span>{subItem.label}</span>
                   </button>
                 ))}

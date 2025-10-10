@@ -1,19 +1,15 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import MenuBar from './MenuBar';
-import AdminHeader from './AdminHeader';
 
 const AdminLayout: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Fixed Admin MenuBar */}
+    <div className="flex h-screen bg-gray-100">
+      {/* Admin MenuBar */}
       <MenuBar />
 
-      {/* Main Content Area - offset by sidebar width */}
-      <div className="ml-[310px] flex flex-col min-h-screen">
-        {/* Admin Header */}
-        <AdminHeader />
-
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Content */}
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />

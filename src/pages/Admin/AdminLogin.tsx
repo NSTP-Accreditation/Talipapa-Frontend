@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+} from '../../components/ui/card';
 import { APP_ROUTES } from '../../utils/constants/routes';
 import { useAuth } from '../../contexts/AuthContext';
 

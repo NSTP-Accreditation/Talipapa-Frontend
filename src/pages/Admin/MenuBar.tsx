@@ -3,24 +3,21 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../../components/utils';
 import { APP_ROUTES } from '../../utils/constants/routes';
 import { useAuth } from '../../contexts/AuthContext';
-import {
-  LayoutDashboard,
-  TrendingUp,
-  Home,
-  BookOpen,
-  FileText,
-  Newspaper,
-  Users,
-  Package,
-  Settings,
+import { 
+  LayoutDashboard, 
+  TrendingUp, 
+  Home, 
+  BookOpen, 
+  Newspaper, 
+  Users, 
+  FolderOpen, 
+  Settings, 
   LogOut,
   ChevronDown,
-  FileBarChart,
-  Coins,
-  ArrowRightLeft,
-  Box,
-  Wrench,
-  Trophy,
+  Activity,
+  Plus,
+  Repeat,
+  Trophy
 } from 'lucide-react';
 
 interface MenuBarProps {
@@ -40,7 +37,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [expandedItems, setExpandedItems] = useState<string[]>(['Trading', 'Home Editables', 'Logs']);
 
   const menuItems: MenuItem[] = [
     {
@@ -49,19 +46,24 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       href: APP_ROUTES.ADMIN.DASHBOARD,
     },
     {
-      icon: <Users className="w-5 h-5" />,
-      label: 'Resident Records',
-      href: APP_ROUTES.ADMIN.RESOURCES,
-    },
-    {
       icon: <TrendingUp className="w-5 h-5" />,
       label: 'Trading',
       href: APP_ROUTES.ADMIN.TRADING,
       submenu: [
         {
-          icon: <Coins className="w-4 h-4" />,
-          label: 'Earn Points',
+          icon: <Activity className="w-4 h-4" />,
+          label: 'Activity Logs',
+          href: APP_ROUTES.ADMIN.TRADING + '/activity',
+        },
+        {
+          icon: <Plus className="w-4 h-4" />,
+          label: 'Earn Points Logs',
           href: APP_ROUTES.ADMIN.TRADING + '/earn-points',
+        },
+        {
+          icon: <Repeat className="w-4 h-4" />,
+          label: 'Swap Logs',
+          href: APP_ROUTES.ADMIN.TRADING + '/swap',
         },
       ],
     },
@@ -93,19 +95,24 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       ],
     },
     {
-      icon: <Package className="w-5 h-5" />,
-      label: 'Inventory',
-      href: APP_ROUTES.ADMIN.INVENTORY,
+      icon: <FolderOpen className="w-5 h-5" />,
+      label: 'Logs',
+      href: APP_ROUTES.ADMIN.NOTIFICATIONS,
       submenu: [
         {
-          icon: <Box className="w-4 h-4" />,
-          label: 'Products',
-          href: APP_ROUTES.ADMIN.INVENTORY + '?tab=products',
+          icon: <Activity className="w-4 h-4" />,
+          label: 'Activity Logs',
+          href: APP_ROUTES.ADMIN.NOTIFICATIONS + '/activity',
         },
         {
-          icon: <Wrench className="w-4 h-4" />,
-          label: 'Materials',
-          href: APP_ROUTES.ADMIN.INVENTORY + '?tab=materials',
+          icon: <Plus className="w-4 h-4" />,
+          label: 'Earn Points Logs',
+          href: APP_ROUTES.ADMIN.NOTIFICATIONS + '/earn-points',
+        },
+        {
+          icon: <Repeat className="w-4 h-4" />,
+          label: 'Swap Logs',
+          href: APP_ROUTES.ADMIN.NOTIFICATIONS + '/swap',
         },
       ],
     },
@@ -117,9 +124,9 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   ];
 
   const toggleExpanded = (label: string) => {
-    setExpandedItems((prev) =>
-      prev.includes(label)
-        ? prev.filter((item) => item !== label)
+    setExpandedItems(prev => 
+      prev.includes(label) 
+        ? prev.filter(item => item !== label)
         : [...prev, label]
     );
   };
@@ -142,40 +149,37 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        'w-[310px] h-screen bg-green-600 text-white flex flex-col fixed left-0 top-0 overflow-hidden',
+        'w-72 h-screen bg-green-600 text-white flex flex-col',
         className
       )}
     >
       {/* Header */}
-      <div className="px-4 py-4">
-        <div className="flex items-center justify-center space-x-3">
-          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+      <div className="px-4 py-4 border-b border-green-500">
+        <div className="flex items-center space-x-3">
+          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center flex-shrink-0">
             <img
               src="/brgy talipapa.png"
               alt="Barangay Talipapa Logo"
-              className="w-10 h-10 object-contain"
+              className="w-14 h-14 object-contain"
             />
           </div>
           <div>
-            <h1 className="text-white font-black text-xl">Barangay Admin</h1>
+            <h2 className="text-white font-semibold text-xl">Barangay CMS</h2>
+            <p className="text-green-200 text-lg">Brgy. Talipapa</p>
           </div>
         </div>
       </div>
 
-      {/* Separator Line */}
-      <div className="border-t border-green-400/50 mx-4"></div>
-
       {/* Navigation Items */}
-      <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-green-500 scrollbar-track-green-700">
+      <nav className="flex-1 px-4 py-4 space-y-1">
         {menuItems.map((item, index) => (
           <div key={index}>
             <button
               onClick={() => handleItemClick(item)}
               className={cn(
-                'w-full flex items-center justify-between px-4 py-3 text-left transition-colors duration-200 text-base',
-                location.pathname === item.href ||
-                  (item.submenu &&
-                    item.submenu.some((sub) => location.pathname === sub.href))
+                'w-full flex items-center justify-between px-3 py-3 text-left transition-colors duration-200 text-xl',
+                location.pathname === item.href || 
+                (item.submenu && item.submenu.some(sub => location.pathname === sub.href))
                   ? 'bg-green-700 text-white'
                   : 'text-white hover:bg-green-500/50'
               )}
@@ -185,39 +189,30 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
                 <span className="font-medium">{item.label}</span>
               </div>
               {item.submenu && (
-                <ChevronDown
-                  className={cn(
-                    'w-5 h-5 transition-transform duration-200',
-                    expandedItems.includes(item.label) ? 'rotate-180' : ''
-                  )}
-                />
+                <ChevronDown className={cn(
+                  'w-5 h-5 transition-transform duration-200',
+                  expandedItems.includes(item.label) ? 'rotate-180' : ''
+                )} />
               )}
             </button>
-
+            
             {/* Submenu */}
             {item.submenu && expandedItems.includes(item.label) && (
-              <div className="mt-3 mb-3 space-y-2">
+              <div className="space-y-1 mt-1 mb-1">
                 {item.submenu.map((subItem, subIndex) => (
-                  <div key={subIndex}>
-                    {subIndex > 0 && (
-                      <div className="border-t-2 border-green-300/60 my-2" style={{ marginLeft: '3rem', marginRight: '5rem' }} />
+                  <button
+                    key={subIndex}
+                    onClick={() => navigate(subItem.href!)}
+                    className={cn(
+                      'w-full flex items-center space-x-4 px-5 py-2 text-left transition-colors duration-200 text-lg',
+                      location.pathname === subItem.href
+                        ? 'bg-green-700 text-white'
+                        : 'text-white hover:bg-green-500/50'
                     )}
-                    <button
-                      onClick={() => navigate(subItem.href!)}
-                      className={cn(
-                        'w-full flex items-center space-x-3 pr-4 py-3 text-left transition-all duration-300 ease-in-out text-base rounded-md transform',
-                        'hover:scale-105 hover:shadow-lg hover:shadow-green-900/30 hover:bg-green-600/70 hover:text-white hover:font-semibold',
-                        'active:scale-95',
-                        location.pathname === subItem.href
-                          ? 'bg-green-700 text-white font-semibold scale-105 shadow-md'
-                          : 'text-green-100'
-                      )}
-                      style={{ paddingLeft: '3rem' }}
-                    >
-                      <span className="flex-shrink-0">{subItem.icon}</span>
-                      <span>{subItem.label}</span>
-                    </button>
-                  </div>
+                  >
+                    <span className="flex-shrink-0">{subItem.icon}</span>
+                    <span>{subItem.label}</span>
+                  </button>
                 ))}
               </div>
             )}
@@ -229,7 +224,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
       <div className="px-4 pb-4 border-t border-green-500 pt-4">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors duration-200 text-white hover:bg-green-500/50 text-base"
+          className="w-full flex items-center space-x-3 px-3 py-3 text-left transition-colors duration-200 text-white hover:bg-green-500/50 text-xl"
         >
           <LogOut className="w-5 h-5 text-orange-400" />
           <span className="font-medium">Logout</span>

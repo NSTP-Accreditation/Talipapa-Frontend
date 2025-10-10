@@ -5,13 +5,13 @@
  */
 
 /* Import Tailwind directives */
-@import url('./tailwind.css');
+@import './tailwind.css';
 
 /* Import CSS variables
  * Contains theme variables for colors, spacing, typography, and other design tokens
  * Used throughout the application for consistent styling
  */
-@import url('./variables.css');
+@import './variables.css';
 
 /* Base layer styles */
 @layer base {
@@ -21,26 +21,6 @@
 
   body {
     @apply bg-background text-foreground;
-  }
-
-  /* Hide scrollbar for webkit browsers (Chrome, Safari, Edge) */
-  html, body {
-    overflow-x: hidden;
-  }
-
-  body {
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
-  }
-
-  /* Hide scrollbar for any scrollable element */
-  *::-webkit-scrollbar {
-    display: none;
-  }
-
-  * {
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
   }
 }
 

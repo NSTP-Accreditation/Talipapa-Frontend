@@ -15,7 +15,7 @@ export default function Footer() {
           </p>
           <div className="flex space-x-4 mt-4">
             <a
-              href="https://www.facebook.com/attyericjuan"
+              href="https://www.facebook.com"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
@@ -57,7 +57,7 @@ export default function Footer() {
             </a>
 
             <a
-              href="https://quezoncity.gov.ph/"
+              href="https://talipapa.gov.ph"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Official website"

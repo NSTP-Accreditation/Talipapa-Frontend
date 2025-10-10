@@ -110,6 +110,13 @@ export default function NavBar() {
           >
             EcoCycle
           </Link>
+          <a
+            href=""
+            className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold"
+            style={{ fontSize: '16px' }}
+          >
+            Services
+          </a>
           <Link
             to="/aboutus"
             className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold"

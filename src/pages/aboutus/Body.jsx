@@ -12,12 +12,12 @@ const officials = [
 
 const BarangayOfficials = () => {
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-green-600 mb-8 text-center">
+    <div className="bg-white border border-gray-200 rounded-lg p-[70px] mr-[50px] ml-[50px] mb-[10px] shadow-sm">
+      <h2 className="text-[30px] font-semibold text-green-600 mb-6 pt-[20px] pb-[50px] text-center">
         Barangay Officials
       </h2>
 
-      <div className="flex flex-wrap justify-center gap-6 mb-16">
+      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {officials.map((official, index) => (
           <OfficialCard key={index} official={official} />
         ))}

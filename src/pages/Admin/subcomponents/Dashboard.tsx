@@ -5,209 +5,148 @@ import {
   CardContent,
   CardTitle,
 } from '../../../components/ui/card';
-import {
-  Users,
-  SquareMousePointer,
-  FileText,
-  Eye,
-  Trophy,
-  Activity,
-} from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const recentActivity = [
-    {
-      id: 'T001',
-      name: 'Juan Dela Cruz',
-      points: 150,
-      date: '2025-10-01',
-      trend: 'up',
-    },
-    {
-      id: 'T002',
-      name: 'Maria Santos',
-      points: 200,
-      date: '2025-10-01',
-      trend: 'up',
-    },
-    {
-      id: 'T003',
-      name: 'Jose Reyes',
-      points: 100,
-      date: '2025-09-30',
-      trend: 'down',
-    },
-    {
-      id: 'T004',
-      name: 'Anna Garcia',
-      points: 175,
-      date: '2025-09-30',
-      trend: 'up',
-    },
-  ];
-
-  const achievements = [
-    {
-      title: 'Community Clean-up Drive',
-      date: '2025-10-05',
-      status: 'Completed',
-    },
-    {
-      title: 'Vaccination Program Schedule',
-      date: '2025-10-03',
-      status: 'Completed',
-    },
-    {
-      title: 'Barangay Assembly Meeting',
-      date: '2025-10-02',
-      status: 'Ongoing',
-    },
-  ];
-
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">Dashboard</h1>
-        <p className="text-base text-teal-600">
-          Overview of your Barangay Information System
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+        <p className="text-gray-600 mt-2">
+          Welcome to Barangay CMS Admin Panel
         </p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-6">
-        {/* Today's Visits Card */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
-            <CardTitle className="text-sm font-bold text-gray-800">
-              Today's Visits
-            </CardTitle>
-            <Eye className="h-5 w-5 text-gray-500" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <svg
+              className="h-4 w-4 text-muted-foreground"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+              />
+            </svg>
           </CardHeader>
-          <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-900 mb-1">324</div>
-            <p className="text-xs text-blue-600">+8% from yesterday</p>
+          <CardContent>
+            <div className="text-2xl font-bold">1,234</div>
+            <p className="text-xs text-muted-foreground">
+              +10% from last month
+            </p>
           </CardContent>
         </Card>
 
-        {/* Total Visits Card */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
-            <CardTitle className="text-sm font-bold text-gray-800">
-              Total Visits
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Active Services
             </CardTitle>
-            <SquareMousePointer className="h-5 w-5 text-gray-500" />
+            <svg
+              className="h-4 w-4 text-muted-foreground"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+              />
+            </svg>
           </CardHeader>
-          <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-900 mb-1">12,458</div>
-            <p className="text-xs text-blue-600">+15% from last month</p>
+          <CardContent>
+            <div className="text-2xl font-bold">24</div>
+            <p className="text-xs text-muted-foreground">+2 new this week</p>
           </CardContent>
         </Card>
 
-        {/* Total Users Card */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
-            <CardTitle className="text-sm font-bold text-gray-800">
-              Total Users
-            </CardTitle>
-            <Users className="h-5 w-5 text-gray-500" />
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">News Articles</CardTitle>
+            <svg
+              className="h-4 w-4 text-muted-foreground"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+              />
+            </svg>
           </CardHeader>
-          <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-900 mb-1">1,245</div>
-            <p className="text-xs text-blue-600">+12% from last month</p>
+          <CardContent>
+            <div className="text-2xl font-bold">156</div>
+            <p className="text-xs text-muted-foreground">+12 published today</p>
           </CardContent>
         </Card>
 
-        {/* Placeholder Card */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
-            <CardTitle className="text-sm font-bold text-gray-400">
-              Coming Soon
-            </CardTitle>
-            <FileText className="h-5 w-5 text-gray-400" />
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Notifications</CardTitle>
+            <svg
+              className="h-4 w-4 text-muted-foreground"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 17h5l-5 5v-5z"
+              />
+            </svg>
           </CardHeader>
-          <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-400 mb-1">---</div>
-            <p className="text-xs text-gray-400">Feature in development</p>
+          <CardContent>
+            <div className="text-2xl font-bold">8</div>
+            <p className="text-xs text-muted-foreground">3 unread</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Bottom Section - Recent Activity and Achievements */}
-      <div className="grid grid-cols-2 gap-6 mt-8">
-        {/* Recent Activity */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
-          <CardHeader className="px-6 py-2.5 pb-1.5 flex flex-row items-center gap-2 border-b border-gray-200">
-            <Activity className="h-5 w-5 text-green-600" />
-            <CardTitle className="text-lg font-bold text-gray-800">
-              Recent Activity
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-6 py-0 pt-0.5 pb-2">
-            <div className="space-y-0">
-              {recentActivity.map((activity, index) => (
-                <div
-                  key={activity.id}
-                  className="flex items-center justify-between py-4 border-b border-gray-200 last:border-0"
-                >
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-gray-900 mb-1">
-                      {activity.name}
-                    </p>
-                    <p className="text-xs text-blue-600 font-medium">
-                      ID: {activity.id}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-gray-900 mb-1">
-                      {activity.points} pts
-                    </p>
-                    <p className="text-xs text-gray-500">{activity.date}</p>
-                  </div>
-                </div>
-              ))}
+      {/* Recent Activity */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">New user registration</p>
+                <p className="text-xs text-gray-500">2 minutes ago</p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Achievements */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl gap-0">
-          <CardHeader className="px-6 py-2.5 pb-1.5 flex flex-row items-center gap-2 border-b border-gray-200">
-            <Trophy className="h-5 w-5 text-green-600" />
-            <CardTitle className="text-lg font-bold text-gray-800">
-              Achievements
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-6 py-0 pt-0.5 pb-2">
-            <div className="space-y-0">
-              {achievements.map((achievement, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between py-4 border-b border-gray-200 last:border-0"
-                >
-                  <div className="flex-1 pr-4">
-                    <p className="text-sm font-semibold text-gray-900 mb-1">
-                      {achievement.title}
-                    </p>
-                    <p className="text-xs text-gray-500">{achievement.date}</p>
-                  </div>
-                  <div>
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-semibold ${
-                        achievement.status === 'Ongoing'
-                          ? 'bg-green-600 text-white'
-                          : 'bg-blue-600 text-white'
-                      }`}
-                    >
-                      {achievement.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
+            <div className="flex items-center space-x-4">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">Service updated</p>
+                <p className="text-xs text-gray-500">15 minutes ago</p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            <div className="flex items-center space-x-4">
+              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">News article published</p>
+                <p className="text-xs text-gray-500">1 hour ago</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
