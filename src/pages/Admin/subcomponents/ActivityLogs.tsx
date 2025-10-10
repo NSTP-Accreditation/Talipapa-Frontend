@@ -48,7 +48,7 @@ const ResidentRecords: React.FC = () => {
       <div className="flex items-start justify-between mb-6">
         <div>
           <h1 className="text-[50px] font-bold text-green-800">Resident Records</h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text- -600 mt-2">
             List of the resident records created.
           </p>
         </div>
@@ -62,12 +62,12 @@ const ResidentRecords: React.FC = () => {
 
       {/* Search Bar */}
       <div className="relative w-full mb-[40px]">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text- -400 pointer-events-none" />
 
         <Input
           type="text"
           placeholder="Search by Record Id or Name"
-          className="w-full rounded-md border border-gray-300 pt-[10px] pb-[10px] pl-[40px] focus:ring-2 focus:ring-green-600 focus:outline-none"
+          className="w-full rounded-md border border- -300 pt-[10px] pb-[10px] pl-[40px] focus:ring-2 focus:ring-green-600 focus:outline-none"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
@@ -79,7 +79,7 @@ const ResidentRecords: React.FC = () => {
       {/* Table */}
       <div className="overflow-x-auto rounded-lg border">
         <table className="min-w-full text-sm">
-          <thead className="bg-gray-100 text-gray-700">
+          <thead className="bg- -100 text- -700">
             <tr>
               <th className="px-4 py-2 text-left">Record Id</th>
               <th className="px-4 py-2 text-left">Name</th>
@@ -93,7 +93,7 @@ const ResidentRecords: React.FC = () => {
           <tbody>
             {currentResidents.length > 0 ? (
               currentResidents.map((resident, index) => (
-                <tr key={index} className="border-t hover:bg-gray-50">
+                <tr key={index} className="border-t hover:bg- -50">
                   <td className="px-4 py-3">{resident.recordId}</td>
                   <td className="px-4 py-3">{resident.name}</td>
                   <td className="px-4 py-3">{resident.activity}</td>
@@ -104,7 +104,7 @@ const ResidentRecords: React.FC = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="text-center py-4 text-gray-500">
+                <td colSpan={6} className="text-center py-4 text- -500">
                   No records found.
                 </td>
               </tr>
@@ -123,7 +123,7 @@ const ResidentRecords: React.FC = () => {
         >
           &lt;
         </Button>
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-  -600">
           Page {currentPage} of {totalPages || 1}
         </span>
         <Button

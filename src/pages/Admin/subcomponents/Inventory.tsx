@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,10 +15,6 @@ import {
   Wrench
 } from 'lucide-react';
 
-// Import the subcomponents
-import Products from '@/pages/Admin/subcomponents/Products';
-import Materials from '@/pages/Admin/subcomponents/Materials';
-
 interface InventoryStats {
   totalProducts: number;
   totalMaterials: number;
@@ -28,26 +23,6 @@ interface InventoryStats {
 }
 
 const Inventory: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'materials'>('overview');
-
-  // Update tab based on URL parameter
-  useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab && ['overview', 'products', 'materials'].includes(tab)) {
-      setActiveTab(tab as 'overview' | 'products' | 'materials');
-    }
-  }, [searchParams]);
-
-  // Update URL when tab changes
-  const handleTabChange = (tab: 'overview' | 'products' | 'materials') => {
-    setActiveTab(tab);
-    if (tab === 'overview') {
-      setSearchParams({});
-    } else {
-      setSearchParams({ tab });
-    }
-  };
 
   // Mock stats data - in real implementation, this would come from API
   const stats: InventoryStats = {
@@ -57,15 +32,8 @@ const Inventory: React.FC = () => {
     outOfStockItems: 2
   };
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'products':
-        return <Products />;
-      case 'materials':
-        return <Materials />;
-      case 'overview':
-      default:
-        return (
+  const renderContent = () => {
+    return (
           <div className="space-y-12">
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
@@ -132,29 +100,7 @@ const Inventory: React.FC = () => {
                 <CardTitle className="text-2xl">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <Button 
-                    onClick={() => handleTabChange('products')}
-                    className="h-32 flex flex-col items-center justify-center text-xl text-white"
-                    style={{ backgroundColor: '#1a4d2e' }}
-                  >
-                    <div className="p-2 rounded-lg mb-4" style={{ backgroundColor: '#F6F6F6' }}>
-                      <Package className="w-12 h-12" style={{ color: '#1a4d2e' }} />
-                    </div>
-                    <span>Manage Products</span>
-                  </Button>
-                  
-                  <Button 
-                    onClick={() => handleTabChange('materials')}
-                    className="h-32 flex flex-col items-center justify-center text-xl text-white"
-                    style={{ backgroundColor: '#1a4d2e' }}
-                  >
-                    <div className="p-2 rounded-lg mb-4" style={{ backgroundColor: '#F6F6F6' }}>
-                      <Wrench className="w-12 h-12" style={{ color: '#1a4d2e' }} />
-                    </div>
-                    <span>Manage Materials</span>
-                  </Button>
-                  
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-8 max-w-md">
                   <Button 
                     variant="outline"
                     className="h-32 flex flex-col items-center justify-center text-xl border-2"
@@ -265,55 +211,21 @@ const Inventory: React.FC = () => {
             </Card>
           </div>
         );
-    }
   };
 
   return (
     <div className="p-8 space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-4xl font-bold text-gray-900">Inventory Management</h1>
-          <p className="text-lg text-gray-600 mt-3">Manage products and materials for trading</p>
-        </div>
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 mb-3 flex items-center gap-3">
+          <span className="text-4xl">📦</span>
+          Inventory Management
+        </h1>
+        <p className="text-lg text-gray-700 font-medium">Manage products and materials for trading</p>
       </div>
 
-      {/* Tabs */}
-      <div className="flex space-x-2 bg-gray-100 p-2 rounded-lg w-fit mb-8">
-        <button
-          onClick={() => handleTabChange('overview')}
-          className={`px-6 py-3 rounded-md font-medium transition-colors ${
-            activeTab === 'overview' 
-              ? 'bg-white text-gray-900 shadow-sm' 
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Overview
-        </button>
-        <button
-          onClick={() => handleTabChange('products')}
-          className={`px-6 py-3 rounded-md font-medium transition-colors ${
-            activeTab === 'products' 
-              ? 'bg-white text-gray-900 shadow-sm' 
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Products
-        </button>
-        <button
-          onClick={() => handleTabChange('materials')}
-          className={`px-6 py-3 rounded-md font-medium transition-colors ${
-            activeTab === 'materials' 
-              ? 'bg-white text-gray-900 shadow-sm' 
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Materials
-        </button>
-      </div>
-
-      {/* Tab Content */}
-      {renderTabContent()}
+      {/* Content */}
+      {renderContent()}
     </div>
   );
 };

@@ -93,62 +93,64 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div
-          className="bg-white p-6 rounded-lg shadow-sm"
-          style={{ marginBottom: '48px' }}
-        >
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
-          <p className="text-gray-600 text-lg">
-            Manage system configuration and preferences
-          </p>
-        </div>
+    <div className="p-8 space-y-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-gray-900">Settings</h1>
+        <p className="text-lg text-gray-700 mt-3 font-medium">
+          Manage system configuration and preferences
+        </p>
+      </div>
 
+      {/* Content */}
+      <div className="grid grid-cols-1 gap-8">
         {/* Barangay Information */}
-        <Card className="shadow-sm" style={{ marginBottom: '48px' }}>
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl font-semibold text-gray-800">
+        <Card className="shadow-sm border border-gray-200">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-blue-50">
+                <span className="text-2xl">🏛️</span>
+              </div>
               Barangay Information
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6 pt-2">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+          <CardContent className="space-y-8">
+            <div className="space-y-4">
+              <label className="block text-base font-semibold text-gray-700">
                 Barangay Name
               </label>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 {editingBarangay ? (
                   <>
                     <input
                       type="text"
                       value={barangayName}
                       onChange={(e) => setBarangayName(e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="flex-1 px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     />
                     <button
                       onClick={handleBarangayNameSave}
-                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm"
+                      className="px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-all shadow-sm flex-shrink-0"
                     >
-                      Save
+                      ✓ Save
                     </button>
                     <button
                       onClick={() => setEditingBarangay(false)}
-                      className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm"
+                      className="px-6 py-3 bg-gray-500 text-white font-medium rounded-lg hover:bg-gray-600 transition-all shadow-sm flex-shrink-0"
                     >
-                      Cancel
+                      ✕ Cancel
                     </button>
                   </>
                 ) : (
                   <>
-                    <div className="flex-1 px-3 py-2 bg-green-50 border border-green-200 rounded-md">
+                    <div className="flex-1 px-4 py-3 text-lg bg-gray-50 border border-gray-200 rounded-lg font-medium text-gray-900">
                       {barangayName}
                     </div>
                     <button
                       onClick={() => setEditingBarangay(true)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm"
+                      className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all shadow-sm flex items-center gap-2 flex-shrink-0"
                     >
+                      <span>✏️</span>
                       Edit
                     </button>
                   </>
@@ -156,23 +158,26 @@ const Settings: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <label className="block text-sm font-medium text-gray-700 mb-4">
+            <div className="space-y-4">
+              <label className="block text-base font-semibold text-gray-700">
                 Barangay Logo
               </label>
-              <div className="flex items-center gap-6">
-                <div className="w-24 h-24 bg-gray-100 border-2 border-gray-300 rounded-lg flex items-center justify-center">
+              <div className="flex items-start gap-8">
+                <div className="w-40 h-40 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0 hover:border-blue-400 transition-colors">
                   {logoPreview ? (
                     <img
                       src={logoPreview}
                       alt="Logo preview"
-                      className="w-full h-full object-cover rounded-lg"
+                      className="w-full h-full object-contain p-2"
                     />
                   ) : (
-                    <span className="text-gray-500 text-3xl font-bold">B</span>
+                    <div className="text-center">
+                      <span className="text-gray-500 text-6xl block mb-2">🏛️</span>
+                      <span className="text-gray-700 text-sm font-bold">No Logo</span>
+                    </div>
                   )}
                 </div>
-                <div className="space-y-2">
+                <div className="flex flex-col gap-4 flex-1">
                   <input
                     type="file"
                     accept="image/*"
@@ -182,13 +187,21 @@ const Settings: React.FC = () => {
                   />
                   <label
                     htmlFor="logo-upload"
-                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md cursor-pointer text-sm flex items-center gap-2 font-medium"
+                    className="inline-flex items-center justify-center gap-3 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg cursor-pointer hover:bg-blue-700 transition-all shadow-sm w-fit"
                   >
-                    📁 Upload New Logo
+                    <span className="text-lg">📁</span>
+                    Upload New Logo
                   </label>
-                  <p className="text-sm text-gray-500">
-                    Recommended size: 200x200px
-                  </p>
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-800 font-bold">
+                      📋 Requirements:
+                    </p>
+                    <ul className="text-sm text-gray-700 space-y-1 ml-4 font-medium">
+                      <li>• Recommended size: 200x200px</li>
+                      <li>• Maximum file size: 2MB</li>
+                      <li>• Formats: JPG, PNG, GIF</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -196,123 +209,136 @@ const Settings: React.FC = () => {
         </Card>
 
         {/* Theme Settings */}
-        <Card className="shadow-sm" style={{ marginBottom: '48px' }}>
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl font-semibold text-gray-800">
+        <Card className="shadow-sm border border-gray-200">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-purple-50">
+                <span className="text-2xl">🎨</span>
+              </div>
               Theme Settings
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-2">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <label className="block text-sm font-medium text-gray-700 mb-4">
+          <CardContent>
+            <div className="space-y-6">
+              <label className="block text-base font-semibold text-gray-700">
                 Color Scheme
               </label>
-              <div className="flex gap-6">
+              <div className="flex flex-wrap gap-6">
                 <button
                   onClick={() => setColorScheme('Green')}
-                  className={`flex items-center gap-3 px-6 py-3 rounded-lg border-2 font-medium transition-all ${
+                  className={`flex items-center justify-center gap-4 px-8 py-4 rounded-xl border-2 font-semibold transition-all min-w-[140px] shadow-sm ${
                     colorScheme === 'Green'
-                      ? 'bg-green-600 text-white border-green-600 shadow-md'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-green-300'
+                      ? 'bg-green-600 text-white border-green-600 shadow-green-200'
+                      : 'bg-white text-gray-700 border-gray-300 hover:bg-green-50 hover:border-green-400 hover:shadow-md'
                   }`}
                 >
-                  <div className="w-5 h-5 bg-green-600 rounded"></div>
-                  Green
+                  <div className="w-5 h-5 bg-green-600 rounded-full flex-shrink-0 shadow-inner"></div>
+                  <span>Green</span>
                 </button>
                 <button
                   onClick={() => setColorScheme('White')}
-                  className={`flex items-center gap-3 px-6 py-3 rounded-lg border-2 font-medium transition-all ${
+                  className={`flex items-center justify-center gap-4 px-8 py-4 rounded-xl border-2 font-semibold transition-all min-w-[140px] shadow-sm ${
                     colorScheme === 'White'
-                      ? 'bg-gray-700 text-white border-gray-700 shadow-md'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                      ? 'bg-gray-700 text-white border-gray-700 shadow-gray-200'
+                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-500 hover:shadow-md'
                   }`}
                 >
-                  <div className="w-5 h-5 bg-white border border-gray-400 rounded"></div>
-                  White
+                  <div className="w-5 h-5 bg-white border-2 border-gray-400 rounded-full flex-shrink-0 shadow-inner"></div>
+                  <span>White</span>
                 </button>
               </div>
-              <p className="text-sm text-gray-500 mt-4">
-                Currently using {colorScheme.toLowerCase()} and white palette
-              </p>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="text-sm text-blue-800 font-medium">
+                  ✨ Currently using <span className="font-bold">{colorScheme}</span> theme with enhanced styling
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Admin Accounts */}
-        <Card className="shadow-sm" style={{ marginBottom: '48px' }}>
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl font-semibold text-gray-800">
+        <Card className="shadow-sm border border-gray-200">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-green-50">
+                <span className="text-2xl">👥</span>
+              </div>
               Admin Accounts
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 pt-2">
-            {adminUsers.map((user) => (
-              <div
-                key={user.id}
-                className="flex items-center justify-between p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                    <span className="text-green-600 font-semibold text-xl">
-                      {user.name.charAt(0)}
+          <CardContent>
+            <div className="space-y-4">
+              {adminUsers.map((user) => (
+                <div
+                  key={user.id}
+                  className="flex items-center justify-between p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all"
+                >
+                  <div className="flex items-center gap-6">
+                    <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <span className="text-white font-bold text-xl">
+                        {user.name.charAt(0)}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-lg text-gray-900">
+                        {user.name}
+                      </h4>
+                      <p className="text-base text-gray-800 font-medium">{user.email}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 flex-shrink-0">
+                    <span
+                      className={`px-4 py-2 rounded-full text-sm font-semibold shadow-sm ${
+                        user.role === 'Super Admin'
+                          ? 'bg-blue-100 text-blue-800 border border-blue-200'
+                          : 'bg-green-100 text-green-800 border border-green-200'
+                      }`}
+                    >
+                      {user.role}
                     </span>
-                  </div>
-                  <div className="space-y-1">
-                    <h4 className="font-semibold text-gray-900 text-lg">
-                      {user.name}
-                    </h4>
-                    <p className="text-sm text-gray-600">{user.email}</p>
+                    <button
+                      onClick={() => handleDeleteAdmin(user.id)}
+                      className="w-10 h-10 flex items-center justify-center text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all shadow-sm border border-red-200 hover:border-red-600"
+                      title="Delete admin"
+                    >
+                      <span className="text-lg">🗑️</span>
+                    </button>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span
-                    className={`px-4 py-2 rounded-full text-sm font-medium ${
-                      user.role === 'Super Admin'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-green-100 text-green-800'
-                    }`}
-                  >
-                    {user.role}
-                  </span>
-                  <button
-                    onClick={() => handleDeleteAdmin(user.id)}
-                    className="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 rounded-lg transition-colors"
-                    title="Delete admin"
-                  >
-                    🗑️
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </CardContent>
         </Card>
 
         {/* Add New Admin */}
-        <Card className="shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-xl font-semibold text-gray-800">
+        <Card className="shadow-sm border border-gray-200">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-orange-50">
+                <span className="text-2xl">➕</span>
+              </div>
               Add New Admin
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-2">
+          <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Name
+                <label className="block text-base font-semibold text-gray-700 mb-3">
+                  👤 Name
                 </label>
                 <input
                   type="text"
-                  placeholder="Full name"
+                  placeholder="Enter full name"
                   value={newAdmin.name}
                   onChange={(e) =>
                     setNewAdmin({ ...newAdmin, name: e.target.value })
                   }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Email
+                <label className="block text-base font-semibold text-gray-700 mb-3">
+                  📧 Email
                 </label>
                 <input
                   type="email"
@@ -321,26 +347,26 @@ const Settings: React.FC = () => {
                   onChange={(e) =>
                     setNewAdmin({ ...newAdmin, email: e.target.value })
                   }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Password
+                <label className="block text-base font-semibold text-gray-700 mb-3">
+                  🔐 Password
                 </label>
                 <input
                   type="password"
-                  placeholder="Secure password"
+                  placeholder="Create secure password"
                   value={newAdmin.password}
                   onChange={(e) =>
                     setNewAdmin({ ...newAdmin, password: e.target.value })
                   }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Role
+                <label className="block text-base font-semibold text-gray-700 mb-3">
+                  🏅 Role
                 </label>
                 <select
                   value={newAdmin.role}
@@ -350,19 +376,20 @@ const Settings: React.FC = () => {
                       role: e.target.value as 'Super Admin' | 'Editor',
                     })
                   }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm bg-white"
                 >
                   <option value="Editor">Editor</option>
                   <option value="Super Admin">Super Admin</option>
                 </select>
               </div>
             </div>
-            <div className="md:col-span-2 mt-6 pt-4 border-t border-gray-200">
+            <div className="mt-8 pt-6 border-t border-gray-200">
               <button
                 onClick={handleAddAdmin}
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium text-lg transition-colors shadow-md hover:shadow-lg"
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold text-lg rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl flex items-center gap-3"
               >
-                ➕ Add Admin Account
+                <span className="text-xl">✨</span>
+                Add Admin Account
               </button>
             </div>
           </CardContent>
