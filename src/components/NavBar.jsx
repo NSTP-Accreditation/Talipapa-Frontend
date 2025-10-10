@@ -49,7 +49,7 @@ export default function NavBar() {
 
       {/* Top bar with date and time */}
       <div
-        className="bg-[#0d2617] px-4 sm:px-6 py-1 flex justify-between items-center font-bold relative text-sm"
+        className="bg-[#0d2617] px-4 sm:px-6 py-1 flex justify-between items-center font-bold relative text-base md:text-lg"
       >
         <span className="tracking-wide truncate">{currentDate}</span>
         <span className="tracking-wide ml-2">{currentTime}</span>
@@ -87,25 +87,25 @@ export default function NavBar() {
         <div className="flex items-center space-x-3 sm:space-x-6">
           <Link
             to="/"
-            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-sm sm:text-base"
+            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
           >
             Home
           </Link>
           <Link
             to="/guidelines"
-            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-sm sm:text-base"
+            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
           >
             Guides
           </Link>
           <Link
             to="/trading"
-            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-sm sm:text-base"
+            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
           >
             EcoCycle
           </Link>
           <Link
             to="/aboutus"
-            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-sm sm:text-base"
+            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
           >
             About Us
           </Link>

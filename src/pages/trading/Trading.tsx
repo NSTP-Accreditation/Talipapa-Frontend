@@ -139,7 +139,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-3 px-6 border-b border-gray-200">
+      <div className="bg-gray-50 py-3 px-6">
         <div className="max-w-7xl mx-auto">
           <nav className="text-sm text-gray-600">
             <Link to="/" className="hover:underline">
@@ -152,25 +152,25 @@ export default function App() {
       </div>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
-        <div className="text-center mb-8">
-          <h1 className="mb-2 text-4xl font-bold">Eco Cycle</h1>
-          <p className="text-gray-600">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 md:py-16">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <h1 className="mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl font-bold">Eco Cycle</h1>
+          <p className="text-sm sm:text-base text-gray-600 px-4">
             Calculate how much valuable product you can get from your recyclable
             waste
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto mb-12 md:mb-16">
           {/* Input Panel */}
           <Card style={{ backgroundColor: '#f1f8f4', borderColor: '#c8e6c9' }}>
             <CardHeader>
               <CardTitle
-                className="flex items-center"
+                className="flex items-center text-base sm:text-lg"
                 style={{ color: '#1b4c2e' }}
               >
                 <div
-                  className="w-6 h-6 rounded-full text-white flex items-center justify-center text-sm mr-2"
+                  className="w-5 h-5 sm:w-6 sm:h-6 rounded-full text-white flex items-center justify-center text-xs sm:text-sm mr-2"
                   style={{ backgroundColor: '#1b4c2e' }}
                 >
                   ♻
@@ -181,14 +181,14 @@ export default function App() {
             <CardContent className="space-y-4">
               <div>
                 <label
-                  className="block text-sm mb-2"
+                  className="block text-xs sm:text-sm mb-2"
                   style={{ color: '#1b4c2e' }}
                 >
                   Select Recyclable Type:
                 </label>
                 <Select value={selectedType} onValueChange={setSelectedType}>
                   <SelectTrigger
-                    className="bg-white h-10 px-4 w-full"
+                    className="bg-white h-9 sm:h-10 px-3 sm:px-4 w-full text-sm"
                     style={{ borderColor: '#a5d6a7' }}
                   >
                     <SelectValue placeholder="Choose recyclable type" />
@@ -205,7 +205,7 @@ export default function App() {
 
               <div>
                 <label
-                  className="block text-sm mb-3"
+                  className="block text-xs sm:text-sm mb-2"
                   style={{ color: '#1b4c2e' }}
                 >
                   Enter weight (e.g., 2.5 kg):
@@ -215,14 +215,14 @@ export default function App() {
                   placeholder="2 KG"
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
-                  className="bg-white h-9 px-4 w-full"
+                  className="bg-white h-9 sm:h-10 px-3 sm:px-4 w-full text-sm"
                   style={{ borderColor: '#a5d6a7' }}
                 />
               </div>
 
               <Button
                 onClick={handleConvert}
-                className="w-full z-10 h-12 text-base font-semibold mt-2"
+                className="w-full z-10 h-10 sm:h-12 text-sm sm:text-base font-semibold"
                 style={{ backgroundColor: '#1b4c2e' }}
               >
                 Convert
@@ -234,11 +234,11 @@ export default function App() {
           <Card style={{ backgroundColor: '#f1f8f4', borderColor: '#c8e6c9' }}>
             <CardHeader>
               <CardTitle
-                className="flex items-center"
+                className="flex items-center text-base sm:text-lg"
                 style={{ color: '#1b4c2e' }}
               >
                 <div
-                  className="w-6 h-6 rounded-full text-white flex items-center justify-center text-sm mr-2"
+                  className="w-5 h-5 sm:w-6 sm:h-6 rounded-full text-white flex items-center justify-center text-xs sm:text-sm mr-2"
                   style={{ backgroundColor: '#1b4c2e' }}
                 >
                   📊
@@ -246,16 +246,16 @@ export default function App() {
                 Result
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-4">
               <div>
-                <p className="text-center mb-4" style={{ color: '#1b4c2e' }}>
+                <p className="text-center text-sm sm:text-base mb-4" style={{ color: '#1b4c2e' }}>
                   Conversion Result:
                 </p>
 
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center p-2 bg-red-50 rounded">
-                    <span className="text-red-600">Input:</span>
-                    <span className="text-red-600">
+                <div className="space-y-3">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 bg-red-50 rounded gap-1 sm:gap-0">
+                    <span className="text-red-600 text-xs sm:text-sm font-medium">Input:</span>
+                    <span className="text-red-600 text-xs sm:text-sm break-words">
                       {weight
                         ? `${weight} kg ${
                             wasteTypes.find((t) => t.value === selectedType)
@@ -266,15 +266,15 @@ export default function App() {
                   </div>
 
                   <div className="p-4 bg-orange-50 rounded flex flex-col items-center">
-                    <span className="text-orange-600 mb-2">Output:</span>
+                    <span className="text-orange-600 text-xs sm:text-sm font-medium mb-3">Output:</span>
                     {result && (
                       <ImageWithFallback
                         src={result.image}
                         alt={result.output}
-                        className="w-48 h-48 rounded object-cover mb-2" // Increased size and centered
+                        className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded object-cover mb-3"
                       />
                     )}
-                    <span className="text-orange-600">
+                    <span className="text-orange-600 text-xs sm:text-sm text-center">
                       {result
                         ? `${(parseFloat(weight) * 0.2).toFixed(
                             1
@@ -284,11 +284,11 @@ export default function App() {
                   </div>
 
                   <div
-                    className="flex justify-between items-center p-2 rounded"
+                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 rounded gap-1 sm:gap-0"
                     style={{ backgroundColor: '#f1f8f4' }}
                   >
-                    <span style={{ color: '#1b4c2e' }}>Estimated Value:</span>
-                    <span style={{ color: '#1b4c2e' }}>
+                    <span className="text-xs sm:text-sm font-medium" style={{ color: '#1b4c2e' }}>Estimated Value:</span>
+                    <span className="text-xs sm:text-sm" style={{ color: '#1b4c2e' }}>
                       {result
                         ? `${result.points} ${
                             result.points === 1 ? 'point' : 'points'
@@ -299,8 +299,8 @@ export default function App() {
                 </div>
 
                 <div className="mt-4 text-center">
-                  <p className="text-gray-600 mb-2">TOTAL:</p>
-                  <p className="text-2xl" style={{ color: '#1b4c2e' }}>
+                  <p className="text-gray-600 text-xs sm:text-sm mb-2">TOTAL:</p>
+                  <p className="text-xl sm:text-2xl font-semibold" style={{ color: '#1b4c2e' }}>
                     {result
                       ? `${result.points} ${
                           result.points === 1 ? 'point' : 'points'
@@ -314,13 +314,13 @@ export default function App() {
         </div>
 
         {/* Check Your Points */}
-        <div className="flex justify-center items-center bg-gray-50 py-12">
+        <div className="max-w-lg mx-auto py-12 md:py-16 px-4">
           <div
-            className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full border"
+            className="bg-white rounded-lg shadow-lg p-6 sm:p-8 w-full border"
             style={{ borderColor: '#c8e6c9' }}
           >
             <h3
-              className="mb-4 text-lg font-semibold text-center"
+              className="mb-6 text-lg sm:text-xl font-semibold text-center"
               style={{ color: '#1b4c2e' }}
             >
               Check Your Record Points Here
@@ -328,7 +328,7 @@ export default function App() {
             <div className="space-y-4">
               <div>
                 <label
-                  className="block text-sm mb-2"
+                  className="block text-xs sm:text-sm mb-2 font-medium"
                   htmlFor="record-id"
                   style={{ color: '#1b4c2e' }}
                 >
@@ -338,13 +338,13 @@ export default function App() {
                   id="record-id"
                   type="text"
                   placeholder="BT-"
-                  className="bg-white px-4 py-2 rounded border shadow-sm w-full"
+                  className="bg-white h-10 px-3 sm:px-4 rounded border shadow-sm w-full text-sm"
                   style={{ color: '#1b4c2e', borderColor: '#c8e6c9' }}
                 />
               </div>
               <div>
                 <label
-                  className="block text-sm mb-2"
+                  className="block text-xs sm:text-sm mb-2 font-medium"
                   htmlFor="last-name"
                   style={{ color: '#1b4c2e' }}
                 >
@@ -354,12 +354,12 @@ export default function App() {
                   id="last-name"
                   type="text"
                   placeholder="Enter your last name"
-                  className="bg-white px-4 py-2 rounded border shadow-sm w-full"
+                  className="bg-white h-10 px-3 sm:px-4 rounded border shadow-sm w-full text-sm"
                   style={{ color: '#1b4c2e', borderColor: '#c8e6c9' }}
                 />
               </div>
               <Button
-                className="text-white px-6 py-2 rounded shadow-md w-full transition-all"
+                className="text-white h-10 sm:h-11 px-4 sm:px-6 rounded shadow-md w-full transition-all text-sm sm:text-base font-semibold mt-2"
                 style={{ backgroundColor: '#1b4c2e' }}
                 onClick={() => alert('Check Record feature coming soon!')}
               >
@@ -371,43 +371,43 @@ export default function App() {
 
         {/* TaliPanahATIN Program */}
         <Card
-          className="shadow-lg mt-8"
+          className="shadow-lg mt-10 sm:mt-12 md:mt-16"
           style={{
             background: 'linear-gradient(to bottom right, #f1f8f4, #e8f5e9)',
             borderColor: '#c8e6c9',
           }}
         >
           <CardHeader
-            className="text-center text-white rounded-t-lg"
+            className="text-center text-white rounded-t-lg p-5 sm:p-6"
             style={{
               background: 'linear-gradient(to right, #1b4c2e, #256d3f)',
             }}
           >
-            <CardTitle className="text-2xl">
+            <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold">
               "May Buhay sa Basura ng Barangay"
               <br />
-              <span className="text-xl opacity-80">TaliPaPaNatin</span>
+              <span className="text-base sm:text-lg md:text-xl opacity-90">TaliPaPaNatin</span>
             </CardTitle>
-            <p className="mt-2 opacity-90">
+            <p className="mt-2 sm:mt-3 opacity-90 text-xs sm:text-sm md:text-base">
               Community Waste Management Programs
             </p>
           </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <CardContent className="p-6 sm:p-8 md:p-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {programCategories.map((category, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-lg p-5 border shadow-sm hover:shadow-md transition-shadow duration-200"
+                  className="bg-white rounded-lg p-5 sm:p-6 border shadow-sm hover:shadow-md transition-shadow duration-200"
                   style={{ borderColor: '#c8e6c9' }}
                 >
                   <div className="flex items-center mb-4">
                     <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center mr-3"
+                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0"
                       style={{ backgroundColor: '#1b4c2e' }}
                     >
-                      <span className="text-white text-sm">✓</span>
+                      <span className="text-white text-xs sm:text-sm">✓</span>
                     </div>
-                    <h4 className="leading-tight" style={{ color: '#1b4c2e' }}>
+                    <h4 className="text-xs sm:text-sm md:text-base font-semibold leading-tight" style={{ color: '#1b4c2e' }}>
                       {category.title}
                     </h4>
                   </div>
@@ -415,10 +415,10 @@ export default function App() {
                     {category.items.map((item, itemIndex) => (
                       <li
                         key={itemIndex}
-                        className="text-sm text-gray-700 flex items-start"
+                        className="text-xs sm:text-sm text-gray-700 flex items-start"
                       >
                         <span
-                          className="mr-2 mt-1 text-xs"
+                          className="mr-1.5 sm:mr-2 mt-0.5 sm:mt-1 text-xs flex-shrink-0"
                           style={{ color: '#1b4c2e' }}
                         >
                           ●

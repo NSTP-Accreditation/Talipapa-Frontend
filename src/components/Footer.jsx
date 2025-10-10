@@ -8,8 +8,8 @@ export default function Footer() {
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-green-800 pt-6">
         <div>
-          <h3 className="mb-4">Barangay Talipapa</h3>
-          <p className="text-[#cfead6] text-sm leading-relaxed">
+          <h3 className="mb-4 text-lg md:text-xl font-bold">Barangay Talipapa</h3>
+          <p className="text-[#cfead6] text-base md:text-lg leading-relaxed">
             A progressive community fostering environmental sustainability and
             unity in Quezon City, Philippines.
           </p>
@@ -80,8 +80,8 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="mb-4">Contact Information</h3>
-          <ul className="space-y-2 text-sm">
+          <h3 className="mb-4 text-lg md:text-xl font-bold">Contact Information</h3>
+          <ul className="space-y-2 text-base md:text-lg">
             <li className="flex items-center text-[#cfead6]">
               {/* Location icon */}
               <svg
@@ -94,7 +94,7 @@ export default function Footer() {
               >
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" />
               </svg>
-              <span className="text-sm">
+              <span className="text-base md:text-lg">
                 506 Quirino Hwy, Novaliches, Quezon City, 1116
               </span>
             </li>
@@ -111,7 +111,7 @@ export default function Footer() {
               >
                 <path d="M6.62 10.79a15.46 15.46 0 006.59 6.59l2.2-2.2a1 1 0 01.95-.27c1.06.27 2.2.42 3.38.42a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.18.15 2.32.42 3.38a1 1 0 01-.27.95l-2.03 2.46z" />
               </svg>
-              <span className="text-sm">Desk Office: (63) 0917-5586735</span>
+              <span className="text-base md:text-lg">Desk Office: (63) 0917-5586735</span>
             </li>
 
             <li className="flex items-center text-[#cfead6]">
@@ -126,7 +126,7 @@ export default function Footer() {
               >
                 <path d="M6.62 10.79a15.46 15.46 0 006.59 6.59l2.2-2.2a1 1 0 01.95-.27c1.06.27 2.2.42 3.38.42a1 1 0 011 1V20a1 1 0 01-1 1C10.07 21 3 13.93 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.18.15 2.32.42 3.38a1 1 0 01-.27.95l-2.03 2.46z" />
               </svg>
-              <span className="text-sm">Admin Office: (63) 8-7110745</span>
+              <span className="text-base md:text-lg">Admin Office: (63) 8-7110745</span>
             </li>
 
             <li className="flex items-center text-[#cfead6]">
@@ -142,7 +142,7 @@ export default function Footer() {
                 <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
               </svg>
               <a
-                className="text-sm hover:underline"
+                className="text-base md:text-lg hover:underline"
                 href="mailto:barangay.talipapa2018@gmail.com"
               >
                 barangay.talipapa2018@gmail.com
