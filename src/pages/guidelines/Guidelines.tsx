@@ -74,12 +74,12 @@ export default function Guidelines() {
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {guides.map((guide, index) => {
             const IconComponent = guide.icon;
             return (
               <Link key={index} to={guide.path}>
-                <div className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-lg transition-all duration-300 cursor-pointer group hover:border-green-300 hover:bg-green-50">
+                <div className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-lg transition-all duration-300 cursor-pointer group hover:border-green-300 hover:bg-green-50 min-h-[140px] flex flex-col items-center justify-center">
                   <div 
                     className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300"
                     style={{ backgroundColor: '#e8f5e9' }}

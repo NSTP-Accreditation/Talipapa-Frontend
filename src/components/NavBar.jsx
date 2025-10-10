@@ -42,25 +42,21 @@ export default function NavBar() {
           <img
             src="/brgy talipapa.png"
             alt="Barangay Talipapa Lungsod Quezon Logo"
-            className="h-[80px] w-[80px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
+            className="h-[70px] w-[70px] sm:h-[80px] sm:w-[80px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
           />
         </Link>
       </div>
 
       {/* Top bar with date and time */}
       <div
-        className="bg-[#0d2617] px-6 py-1 flex justify-between items-center font-bold relative"
-        style={{ fontSize: '14px' }}
+        className="bg-[#0d2617] px-4 sm:px-6 py-1 flex justify-between items-center font-bold relative text-base md:text-lg"
       >
-        <span className="tracking-wide">{currentDate}</span>
-        <span className="tracking-wide">{currentTime}</span>
+        <span className="tracking-wide truncate">{currentDate}</span>
+        <span className="tracking-wide ml-2">{currentTime}</span>
       </div>
 
       {/* Main navbar */}
-      <nav
-        className="px-6 py-2 flex items-center justify-between"
-        style={{ fontSize: '16px' }}
-      >
+      <nav className="px-4 sm:px-6 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <a
             href="https://quezoncity.gov.ph/"
@@ -71,7 +67,7 @@ export default function NavBar() {
             <img
               src="/qc.png"
               alt="Lungsod Quezon Pilipinas Logo"
-              className="h-[45px] w-[45px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
+              className="h-[40px] w-[40px] sm:h-[45px] sm:w-[45px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
             />
           </a>
           <a
@@ -83,37 +79,33 @@ export default function NavBar() {
             <img
               src="/qcu.png"
               alt="QCU Logo"
-              className="h-[45px] w-[45px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
+              className="h-[40px] w-[40px] sm:h-[45px] sm:w-[45px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
             />
           </a>
         </div>
 
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-3 sm:space-x-6">
           <Link
             to="/"
-            className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold"
-            style={{ fontSize: '16px' }}
+            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
           >
             Home
           </Link>
           <Link
             to="/guidelines"
-            className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold"
-            style={{ fontSize: '16px' }}
+            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
           >
             Guides
           </Link>
           <Link
             to="/trading"
-            className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold"
-            style={{ fontSize: '16px' }}
+            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
           >
             EcoCycle
           </Link>
           <Link
             to="/aboutus"
-            className="hover:text-gray-200 px-3 py-1 transition-colors font-semibold"
-            style={{ fontSize: '16px' }}
+            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
           >
             About Us
           </Link>
