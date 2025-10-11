@@ -141,7 +141,7 @@ export default function CalendarEvents() {
 
         {/* Call to Action */}
         <div className="text-center mt-12">
-          <div className="bg-green-50 border border-green-200 rounded-lg p-6 max-w-2xl mx-auto">
+          <div className="bg-white border border-green-200 rounded-lg p-6 max-w-2xl mx-auto">
             <h3 className="text-lg font-semibold text-green-800 mb-2">
               Want to stay updated?
             </h3>

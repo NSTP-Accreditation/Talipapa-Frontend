@@ -12,7 +12,7 @@ export default function MissionVision() {
     <section className="bg-green-50 py-12 px-6 flex flex-col items-center">
       {/* Header */}
       <header className="max-w-2xl text-center mb-12">
-        <h2 className="text-[32px] font-black text-gray-800">
+        <h2 className="text-[32px] font-black text-green-800">
           Our Mission & Vision
         </h2>
         <br />
@@ -54,7 +54,7 @@ export default function MissionVision() {
         </div>
       </div>
       {/* Core Values */}
-      <div className="max-w-5xl w-[1200px] mt-[50px] mx-auto">
+      <div className="max-w-5xl w-[1500px] mt-[50px] mx-auto">
         <div className="bg-green-600 rounded-xl py-16 px-10 grid grid-cols-4 gap-10 text-center text-white">
           <div className="flex flex-col items-center justify-center">
             <Leaf className="mb-4" size={25} />
