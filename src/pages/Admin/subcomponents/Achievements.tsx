@@ -448,7 +448,7 @@ const Achievements: React.FC = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <span className="text-4xl">🏆</span>
+            <span className="text-4xl"></span>
             Barangay Achievements
           </h1>
           <p className="text-lg text-gray-700 mt-3 font-medium">

@@ -69,7 +69,7 @@ const Dashboard: React.FC = () => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-3 flex items-center gap-3">
-          <span className="text-4xl">📊</span>
+          <span className="text-4xl"></span>
           Dashboard
         </h1>
         <p className="text-lg text-gray-700 font-medium">

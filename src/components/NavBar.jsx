@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
 export default function NavBar() {
   const [currentDate, setCurrentDate] = useState('');
   const [currentTime, setCurrentTime] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -36,17 +38,6 @@ export default function NavBar() {
 
   return (
     <header className="bg-[#1b4c2e] text-white w-full relative pt-10">
-      {/* Center Barangay Talipapa Logo - Overlapping both bars */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 top-0 z-10">
-        <Link to="/" className="block">
-          <img
-            src="/brgy talipapa.png"
-            alt="Barangay Talipapa Lungsod Quezon Logo"
-            className="h-[70px] w-[70px] sm:h-[80px] sm:w-[80px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
-          />
-        </Link>
-      </div>
-
       {/* Top bar with date and time */}
       <div
         className="bg-[#0d2617] px-4 sm:px-6 py-1 flex justify-between items-center font-bold relative text-base md:text-lg"
@@ -57,7 +48,63 @@ export default function NavBar() {
 
       {/* Main navbar */}
       <nav className="px-4 sm:px-6 py-2 flex items-center justify-between">
+        {/* Left Side: Hamburger (mobile) or Navigation Links (desktop) */}
+        <div className="flex items-center">
+          {/* Mobile Hamburger Button */}
+          <button
+            className="text-white hover:text-gray-200 transition-colors"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+            style={{ display: window.innerWidth >= 768 ? 'none' : 'block' }}
+          >
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
+
+          {/* Desktop Navigation Links */}
+          <div 
+            className="items-center space-x-3 sm:space-x-6"
+            style={{ display: window.innerWidth >= 768 ? 'flex' : 'none' }}
+          >
+            <Link
+              to="/"
+              className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
+            >
+              Home
+            </Link>
+            <Link
+              to="/guidelines"
+              className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
+            >
+              Guides
+            </Link>
+            <Link
+              to="/trading"
+              className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
+            >
+              EcoCycle
+            </Link>
+            <Link
+              to="/aboutus"
+              className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
+            >
+              About Us
+            </Link>
+          </div>
+        </div>
+
+        {/* All Icons on the Right Side */}
         <div className="flex items-center space-x-3">
+          <Link to="/" className="block">
+            <img
+              src="/brgy talipapa.png"
+              alt="Barangay Talipapa Lungsod Quezon Logo"
+              className="h-[40px] w-[40px] sm:h-[45px] sm:w-[45px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
+            />
+          </Link>
           <a
             href="https://quezoncity.gov.ph/"
             target="_blank"
@@ -83,34 +130,44 @@ export default function NavBar() {
             />
           </a>
         </div>
+      </nav>
 
-        <div className="flex items-center space-x-3 sm:space-x-6">
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div 
+          className="bg-[#0d2617] px-4 py-3 space-y-2"
+          style={{ display: window.innerWidth >= 768 ? 'none' : 'block' }}
+        >
           <Link
             to="/"
-            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
+            className="block hover:text-gray-200 px-3 py-2 transition-colors font-semibold text-base rounded hover:bg-[#1b4c2e]"
+            onClick={() => setIsMenuOpen(false)}
           >
             Home
           </Link>
           <Link
             to="/guidelines"
-            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
+            className="block hover:text-gray-200 px-3 py-2 transition-colors font-semibold text-base rounded hover:bg-[#1b4c2e]"
+            onClick={() => setIsMenuOpen(false)}
           >
             Guides
           </Link>
           <Link
             to="/trading"
-            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
+            className="block hover:text-gray-200 px-3 py-2 transition-colors font-semibold text-base rounded hover:bg-[#1b4c2e]"
+            onClick={() => setIsMenuOpen(false)}
           >
             EcoCycle
           </Link>
           <Link
             to="/aboutus"
-            className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
+            className="block hover:text-gray-200 px-3 py-2 transition-colors font-semibold text-base rounded hover:bg-[#1b4c2e]"
+            onClick={() => setIsMenuOpen(false)}
           >
             About Us
           </Link>
         </div>
-      </nav>
+      )}
     </header>
   );
 }
