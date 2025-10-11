@@ -48,7 +48,7 @@ const ResidentRecords: React.FC = () => {
       <div className="flex items-start justify-between mb-6">
         <div>
           <h1 className="text-[50px] font-bold text-green-800">Resident Records</h1>
-          <p className="text- -600 mt-2">
+          <p className="text-gray-600 mt-2">
             List of the resident records created.
           </p>
         </div>
