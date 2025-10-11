@@ -93,7 +93,7 @@ const ResidentRecords: React.FC = () => {
           <tbody>
             {currentResidents.length > 0 ? (
               currentResidents.map((resident, index) => (
-                <tr key={index} className="border-t hover:bg- -50">
+                <tr key={index} className="border-t hover:bg-gray-50">
                   <td className="px-4 py-3">{resident.recordId}</td>
                   <td className="px-4 py-3">{resident.name}</td>
                   <td className="px-4 py-3">{resident.activity}</td>
