@@ -44,7 +44,7 @@ export default function AlertMessage({ type = "success", message = "Message" }: 
       <button
         onClick={() => setVisible(false)}
         className="text-gray-400 hover:text-gray-600 transition-colors"
-        aria-label="Close alert"
+        aria-label={`Close ${type} message`}
       >
         <X className="w-5 h-5" />
       </button>
