@@ -11,10 +11,9 @@ const AdminLogin: React.FC = () => {
     password: '',
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, loading, setLoading } = useAuth();
 
   // Redirect if already logged in
   useEffect(() => {
@@ -64,12 +63,11 @@ const AdminLogin: React.FC = () => {
       return;
     }
 
-    setIsLoading(true);
-
-    try {
+    setLoading(true);
+    try { 
       const success = await login(formData.username, formData.password);
 
-      if (success) {
+      if (isAuthenticated) {
         // Redirect to the intended page or dashboard
         const from =
           (location.state as any)?.from?.pathname || APP_ROUTES.ADMIN.DASHBOARD;
@@ -84,7 +82,7 @@ const AdminLogin: React.FC = () => {
         submit: 'Login failed. Please try again.',
       });
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -127,7 +125,7 @@ const AdminLogin: React.FC = () => {
                       value={formData.username}
                       onChange={handleInputChange}
                       className={`w-full h-[48px] px-3 bg-white border-0 border-b-2 border-gray-300 rounded-none text-base placeholder:text-gray-500 focus:border-blue-500 focus:ring-0 focus:outline-none hover:opacity-80 transition-opacity cursor-pointer ${errors.username ? 'border-red-500 focus:border-red-500' : ''}`}
-                      disabled={isLoading}
+                      disabled={loading}
                     />
                     {errors.username && (
                       <p className="text-sm text-red-600 mt-2">
@@ -146,7 +144,7 @@ const AdminLogin: React.FC = () => {
                       value={formData.password}
                       onChange={handleInputChange}
                       className={`w-full h-[48px] px-3 bg-white border-0 border-b-2 border-gray-300 rounded-none text-base placeholder:text-gray-500 focus:border-blue-500 focus:ring-0 focus:outline-none hover:opacity-80 transition-opacity cursor-pointer ${errors.password ? 'border-red-500 focus:border-red-500' : ''}`}
-                      disabled={isLoading}
+                      disabled={loading}
                     />
                     {errors.password && (
                       <p className="text-sm text-red-600 mt-2">
@@ -167,9 +165,9 @@ const AdminLogin: React.FC = () => {
                     <Button
                       type="submit"
                       className="w-full h-[64px] bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-md text-lg hover:opacity-80 transition-opacity cursor-pointer mb-6"
-                      disabled={isLoading}
+                      disabled={loading}
                     >
-                      {isLoading ? (
+                      {loading ? (
                         <div className="flex items-center justify-center space-x-2">
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                           <span>Signing in...</span>

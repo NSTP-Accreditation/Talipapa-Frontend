@@ -21,7 +21,7 @@ import AdminLogin from '@/admin/auth/AdminLogin';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import Inventory from '@/admin/pages/Inventory';
 // USER PAGE EXPORT HERE
-import Home from './users/page/Home';
+import Home from '@/users/page/Home';
 import NavBar from '@/users/components/NavBar';
 import GuidelinesApp from '@/users/page/Guidelines';
 import MoreGuides from '@/users/page/MoreGuides';
