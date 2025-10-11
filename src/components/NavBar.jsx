@@ -71,25 +71,25 @@ export default function NavBar() {
           >
             <Link
               to="/"
-              className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
+              className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-bold text-base md:text-lg"
             >
               Home
             </Link>
             <Link
               to="/guidelines"
-              className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
+              className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-bold text-base md:text-lg"
             >
               Guides
             </Link>
             <Link
               to="/trading"
-              className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
+              className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-bold text-base md:text-lg"
             >
               EcoCycle
             </Link>
             <Link
               to="/aboutus"
-              className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-semibold text-base md:text-lg"
+              className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-bold text-base md:text-lg"
             >
               About Us
             </Link>
@@ -102,7 +102,7 @@ export default function NavBar() {
             <img
               src="/brgy talipapa.png"
               alt="Barangay Talipapa Lungsod Quezon Logo"
-              className="h-[40px] w-[40px] sm:h-[45px] sm:w-[45px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
+              className="h-[50px] w-[50px] sm:h-[55px] sm:w-[55px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
             />
           </Link>
           <a
@@ -114,7 +114,7 @@ export default function NavBar() {
             <img
               src="/qc.png"
               alt="Lungsod Quezon Pilipinas Logo"
-              className="h-[40px] w-[40px] sm:h-[45px] sm:w-[45px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
+              className="h-[50px] w-[50px] sm:h-[55px] sm:w-[55px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
             />
           </a>
           <a
@@ -126,7 +126,7 @@ export default function NavBar() {
             <img
               src="/qcu.png"
               alt="QCU Logo"
-              className="h-[40px] w-[40px] sm:h-[45px] sm:w-[45px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
+              className="h-[50px] w-[50px] sm:h-[55px] sm:w-[55px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
             />
           </a>
         </div>
@@ -140,28 +140,28 @@ export default function NavBar() {
         >
           <Link
             to="/"
-            className="block hover:text-gray-200 px-3 py-2 transition-colors font-semibold text-base rounded hover:bg-[#1b4c2e]"
+            className="block hover:text-gray-200 px-3 py-2 transition-colors font-bold text-base rounded hover:bg-[#1b4c2e]"
             onClick={() => setIsMenuOpen(false)}
           >
             Home
           </Link>
           <Link
             to="/guidelines"
-            className="block hover:text-gray-200 px-3 py-2 transition-colors font-semibold text-base rounded hover:bg-[#1b4c2e]"
+            className="block hover:text-gray-200 px-3 py-2 transition-colors font-bold text-base rounded hover:bg-[#1b4c2e]"
             onClick={() => setIsMenuOpen(false)}
           >
             Guides
           </Link>
           <Link
             to="/trading"
-            className="block hover:text-gray-200 px-3 py-2 transition-colors font-semibold text-base rounded hover:bg-[#1b4c2e]"
+            className="block hover:text-gray-200 px-3 py-2 transition-colors font-bold text-base rounded hover:bg-[#1b4c2e]"
             onClick={() => setIsMenuOpen(false)}
           >
             EcoCycle
           </Link>
           <Link
             to="/aboutus"
-            className="block hover:text-gray-200 px-3 py-2 transition-colors font-semibold text-base rounded hover:bg-[#1b4c2e]"
+            className="block hover:text-gray-200 px-3 py-2 transition-colors font-bold text-base rounded hover:bg-[#1b4c2e]"
             onClick={() => setIsMenuOpen(false)}
           >
             About Us
