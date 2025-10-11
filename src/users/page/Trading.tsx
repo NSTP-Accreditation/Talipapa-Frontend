@@ -190,7 +190,7 @@ export default function Trading() {
             </CardHeader>
             <CardContent className="space-y-6 p-6">
               <div>
-                <label className="block text-sm mb-3 font-bold text-gray-800 flex items-center gap-2">
+                <label className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2">
                   <span className="text-lg">🗑️</span>
                   Select Recyclable Type:
                 </label>
@@ -209,7 +209,7 @@ export default function Trading() {
               </div>
 
               <div>
-                <label className="block text-sm mb-3 font-bold text-gray-800 flex items-center gap-2">
+                <label className=" text-sm mb-3 font-bold text-gray-800 flex items-center gap-2">
                   <span className="text-lg">⚖️</span>
                   Enter weight (kg):
                 </label>
@@ -309,7 +309,7 @@ export default function Trading() {
                   </div>
                 </div>
 
-                <div className="mt-6 text-center pt-6 border-t-2 border-gray-200 bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-200">
+                <div className="mt-6 text-center pt-6 border-t-2  bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-200">
                   <p className="text-gray-700 text-sm mb-3 font-bold tracking-wide flex items-center justify-center gap-2">
                     <span className="text-xl">🎯</span>
                     TOTAL POINTS:
@@ -346,7 +346,7 @@ export default function Trading() {
             </div>
             <div className="space-y-5">
               <div>
-                <label className="block text-sm mb-3 font-bold text-gray-800 flex items-center gap-2" htmlFor="record-id">
+                <label className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2" htmlFor="record-id">
                   <span className="text-lg">🎫</span>
                   Record ID
                 </label>
@@ -358,7 +358,7 @@ export default function Trading() {
                 />
               </div>
               <div>
-                <label className="block text-sm mb-3 font-bold text-gray-800 flex items-center gap-2" htmlFor="last-name">
+                <label className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2" htmlFor="last-name">
                   <span className="text-lg">👤</span>
                   Last Name
                 </label>
