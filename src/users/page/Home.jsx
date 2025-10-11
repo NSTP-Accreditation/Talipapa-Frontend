@@ -1,8 +1,7 @@
-import React from 'react';
-import Carousel from './Carousel';
-import MissionVision from './MissionVision';
-import Achievements from './Achievement';
-import CalendarEvents from './CalendarEvents';
+import Carousel from '../components/Carousel';
+import MissionVision from '../components/MissionVision';
+import Achievements from '../components/Achievement';
+import CalendarEvents from '../components/CalendarEvents';
 
 const Home = () => {
   return (

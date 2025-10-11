@@ -1,5 +1,5 @@
 import React from 'react';
-import GuideTemplate from '../GuideTemplate';
+import GuideTemplate from '../../../users/page/GuideTemplate';
 import { TrafficCone } from 'lucide-react';
 
 const TrafficClearanceGuide: React.FC = () => {

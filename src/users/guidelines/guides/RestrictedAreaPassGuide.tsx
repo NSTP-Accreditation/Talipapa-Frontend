@@ -1,5 +1,5 @@
 import React from 'react';
-import GuideTemplate from '../GuideTemplate';
+import GuideTemplate from '../../../users/page/GuideTemplate';
 import { CircleSlash } from 'lucide-react';
 
 const RestrictedAreaPassGuide: React.FC = () => {

@@ -104,7 +104,7 @@ const programCategories = [
   },
 ];
 
-export default function App() {
+export default function Trading() {
   const [selectedType, setSelectedType] = useState('');
   const [weight, setWeight] = useState('');
   const [result, setResult] = useState<{

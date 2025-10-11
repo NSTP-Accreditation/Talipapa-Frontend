@@ -1,25 +1,11 @@
-import React from 'react';
+// import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from '@/pages/Home';
-import NavBar from '@/components/NavBar';
-import GuidelinesApp from '@/pages/guidelines/Guidelines';
-import MoreGuides from '@/pages/guidelines/MoreGuides';
-import BarangayClearanceGuide from '@/pages/guidelines/guides/BarangayClearanceGuide';
-import CertificateOfIndigencyGuide from '@/pages/guidelines/guides/CertificateOfIndigencyGuide';
-import CertificateOfResidencyGuide from '@/pages/guidelines/guides/CertificateOfResidencyGuide';
-import BusinessClearanceGuide from '@/pages/guidelines/guides/BusinessClearanceGuide';
-import GoodMoralCharacterGuide from '@/pages/guidelines/guides/GoodMoralCharacterGuide';
-import TrafficClearanceGuide from '@/pages/guidelines/guides/TrafficClearanceGuide';
-import BarangayAffidavitGuide from '@/pages/guidelines/guides/BarangayAffidavitGuide';
-import PhilsysIdGuide from '@/pages/guidelines/guides/PhilsysIdGuide';
-import QuezonCityIdGuide from '@/pages/guidelines/guides/QuezonCityIdGuide';
-import HealthCertificateGuide from '@/pages/guidelines/guides/HealthCertificateGuide';
-import FloodAssistanceGuide from '@/pages/guidelines/guides/FloodAssistanceGuide';
-import LandUsePermitGuide from '@/pages/guidelines/guides/LandUsePermitGuide';
-import RestrictedAreaPassGuide from '@/pages/guidelines/guides/RestrictedAreaPassGuide';
-import Trading from '@/pages/trading/Trading';
-import Footer from '@/components/Footer';
-import AboutUs from '@/pages/aboutus/AboutUs';
+
+// import Forms from '@/pages/Admin/subcomponents/Forms'; // Forms.tsx doesn't exist
+import { AuthProvider } from './contexts/AuthContext';
+
+
+// ADMIN EXPORT HERE
 import AdminLayout from '@/admin/layout/AdminLayout';
 import Dashboard from '@/admin/pages/Dashboard';
 import TradingStatistics from '@/admin/pages/TradingStatistics';
@@ -27,7 +13,6 @@ import Settings from '@/admin/pages/Settings';
 import ActivityLogs from '@/admin/pages/Records';
 import EarnPointsLogs from '@/admin/pages/EarnPoints';
 import SwapLogs from '@/admin/pages/SwapItem';
-// import Forms from '@/pages/Admin/subcomponents/Forms'; // Forms.tsx doesn't exist
 import Guidelines from '@/admin/pages/Guidelines';
 import News from '@/admin/pages/NewsEvents';
 import AboutUsAdmin from '@/admin/pages/AboutUs';
@@ -35,7 +20,31 @@ import Achievements from '@/admin/pages/Achievements';
 import AdminLogin from '@/admin/auth/AdminLogin';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import Inventory from '@/admin/pages/Inventory';
-import { AuthProvider } from '@/contexts/AuthContext';
+// USER PAGE EXPORT HERE
+import Home from './users/page/Home';
+import NavBar from '@/users/components/NavBar';
+import GuidelinesApp from '@/users/page/Guidelines';
+import MoreGuides from '@/users/page/MoreGuides';
+import BarangayClearanceGuide from '@/users/guidelines/guides/CertificateOfIndigencyGuide';
+import CertificateOfIndigencyGuide from '@/users/guidelines/guides/CertificateOfIndigencyGuide';
+import CertificateOfResidencyGuide from '@/users/guidelines/guides/CertificateOfResidencyGuide';
+import BusinessClearanceGuide from '@/users/guidelines/guides/BusinessClearanceGuide';
+import GoodMoralCharacterGuide from '@/users/guidelines/guides/GoodMoralCharacterGuide';
+import TrafficClearanceGuide from '@/users/guidelines/guides/TrafficClearanceGuide';
+import BarangayAffidavitGuide from '@/users/guidelines/guides/BarangayAffidavitGuide';
+import PhilsysIdGuide from '@/users/guidelines/guides/PhilsysIdGuide';
+import QuezonCityIdGuide from '@/users/guidelines/guides/QuezonCityIdGuide';
+import HealthCertificateGuide from '@/users/guidelines/guides/HealthCertificateGuide';
+import FloodAssistanceGuide from '@/users/guidelines/guides/FloodAssistanceGuide';
+import LandUsePermitGuide from '@/users/guidelines/guides/LandUsePermitGuide';
+import RestrictedAreaPassGuide from '@/users/guidelines/guides/RestrictedAreaPassGuide';
+import Trading from '@/users/page/Trading';
+import AboutUs from '@/users/page/AboutUs';
+
+
+
+import Footer from '@/components/Footer';
+
 
 function App() {
   return (

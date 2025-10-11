@@ -1,6 +1,93 @@
-import React from 'react';
-import { MapPin, ExternalLink } from 'lucide-react';
+import AboutBarangay from '../components/AboutBarangay';
+import { User, MapPin, ExternalLink } from 'lucide-react';
 
+const AboutUs = () => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
+      <AboutBarangay />
+      
+      {/* Consistent container for officials and map */}
+      <div className="py-12">
+        <div className="max-w-7xl mx-auto px-6">
+          {BarangayOfficials()}
+          {BarangayMap()}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AboutUs;
+
+const officials = [
+  { name: 'Rodrigo Santos', role: 'Barangay Captain' },
+  { name: 'Elena Martinez', role: 'Kagawad - Health' },
+  { name: 'Carlos Reyes', role: 'Kagawad - Education' },
+  { name: 'Sofia Dela Cruz', role: 'Kagawad - Infrastructure' },
+  { name: 'Miguel Torres', role: 'SK Chairman' },
+  { name: 'Rosa Villanueva', role: 'Barangay Secretary' },
+  { name: 'Pedro Garcia', role: 'Barangay Treasurer' },
+];
+
+// BARANGAY  OFFICIALS
+const BarangayOfficials = () => {
+  return (
+    <div className="mb-12 sm:mb-16 md:mb-20 lg:mb-24">
+      {/* Header Section */}
+      <div className="text-center mb-12">
+        <div className="inline-block p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-full mb-6 shadow-lg">
+          <span className="text-5xl">👥</span>
+        </div>
+        <h2 className="text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-4">
+          Barangay Officials
+        </h2>
+        <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          Meet the dedicated leaders serving our community with passion and
+          integrity
+        </p>
+      </div>
+
+      <div className="flex flex-wrap justify-center gap-8">
+        {officials.map((official, index) => (
+          <div
+            key={index}
+            className="bg-white rounded-2xl p-8 flex flex-col items-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden group"
+            style={{
+              width: '240px',
+              height: '240px',
+              minWidth: '240px',
+              maxWidth: '240px',
+              minHeight: '240px',
+              maxHeight: '240px',
+            }}
+          >
+            {/* Hover Gradient Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <div className="relative z-10 flex flex-col items-center w-full h-full justify-center">
+              {/* Circle Avatar with Icon */}
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-5 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                <User className="w-10 h-10 text-green-700" />
+              </div>
+
+              {/* Name */}
+              <h3 className="font-bold text-base text-gray-800 mb-3 leading-tight text-center group-hover:text-green-700 transition-colors">
+                {official.name}
+              </h3>
+
+              {/* Role */}
+              <p className="text-gray-600 text-sm leading-tight text-center flex-grow flex items-center font-medium">
+                {official.role}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// BARANGAY MAP
 const BarangayMap = () => {
   // Barangay Talipapa coordinates - Talipapa Barangay Hall on Quirino Highway
   const barangayCoordinates = {
@@ -98,5 +185,3 @@ const BarangayMap = () => {
     </div>
   );
 };
-
-export default BarangayMap;
