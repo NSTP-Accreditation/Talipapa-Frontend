@@ -43,7 +43,7 @@ import AboutUs from '@/users/page/AboutUs';
 
 
 
-import Footer from '@/components/Footer';
+import Footer from '@/users/components/Footer';
 
 
 function App() {
