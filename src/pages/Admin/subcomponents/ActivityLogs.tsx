@@ -123,7 +123,7 @@ const ResidentRecords: React.FC = () => {
         >
           &lt;
         </Button>
-        <span className="text-sm text-  -600">
+        <span className="text-sm text-gray-600">
           Page {currentPage} of {totalPages || 1}
         </span>
         <Button
