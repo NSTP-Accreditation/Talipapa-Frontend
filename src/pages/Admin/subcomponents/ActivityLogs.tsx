@@ -67,7 +67,7 @@ const ResidentRecords: React.FC = () => {
         <Input
           type="text"
           placeholder="Search by Record Id or Name"
-          className="w-full rounded-md border border- -300 pt-[10px] pb-[10px] pl-[40px] focus:ring-2 focus:ring-green-600 focus:outline-none"
+          className="w-full rounded-md border border-gray-300 pt-[10px] pb-[10px] pl-[40px] focus:ring-2 focus:ring-green-600 focus:outline-none"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
