@@ -28,7 +28,7 @@ export default function Carousel() {
       />
 
       {/* Overlay Text */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-6 py-4 rounded-lg text-center max-w-[90%] mt-[230px]">
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2  bg-opacity-50 text-white px-6 py-4 rounded-lg text-center max-w-[90%] mb-[200px]">
         <h2 className="text-[30px] font-bold">Welcome to Barangay Talipapa!</h2>
         <p className="text-[20px]">Your community, our pride.</p>
       </div>

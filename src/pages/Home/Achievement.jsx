@@ -47,37 +47,56 @@ const achievements = [
 
 export default function Achievements() {
   return (
-    <section className="bg-white py-16 flex justify-center">
-  <div className="rounded-xl max-w-4xl w-64 mx-auto px-6 py-10">
-    <header className="text-center mb-12">
-      <h2 className="text-4xl font-bold text-green-800">Achievements</h2>
-    </header>
+    <section className="bg-gray-50 py-20 flex justify-center">
+      <div className="max-w-6xl w-full px-6">
+        {/* 🏆 Section Header */}
+        <header className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-green-800">Achievements</h2>
+        </header>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {/* 🧩 Grid Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 justify-items-center">
           {achievements.map((item, index) => (
             <div
               key={index}
-              className="bg-white p-6 rounded-xl flex flex-col items-center text-center border border-green-300 shadow-sm hover:shadow-lg transition"
+              className="bg-white p-6 rounded-xl flex flex-col items-center text-center border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 w-72"
             >
-              {/* ✅ Removed white background around the image */}
-            <div className="flex items-center justify-center w-full h-48 mb-4 overflow-hidden rounded-md">
-            <img
-                src={item.image}
-                alt={item.title}
+              {/* 🖼 Image Container */}
+              <div className="flex items-center justify-center w-full h-48 mb-4 overflow-hidden rounded-lg bg-gray-100">
+                {item.image ? (
+                  <img
+                    src={item.image}
+                    alt={item.title || 'Achievement image'}
                     className="w-full h-full object-cover"
-                />
+                  />
+                ) : (
+                  <span className="text-gray-400 text-sm">No image available</span>
+                )}
               </div>
 
-              <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-              <p className="text-gray-600 text-sm mb-3">{item.description}</p>
-              <a
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-green-700 text-sm font-medium hover:underline"
-              >
-                Learn more
-              </a>
+              {/* 🏷 Title */}
+              <h3 className="font-semibold text-base text-green-800 mb-1">
+                {item.title || 'Achievement'}
+              </h3>
+
+              {/* 📝 Description */}
+              <p className="text-gray-600 text-sm mb-2">
+                {item.description || 'Description'}
+              </p>
+
+              {/* 🔗 Link */}
+              {item.link ? (
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-600 text-sm font-medium hover:underline"
+                >
+                  Learn more
+                </a>
+              ) : (
+                <span className="text-gray-400 text-sm">No link</span>
+              )}
             </div>
           ))}
         </div>
@@ -85,3 +104,4 @@ export default function Achievements() {
     </section>
   );
 }
+
