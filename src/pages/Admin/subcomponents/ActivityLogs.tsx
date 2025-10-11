@@ -104,7 +104,7 @@ const ResidentRecords: React.FC = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="text-center py-4 text- -500">
+                <td colSpan={6} className="text-center py-4 text-gray-500">
                   No records found.
                 </td>
               </tr>
