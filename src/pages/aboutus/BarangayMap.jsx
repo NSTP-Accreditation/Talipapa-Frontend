@@ -13,7 +13,7 @@ const BarangayMap = () => {
   const googleMapsUrl = `https://www.google.com/maps?q=${barangayCoordinates.lat},${barangayCoordinates.lng}`;
 
   return (
-    <div>
+    <div className="mt-12 sm:mt-16 md:mt-20 lg:mt-24">
       {/* Header Section */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-green-600 mb-4">
