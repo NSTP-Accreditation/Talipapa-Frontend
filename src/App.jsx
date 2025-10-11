@@ -69,6 +69,7 @@ function App() {
 
             {/* Trading Routes */}
             <Route path="trading" element={<TradingStatistics />} />
+            <Route path="trading/statistics" element={<TradingStatistics />} />
             <Route path="trading/activity" element={<ActivityLogs />} />
             <Route path="trading/earn-points" element={<EarnPointsLogs />} />
             <Route path="trading/swap" element={<SwapLogs />} />

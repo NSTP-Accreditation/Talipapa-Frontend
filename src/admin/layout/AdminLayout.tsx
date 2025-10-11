@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import MenuBar from '../components/MenuBar';
 import AdminHeader from '../components/AdminHeader';
 
 const AdminLayout: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Fixed Admin MenuBar */}
-      <MenuBar />
+      <MenuBar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main Content Area - offset by sidebar width */}
-      <div className="ml-[310px] flex flex-col min-h-screen">
+      <div className="sm:ml-[310px] flex flex-col min-h-screen">
         {/* Admin Header */}
-        <AdminHeader />
+        <AdminHeader onToggleSidebar={() => setSidebarOpen((s) => !s)} />
 
         {/* Content */}
         <main className="flex-1 overflow-y-auto p-6">

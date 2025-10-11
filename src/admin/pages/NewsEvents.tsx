@@ -476,9 +476,9 @@ const News: React.FC = () => {
   };
 
   return (
-    <div className="p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+    <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
       {/* Enhanced Header */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
             <span className="text-4xl">📅</span>
