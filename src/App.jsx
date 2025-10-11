@@ -118,7 +118,7 @@ function App() {
               }
             />
             <Route
-              path="resources"
+              path="records"
               element={<ActivityLogs />}
             />
             <Route
