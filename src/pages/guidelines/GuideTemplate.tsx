@@ -88,9 +88,9 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="max-w-4xl mx-auto">
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div>
             {/* Requirements Card */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 mb-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-6">
@@ -161,32 +161,20 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
                       )}
                     </div>
                   </div>
-
-                  {/* Separator Line (except for last step) */}
-                  {index < steps.length - 1 && (
-                    <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2">
-                      <div className="w-8 h-6 bg-gray-300 rounded-full flex items-center justify-center">
-                        <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-                      </div>
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
-          </div>
 
-          {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Tips Card */}
+            {/* Helpful Tips - Moved to Bottom */}
             {tips && tips.length > 0 && (
-              <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 sticky top-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="text-xl">💡</span>
+              <div className="bg-white rounded-xl shadow-md border border-gray-200 p-8 mt-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                  <span className="text-2xl">💡</span>
                   Helpful Tips
                 </h3>
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {tips.map((tip, index) => (
-                    <li key={index} className="text-sm text-gray-800 bg-green-50 border-l-4 border-green-500 py-3 px-4 rounded-r-lg shadow-sm">
+                    <li key={index} className="text-base text-gray-800 bg-green-50 border-l-4 border-green-500 py-4 px-5 rounded-r-lg shadow-sm">
                       <span className="leading-relaxed">{tip}</span>
                     </li>
                   ))}

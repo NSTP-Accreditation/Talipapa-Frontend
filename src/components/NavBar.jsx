@@ -37,10 +37,10 @@ export default function NavBar() {
   }, []);
 
   return (
-    <header className="bg-[#1b4c2e] text-white w-full relative pt-10">
+    <header className="sticky top-0 z-50 bg-[#1b4c2e] text-white w-full">
       {/* Top bar with date and time */}
       <div
-        className="bg-[#0d2617] px-4 sm:px-6 py-1 flex justify-between items-center font-bold relative text-base md:text-lg"
+        className="bg-[#0d2617] px-4 sm:px-6 py-1 flex justify-between items-center font-bold text-base md:text-lg"
       >
         <span className="tracking-wide truncate">{currentDate}</span>
         <span className="tracking-wide ml-2">{currentTime}</span>

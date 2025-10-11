@@ -72,8 +72,8 @@ export default function MoreGuides() {
                 className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow cursor-pointer group"
               >
                 <div className="flex items-start space-x-4">
-                  <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mt-1 group-hover:bg-green-200 transition-colors">
-                    <IconComponent className="w-7 h-7 text-green-600" />
+                  <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1 group-hover:bg-green-200 transition-colors">
+                    <IconComponent className="w-7 h-7 text-green-600 flex-shrink-0" strokeWidth={2} />
                   </div>
                   <div>
                     <h3 className="text-gray-800 text-lg font-medium">
