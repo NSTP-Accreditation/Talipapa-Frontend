@@ -25,6 +25,8 @@ import {
 
 interface MenuBarProps {
   className?: string;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 interface MenuItem {
@@ -36,7 +38,7 @@ interface MenuItem {
   submenu?: MenuItem[];
 }
 
-const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
+const MenuBar: React.FC<MenuBarProps> = ({ className, isOpen = true, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
@@ -63,6 +65,11 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
           label: 'Earn Points',
           href: APP_ROUTES.ADMIN.TRADING + '/earn-points',
         },
+          {
+            icon: <FileBarChart className="w-4 h-4" />,
+            label: 'Statistics',
+            href: APP_ROUTES.ADMIN.TRADING + '/statistics',
+          },
       ],
     },
     {
@@ -140,12 +147,20 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
   };
 
   return (
-    <div
-      className={cn(
-        'w-[310px] h-screen bg-green-600 text-white flex flex-col fixed left-0 top-0 overflow-hidden',
-        className
+    <>
+      {/* Mobile overlay */}
+      {!isOpen ? null : (
+        <div className="sm:hidden fixed inset-0 z-40 bg-black/40" onClick={onClose} />
       )}
-    >
+
+      <div
+        className={cn(
+          'w-[310px] h-screen bg-green-600 text-white flex flex-col fixed left-0 top-0 overflow-hidden transform transition-transform duration-300 z-50',
+          // hide on small screens unless isOpen
+          isOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0',
+          className
+        )}
+      >
       {/* Header */}
       <div className="px-4 py-4">
         <div className="flex items-center justify-center space-x-3">
@@ -184,7 +199,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
                 <span className="flex-shrink-0">{item.icon}</span>
                 <span className="font-medium">{item.label}</span>
               </div>
-              {item.submenu && (
+                {item.submenu && (
                 <ChevronDown
                   className={cn(
                     'w-5 h-5 transition-transform duration-200',
@@ -235,7 +250,10 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
           <span className="font-medium">Logout</span>
         </button>
       </div>
+
+      {/* Modal removed: Statistics now navigates to its dedicated page */}
     </div>
+    </>
   );
 };
 

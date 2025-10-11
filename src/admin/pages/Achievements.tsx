@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SquarePen, Plus, Trash2, Upload, Download, X } from "lucide-react";
+import { SquarePen, Plus, Trash2, X } from "lucide-react";
 
 /**
  * AchievementsAdmin
@@ -155,83 +155,73 @@ export default function AchievementsAdmin() {
     setItems((prev) => prev.filter((_, i) => i !== index));
   };
 
-  /* ---------- export / import ---------- */
-  const handleExport = () => {
-    const dataStr = JSON.stringify(items, null, 2);
-    const blob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "achievements_export.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const handleImport = (file) => {
-    if (!file) return;  
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const parsed = JSON.parse(reader.result);
-        if (!Array.isArray(parsed)) throw new Error("Invalid format");
-        // basic validation shape
-        const clean = parsed.map((p) => ({
-          title: p.title || "",
-          description: p.description || "",
-          link: p.link || "",
-          image: p.image || "",
-        }));
-        setItems(clean);
-        alert("Import successful. Data saved locally.");
-      } catch (e) {
-        alert("Invalid JSON file.");
-      }
-    };
-    reader.readAsText(file);
-  };
-
   /* ---------- small card component ---------- */
   const Card = ({ item, index }) => (
-    <div className="bg-white p-6 rounded-xl flex flex-col items-center text-center border border-green-200 shadow-sm hover:shadow-lg transition">
-      <div className="flex items-center justify-center w-full h-48 mb-4 overflow-hidden rounded-md bg-gray-50">
+    <div className="group bg-white rounded-xl overflow-hidden border-2 border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
+      {/* Image Container - Fixed Height */}
+      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-green-50 to-emerald-50">
         {item.image ? (
-          // image may be url or base64
-          // fallback to object-cover
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+          <img 
+            src={item.image} 
+            alt={item.title} 
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+          />
         ) : (
-          <div className="text-gray-400">No image</div>
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="text-7xl">🏆</span>
+          </div>
         )}
+        
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
-      <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-      <p className="text-gray-600 text-sm mb-3">{item.description}</p>
-      <a
-        href={item.link || "#"}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-green-700 text-sm font-medium hover:underline mb-4"
-      >
-        {item.link ? "Learn more" : "No link"}
-      </a>
+      {/* Content */}
+      <div className="p-5 flex flex-col flex-1">
+        {/* Icon Badge */}
+        <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 text-white mb-3 shadow-md group-hover:scale-110 transition-transform duration-300">
+          <span className="text-xl">🏆</span>
+        </div>
 
-      {/* Centered edit bar */}
-      <div className="w-full mt-2">
-        <div className="flex justify-center gap-3">
+        {/* Title */}
+        <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-green-600 transition-colors leading-tight">
+          {item.title}
+        </h3>
+
+        {/* Description */}
+        <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-3 flex-1">
+          {item.description}
+        </p>
+
+        {/* Link */}
+        {item.link && (
+          <a
+            href={item.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-green-600 text-sm font-semibold hover:text-green-700 hover:gap-3 transition-all mb-3"
+          >
+            <span>View Details</span>
+            <span>→</span>
+          </a>
+        )}
+
+        {/* Action Buttons */}
+        <div className="flex gap-2 mt-auto pt-3 border-t border-gray-100">
           <button
             onClick={() => openEdit(index)}
-            className="flex items-center gap-2 px-4 py-2 bg-white border rounded-full shadow hover:bg-green-50 transition"
+            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 font-semibold text-sm"
             title="Edit"
           >
-            <SquarePen size={16} /> Edit
+            <SquarePen size={14} /> Edit
           </button>
 
           <button
             onClick={() => handleDelete(index)}
-            className="flex items-center gap-2 px-4 py-2 bg-white border rounded-full text-red-600 shadow hover:bg-red-50 transition"
+            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 font-semibold text-sm"
             title="Delete"
           >
-            <Trash2 size={16} /> Delete
+            <Trash2 size={14} /> Delete
           </button>
         </div>
       </div>
@@ -239,145 +229,194 @@ export default function AchievementsAdmin() {
   );
 
   return (
-    <section className="bg-white py-10 px-4">
-      <div className="max-w-6xl mx-auto">
-        
-        {/* header / admin controls */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-          <div>
-            <h2 className="text-3xl font-bold text-green-800">Achievements — Admin</h2>
-            <p className="text-gray-500 text-sm">Manage achievements: add, edit, delete, import/export.</p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 px-4 py-2 bg-white border rounded-md cursor-pointer shadow">
-              <Download size={16} />
-              <input type="file" accept="application/json" className="hidden" onChange={(e) => handleImport(e.target.files?.[0])} />
-              Import JSON
-            </label>
-
-            <button
-              onClick={handleExport}
-              className="flex items-center gap-2 px-4 py-2 bg-white border rounded-md shadow hover:bg-green-50"
-            >
-              <Upload size={16} /> Export JSON
-            </button>
-
-            <button
-              onClick={openAdd}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700"
-            >
-              <Plus size={16} /> Add Achievement
-            </button>
-          </div>
+    <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+      {/* Enhanced Header */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+        <div>
+          <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
+            <span className="text-4xl">🏆</span>
+            Achievements
+          </h1>
+          <p className="text-lg text-gray-700 mt-3 font-medium">
+            Manage community achievements and milestones
+            <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+              {items.length} {items.length === 1 ? 'Achievement' : 'Achievements'}
+            </span>
+          </p>
         </div>
-
-        {/* grid */}
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {items.length === 0 ? (
-            <div className="text-center text-gray-500 col-span-full">No achievements yet.</div>
-          ) : (
-            items.map((it, idx) => <Card key={idx} item={it} index={idx} />)
-          )}
-        </div>
-
-        {/* Save-all hint */}
-        <div className="mt-8 text-sm text-gray-500">
-          <strong>Note:</strong> Data is saved locally in your browser (localStorage). To persist server-side, export and send the JSON to your backend API or connect this UI to an API endpoint.
-        </div>
+        <button
+          onClick={openAdd}
+          className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-2"
+        >
+          <Plus size={20} />
+          Add New Achievement
+        </button>
       </div>
 
-      {/* ---------- modal (simple) ---------- */}
+      {/* Enhanced Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {items.length === 0 ? (
+          <div className="col-span-full text-center py-24">
+            <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl shadow-xl mb-6">
+              <span className="text-8xl">🏆</span>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-800 mb-3">No achievements yet</h3>
+            <p className="text-gray-600 text-lg mb-6 max-w-md mx-auto">
+              Start building your collection by adding your first achievement
+            </p>
+            <button
+              onClick={openAdd}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
+            >
+              <Plus size={20} /> Create First Achievement
+            </button>
+          </div>
+        ) : (
+          items.map((it, idx) => <Card key={idx} item={it} index={idx} />)
+        )}
+      </div>
+
+
+      {/* ---------- modal (enhanced) ---------- */}
       {modalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
           role="dialog"
           aria-modal="true"
         >
-          <div className="w-full max-w-2xl bg-white rounded-lg shadow-lg overflow-auto max-h-[90vh]">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h3 className="text-lg font-semibold">{editingIndex === null ? "Add Achievement" : "Edit Achievement"}</h3>
-              <button onClick={closeModal} className="p-2 rounded hover:bg-gray-100">
-                <X size={18} />
+          <div className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b-2 border-gray-100 bg-gradient-to-r from-green-50 to-emerald-50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                  <span className="text-white text-xl">{editingIndex === null ? "➕" : "✏️"}</span>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800">
+                  {editingIndex === null ? "Add New Achievement" : "Edit Achievement"}
+                </h3>
+              </div>
+              <button 
+                onClick={closeModal} 
+                className="p-2 rounded-lg hover:bg-gray-200 transition-colors"
+                title="Close"
+              >
+                <X size={24} />
               </button>
             </div>
 
-            <div className="p-6 space-y-4">
+            {/* Modal Body - Scrollable */}
+            <div className="p-8 space-y-6 overflow-y-auto flex-1">
               <label className="block">
-                <div className="text-sm font-medium mb-1">Title *</div>
+                <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                  <span>📝</span> Title <span className="text-red-500">*</span>
+                </div>
                 <input
                   type="text"
                   value={form.title}
                   onChange={(e) => handleChange("title", e.target.value)}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
+                  placeholder="Enter achievement title..."
                 />
               </label>
 
               <label className="block">
-                <div className="text-sm font-medium mb-1">Description</div>
+                <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                  <span>📄</span> Description
+                </div>
                 <textarea
                   value={form.description}
                   onChange={(e) => handleChange("description", e.target.value)}
-                  className="w-full border rounded px-3 py-2"
-                  rows={4}
+                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none resize-none"
+                  rows={5}
+                  placeholder="Describe this achievement..."
                 />
               </label>
 
               <label className="block">
-                <div className="text-sm font-medium mb-1">Link (optional)</div>
+                <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                  <span>🔗</span> Link (optional)
+                </div>
                 <input
                   type="url"
                   value={form.link}
                   onChange={(e) => handleChange("link", e.target.value)}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
+                  placeholder="https://example.com/achievement"
                 />
               </label>
 
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid sm:grid-cols-2 gap-6">
                 <label className="block">
-                  <div className="text-sm font-medium mb-1">Image URL</div>
+                  <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                    <span>🌐</span> Image URL
+                  </div>
                   <input
                     type="url"
                     value={form.image && form.image.startsWith("data:") ? "" : form.image}
                     onChange={(e) => handleChange("image", e.target.value)}
-                    className="w-full border rounded px-3 py-2"
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
                     placeholder="https://..."
                   />
                 </label>
 
                 <label className="block">
-                  <div className="text-sm font-medium mb-1">Or upload image (jpg, png)</div>
+                  <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                    <span>📸</span> Or Upload Image
+                  </div>
                   <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => handleFile(e.target.files?.[0])}
-                    className="w-full"
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-green-50 file:text-green-700 hover:file:bg-green-100 file:cursor-pointer"
                   />
-                  {fileUploading && <div className="text-sm text-gray-500 mt-1">Uploading...</div>}
+                  {fileUploading && (
+                    <div className="text-sm text-green-600 mt-2 font-medium flex items-center gap-2">
+                      <span className="animate-spin">⏳</span> Uploading...
+                    </div>
+                  )}
                 </label>
               </div>
 
-              {/* preview */}
+              {/* Preview */}
               <div className="pt-2">
-                <div className="text-sm font-medium mb-1">Preview</div>
-                <div className="w-full h-44 bg-gray-50 rounded overflow-hidden flex items-center justify-center">
+                <div className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                  <span>👁️</span> Image Preview
+                </div>
+                <div className="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden flex items-center justify-center border-2 border-gray-200 shadow-inner">
                   {form.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={form.image} alt="preview" className="w-full h-full object-cover" />
+                    <img 
+                      src={form.image} 
+                      alt="preview" 
+                      className="w-full h-full object-cover" 
+                    />
                   ) : (
-                    <div className="text-gray-400">No image selected</div>
+                    <div className="text-center">
+                      <span className="text-6xl mb-2 block">🖼️</span>
+                      <div className="text-gray-400 font-medium">No image selected</div>
+                    </div>
                   )}
                 </div>
               </div>
+            </div>
 
-              <div className="flex justify-end gap-3 pt-4">
-                <button onClick={closeModal} className="px-4 py-2 rounded border">Cancel</button>
-                <button onClick={handleSave} className="px-4 py-2 rounded bg-green-600 text-white">Save</button>
-              </div>
+            {/* Modal Footer */}
+            <div className="flex justify-end gap-4 p-6 border-t-2 border-gray-100 bg-gray-50">
+              <button 
+                onClick={closeModal} 
+                className="px-6 py-3 rounded-xl border-2 border-gray-300 font-semibold hover:bg-gray-100 transition-all"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleSave} 
+                className="px-8 py-3 rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all"
+              >
+                {editingIndex === null ? "Create Achievement" : "Save Changes"}
+              </button>
             </div>
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }

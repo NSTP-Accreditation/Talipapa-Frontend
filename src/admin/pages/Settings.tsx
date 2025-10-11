@@ -93,13 +93,15 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 sm:p-6 md:p-8 space-y-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900">Settings</h1>
-        <p className="text-lg text-gray-700 mt-3 font-medium">
-          Manage system configuration and preferences
-        </p>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-8">
+        <div>
+          <h1 className="text-4xl font-bold text-gray-900">Settings</h1>
+          <p className="text-lg text-gray-700 mt-3 font-medium">
+            Manage system configuration and preferences
+          </p>
+        </div>
       </div>
 
       {/* Content */}
