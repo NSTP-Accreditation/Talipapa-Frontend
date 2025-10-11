@@ -4,7 +4,7 @@ import BarangayMap from './BarangayMap';
 
 const AboutUs = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
       <AboutBarangay />
       
       {/* Consistent container for officials and map */}

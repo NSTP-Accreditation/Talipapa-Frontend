@@ -136,53 +136,71 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Breadcrumb */}
-      <div className="bg-white py-3 px-6 border-b border-gray-200">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      {/* Enhanced Breadcrumb */}
+      <div className="bg-white py-4 px-6 border-b-2 border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto">
-          <nav className="text-sm text-gray-700">
-            <Link to="/" className="hover:underline hover:text-[#0c2716]">
-              Home
+          <nav className="text-sm text-gray-700 font-medium">
+            <Link to="/" className="hover:text-green-600 transition-colors">
+              🏠 Home
             </Link>
-            <span className="mx-2">/</span>
-            <span className="text-[#0c2716] font-medium">EcoCycle</span>
+            <span className="mx-2 text-gray-400">/</span>
+            <span className="text-green-700 font-semibold">♻️ EcoCycle</span>
           </nav>
         </div>
       </div>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 md:py-16">
-        <div className="text-center mb-8 sm:mb-10 md:mb-12">
-          <h1 className="mb-5 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900">EcoCycle</h1>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4 font-normal">
-            Calculate how much valuable product you can get from your recyclable
-            waste
+        {/* Enhanced Hero Section */}
+        <div className="text-center mb-10 sm:mb-12 md:mb-16">
+          <div className="inline-block mb-4">
+            <span className="text-6xl sm:text-7xl">♻️</span>
+          </div>
+          <h1 className="mb-5 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900">
+            EcoCycle
+          </h1>
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4 font-medium max-w-3xl mx-auto leading-relaxed">
+            Calculate how much valuable product you can get from your recyclable waste
           </p>
+          <div className="mt-6 flex items-center justify-center gap-2 text-sm text-green-700 font-semibold">
+            <span className="px-4 py-2 bg-green-100 rounded-full border border-green-200">
+              🌱 Eco-Friendly
+            </span>
+            <span className="px-4 py-2 bg-green-100 rounded-full border border-green-200">
+              💰 Earn Points
+            </span>
+            <span className="px-4 py-2 bg-green-100 rounded-full border border-green-200">
+              🌍 Save Earth
+            </span>
+          </div>
         </div>
 
+        {/* Enhanced Calculator Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-16 md:mb-20">
-          {/* Input Panel */}
-          <Card className="bg-white rounded-xl shadow-md border-2 border-gray-200 hover:border-green-300 transition-colors">
-            <CardHeader className="pb-5">
+          {/* Enhanced Input Panel */}
+          <Card className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 hover:border-green-400 hover:shadow-2xl transition-all duration-300">
+            <CardHeader className="pb-5 bg-gradient-to-br from-green-50 to-white border-b-2 border-green-100">
               <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
-                  <FileText className="w-5 h-5 text-green-700" />
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 shadow-md">
+                  <FileText className="w-6 h-6 text-white" />
                 </div>
-                Input
+                <span>Input Waste</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-5">
+            <CardContent className="space-y-6 p-6">
               <div>
-                <label className="block text-sm mb-2.5 font-medium text-gray-700">
+                <label className="block text-sm mb-3 font-bold text-gray-800 flex items-center gap-2">
+                  <span className="text-lg">🗑️</span>
                   Select Recyclable Type:
                 </label>
                 <Select value={selectedType} onValueChange={setSelectedType}>
-                  <SelectTrigger className="bg-white h-11 px-4 w-full text-sm border-2 border-gray-200 rounded-lg shadow-sm hover:border-green-400 transition-colors">
-                    <SelectValue placeholder="Choose recyclable type" />
+                  <SelectTrigger className="bg-white h-12 px-4 w-full text-sm border-2 border-gray-300 rounded-xl shadow-sm hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-medium">
+                    <SelectValue placeholder="Choose recyclable type..." />
                   </SelectTrigger>
                   <SelectContent>
                     {wasteTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
+                      <SelectItem key={type.value} value={type.value} className="font-medium">
                         {type.label}
                       </SelectItem>
                     ))}
@@ -191,184 +209,222 @@ export default function App() {
               </div>
 
               <div>
-                <label className="block text-sm mb-2.5 font-medium text-gray-700">
-                  Enter weight (e.g., 2.5 kg):
+                <label className="block text-sm mb-3 font-bold text-gray-800 flex items-center gap-2">
+                  <span className="text-lg">⚖️</span>
+                  Enter weight (kg):
                 </label>
                 <Input
                   type="number"
-                  placeholder="2 KG"
+                  placeholder="e.g., 2.5"
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
-                  className="bg-white h-11 px-4 w-full text-sm border-2 border-gray-200 rounded-lg shadow-sm hover:border-green-400 transition-colors"
+                  className="bg-white h-12 px-4 w-full text-base border-2 border-gray-300 rounded-xl shadow-sm hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-medium"
                 />
               </div>
 
               <Button
                 onClick={handleConvert}
-                className="w-full h-11 text-sm font-semibold bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md mt-2"
+                className="w-full h-12 text-base font-bold bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 mt-4"
               >
-                Convert
+                <span className="mr-2">🔄</span>
+                Convert Now
               </Button>
             </CardContent>
           </Card>
 
-          {/* Result Panel */}
-          <Card className="bg-white rounded-xl shadow-md border-2 border-gray-200 hover:border-green-300 transition-colors">
-            <CardHeader className="pb-5">
+          {/* Enhanced Result Panel */}
+          <Card className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 hover:border-green-400 hover:shadow-2xl transition-all duration-300">
+            <CardHeader className="pb-5 bg-gradient-to-br from-blue-50 to-white border-b-2 border-blue-100">
               <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
-                  <CheckCircle className="w-5 h-5 text-green-700" />
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-md">
+                  <CheckCircle className="w-6 h-6 text-white" />
                 </div>
-                Result
+                <span>Conversion Result</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-5">
+            <CardContent className="space-y-5 p-6">
               <div>
-                <p className="text-center text-sm mb-5 font-medium text-gray-600">
-                  Conversion Result:
+                <p className="text-center text-base mb-6 font-bold text-gray-800 flex items-center justify-center gap-2">
+                  <span className="text-xl">📊</span>
+                  Your Conversion Summary
                 </p>
 
                 <div className="space-y-4">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gray-50 rounded-lg gap-1 sm:gap-0 border-2 border-gray-200">
-                    <span className="text-gray-700 text-sm font-medium">Input:</span>
-                    <span className="text-gray-700 text-sm font-medium break-words">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl gap-2 sm:gap-0 border-2 border-gray-200">
+                    <span className="text-gray-700 text-sm font-bold flex items-center gap-2">
+                      <span className="text-lg">📥</span>
+                      Input:
+                    </span>
+                    <span className="text-gray-900 text-sm font-bold break-words">
                       {weight
                         ? `${weight} kg ${
                             wasteTypes.find((t) => t.value === selectedType)
                               ?.label || ''
                           }`
-                        : '-'}
+                        : 'Not calculated yet'}
                     </span>
                   </div>
 
-                  <div className="p-6 bg-gray-50 rounded-lg flex flex-col items-center border-2 border-gray-200">
-                    <span className="text-gray-700 text-sm font-medium mb-4 px-2">Output:</span>
+                  <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl flex flex-col items-center border-2 border-green-200">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-lg">📦</span>
+                      <span className="text-gray-800 text-sm font-bold">Output Product:</span>
+                    </div>
                     {result ? (
-                      <div className="mb-4 flex-shrink-0" style={{ width: '240px', height: '220px', minWidth: '240px', minHeight: '220px', maxWidth: '240px', maxHeight: '220px' }}>
+                      <div className="mb-4 flex-shrink-0 rounded-xl overflow-hidden shadow-lg border-2 border-white" style={{ width: '240px', height: '220px', minWidth: '240px', minHeight: '220px', maxWidth: '240px', maxHeight: '220px' }}>
                         <ImageWithFallback
                           src={result.image}
                           alt={result.output}
-                          className="rounded-lg shadow-sm"
+                          className=""
                           style={{ width: '240px', height: '220px', objectFit: 'cover', display: 'block' }}
                         />
                       </div>
                     ) : (
-                      <div className="mb-4 flex items-center justify-center bg-gray-100 rounded-lg" style={{ width: '240px', height: '220px' }}>
-                        <span className="text-gray-400 text-sm">-</span>
+                      <div className="mb-4 flex items-center justify-center bg-white rounded-xl border-2 border-dashed border-gray-300" style={{ width: '240px', height: '220px' }}>
+                        <div className="text-center">
+                          <span className="text-4xl mb-2 block">📦</span>
+                          <span className="text-gray-400 text-sm font-medium">Awaiting conversion</span>
+                        </div>
                       </div>
                     )}
-                    <span className="text-gray-700 text-sm font-medium text-center px-3">
-                      {result
-                        ? `${(parseFloat(weight) * 0.2).toFixed(
-                            1
-                          )} kg ${result.output}`
-                        : '-'}
-                    </span>
+                    <div className="bg-white px-4 py-2 rounded-lg border-2 border-green-200 shadow-sm">
+                      <span className="text-gray-900 text-sm font-bold text-center">
+                        {result
+                          ? `${(parseFloat(weight) * 0.2).toFixed(1)} kg ${result.output}`
+                          : 'No output yet'}
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-lg gap-1 sm:gap-0 bg-gray-50 border-2 border-gray-200">
-                    <span className="text-sm font-medium text-gray-700">Estimated Value:</span>
-                    <span className="text-sm font-medium text-gray-700">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-xl gap-2 sm:gap-0 bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-200">
+                    <span className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                      <span className="text-lg">⭐</span>
+                      Estimated Value:
+                    </span>
+                    <span className="text-base font-bold text-yellow-700">
                       {result
-                        ? `${result.points} ${
-                            result.points === 1 ? 'point' : 'points'
-                          }`
-                        : '-'}
+                        ? `${result.points} ${result.points === 1 ? 'point' : 'points'}`
+                        : '0 points'}
                     </span>
                   </div>
                 </div>
 
-                <div className="mt-6 text-center pt-4 border-t-2 border-gray-200">
-                  <p className="text-gray-600 text-xs mb-2 font-semibold tracking-wide">TOTAL:</p>
-                  <p className="text-3xl font-bold text-gray-900">
-                    {result
-                      ? `${result.points} ${
-                          result.points === 1 ? 'point' : 'points'
-                        }`
-                      : '0 points'}
+                <div className="mt-6 text-center pt-6 border-t-2 border-gray-200 bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-200">
+                  <p className="text-gray-700 text-sm mb-3 font-bold tracking-wide flex items-center justify-center gap-2">
+                    <span className="text-xl">🎯</span>
+                    TOTAL POINTS:
                   </p>
+                  <p className="text-4xl font-bold text-green-700">
+                    {result
+                      ? `${result.points} ${result.points === 1 ? 'pt' : 'pts'}`
+                      : '0 pts'}
+                  </p>
+                  {result && (
+                    <p className="text-xs text-green-600 mt-2 font-semibold">
+                      Great job! Keep recycling! 🌱
+                    </p>
+                  )}
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Check Your Points */}
+        {/* Enhanced Check Your Points */}
         <div className="max-w-lg mx-auto py-12 md:py-16 px-4">
-          <div className="rounded-xl shadow-md p-8 w-full bg-white border-2 border-gray-200">
-            <h3 className="mb-6 text-xl font-bold text-center text-gray-900">
-              Check Your Record Points Here
-            </h3>
+          <div className="rounded-2xl shadow-xl p-8 w-full bg-white border-2 border-gray-200 hover:border-green-300 transition-all">
+            <div className="text-center mb-6">
+              <div className="inline-block mb-3">
+                <span className="text-5xl">🔍</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Check Your Record Points
+              </h3>
+              <p className="text-sm text-gray-600 font-medium">
+                Enter your details to view your recycling points
+              </p>
+            </div>
             <div className="space-y-5">
               <div>
-                <label className="block text-sm mb-2.5 font-medium text-gray-700" htmlFor="record-id">
+                <label className="block text-sm mb-3 font-bold text-gray-800 flex items-center gap-2" htmlFor="record-id">
+                  <span className="text-lg">🎫</span>
                   Record ID
                 </label>
                 <Input
                   id="record-id"
                   type="text"
-                  placeholder="BT-"
-                  className="bg-white h-11 px-4 rounded-lg border-2 border-gray-200 shadow-sm w-full text-sm text-gray-900 hover:border-green-400 transition-colors"
+                  placeholder="BT-0001"
+                  className="bg-white h-12 px-4 rounded-xl border-2 border-gray-300 shadow-sm w-full text-base text-gray-900 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-medium"
                 />
               </div>
               <div>
-                <label className="block text-sm mb-2.5 font-medium text-gray-700" htmlFor="last-name">
+                <label className="block text-sm mb-3 font-bold text-gray-800 flex items-center gap-2" htmlFor="last-name">
+                  <span className="text-lg">👤</span>
                   Last Name
                 </label>
                 <Input
                   id="last-name"
                   type="text"
                   placeholder="Enter your last name"
-                  className="bg-white h-11 px-4 rounded-lg border-2 border-gray-200 shadow-sm w-full text-sm text-gray-900 hover:border-green-400 transition-colors"
+                  className="bg-white h-12 px-4 rounded-xl border-2 border-gray-300 shadow-sm w-full text-base text-gray-900 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-medium"
                 />
               </div>
               <Button
-                className="text-white h-11 px-6 rounded-lg shadow-md w-full transition-all text-sm font-semibold mt-2 bg-green-600 hover:bg-green-700"
+                className="text-white h-12 px-6 rounded-xl shadow-lg w-full transition-all text-base font-bold mt-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 hover:shadow-xl hover:-translate-y-1"
                 onClick={() => alert('Check Record feature coming soon!')}
               >
-                Check Record
+                <span className="mr-2">🔍</span>
+                Check My Record
               </Button>
             </div>
           </div>
         </div>
 
-        {/* TaliPanahATIN Program */}
-        <Card className="shadow-md mt-12 sm:mt-16 md:mt-20 bg-white border-2 border-gray-200 rounded-xl">
-          <CardHeader className="text-center rounded-t-xl p-8 sm:p-10 bg-gradient-to-r from-green-600 to-green-700">
-            <CardTitle className="text-2xl sm:text-3xl font-bold text-white">
+        {/* Enhanced TaliPanahATIN Program */}
+        <Card className="shadow-xl mt-12 sm:mt-16 md:mt-20 bg-white border-2 border-gray-200 rounded-2xl overflow-hidden">
+          <CardHeader className="text-center rounded-t-2xl p-8 sm:p-10 bg-gradient-to-br from-green-600 via-green-700 to-green-800">
+            <div className="mb-4">
+              <span className="text-6xl">🌱</span>
+            </div>
+            <CardTitle className="text-2xl sm:text-3xl font-bold text-white mb-2">
               "May Buhay sa Basura ng Barangay"
-              <br />
-              <span className="text-lg sm:text-xl opacity-90">TaliPaPaNatin</span>
             </CardTitle>
-            <p className="mt-3 sm:mt-4 opacity-90 text-sm sm:text-base text-green-100">
-              Community Waste Management Programs
+            <div className="text-xl sm:text-2xl font-bold text-green-100 mb-3">
+              TaliPaPaNatin Program
+            </div>
+            <p className="text-sm sm:text-base text-green-100 font-medium max-w-2xl mx-auto">
+              Community Waste Management & Sustainability Programs
             </p>
           </CardHeader>
-          <CardContent className="p-8 sm:p-10 md:p-12">
+          <CardContent className="p-8 sm:p-10 md:p-12 bg-gradient-to-br from-gray-50 to-white">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Our Programs</h3>
+              <p className="text-gray-600 font-medium">Transforming waste into community value</p>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {programCategories.map((category, index) => (
                 <div
                   key={index}
-                  className="rounded-lg p-6 bg-gray-50 border-2 border-gray-200 shadow-sm hover:shadow-md hover:border-green-300 transition-all duration-200"
+                  className="rounded-xl p-6 bg-white border-2 border-gray-200 shadow-md hover:shadow-xl hover:border-green-400 hover:-translate-y-1 transition-all duration-300"
                 >
-                  <div className="flex items-center mb-5">
-                    <div className="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center mr-3 flex-shrink-0">
-                      <CheckCircle className="w-5 h-5 text-green-600" />
+                  <div className="flex items-start mb-5">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mr-3 flex-shrink-0 shadow-md">
+                      <CheckCircle className="w-6 h-6 text-white" />
                     </div>
-                    <h4 className="text-xs sm:text-sm font-semibold leading-tight text-gray-900">
+                    <h4 className="text-sm font-bold leading-tight text-gray-900 pt-1">
                       {category.title}
                     </h4>
                   </div>
-                  <ul className="space-y-2">
+                  <ul className="space-y-2.5">
                     {category.items.map((item, itemIndex) => (
                       <li
                         key={itemIndex}
-                        className="text-xs sm:text-sm text-gray-700 flex items-start"
+                        className="text-xs sm:text-sm text-gray-700 flex items-start bg-gray-50 p-2 rounded-lg hover:bg-green-50 transition-colors"
                       >
-                        <span className="mr-2 mt-0.5 text-xs flex-shrink-0 text-green-600">
-                          •
+                        <span className="mr-2 mt-0.5 text-base flex-shrink-0 text-green-600">
+                          ✓
                         </span>
-                        <span className="leading-relaxed">{item}</span>
+                        <span className="leading-relaxed font-medium">{item}</span>
                       </li>
                     ))}
                   </ul>

@@ -9,14 +9,16 @@ import {
 } from 'lucide-react';
 export default function MissionVision() {
   return (
-    <section className="bg-green-50 py-12 px-6 flex flex-col items-center">
+    <section className="bg-gradient-to-br from-green-50 to-white py-20 px-6 flex flex-col items-center">
       {/* Header */}
-      <header className="max-w-2xl text-center mb-12">
-        <h2 className="text-[32px] font-black text-green-800">
+      <header className="max-w-3xl text-center mb-16">
+        <div className="inline-block p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-full mb-6 shadow-lg">
+          <span className="text-5xl">🎯</span>
+        </div>
+        <h2 className="text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-6">
           Our Mission & Vision
         </h2>
-        <br />
-        <p className="mt-3 text-gray-600 text-base leading-relaxed">
+        <p className="text-gray-600 text-lg leading-relaxed">
           Guided by our commitment to sustainable development and community
           welfare, we strive to build a better future for all residents of
           Barangay Talipapa.
@@ -24,61 +26,77 @@ export default function MissionVision() {
       </header>
 
       {/* Mission & Vision Cards */}
-      <div className="grid md:grid-cols-2 gap-[100px] max-w-5xl w-[1000px]">
+      <div className="grid md:grid-cols-2 gap-12 max-w-5xl w-full mb-16">
         {/* Mission */}
-        <div className="border border-green-200 shadow-md rounded-lg bg-white p-8 flex flex-col items-center max-w-sm mx-auto">
-          <Target className="text-green-600 mb-6" size={40} />{' '}
-          {/* increased spacing */}
-          <h3 className="text-lg font-semibold mb-4 text-center pb-[5px]">
-            Our Mission
-          </h3>
-          <p className="text-gray-900 text-m mb-4 leading-relaxed text-justify">
-            To provide efficient, transparent, and sustainable governance that
-            promotes the welfare of all residents while preserving our
-            environment for future generations.
-          </p>
+        <div className="bg-white border-2 border-green-100 shadow-xl rounded-2xl p-10 flex flex-col items-center hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="relative z-10 flex flex-col items-center w-full">
+            <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+              <Target className="text-green-700" size={48} />
+            </div>
+            <h3 className="text-2xl font-bold mb-6 text-gray-800">
+              Our Mission
+            </h3>
+            <p className="text-gray-700 text-base leading-relaxed text-justify">
+              To provide efficient, transparent, and sustainable governance that
+              promotes the welfare of all residents while preserving our
+              environment for future generations.
+            </p>
+          </div>
         </div>
 
         {/* Vision */}
-        <div className="border border-green-200 shadow-md rounded-lg bg-white p-8 flex flex-col items-center max-w-sm mx-auto">
-          <Eye className="text-green-600 mb-6" size={40} />{' '}
-          {/* increased spacing */}
-          <h3 className="text-lg font-semibold mb-4 text-center  pb-[5px]">
-            Our Vision
-          </h3>
-          <p className="text-gray-600 text-base mb-4 leading-relaxed text-justify">
-            To be a model eco-friendly barangay that exemplifies sustainable
-            living, where every resident enjoys a high quality of life in
-            harmony with nature.
-          </p>
+        <div className="bg-white border-2 border-green-100 shadow-xl rounded-2xl p-10 flex flex-col items-center hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="relative z-10 flex flex-col items-center w-full">
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+              <Eye className="text-blue-700" size={48} />
+            </div>
+            <h3 className="text-2xl font-bold mb-6 text-gray-800">
+              Our Vision
+            </h3>
+            <p className="text-gray-700 text-base leading-relaxed text-justify">
+              To be a model eco-friendly barangay that exemplifies sustainable
+              living, where every resident enjoys a high quality of life in
+              harmony with nature.
+            </p>
+          </div>
         </div>
       </div>
       {/* Core Values */}
-      <div className="max-w-5xl w-[1500px] mt-[50px] mx-auto">
-        <div className="bg-green-600 rounded-xl py-16 px-10 grid grid-cols-4 gap-10 text-center text-white">
-          <div className="flex flex-col items-center justify-center">
-            <Leaf className="mb-4" size={25} />
-            <h4 className="font-semibold text-lg">Sustainability</h4>
-            <p className="text-sm opacity-90 mt-1">
+      <div className="max-w-6xl w-full">
+        <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl py-16 px-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center text-white shadow-2xl">
+          <div className="flex flex-col items-center justify-center group hover:-translate-y-2 transition-all duration-300">
+            <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-300 backdrop-blur-sm">
+              <Leaf size={32} />
+            </div>
+            <h4 className="font-bold text-xl mb-2">Sustainability</h4>
+            <p className="text-sm text-green-100">
               Protecting our environment
             </p>
           </div>
-          <div className="flex flex-col items-center justify-center">
-            <Heart className="mb-4" size={25} />
-            <h4 className="font-semibold text-lg">Compassion</h4>
-            <p className="text-sm opacity-90 mt-1">Caring for our community</p>
+          <div className="flex flex-col items-center justify-center group hover:-translate-y-2 transition-all duration-300">
+            <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-300 backdrop-blur-sm">
+              <Heart size={32} />
+            </div>
+            <h4 className="font-bold text-xl mb-2">Compassion</h4>
+            <p className="text-sm text-green-100">Caring for our community</p>
           </div>
-          <div className="flex flex-col items-center justify-center">
-            <Award className="mb-4" size={25} />
-            <h4 className="font-semibold text-lg">Excellence</h4>
-            <p className="text-sm opacity-90 mt-1">
+          <div className="flex flex-col items-center justify-center group hover:-translate-y-2 transition-all duration-300">
+            <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-300 backdrop-blur-sm">
+              <Award size={32} />
+            </div>
+            <h4 className="font-bold text-xl mb-2">Excellence</h4>
+            <p className="text-sm text-green-100">
               Quality services with integrity
             </p>
           </div>
-          <div className="flex flex-col items-center justify-center">
-            <ShieldCheck className="mb-4" size={25} />
-            <h4 className="font-semibold text-lg">Transparency</h4>
-            <p className="text-sm opacity-90 mt-1">Open and accountable</p>
+          <div className="flex flex-col items-center justify-center group hover:-translate-y-2 transition-all duration-300">
+            <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-300 backdrop-blur-sm">
+              <ShieldCheck size={32} />
+            </div>
+            <h4 className="font-bold text-xl mb-2">Transparency</h4>
+            <p className="text-sm text-green-100">Open and accountable</p>
           </div>
         </div>
       </div>
