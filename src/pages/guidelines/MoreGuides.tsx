@@ -35,18 +35,18 @@ export default function MoreGuides() {
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-3 px-6">
+      <div className="bg-white py-3 px-6 border-b border-gray-200">
         <div className="max-w-7xl mx-auto">
-          <nav className="text-sm text-gray-600">
-            <Link to="/" className="hover:underline">
+          <nav className="text-sm text-gray-700">
+            <Link to="/" className="hover:underline hover:text-[#0c2716]">
               Home
             </Link>
             <span className="mx-2">/</span>
-            <Link to="/guidelines" className="hover:underline">
+            <Link to="/guidelines" className="hover:underline hover:text-[#0c2716]">
               How to Guides
             </Link>
             <span className="mx-2">/</span>
-            <span>More Guides</span>
+            <span className="text-[#0c2716] font-medium">More Guides</span>
           </nav>
         </div>
       </div>

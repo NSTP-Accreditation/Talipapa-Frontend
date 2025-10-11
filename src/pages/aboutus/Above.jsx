@@ -5,14 +5,14 @@ export default function AboutBarangay() {
   return (
     <>
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-3 px-6 border-b border-gray-200">
+      <div className="bg-white py-3 px-6 border-b border-gray-200">
         <div className="max-w-7xl mx-auto">
-          <nav className="text-sm text-gray-600">
-            <Link to="/" className="hover:underline">
+          <nav className="text-sm text-gray-700">
+            <Link to="/" className="hover:underline hover:text-[#0c2716]">
               Home
             </Link>
             <span className="mx-2">/</span>
-            <span>About Us</span>
+            <span className="text-[#0c2716] font-medium">About Us</span>
           </nav>
         </div>
       </div>

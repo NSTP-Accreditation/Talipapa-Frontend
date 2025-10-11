@@ -43,14 +43,14 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb */}
-      <div className="bg-white py-4 px-6 border-b">
+      <div className="bg-white py-3 px-6 border-b border-gray-200">
         <div className="max-w-4xl mx-auto">
-          <nav className="flex items-center text-sm text-gray-600">
-            <Link to="/" className="hover:underline">Home</Link>
+          <nav className="flex items-center text-sm text-gray-700">
+            <Link to="/" className="hover:underline hover:text-[#0c2716]">Home</Link>
             <span className="mx-2">/</span>
-            <Link to="/guidelines" className="hover:underline">How to Guides</Link>
+            <Link to="/guidelines" className="hover:underline hover:text-[#0c2716]">How to Guides</Link>
             <span className="mx-2">/</span>
-            <span className="text-gray-900">{title}</span>
+            <span className="text-[#0c2716] font-medium">{title}</span>
           </nav>
         </div>
       </div>
