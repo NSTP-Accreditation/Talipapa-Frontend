@@ -65,11 +65,14 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="p-8 space-y-8">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">Dashboard</h1>
-        <p className="text-base text-teal-600">
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 mb-3 flex items-center gap-3">
+          <span className="text-4xl">📊</span>
+          Dashboard
+        </h1>
+        <p className="text-lg text-gray-700 font-medium">
           Overview of your Barangay Information System
         </p>
       </div>
@@ -119,16 +122,16 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Placeholder Card */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
+        <Card className="border border-orange-200 shadow-md hover:shadow-lg transition-shadow bg-orange-50 rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
-            <CardTitle className="text-sm font-bold text-gray-400">
+            <CardTitle className="text-sm font-bold text-orange-700">
               Coming Soon
             </CardTitle>
-            <FileText className="h-5 w-5 text-gray-400" />
+            <FileText className="h-5 w-5 text-orange-600" />
           </CardHeader>
           <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-400 mb-1">---</div>
-            <p className="text-xs text-gray-400">Feature in development</p>
+            <div className="text-3xl font-bold text-orange-600 mb-1">🚀</div>
+            <p className="text-xs text-orange-700 font-medium">Feature in development</p>
           </CardContent>
         </Card>
       </div>
@@ -162,7 +165,7 @@ const Dashboard: React.FC = () => {
                     <p className="text-sm font-bold text-gray-900 mb-1">
                       {activity.points} pts
                     </p>
-                    <p className="text-xs text-gray-500">{activity.date}</p>
+                    <p className="text-sm text-gray-700 font-medium">{activity.date}</p>
                   </div>
                 </div>
               ))}
@@ -189,7 +192,7 @@ const Dashboard: React.FC = () => {
                     <p className="text-sm font-semibold text-gray-900 mb-1">
                       {achievement.title}
                     </p>
-                    <p className="text-xs text-gray-500">{achievement.date}</p>
+                    <p className="text-sm text-gray-700 font-medium">{achievement.date}</p>
                   </div>
                   <div>
                     <span

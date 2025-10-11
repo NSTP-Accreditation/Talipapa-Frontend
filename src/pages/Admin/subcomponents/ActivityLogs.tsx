@@ -62,7 +62,7 @@ const ResidentRecords: React.FC = () => {
 
       {/* Search Bar */}
       <div className="relative w-full mb-[40px]">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text- -400 pointer-events-none" />
 
         <Input
           type="text"
@@ -79,7 +79,7 @@ const ResidentRecords: React.FC = () => {
       {/* Table */}
       <div className="overflow-x-auto rounded-lg border">
         <table className="min-w-full text-sm">
-          <thead className="bg-gray-100 text-gray-700">
+          <thead className="bg- -100 text- -700">
             <tr>
               <th className="px-4 py-2 text-left">Record Id</th>
               <th className="px-4 py-2 text-left">Name</th>

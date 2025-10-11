@@ -23,9 +23,9 @@ import Settings from '@/pages/Admin/subcomponents/Settings';
 import ActivityLogs from '@/pages/Admin/subcomponents/ActivityLogs';
 import EarnPointsLogs from '@/pages/Admin/subcomponents/EarnPointsLogs';
 import SwapLogs from '@/pages/Admin/subcomponents/SwapLogs';
-import Forms from '@/pages/Admin/subcomponents/Forms';
+// import Forms from '@/pages/Admin/subcomponents/Forms'; // Forms.tsx doesn't exist
 import Guidelines from '@/pages/Admin/subcomponents/Guidelines';
-import News from '@/pages/Admin/subcomponents/News';
+import News from '@/pages/Admin/subcomponents/NewsEvents';
 import AboutUsAdmin from '@/pages/Admin/subcomponents/AboutUs';
 import Achievements from '@/pages/Admin/subcomponents/Achievements';
 import AdminLogin from '@/pages/Admin/AdminLogin';
@@ -65,8 +65,8 @@ function App() {
             <Route path="about/achievements" element={<Achievements />} />
             <Route path="news" element={<News />} />
 
-            {/* Forms Route (Admin version) */}
-            <Route path="forms" element={<Forms />} />
+            {/* Forms Route (Admin version) - Disabled: Forms.tsx doesn't exist */}
+            {/* <Route path="forms" element={<Forms />} /> */}
 
             {/* Guidelines Route (Admin version) */}
             <Route path="guidelines" element={<Guidelines />} />

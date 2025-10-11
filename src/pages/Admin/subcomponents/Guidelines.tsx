@@ -1002,10 +1002,12 @@ const Guidelines: React.FC = () => {
       <div className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Guidelines</h1>
-            <p className="text-gray-600 text-sm mt-1">
-              Step-by-step instructions for barangay services (
-              {guidelines.length} total)
+            <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
+              <span className="text-4xl">📋</span>
+              Guidelines
+            </h1>
+            <p className="text-lg text-gray-700 mt-2 font-medium">
+              Step-by-step instructions for barangay services ({guidelines.length} total)
             </p>
           </div>
 
