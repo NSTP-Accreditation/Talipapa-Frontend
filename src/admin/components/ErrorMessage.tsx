@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { CheckCircle, XCircle, X } from "lucide-react";
 
-export default function AlertMessage({ type = "success", message = "Message" }) {
+interface AlertMessageProps {
+  type?: "success" | "error";
+  message?: string;
+}
+
+export default function AlertMessage({ type = "success", message = "Message" }: AlertMessageProps) {
   const [visible, setVisible] = useState(true);
 
   if (!visible) return null;
