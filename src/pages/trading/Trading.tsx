@@ -151,33 +151,33 @@ export default function App() {
       </div>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 md:py-12">
-        <div className="text-center mb-6 sm:mb-8 md:mb-10">
-          <h1 className="mb-2 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900">EcoCycle</h1>
-          <p className="text-base sm:text-lg md:text-xl text-gray-700 px-4 font-medium">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 md:py-16">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
+          <h1 className="mb-3 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900">EcoCycle</h1>
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4 font-normal">
             Calculate how much valuable product you can get from your recyclable
             waste
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto mb-12 md:mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-16 md:mb-20">
           {/* Input Panel */}
-          <Card className="bg-white rounded-lg shadow-sm border border-gray-100">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
-                  <FileText className="w-4 h-4 text-green-700" />
+          <Card className="bg-white rounded-xl shadow-md border-2 border-gray-200 hover:border-green-300 transition-colors">
+            <CardHeader className="pb-5">
+              <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
+                  <FileText className="w-5 h-5 text-green-700" />
                 </div>
                 Input
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-5">
               <div>
-                <label className="block text-sm mb-2 font-medium text-gray-700">
+                <label className="block text-sm mb-2.5 font-medium text-gray-700">
                   Select Recyclable Type:
                 </label>
                 <Select value={selectedType} onValueChange={setSelectedType}>
-                  <SelectTrigger className="bg-white h-10 px-3 w-full text-sm border border-gray-200 rounded-lg shadow-sm">
+                  <SelectTrigger className="bg-white h-11 px-4 w-full text-sm border-2 border-gray-200 rounded-lg shadow-sm hover:border-green-400 transition-colors">
                     <SelectValue placeholder="Choose recyclable type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -191,7 +191,7 @@ export default function App() {
               </div>
 
               <div>
-                <label className="block text-sm mb-2 font-medium text-gray-700">
+                <label className="block text-sm mb-2.5 font-medium text-gray-700">
                   Enter weight (e.g., 2.5 kg):
                 </label>
                 <Input
@@ -199,13 +199,13 @@ export default function App() {
                   placeholder="2 KG"
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
-                  className="bg-white h-10 px-3 w-full text-sm border border-gray-200 rounded-lg shadow-sm"
+                  className="bg-white h-11 px-4 w-full text-sm border-2 border-gray-200 rounded-lg shadow-sm hover:border-green-400 transition-colors"
                 />
               </div>
 
               <Button
                 onClick={handleConvert}
-                className="w-full h-10 text-sm font-semibold bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-sm"
+                className="w-full h-11 text-sm font-semibold bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md mt-2"
               >
                 Convert
               </Button>
@@ -213,23 +213,23 @@ export default function App() {
           </Card>
 
           {/* Result Panel */}
-          <Card className="bg-white rounded-lg shadow-sm border border-gray-100">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
-                  <CheckCircle className="w-4 h-4 text-green-700" />
+          <Card className="bg-white rounded-xl shadow-md border-2 border-gray-200 hover:border-green-300 transition-colors">
+            <CardHeader className="pb-5">
+              <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
+                  <CheckCircle className="w-5 h-5 text-green-700" />
                 </div>
                 Result
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-5">
               <div>
-                <p className="text-center text-sm mb-4 font-medium text-gray-600">
+                <p className="text-center text-sm mb-5 font-medium text-gray-600">
                   Conversion Result:
                 </p>
 
-                <div className="space-y-3">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gray-50 rounded-lg gap-1 sm:gap-0 border border-gray-100">
+                <div className="space-y-4">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gray-50 rounded-lg gap-1 sm:gap-0 border-2 border-gray-200">
                     <span className="text-gray-700 text-sm font-medium">Input:</span>
                     <span className="text-gray-700 text-sm font-medium break-words">
                       {weight
@@ -241,7 +241,7 @@ export default function App() {
                     </span>
                   </div>
 
-                  <div className="p-5 bg-gray-50 rounded-lg flex flex-col items-center border border-gray-100">
+                  <div className="p-6 bg-gray-50 rounded-lg flex flex-col items-center border-2 border-gray-200">
                     <span className="text-gray-700 text-sm font-medium mb-4 px-2">Output:</span>
                     {result ? (
                       <div className="mb-4 flex-shrink-0" style={{ width: '240px', height: '220px', minWidth: '240px', minHeight: '220px', maxWidth: '240px', maxHeight: '220px' }}>
@@ -266,7 +266,7 @@ export default function App() {
                     </span>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-lg gap-1 sm:gap-0 bg-gray-50 border border-gray-100">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-lg gap-1 sm:gap-0 bg-gray-50 border-2 border-gray-200">
                     <span className="text-sm font-medium text-gray-700">Estimated Value:</span>
                     <span className="text-sm font-medium text-gray-700">
                       {result
@@ -278,9 +278,9 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="mt-4 text-center">
-                  <p className="text-gray-600 text-xs mb-2 font-medium">TOTAL:</p>
-                  <p className="text-2xl font-bold text-gray-900">
+                <div className="mt-6 text-center pt-4 border-t-2 border-gray-200">
+                  <p className="text-gray-600 text-xs mb-2 font-semibold tracking-wide">TOTAL:</p>
+                  <p className="text-3xl font-bold text-gray-900">
                     {result
                       ? `${result.points} ${
                           result.points === 1 ? 'point' : 'points'
@@ -295,35 +295,35 @@ export default function App() {
 
         {/* Check Your Points */}
         <div className="max-w-lg mx-auto py-12 md:py-16 px-4">
-          <div className="rounded-lg shadow-sm p-8 w-full bg-white border border-gray-100">
+          <div className="rounded-xl shadow-md p-8 w-full bg-white border-2 border-gray-200">
             <h3 className="mb-6 text-xl font-bold text-center text-gray-900">
               Check Your Record Points Here
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label className="block text-sm mb-2 font-medium text-gray-700" htmlFor="record-id">
+                <label className="block text-sm mb-2.5 font-medium text-gray-700" htmlFor="record-id">
                   Record ID
                 </label>
                 <Input
                   id="record-id"
                   type="text"
                   placeholder="BT-"
-                  className="bg-white h-10 px-3 rounded-lg border border-gray-200 shadow-sm w-full text-sm text-gray-900"
+                  className="bg-white h-11 px-4 rounded-lg border-2 border-gray-200 shadow-sm w-full text-sm text-gray-900 hover:border-green-400 transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-sm mb-2 font-medium text-gray-700" htmlFor="last-name">
+                <label className="block text-sm mb-2.5 font-medium text-gray-700" htmlFor="last-name">
                   Last Name
                 </label>
                 <Input
                   id="last-name"
                   type="text"
                   placeholder="Enter your last name"
-                  className="bg-white h-10 px-3 rounded-lg border border-gray-200 shadow-sm w-full text-sm text-gray-900"
+                  className="bg-white h-11 px-4 rounded-lg border-2 border-gray-200 shadow-sm w-full text-sm text-gray-900 hover:border-green-400 transition-colors"
                 />
               </div>
               <Button
-                className="text-white h-10 px-6 rounded-lg shadow-sm w-full transition-all text-sm font-semibold mt-2 bg-green-600 hover:bg-green-700"
+                className="text-white h-11 px-6 rounded-lg shadow-md w-full transition-all text-sm font-semibold mt-2 bg-green-600 hover:bg-green-700"
                 onClick={() => alert('Check Record feature coming soon!')}
               >
                 Check Record
@@ -333,27 +333,27 @@ export default function App() {
         </div>
 
         {/* TaliPanahATIN Program */}
-        <Card className="shadow-sm mt-10 sm:mt-12 md:mt-16 bg-white border border-gray-100 rounded-xl">
-          <CardHeader className="text-center rounded-t-xl p-6 sm:p-8 bg-gradient-to-r from-green-600 to-green-700">
+        <Card className="shadow-md mt-12 sm:mt-16 md:mt-20 bg-white border-2 border-gray-200 rounded-xl">
+          <CardHeader className="text-center rounded-t-xl p-8 sm:p-10 bg-gradient-to-r from-green-600 to-green-700">
             <CardTitle className="text-2xl sm:text-3xl font-bold text-white">
               "May Buhay sa Basura ng Barangay"
               <br />
               <span className="text-lg sm:text-xl opacity-90">TaliPaPaNatin</span>
             </CardTitle>
-            <p className="mt-2 sm:mt-3 opacity-90 text-sm sm:text-base text-green-100">
+            <p className="mt-3 sm:mt-4 opacity-90 text-sm sm:text-base text-green-100">
               Community Waste Management Programs
             </p>
           </CardHeader>
-          <CardContent className="p-6 sm:p-8 md:p-10">
+          <CardContent className="p-8 sm:p-10 md:p-12">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {programCategories.map((category, index) => (
                 <div
                   key={index}
-                  className="rounded-lg p-5 sm:p-6 bg-gray-50 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200"
+                  className="rounded-lg p-6 bg-gray-50 border-2 border-gray-200 shadow-sm hover:shadow-md hover:border-green-300 transition-all duration-200"
                 >
-                  <div className="flex items-center mb-4">
-                    <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center mr-3 flex-shrink-0">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
+                  <div className="flex items-center mb-5">
+                    <div className="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center mr-3 flex-shrink-0">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
                     </div>
                     <h4 className="text-xs sm:text-sm font-semibold leading-tight text-gray-900">
                       {category.title}
