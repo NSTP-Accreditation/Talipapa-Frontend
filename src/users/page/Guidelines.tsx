@@ -11,8 +11,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translations } from '@/utils/translations';
 
 export default function Guidelines() {
+  const { t, language } = useLanguage();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -24,7 +27,8 @@ export default function Guidelines() {
   }, []);
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
+    const locale = language === 'tl' ? 'tl-PH' : 'en-US';
+    return date.toLocaleDateString(locale, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -33,7 +37,8 @@ export default function Guidelines() {
   };
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', {
+    const locale = language === 'tl' ? 'tl-PH' : 'en-US';
+    return date.toLocaleTimeString(locale, {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
@@ -41,15 +46,15 @@ export default function Guidelines() {
   };
 
   const guides = [
-    { icon: FileText, title: 'Barangay Clearance', path: '/guidelines/barangay-clearance' },
-    { icon: File, title: 'Certificate of Indigency', path: '/guidelines/certificate-of-indigency' },
-    { icon: House, title: 'Certificate of Residency', path: '/guidelines/certificate-of-residency' },
-    { icon: Building2, title: 'Business Clearance', path: '/guidelines/business-clearance' },
-    { icon: TrafficCone, title: 'Traffic Clearance', path: '/guidelines/traffic-clearance' },
-    { icon: ThumbsUp, title: 'Good Moral Character', path: '/guidelines/good-moral-character' },
-    { icon: ScrollText, title: 'Barangay Affidavit', path: '/guidelines/barangay-affidavit' },
-    { icon: IdCard, title: 'Philsys ID', path: '/guidelines/philsys-id' },
-    { icon: IdCard, title: 'Quezon City ID', path: '/guidelines/quezon-city-id' },
+    { icon: FileText, title: t(translations.documents.barangayClearance), path: '/guidelines/barangay-clearance' },
+    { icon: File, title: t(translations.documents.certificateOfIndigency), path: '/guidelines/certificate-of-indigency' },
+    { icon: House, title: t(translations.documents.certificateOfResidency), path: '/guidelines/certificate-of-residency' },
+    { icon: Building2, title: t(translations.documents.businessClearance), path: '/guidelines/business-clearance' },
+    { icon: TrafficCone, title: t(translations.documents.trafficClearance), path: '/guidelines/traffic-clearance' },
+    { icon: ThumbsUp, title: t(translations.documents.goodMoralCharacter), path: '/guidelines/good-moral-character' },
+    { icon: ScrollText, title: t(translations.documents.barangayAffidavit), path: '/guidelines/barangay-affidavit' },
+    { icon: IdCard, title: t(translations.documents.philsysId), path: '/guidelines/philsys-id' },
+    { icon: IdCard, title: t(translations.documents.quezonCityId), path: '/guidelines/quezon-city-id' },
   ];
 
   return (
@@ -59,10 +64,10 @@ export default function Guidelines() {
         <div className="max-w-7xl mx-auto">
           <nav className="text-sm text-gray-600">
             <Link to="/" className="hover:text-green-600 transition-colors">
-              🏠 Home
+              🏠 {t(translations.nav.home)}
             </Link>
             <span className="mx-2 text-gray-400">/</span>
-            <span className="text-green-700 font-semibold">📖 How to Guides</span>
+            <span className="text-green-700 font-semibold">📖 {t(translations.nav.guides)}</span>
           </nav>
         </div>
       </div>
@@ -74,10 +79,10 @@ export default function Guidelines() {
             <span className="text-6xl">📚</span>
           </div>
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent">
-            Talipapa How-To Guides
+            {t(translations.guidelines.title)}
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Step-by-step instructions for barangay services and requirements
+            {t(translations.guidelines.subtitle)}
           </p>
         </div>
 

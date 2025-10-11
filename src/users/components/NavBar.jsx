@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import LanguageToggle from '@/components/LanguageToggle';
+import { translations } from '@/utils/translations';
 
 export default function NavBar() {
   const [currentDate, setCurrentDate] = useState('');
   const [currentTime, setCurrentTime] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     const updateDateTime = () => {
       const now = new Date();
+      const locale = language === 'tl' ? 'tl-PH' : 'en-US';
 
       // Format date as "Sunday, October 5, 2025"
       const dateOptions = {
@@ -18,7 +23,7 @@ export default function NavBar() {
         month: 'long',
         day: 'numeric',
       };
-      setCurrentDate(now.toLocaleDateString('en-US', dateOptions));
+      setCurrentDate(now.toLocaleDateString(locale, dateOptions));
 
       // Format time as "10:38:45 PM"
       const timeOptions = {
@@ -27,14 +32,14 @@ export default function NavBar() {
         second: '2-digit',
         hour12: true,
       };
-      setCurrentTime(now.toLocaleTimeString('en-US', timeOptions));
+      setCurrentTime(now.toLocaleTimeString(locale, timeOptions));
     };
 
     updateDateTime();
     const interval = setInterval(updateDateTime, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [language]);
 
   return (
     <header className="sticky top-0 z-50 bg-[#1b4c2e] text-white w-full">
@@ -73,31 +78,34 @@ export default function NavBar() {
               to="/"
               className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-bold text-base md:text-lg"
             >
-              Home
+              {t(translations.nav.home)}
             </Link>
             <Link
               to="/guidelines"
               className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-bold text-base md:text-lg"
             >
-              Guides
+              {t(translations.nav.guides)}
             </Link>
             <Link
               to="/trading"
               className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-bold text-base md:text-lg"
             >
-              EcoCycle
+              {t(translations.nav.ecocycle)}
             </Link>
             <Link
               to="/aboutus"
               className="hover:text-gray-200 px-2 sm:px-3 py-1 transition-colors font-bold text-base md:text-lg"
             >
-              About Us
+              {t(translations.nav.aboutUs)}
             </Link>
           </div>
         </div>
 
         {/* All Icons on the Right Side */}
         <div className="flex items-center space-x-3">
+          {/* Language Toggle */}
+          <LanguageToggle className="text-white" />
+          
           <Link to="/" className="block">
             <img
               src="/brgy talipapa.png"
@@ -143,29 +151,34 @@ export default function NavBar() {
             className="block hover:text-gray-200 px-3 py-2 transition-colors font-bold text-base rounded hover:bg-[#1b4c2e]"
             onClick={() => setIsMenuOpen(false)}
           >
-            Home
+            {t(translations.nav.home)}
           </Link>
           <Link
             to="/guidelines"
             className="block hover:text-gray-200 px-3 py-2 transition-colors font-bold text-base rounded hover:bg-[#1b4c2e]"
             onClick={() => setIsMenuOpen(false)}
           >
-            Guides
+            {t(translations.nav.guides)}
           </Link>
           <Link
             to="/trading"
             className="block hover:text-gray-200 px-3 py-2 transition-colors font-bold text-base rounded hover:bg-[#1b4c2e]"
             onClick={() => setIsMenuOpen(false)}
           >
-            EcoCycle
+            {t(translations.nav.ecocycle)}
           </Link>
           <Link
             to="/aboutus"
             className="block hover:text-gray-200 px-3 py-2 transition-colors font-bold text-base rounded hover:bg-[#1b4c2e]"
             onClick={() => setIsMenuOpen(false)}
           >
-            About Us
+            {t(translations.nav.aboutUs)}
           </Link>
+          
+          {/* Language Toggle for Mobile */}
+          <div className="px-3 py-2">
+            <LanguageToggle className="text-white" />
+          </div>
         </div>
       )}
     </header>

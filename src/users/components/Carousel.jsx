@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translations } from '@/utils/translations';
 
 const slides = [
   { image: 'https://placebear.com/1600/800' },
@@ -7,6 +9,7 @@ const slides = [
 ];
 
 export default function Carousel() {
+  const { t } = useLanguage();
   const [current, setCurrent] = useState(0);
 
   const nextSlide = () => setCurrent((current + 1) % slides.length);
@@ -32,8 +35,8 @@ export default function Carousel() {
 
       {/* Overlay Text */}
       <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-md text-white px-12 py-8 rounded-2xl text-center max-w-[90%] border border-white/20 shadow-2xl">
-        <h2 className="text-5xl font-bold mb-4 drop-shadow-lg">Welcome to Barangay Talipapa!</h2>
-        <p className="text-2xl font-light drop-shadow-md">Your community, our pride.</p>
+        <h2 className="text-5xl font-bold mb-4 drop-shadow-lg">{t(translations.home.welcome)}</h2>
+        <p className="text-2xl font-light drop-shadow-md">{t(translations.home.subtitle)}</p>
       </div>
 
       {/* Previous Button */}

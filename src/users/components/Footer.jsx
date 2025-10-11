@@ -1,7 +1,10 @@
 import React from 'react';
 import { Globe } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translations } from '@/utils/translations';
 
 export default function Footer() {
+  const { t } = useLanguage();
   return (
     <footer
       style={{ backgroundColor: '#1b4c2e' }}
@@ -9,10 +12,9 @@ export default function Footer() {
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 border-t border-green-800 pt-4 md:pt-6">
         <div>
-          <h3 className="mb-3 md:mb-4 text-base md:text-xl font-bold">Barangay Talipapa</h3>
+          <h3 className="mb-3 md:mb-4 text-base md:text-xl font-bold">{t(translations.footer.title)}</h3>
           <p className="text-sm md:text-base leading-relaxed" style={{ color: '#cfead6' }}>
-            A progressive community fostering environmental sustainability and
-            unity in Quezon City, Philippines.
+            {t(translations.footer.description)}
           </p>
           <div className="flex space-x-4 mt-4">
             <a
@@ -67,7 +69,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="mb-3 md:mb-4 text-base md:text-xl font-bold">Contact Information</h3>
+          <h3 className="mb-3 md:mb-4 text-base md:text-xl font-bold">{t(translations.footer.contactInfo)}</h3>
           <ul className="space-y-2">
             <li className="flex items-start text-sm md:text-base" style={{ color: '#cfead6' }}>
               <svg

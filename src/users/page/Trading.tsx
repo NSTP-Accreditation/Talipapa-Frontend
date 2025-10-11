@@ -12,37 +12,39 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Phone, User, FileText, CheckCircle } from 'lucide-react';
 import { ImageWithFallback } from '@/components/ImageWithFallback';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translations } from '@/utils/translations';
 
-const wasteTypes = [
+const getWasteTypes = (t) => [
   {
     value: 'plastic-bottles',
-    label: 'Plastic Bottles',
+    label: t(translations.trading.wasteTypes.plasticBottles),
     rate: 1,
-    output: 'Good Soil',
+    output: t(translations.trading.outputs.goodSoil),
     image:
       'https://images.unsplash.com/photo-1569880153113-76e33fc52d5f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYXJkZW4lMjBzb2lsJTIwY29tcG9zdHxlbnwxfHx8fDE3NTk1NjAyMzB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
   },
   {
     value: 'paper-cardboard',
-    label: 'Paper & Cardboard',
+    label: t(translations.trading.wasteTypes.paperCardboard),
     rate: 1,
-    output: 'Fertilizer',
+    output: t(translations.trading.outputs.fertilizer),
     image:
       'https://images.unsplash.com/photo-1539902879984-7a1fa3844e48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwZmVydGlsaXplciUyMHNvaWwlMjBjb25kaXRpb25lcnxlbnwxfHx8fDE3NTk1NjAyMjJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
   },
   {
     value: 'organic-waste',
-    label: 'Organic Waste',
+    label: t(translations.trading.wasteTypes.organicWaste),
     rate: 1,
-    output: 'Compost',
+    output: t(translations.trading.outputs.compost),
     image:
       'https://images.unsplash.com/photo-1708432331128-cfe5a2803781?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb21wb3N0JTIwb3JnYW5pYyUyMHdhc3RlJTIwZmVydGlsaXplcnxlbnwxfHx8fDE3NTk1NjAyMjV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
   },
   {
     value: 'cans-metal',
-    label: 'Cans & Metal',
+    label: t(translations.trading.wasteTypes.cansMetal),
     rate: 1,
-    output: 'Vermitech/Liquid Conditioner',
+    output: t(translations.trading.outputs.vermitech),
     image:
       'https://images.unsplash.com/photo-1678129456841-47b1aca89e60?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2ZXJtaWNvbXBvc3QlMjBsaXF1aWQlMjBmZXJ0aWxpemVyJTIwdGVhfGVufDF8fHx8MTc1OTU2MDIyOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
   },
@@ -105,6 +107,8 @@ const programCategories = [
 ];
 
 export default function Trading() {
+  const { t } = useLanguage();
+  const wasteTypes = getWasteTypes(t);
   const [selectedType, setSelectedType] = useState('');
   const [weight, setWeight] = useState('');
   const [result, setResult] = useState<{
@@ -142,10 +146,10 @@ export default function Trading() {
         <div className="max-w-7xl mx-auto">
           <nav className="text-sm text-gray-700 font-medium">
             <Link to="/" className="hover:text-green-600 transition-colors">
-              🏠 Home
+              🏠 {t(translations.nav.home)}
             </Link>
             <span className="mx-2 text-gray-400">/</span>
-            <span className="text-green-700 font-semibold">♻️ EcoCycle</span>
+            <span className="text-green-700 font-semibold">♻️ {t(translations.nav.ecocycle)}</span>
           </nav>
         </div>
       </div>
@@ -158,10 +162,10 @@ export default function Trading() {
             <span className="text-6xl sm:text-7xl">♻️</span>
           </div>
           <h1 className="mb-5 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900">
-            EcoCycle
+            {t(translations.trading.title)}
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4 font-medium max-w-3xl mx-auto leading-relaxed">
-            Calculate how much valuable product you can get from your recyclable waste
+            {t(translations.trading.subtitle)}
           </p>
           <div className="mt-6 flex items-center justify-center gap-2 text-sm text-green-700 font-semibold">
             <span className="px-4 py-2 bg-green-100 rounded-full border border-green-200">
@@ -185,14 +189,14 @@ export default function Trading() {
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 shadow-md">
                   <FileText className="w-6 h-6 text-white" />
                 </div>
-                <span>Input Waste</span>
+                <span>{t(translations.trading.wasteCalculator)}</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6 p-6">
               <div>
                 <label className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2">
                   <span className="text-lg">🗑️</span>
-                  Select Recyclable Type:
+                  {t(translations.trading.selectWasteType)}:
                 </label>
                 <Select value={selectedType} onValueChange={setSelectedType}>
                   <SelectTrigger className="bg-white h-12 px-4 w-full text-sm border-2 border-gray-300 rounded-xl shadow-sm hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-medium">
@@ -211,7 +215,7 @@ export default function Trading() {
               <div>
                 <label className=" text-sm mb-3 font-bold text-gray-800 flex items-center gap-2">
                   <span className="text-lg">⚖️</span>
-                  Enter weight (kg):
+                  {t(translations.trading.quantity)}:
                 </label>
                 <Input
                   type="number"
@@ -227,7 +231,7 @@ export default function Trading() {
                 className="w-full h-12 text-base font-bold bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 mt-4"
               >
                 <span className="mr-2">🔄</span>
-                Convert Now
+                {t(translations.trading.calculate)}
               </Button>
             </CardContent>
           </Card>
@@ -239,7 +243,7 @@ export default function Trading() {
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-md">
                   <CheckCircle className="w-6 h-6 text-white" />
                 </div>
-                <span>Conversion Result</span>
+                <span>{t(translations.trading.output)}</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-5 p-6">

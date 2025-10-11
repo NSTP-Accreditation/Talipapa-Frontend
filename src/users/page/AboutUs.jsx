@@ -1,5 +1,7 @@
 import AboutBarangay from '../components/AboutBarangay';
 import { User, MapPin, ExternalLink } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translations } from '@/utils/translations';
 
 const AboutUs = () => {
   return (
@@ -19,18 +21,21 @@ const AboutUs = () => {
 
 export default AboutUs;
 
-const officials = [
-  { name: 'Rodrigo Santos', role: 'Barangay Captain' },
-  { name: 'Elena Martinez', role: 'Kagawad - Health' },
-  { name: 'Carlos Reyes', role: 'Kagawad - Education' },
-  { name: 'Sofia Dela Cruz', role: 'Kagawad - Infrastructure' },
-  { name: 'Miguel Torres', role: 'SK Chairman' },
-  { name: 'Rosa Villanueva', role: 'Barangay Secretary' },
-  { name: 'Pedro Garcia', role: 'Barangay Treasurer' },
+const getOfficials = (t) => [
+  { name: 'Rodrigo Santos', role: t(translations.aboutUs.roles.captain) },
+  { name: 'Elena Martinez', role: t(translations.aboutUs.roles.health) },
+  { name: 'Carlos Reyes', role: t(translations.aboutUs.roles.education) },
+  { name: 'Sofia Dela Cruz', role: t(translations.aboutUs.roles.infrastructure) },
+  { name: 'Miguel Torres', role: t(translations.aboutUs.roles.chairman) },
+  { name: 'Rosa Villanueva', role: t(translations.aboutUs.roles.secretary) },
+  { name: 'Pedro Garcia', role: t(translations.aboutUs.roles.treasurer) },
 ];
 
 // BARANGAY  OFFICIALS
 const BarangayOfficials = () => {
+  const { t } = useLanguage();
+  const officials = getOfficials(t);
+
   return (
     <div className="mb-12 sm:mb-16 md:mb-20 lg:mb-24">
       {/* Header Section */}
@@ -39,11 +44,10 @@ const BarangayOfficials = () => {
           <span className="text-5xl">👥</span>
         </div>
         <h2 className="text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-4">
-          Barangay Officials
+          {t(translations.aboutUs.officials)}
         </h2>
         <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-          Meet the dedicated leaders serving our community with passion and
-          integrity
+          {t(translations.aboutUs.officialsSubtitle)}
         </p>
       </div>
 
@@ -89,6 +93,8 @@ const BarangayOfficials = () => {
 
 // BARANGAY MAP
 const BarangayMap = () => {
+  const { t } = useLanguage();
+  
   // Barangay Talipapa coordinates - Talipapa Barangay Hall on Quirino Highway
   const barangayCoordinates = {
     lat: 14.6879389,
@@ -107,10 +113,10 @@ const BarangayMap = () => {
           <span className="text-5xl">📍</span>
         </div>
         <h2 className="text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-4">
-          Find Our Barangay
+          {t(translations.aboutUs.mapTitle)}
         </h2>
         <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-          Visit us at our office or explore our location on the map below
+          {t(translations.aboutUs.mapSubtitle)}
         </p>
       </div>
 

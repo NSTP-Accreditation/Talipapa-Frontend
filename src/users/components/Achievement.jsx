@@ -1,51 +1,49 @@
 import React from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translations } from '@/utils/translations';
 
-const achievements = [
+const getAchievements = (t) => [
   {
-    title: 'Barangay Clean-up Drive Award',
-    description:
-      'Recognized for outstanding environmental efforts in maintaining a clean and green community.',
+    title: t(translations.achievements.achievements.cleanupAward.title),
+    description: t(translations.achievements.achievements.cleanupAward.description),
     link: 'https://example.com/cleanup-award',
     image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500',
   },
   {
-    title: 'Health and Wellness Initiative',
-    description:
-      'Awarded for promoting community health through sustainable wellness programs.',
+    title: t(translations.achievements.achievements.healthInitiative.title),
+    description: t(translations.achievements.achievements.healthInitiative.description),
     link: 'https://example.com/health-initiative',
     image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?w=500',
   },
   {
-    title: 'Community Safety Recognition',
-    description:
-      'Acknowledged for exemplary disaster preparedness and safety programs.',
+    title: t(translations.achievements.achievements.safetyRecognition.title),
+    description: t(translations.achievements.achievements.safetyRecognition.description),
     link: 'https://example.com/safety-recognition',
     image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=500',
   },
   {
-    title: 'Youth Empowerment Project',
-    description:
-      'Honored for empowering youth leaders to contribute actively to barangay programs.',
+    title: t(translations.achievements.achievements.youthEmpowerment.title),
+    description: t(translations.achievements.achievements.youthEmpowerment.description),
     link: 'https://example.com/youth-project',
     image: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=500',
   },
   {
-    title: 'Eco-Friendly Barangay',
-    description:
-      'Achieved for implementing innovative recycling and environmental conservation measures.',
+    title: t(translations.achievements.achievements.ecoFriendly.title),
+    description: t(translations.achievements.achievements.ecoFriendly.description),
     link: 'https://example.com/eco-barangay',
     image: 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=500',
   },
   {
-    title: 'Best Barangay Documentation',
-    description:
-      'Awarded for excellence in record keeping, transparency, and governance.',
+    title: t(translations.achievements.achievements.documentation.title),
+    description: t(translations.achievements.achievements.documentation.description),
     link: 'https://example.com/documentation-award',
     image: '',
   },
 ];
 
 export default function Achievements() {
+  const { t } = useLanguage();
+  const achievements = getAchievements(t);
   return (
     <section className="bg-gradient-to-br from-yellow-50 to-orange-50 py-20 flex justify-center">
       <div className="max-w-6xl w-full px-6">
@@ -55,10 +53,10 @@ export default function Achievements() {
             <span className="text-5xl">🏆</span>
           </div>
           <h2 className="text-5xl font-bold bg-gradient-to-r from-orange-700 to-yellow-700 bg-clip-text text-transparent mb-4">
-            Achievements
+            {t(translations.achievements.title)}
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
-            Celebrating our community's milestones and recognition for excellence in service
+            {t(translations.achievements.subtitle)}
           </p>
         </header>
 
@@ -106,7 +104,7 @@ export default function Achievements() {
                     rel="noopener noreferrer"
                     className="text-orange-600 text-sm font-bold hover:text-orange-700 hover:underline bg-orange-50 px-4 py-2 rounded-lg transition-colors"
                   >
-                    Learn more →
+                    {t(translations.achievements.learnMore)} →
                   </a>
                 ) : (
                   <span className="text-gray-400 text-sm">No link available</span>

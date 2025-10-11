@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Target, Eye } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { translations } from '@/utils/translations';
 
 export default function AboutBarangay() {
+  const { t } = useLanguage();
   return (
     <>
       {/* Breadcrumb */}
@@ -9,10 +12,10 @@ export default function AboutBarangay() {
         <div className="max-w-7xl mx-auto">
           <nav className="text-sm text-gray-600">
             <Link to="/" className="hover:text-green-600 transition-colors">
-              🏠 Home
+              🏠 {t(translations.nav.home)}
             </Link>
             <span className="mx-2 text-gray-400">/</span>
-            <span className="text-green-700 font-semibold">ℹ️ About Us</span>
+            <span className="text-green-700 font-semibold">ℹ️ {t(translations.nav.aboutUs)}</span>
           </nav>
         </div>
       </div>
@@ -40,7 +43,7 @@ export default function AboutBarangay() {
               <span className="text-5xl">🏘️</span>
             </div>
             <h1 className="text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-6">
-              About Barangay Talipapa
+              {t(translations.aboutUs.title)}
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Serving our community with excellence, transparency, and dedication

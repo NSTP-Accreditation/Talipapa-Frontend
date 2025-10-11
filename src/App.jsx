@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // import Forms from '@/pages/Admin/subcomponents/Forms'; // Forms.tsx doesn't exist
 import { AuthProvider } from './contexts/AuthContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 
 
 // ADMIN EXPORT HERE
@@ -48,8 +49,9 @@ import Footer from '@/users/components/Footer';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <LanguageProvider>
+      <AuthProvider>
+        <Router>
         <Routes>
           {/* Admin Login Route - No protection needed */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -166,6 +168,7 @@ function App() {
         </Routes>
       </Router>
     </AuthProvider>
+    </LanguageProvider>
   );
 }
 
