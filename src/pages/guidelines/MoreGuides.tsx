@@ -17,36 +17,36 @@ import { Link } from 'react-router-dom';
 
 export default function MoreGuides() {
   const guides = [
-    { icon: FileText, title: 'Barangay Clearance' },
-    { icon: File, title: 'Certificate of Indigency' },
-    { icon: House, title: 'Certificate of Residency' },
-    { icon: Building2, title: 'Business Clearance' },
-    { icon: TrafficCone, title: 'Traffic Clearance' },
-    { icon: ThumbsUp, title: 'Good Moral Character' },
-    { icon: ScrollText, title: 'Barangay Affidavit' },
-    { icon: IdCard, title: 'Philsys ID' },
-    { icon: IdCard, title: 'Quezon City ID' },
-    { icon: Stethoscope, title: 'Health Certificate' },
-    { icon: Waves, title: 'Flood Assistance' },
-    { icon: Mountain, title: 'Land Use Permit' },
-    { icon: CircleSlash, title: 'Restricted Area Pass' },
+    { icon: FileText, title: 'Barangay Clearance', path: '/guidelines/barangay-clearance' },
+    { icon: File, title: 'Certificate of Indigency', path: '/guidelines/certificate-of-indigency' },
+    { icon: House, title: 'Certificate of Residency', path: '/guidelines/certificate-of-residency' },
+    { icon: Building2, title: 'Business Clearance', path: '/guidelines/business-clearance' },
+    { icon: TrafficCone, title: 'Traffic Clearance', path: '/guidelines/traffic-clearance' },
+    { icon: ThumbsUp, title: 'Good Moral Character', path: '/guidelines/good-moral-character' },
+    { icon: ScrollText, title: 'Barangay Affidavit', path: '/guidelines/barangay-affidavit' },
+    { icon: IdCard, title: 'Philsys ID', path: '/guidelines/philsys-id' },
+    { icon: IdCard, title: 'Quezon City ID', path: '/guidelines/quezon-city-id' },
+    { icon: Stethoscope, title: 'Health Certificate', path: '/guidelines/health-certificate' },
+    { icon: Waves, title: 'Flood Assistance', path: '/guidelines/flood-assistance' },
+    { icon: Mountain, title: 'Land Use Permit', path: '/guidelines/land-use-permit' },
+    { icon: CircleSlash, title: 'Restricted Area Pass', path: '/guidelines/restricted-area-pass' },
   ];
 
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-3 px-6">
+      <div className="bg-white py-3 px-6 border-b border-gray-200">
         <div className="max-w-7xl mx-auto">
-          <nav className="text-sm text-gray-600">
-            <Link to="/" className="hover:underline">
+          <nav className="text-sm text-gray-700">
+            <Link to="/" className="hover:underline hover:text-[#0c2716]">
               Home
             </Link>
             <span className="mx-2">/</span>
-            <Link to="/guidelines" className="hover:underline">
+            <Link to="/guidelines" className="hover:underline hover:text-[#0c2716]">
               How to Guides
             </Link>
             <span className="mx-2">/</span>
-            <span>More Guides</span>
+            <span className="text-[#0c2716] font-medium">More Guides</span>
           </nav>
         </div>
       </div>
@@ -84,13 +84,12 @@ export default function MoreGuides() {
                       understand what this guide is for and what documents are
                       needed.
                     </p>
-                    <div className="mt-4 flex space-x-2">
-                      <Button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-                        View
-                      </Button>
-                      <Button className="bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded">
-                        Download
-                      </Button>
+                    <div className="mt-4">
+                      <Link to={guide.path}>
+                        <Button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                          View
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -132,7 +131,10 @@ export default function MoreGuides() {
 
         <div className="text-center">
           <Link to="/guidelines" className="inline-block">
-            <Button className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded">
+            <Button
+              className="text-white px-8 py-3 rounded"
+              style={{ backgroundColor: '#1b4c2e' }}
+            >
               Back to Guides
             </Button>
           </Link>

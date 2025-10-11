@@ -1,4 +1,3 @@
-import './index.css';
 import {
   FileText,
   File,
@@ -55,14 +54,14 @@ export default function Guidelines() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="bg-gray-50 py-3 px-6">
+      <div className="bg-white py-3 px-6 border-b border-gray-200">
         <div className="max-w-7xl mx-auto">
-          <nav className="text-sm text-gray-600">
-            <Link to="/" className="hover:underline">
+          <nav className="text-sm text-gray-700">
+            <Link to="/" className="hover:underline hover:text-[#0c2716]">
               Home
             </Link>
             <span className="mx-2">/</span>
-            <span>How to Guides</span>
+            <span className="text-[#0c2716] font-medium">How to Guides</span>
           </nav>
         </div>
       </div>

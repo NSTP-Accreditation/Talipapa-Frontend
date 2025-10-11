@@ -11,9 +11,7 @@ const AboutUs = () => {
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-6">
           <BarangayOfficials />
-          <div className="mt-32">
-            <BarangayMap />
-          </div>
+          <BarangayMap />
         </div>
       </div>
     </div>

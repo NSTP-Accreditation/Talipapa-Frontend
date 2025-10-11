@@ -7,6 +7,9 @@ import * as path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  css: {
+    postcss: './postcss.config.cjs',
+  },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {

@@ -43,14 +43,14 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb */}
-      <div className="bg-white py-4 px-6 border-b">
+      <div className="bg-white py-3 px-6 border-b border-gray-200">
         <div className="max-w-4xl mx-auto">
-          <nav className="flex items-center text-sm text-gray-600">
-            <Link to="/" className="hover:underline">Home</Link>
+          <nav className="flex items-center text-sm text-gray-700">
+            <Link to="/" className="hover:underline hover:text-[#0c2716]">Home</Link>
             <span className="mx-2">/</span>
-            <Link to="/guidelines" className="hover:underline">How to Guides</Link>
+            <Link to="/guidelines" className="hover:underline hover:text-[#0c2716]">How to Guides</Link>
             <span className="mx-2">/</span>
-            <span className="text-gray-900">{title}</span>
+            <span className="text-[#0c2716] font-medium">{title}</span>
           </nav>
         </div>
       </div>
@@ -133,16 +133,16 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
                       
                       {/* Step Requirements */}
                       {step.requirements && step.requirements.length > 0 && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                          <p className="text-sm font-bold text-blue-900 mb-4 flex items-center gap-3">
-                            <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs flex-shrink-0">!</span>
+                        <div className="bg-blue-50 border-l-4 border-blue-500 rounded-r-lg p-5 mb-4 shadow-sm">
+                          <p className="text-sm font-semibold text-blue-900 mb-4 flex items-center gap-2">
+                            <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs flex-shrink-0">!</span>
                             Required for this step:
                           </p>
-                          <ul className="space-y-3">
+                          <ul className="space-y-2">
                             {step.requirements.map((req, reqIndex) => (
-                              <li key={reqIndex} className="flex items-start gap-3 text-sm text-blue-800">
-                                <span className="text-blue-600 font-bold mt-0.5 flex-shrink-0">•</span>
-                                <span className="font-medium leading-relaxed">{req}</span>
+                              <li key={reqIndex} className="flex items-start gap-2 text-sm text-blue-900">
+                                <span className="text-blue-600 font-bold mt-1 flex-shrink-0">•</span>
+                                <span className="leading-relaxed">{req}</span>
                               </li>
                             ))}
                           </ul>
@@ -151,12 +151,12 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
                       
                       {/* Step Notes */}
                       {step.notes && (
-                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                          <p className="text-sm font-bold text-yellow-900 mb-3 flex items-center gap-3">
-                            <span className="w-6 h-6 rounded-full bg-yellow-600 text-white flex items-center justify-center text-xs flex-shrink-0">💡</span>
+                        <div className="bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg p-5 shadow-sm">
+                          <p className="text-sm font-semibold text-yellow-900 mb-2 flex items-center gap-2">
+                            <span className="text-lg flex-shrink-0">💡</span>
                             Important Note:
                           </p>
-                          <p className="text-sm text-yellow-800 font-medium leading-relaxed">{step.notes}</p>
+                          <p className="text-sm text-yellow-900 leading-relaxed ml-1">{step.notes}</p>
                         </div>
                       )}
                     </div>
@@ -179,44 +179,20 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
           <div className="lg:col-span-1 space-y-6">
             {/* Tips Card */}
             {tips && tips.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <span className="text-2xl">💡</span>
+              <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 sticky top-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span className="text-xl">💡</span>
                   Helpful Tips
                 </h3>
                 <ul className="space-y-3">
                   {tips.map((tip, index) => (
-                    <li key={index} className="text-sm text-gray-700 bg-blue-50 border border-blue-100 p-4 rounded-lg">
-                      <span className="font-medium">{tip}</span>
+                    <li key={index} className="text-sm text-gray-800 bg-green-50 border-l-4 border-green-500 py-3 px-4 rounded-r-lg shadow-sm">
+                      <span className="leading-relaxed">{tip}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
-
-            {/* Contact Info Card */}
-            <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-xl p-6 sticky top-6">
-              <h3 className="text-xl font-bold text-green-900 mb-4 flex items-center gap-2">
-                <span className="text-2xl">📞</span>
-                Need Help?
-              </h3>
-              <div className="space-y-3 text-sm text-green-800">
-                <p>
-                  <span className="font-medium">Barangay Office Hours:</span><br />
-                  Monday - Friday: 8:00 AM - 5:00 PM
-                </p>
-                <p>
-                  <span className="font-medium">Contact:</span><br />
-                  (02) 123-4567<br />
-                  barangay@sanisidro.gov.ph
-                </p>
-                <p>
-                  <span className="font-medium">Address:</span><br />
-                  Barangay San Isidro<br />
-                  Quezon City, Metro Manila
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
