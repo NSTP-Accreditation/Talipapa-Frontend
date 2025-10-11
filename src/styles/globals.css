@@ -4,14 +4,11 @@
  * This is the single entry point for all styles in the application
  */
 
-/* Import Tailwind directives */
-@import url('./tailwind.css');
+/* Import CSS variables first */
+@import './variables.css';
 
-/* Import CSS variables
- * Contains theme variables for colors, spacing, typography, and other design tokens
- * Used throughout the application for consistent styling
- */
-@import url('./variables.css');
+/* Tailwind CSS directives - will be processed by PostCSS */
+@import 'tailwindcss';
 
 /* Base layer styles */
 @layer base {
