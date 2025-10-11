@@ -21,11 +21,12 @@
   }
 
   /* Hide scrollbar for webkit browsers (Chrome, Safari, Edge) */
-  html, body {
+  html {
     overflow-x: hidden;
   }
 
   body {
+    overflow-x: clip; /* Use clip instead of hidden to avoid creating containing block */
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */
   }
