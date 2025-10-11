@@ -13,6 +13,10 @@ import TrafficClearanceGuide from '@/pages/guidelines/guides/TrafficClearanceGui
 import BarangayAffidavitGuide from '@/pages/guidelines/guides/BarangayAffidavitGuide';
 import PhilsysIdGuide from '@/pages/guidelines/guides/PhilsysIdGuide';
 import QuezonCityIdGuide from '@/pages/guidelines/guides/QuezonCityIdGuide';
+import HealthCertificateGuide from '@/pages/guidelines/guides/HealthCertificateGuide';
+import FloodAssistanceGuide from '@/pages/guidelines/guides/FloodAssistanceGuide';
+import LandUsePermitGuide from '@/pages/guidelines/guides/LandUsePermitGuide';
+import RestrictedAreaPassGuide from '@/pages/guidelines/guides/RestrictedAreaPassGuide';
 import Trading from '@/pages/trading/Trading';
 import Footer from '@/components/Footer';
 import AboutUs from '@/pages/aboutus/AboutUs';
@@ -138,6 +142,10 @@ function App() {
                   <Route path="/guidelines/barangay-affidavit" element={<BarangayAffidavitGuide />} />
                   <Route path="/guidelines/philsys-id" element={<PhilsysIdGuide />} />
                   <Route path="/guidelines/quezon-city-id" element={<QuezonCityIdGuide />} />
+                  <Route path="/guidelines/health-certificate" element={<HealthCertificateGuide />} />
+                  <Route path="/guidelines/flood-assistance" element={<FloodAssistanceGuide />} />
+                  <Route path="/guidelines/land-use-permit" element={<LandUsePermitGuide />} />
+                  <Route path="/guidelines/restricted-area-pass" element={<RestrictedAreaPassGuide />} />
                   <Route path="/trading" element={<Trading />} />
                   <Route path="/aboutus" element={<AboutUs />} />
                 </Routes>

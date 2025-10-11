@@ -17,19 +17,19 @@ import { Link } from 'react-router-dom';
 
 export default function MoreGuides() {
   const guides = [
-    { icon: FileText, title: 'Barangay Clearance' },
-    { icon: File, title: 'Certificate of Indigency' },
-    { icon: House, title: 'Certificate of Residency' },
-    { icon: Building2, title: 'Business Clearance' },
-    { icon: TrafficCone, title: 'Traffic Clearance' },
-    { icon: ThumbsUp, title: 'Good Moral Character' },
-    { icon: ScrollText, title: 'Barangay Affidavit' },
-    { icon: IdCard, title: 'Philsys ID' },
-    { icon: IdCard, title: 'Quezon City ID' },
-    { icon: Stethoscope, title: 'Health Certificate' },
-    { icon: Waves, title: 'Flood Assistance' },
-    { icon: Mountain, title: 'Land Use Permit' },
-    { icon: CircleSlash, title: 'Restricted Area Pass' },
+    { icon: FileText, title: 'Barangay Clearance', path: '/guidelines/barangay-clearance' },
+    { icon: File, title: 'Certificate of Indigency', path: '/guidelines/certificate-of-indigency' },
+    { icon: House, title: 'Certificate of Residency', path: '/guidelines/certificate-of-residency' },
+    { icon: Building2, title: 'Business Clearance', path: '/guidelines/business-clearance' },
+    { icon: TrafficCone, title: 'Traffic Clearance', path: '/guidelines/traffic-clearance' },
+    { icon: ThumbsUp, title: 'Good Moral Character', path: '/guidelines/good-moral-character' },
+    { icon: ScrollText, title: 'Barangay Affidavit', path: '/guidelines/barangay-affidavit' },
+    { icon: IdCard, title: 'Philsys ID', path: '/guidelines/philsys-id' },
+    { icon: IdCard, title: 'Quezon City ID', path: '/guidelines/quezon-city-id' },
+    { icon: Stethoscope, title: 'Health Certificate', path: '/guidelines/health-certificate' },
+    { icon: Waves, title: 'Flood Assistance', path: '/guidelines/flood-assistance' },
+    { icon: Mountain, title: 'Land Use Permit', path: '/guidelines/land-use-permit' },
+    { icon: CircleSlash, title: 'Restricted Area Pass', path: '/guidelines/restricted-area-pass' },
   ];
 
   return (
@@ -84,13 +84,12 @@ export default function MoreGuides() {
                       understand what this guide is for and what documents are
                       needed.
                     </p>
-                    <div className="mt-4 flex space-x-2">
-                      <Button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-                        View
-                      </Button>
-                      <Button className="bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded">
-                        Download
-                      </Button>
+                    <div className="mt-4">
+                      <Link to={guide.path}>
+                        <Button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                          View
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </div>
