@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardContent,
   CardTitle,
-} from '../../../components/ui/card';
+} from '../../components/ui/card';
 
 interface Step {
   id: string;

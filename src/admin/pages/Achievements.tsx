@@ -168,7 +168,7 @@ export default function AchievementsAdmin() {
   };
 
   const handleImport = (file) => {
-    if (!file) return;
+    if (!file) return;  
     const reader = new FileReader();
     reader.onload = () => {
       try {

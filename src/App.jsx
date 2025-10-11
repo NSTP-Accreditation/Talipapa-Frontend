@@ -20,21 +20,21 @@ import RestrictedAreaPassGuide from '@/pages/guidelines/guides/RestrictedAreaPas
 import Trading from '@/pages/trading/Trading';
 import Footer from '@/components/Footer';
 import AboutUs from '@/pages/aboutus/AboutUs';
-import AdminLayout from '@/pages/Admin/AdminLayout';
-import Dashboard from '@/pages/Admin/subcomponents/Dashboard';
-import EcocycleTrading from '@/pages/Admin/subcomponents/Ecocycletrading';
-import Settings from '@/pages/Admin/subcomponents/Settings';
-import ActivityLogs from '@/pages/Admin/subcomponents/ActivityLogs';
-import EarnPointsLogs from '@/pages/Admin/subcomponents/EarnPointsLogs';
-import SwapLogs from '@/pages/Admin/subcomponents/SwapLogs';
+import AdminLayout from '@/admin/layout/AdminLayout';
+import Dashboard from '@/admin/pages/Dashboard';
+import TradingStatistics from '@/admin/pages/TradingStatistics';
+import Settings from '@/admin/pages/Settings';
+import ActivityLogs from '@/admin/pages/Records';
+import EarnPointsLogs from '@/admin/pages/EarnPoints';
+import SwapLogs from '@/admin/pages/SwapItem';
 // import Forms from '@/pages/Admin/subcomponents/Forms'; // Forms.tsx doesn't exist
-import Guidelines from '@/pages/Admin/subcomponents/Guidelines';
-import News from '@/pages/Admin/subcomponents/NewsEvents';
-import AboutUsAdmin from '@/pages/Admin/subcomponents/AboutUs';
-import Achievements from '@/pages/Admin/subcomponents/Achievements';
-import AdminLogin from '@/pages/Admin/AdminLogin';
+import Guidelines from '@/admin/pages/Guidelines';
+import News from '@/admin/pages/NewsEvents';
+import AboutUsAdmin from '@/admin/pages/AboutUs';
+import Achievements from '@/admin/pages/Achievements';
+import AdminLogin from '@/admin/auth/AdminLogin';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import Inventory from '@/pages/Admin/subcomponents/Inventory';
+import Inventory from '@/admin/pages/Inventory';
 import { AuthProvider } from '@/contexts/AuthContext';
 
 function App() {
@@ -59,7 +59,7 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
 
             {/* Trading Routes */}
-            <Route path="trading" element={<EcocycleTrading />} />
+            <Route path="trading" element={<TradingStatistics />} />
             <Route path="trading/activity" element={<ActivityLogs />} />
             <Route path="trading/earn-points" element={<EarnPointsLogs />} />
             <Route path="trading/swap" element={<SwapLogs />} />
