@@ -25,19 +25,7 @@ import Home from '@/users/page/Home';
 import NavBar from '@/users/components/NavBar';
 import GuidelinesApp from '@/users/page/Guidelines';
 import MoreGuides from '@/users/page/MoreGuides';
-import BarangayClearanceGuide from '@/users/guidelines/guides/CertificateOfIndigencyGuide';
-import CertificateOfIndigencyGuide from '@/users/guidelines/guides/CertificateOfIndigencyGuide';
-import CertificateOfResidencyGuide from '@/users/guidelines/guides/CertificateOfResidencyGuide';
-import BusinessClearanceGuide from '@/users/guidelines/guides/BusinessClearanceGuide';
-import GoodMoralCharacterGuide from '@/users/guidelines/guides/GoodMoralCharacterGuide';
-import TrafficClearanceGuide from '@/users/guidelines/guides/TrafficClearanceGuide';
-import BarangayAffidavitGuide from '@/users/guidelines/guides/BarangayAffidavitGuide';
-import PhilsysIdGuide from '@/users/guidelines/guides/PhilsysIdGuide';
-import QuezonCityIdGuide from '@/users/guidelines/guides/QuezonCityIdGuide';
-import HealthCertificateGuide from '@/users/guidelines/guides/HealthCertificateGuide';
-import FloodAssistanceGuide from '@/users/guidelines/guides/FloodAssistanceGuide';
-import LandUsePermitGuide from '@/users/guidelines/guides/LandUsePermitGuide';
-import RestrictedAreaPassGuide from '@/users/guidelines/guides/RestrictedAreaPassGuide';
+import UnifiedGuide from '@/users/guidelines/guides/UnifiedGuide';
 import Trading from '@/users/page/Trading';
 import AboutUs from '@/users/page/AboutUs';
 
@@ -143,19 +131,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/guidelines" element={<GuidelinesApp />} />
                   <Route path="/guidelines/more" element={<MoreGuides />} />
-                  <Route path="/guidelines/barangay-clearance" element={<BarangayClearanceGuide />} />
-                  <Route path="/guidelines/certificate-of-indigency" element={<CertificateOfIndigencyGuide />} />
-                  <Route path="/guidelines/certificate-of-residency" element={<CertificateOfResidencyGuide />} />
-                  <Route path="/guidelines/business-clearance" element={<BusinessClearanceGuide />} />
-                  <Route path="/guidelines/good-moral-character" element={<GoodMoralCharacterGuide />} />
-                  <Route path="/guidelines/traffic-clearance" element={<TrafficClearanceGuide />} />
-                  <Route path="/guidelines/barangay-affidavit" element={<BarangayAffidavitGuide />} />
-                  <Route path="/guidelines/philsys-id" element={<PhilsysIdGuide />} />
-                  <Route path="/guidelines/quezon-city-id" element={<QuezonCityIdGuide />} />
-                  <Route path="/guidelines/health-certificate" element={<HealthCertificateGuide />} />
-                  <Route path="/guidelines/flood-assistance" element={<FloodAssistanceGuide />} />
-                  <Route path="/guidelines/land-use-permit" element={<LandUsePermitGuide />} />
-                  <Route path="/guidelines/restricted-area-pass" element={<RestrictedAreaPassGuide />} />
+                  <Route path="/guidelines/:guideId" element={<UnifiedGuide />} />
                   <Route path="/trading" element={<Trading />} />
                   <Route path="/aboutus" element={<AboutUs />} />
                 </Routes>
