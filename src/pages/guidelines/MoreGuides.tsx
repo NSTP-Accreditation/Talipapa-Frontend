@@ -131,7 +131,10 @@ export default function MoreGuides() {
 
         <div className="text-center">
           <Link to="/guidelines" className="inline-block">
-            <Button className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded">
+            <Button
+              className="text-white px-8 py-3 rounded"
+              style={{ backgroundColor: '#1b4c2e' }}
+            >
               Back to Guides
             </Button>
           </Link>
