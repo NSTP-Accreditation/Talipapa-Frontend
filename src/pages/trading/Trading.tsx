@@ -153,7 +153,7 @@ export default function App() {
       {/* Main Content */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 md:py-16">
         <div className="text-center mb-8 sm:mb-10 md:mb-12">
-          <h1 className="mb-3 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900">EcoCycle</h1>
+          <h1 className="mb-5 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900">EcoCycle</h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4 font-normal">
             Calculate how much valuable product you can get from your recyclable
             waste

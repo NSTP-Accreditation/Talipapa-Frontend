@@ -1003,7 +1003,7 @@ const Guidelines: React.FC = () => {
       <div className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent flex items-center gap-3">
+            <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
               <span className="text-4xl">📖</span>
               Guidelines
             </h1>
@@ -1150,7 +1150,7 @@ const Guidelines: React.FC = () => {
   {filteredGuidelines.map((guideline) => (
     <Card
       key={guideline.id}
-      className="bg-white border-2 border-gray-200 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover:border-green-300 group cursor-pointer overflow-hidden"
+      className="bg-white border-2 border-gray-200 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover:border-green-300 group cursor-pointer overflow-hidden flex flex-col"
     >
       <CardHeader className="pb-4 bg-gradient-to-br from-white to-gray-50 group-hover:from-green-50 group-hover:to-white transition-all duration-300">
   {/* Flex container with checkbox on right */}
@@ -1215,14 +1215,14 @@ const Guidelines: React.FC = () => {
   </div>
 </CardHeader>
 
-      <CardContent className="pt-2">
-        <div className="space-y-4">
-          <p className="text-sm text-gray-700 leading-relaxed line-clamp-2">
+      <CardContent className="pt-2 flex-1 flex flex-col">
+        <div className="flex flex-col h-full">
+          <p className="text-sm text-gray-700 leading-relaxed line-clamp-2 mb-4">
             {guideline.description}
           </p>
 
           {/* Enhanced Stats Grid */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 mb-4">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-3 border border-blue-200">
               <div className="flex items-center gap-2 mb-1">
                 <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1248,7 +1248,7 @@ const Guidelines: React.FC = () => {
           </div>
 
           {/* Enhanced Steps Preview */}
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200">
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200 mb-4 flex-1">
             <div className="flex items-center justify-between mb-3">
               <p className="text-xs font-bold text-gray-700 uppercase tracking-wide">
                 📋 Steps Preview
@@ -1282,8 +1282,8 @@ const Guidelines: React.FC = () => {
             </div>
           </div>
 
-          {/* Enhanced Action Buttons */}
-          <div className="space-y-2.5 pt-4 mt-4 border-t-2 border-gray-200">
+          {/* Enhanced Action Buttons - Fixed at Bottom */}
+          <div className="space-y-2.5 pt-4 mt-auto border-t-2 border-gray-200">
             <button
               onClick={() => {
                 // In a real app, this would open a detailed view
