@@ -1,13 +1,13 @@
 <div align="center">
 
-# 🌿 Talipapa-Frontend
+# 🌿 Talipapa-Web
 
 ### Barangay Information System with EcoCycle Trading Platform
 
 [![React](https://img.shields.io/badge/React-18.3.1-61dafb?style=flat&logo=react)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-3178c6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4.1-646cff?style=flat&logo=vite)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.1-38bdf8?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.14-38bdf8?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 
 **An integrated platform for Barangay Talipapa featuring waste management, community services, and administrative tools.**
 
@@ -175,9 +175,9 @@ src/
 
 | Category               | Technologies                    |
 | ---------------------- | ------------------------------- |
-| **Frontend Framework** | React 18.3.1 + TypeScript 5.5.3 |
-| **Build Tool**         | Vite 5.4.1                      |
-| **Styling**            | Tailwind CSS 3.4.1 + PostCSS    |
+| **Frontend Framework** | React 18.3.1 + TypeScript 5.9.3 |
+| **Build Tool**         | Vite 6.3.5                      |
+| **Styling**            | Tailwind CSS 4.1.14 + PostCSS    |
 | **UI Components**      | shadcn/ui + Radix UI            |
 | **Routing**            | React Router DOM v6             |
 | **Icons**              | Lucide React                    |
