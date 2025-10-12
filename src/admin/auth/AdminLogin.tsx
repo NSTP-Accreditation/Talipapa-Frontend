@@ -88,31 +88,31 @@ const AdminLogin: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center py-8 px-4"
+      className="min-h-screen flex items-center justify-center py-4 sm:py-8 px-4"
       style={{ backgroundColor: '#F6F6F6' }}
     >
       <div
-        className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden"
-        style={{ maxWidth: '1100px', width: '95vw' }}
+        className="w-full max-w-6xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden"
+        style={{ maxWidth: '1100px' }}
       >
-        <div className="flex min-h-[650px]">
+        <div className="flex flex-col lg:flex-row min-h-[500px] sm:min-h-[650px]">
           {/* Left Column - Login Form */}
-          <div className="w-1/2 p-16 flex flex-col justify-center">
+          <div className="w-full lg:w-1/2 p-6 sm:p-10 lg:p-16 flex flex-col justify-center">
             <div className="flex flex-col max-w-md mx-auto w-full">
               {/* Logo and Title Section */}
-              <div className="text-center mb-10">
+              <div className="text-center mb-8 sm:mb-10">
                 <div
-                  className="flex items-center justify-center w-32 h-32 mx-auto mb-6 rounded-full shadow-lg"
+                  className="flex items-center justify-center w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-4 sm:mb-6 rounded-full shadow-lg"
                   style={{ backgroundColor: '#F6F6F6' }}
                 >
                   <img
                     src="/brgy talipapa.png"
                     alt="Barangay Talipapa Logo"
-                    className="h-28 w-28 object-contain hover:scale-105 transition-transform duration-300"
+                    className="h-20 w-20 sm:h-28 sm:w-28 object-contain hover:scale-105 transition-transform duration-300"
                   />
                 </div>
                 <h1
-                  className="text-4xl font-bold mb-3"
+                  className="text-3xl sm:text-4xl font-bold mb-2 sm:mb-3"
                   style={{ color: '#1a4d2e' }}
                 >
                   Admin Portal
@@ -121,7 +121,7 @@ const AdminLogin: React.FC = () => {
 
               {/* Login Text */}
               <p
-                className="text-lg mb-8 text-center"
+                className="text-base sm:text-lg mb-6 sm:mb-8 text-center"
                 style={{ color: '#838383' }}
               >
                 Please login to your account
@@ -129,12 +129,12 @@ const AdminLogin: React.FC = () => {
 
               {/* Form */}
               <div className="w-full">
-                <form onSubmit={handleSubmit} className="space-y-8">
+                <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
                   {/* Username Field */}
                   <div>
                     <label
                       htmlFor="form1"
-                      className="block text-sm font-semibold mb-3"
+                      className="block text-sm font-semibold mb-2 sm:mb-3"
                       style={{ color: '#1a4d2e' }}
                     >
                       Username
@@ -146,11 +146,11 @@ const AdminLogin: React.FC = () => {
                       placeholder="Enter your username"
                       value={formData.username}
                       onChange={handleInputChange}
-                      className={`w-full h-14 px-4 bg-white border-2 rounded-xl text-base placeholder:text-gray-400 focus:ring-0 focus:outline-none transition-all duration-300 ${errors.username ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-[#1a4d2e] hover:border-gray-300'}`}
+                      className={`w-full h-12 sm:h-14 px-3 sm:px-4 bg-white border-2 rounded-xl text-sm sm:text-base placeholder:text-gray-400 focus:ring-0 focus:outline-none transition-all duration-300 ${errors.username ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-[#1a4d2e] hover:border-gray-300'}`}
                       disabled={loading}
                     />
                     {errors.username && (
-                      <p className="text-sm text-red-600 mt-2 font-medium">
+                      <p className="text-xs sm:text-sm text-red-600 mt-2 font-medium">
                         {errors.username}
                       </p>
                     )}
@@ -160,7 +160,7 @@ const AdminLogin: React.FC = () => {
                   <div>
                     <label
                       htmlFor="form2"
-                      className="block text-sm font-semibold mb-3"
+                      className="block text-sm font-semibold mb-2 sm:mb-3"
                       style={{ color: '#1a4d2e' }}
                     >
                       Password
@@ -172,11 +172,11 @@ const AdminLogin: React.FC = () => {
                       placeholder="Enter your password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className={`w-full h-14 px-4 bg-white border-2 rounded-xl text-base placeholder:text-gray-400 focus:ring-0 focus:outline-none transition-all duration-300 ${errors.password ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-[#1a4d2e] hover:border-gray-300'}`}
+                      className={`w-full h-12 sm:h-14 px-3 sm:px-4 bg-white border-2 rounded-xl text-sm sm:text-base placeholder:text-gray-400 focus:ring-0 focus:outline-none transition-all duration-300 ${errors.password ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-[#1a4d2e] hover:border-gray-300'}`}
                       disabled={loading}
                     />
                     {errors.password && (
-                      <p className="text-sm text-red-600 mt-2 font-medium">
+                      <p className="text-xs sm:text-sm text-red-600 mt-2 font-medium">
                         {errors.password}
                       </p>
                     )}
@@ -184,24 +184,24 @@ const AdminLogin: React.FC = () => {
 
                   {/* Submit Error */}
                   {errors.submit && (
-                    <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
-                      <p className="text-sm text-red-600 font-medium">
+                    <div className="bg-red-50 border-2 border-red-200 rounded-xl p-3 sm:p-4">
+                      <p className="text-xs sm:text-sm text-red-600 font-medium">
                         {errors.submit}
                       </p>
                     </div>
                   )}
 
                   {/* Submit Button and Links */}
-                  <div className="pt-4">
+                  <div className="pt-2 sm:pt-4">
                     <Button
                       type="submit"
-                      className="w-full h-16 text-white font-bold rounded-xl text-lg shadow-lg hover:shadow-xl hover:opacity-90 transition-all duration-300"
+                      className="w-full h-14 sm:h-16 text-white font-bold rounded-xl text-base sm:text-lg shadow-lg hover:shadow-xl hover:opacity-90 transition-all duration-300"
                       style={{ backgroundColor: '#1a4d2e' }}
                       disabled={loading}
                     >
                       {loading ? (
-                        <div className="flex items-center justify-center space-x-3">
-                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                        <div className="flex items-center justify-center space-x-2 sm:space-x-3">
+                          <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 border-b-2 border-white"></div>
                           <span>Signing in...</span>
                         </div>
                       ) : (
@@ -216,20 +216,20 @@ const AdminLogin: React.FC = () => {
 
           {/* Right Column - Branding */}
           <div
-            className="w-1/2 flex flex-col justify-center text-white p-16 relative overflow-hidden"
+            className="hidden lg:flex w-full lg:w-1/2 flex-col justify-center text-white p-12 lg:p-16 relative overflow-hidden"
             style={{ backgroundColor: '#1a4d2e' }}
           >
             {/* Decorative circles */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full -ml-48 -mb-48"></div>
 
-            <div className="relative z-10 text-center px-8">
-              <h4 className="text-5xl font-black mb-8 leading-tight">
+            <div className="relative z-10 text-center px-4 lg:px-8">
+              <h4 className="text-4xl lg:text-5xl font-black mb-6 lg:mb-8 leading-tight">
                 Welcome Back,
                 <br />
                 Admin
               </h4>
-              <p className="text-white/90 text-lg leading-relaxed font-light">
+              <p className="text-white/90 text-base lg:text-lg leading-relaxed font-light">
                 Access the comprehensive Barangay Content Management System.
                 Manage community services, resources, news, and user accounts
                 efficiently. Your administrative dashboard provides complete
@@ -238,7 +238,7 @@ const AdminLogin: React.FC = () => {
               </p>
 
               {/* Additional decorative element */}
-              <div className="mt-12 flex justify-center space-x-3">
+              <div className="mt-10 lg:mt-12 flex justify-center space-x-3">
                 <div className="w-3 h-3 bg-white rounded-full opacity-50"></div>
                 <div className="w-3 h-3 bg-white rounded-full opacity-75"></div>
                 <div className="w-3 h-3 bg-white rounded-full"></div>
