@@ -44,6 +44,7 @@ import AboutUs from '@/users/page/AboutUs';
 
 
 import Footer from '@/users/components/Footer';
+import SwapItem from '@/admin/pages/SwapItem';
 
 
 function App() {
@@ -72,6 +73,7 @@ function App() {
             <Route path="trading/statistics" element={<TradingStatistics />} />
             <Route path="trading/activity" element={<ActivityLogs />} />
             <Route path="trading/earn-points" element={<EarnPointsLogs />} />
+            <Route path="trading/swap-item" element={<SwapItem />} />
             <Route path="trading/swap" element={<SwapLogs />} />
 
             {/* Home Editables Routes */}
@@ -119,7 +121,7 @@ function App() {
               }
             />
             <Route
-              path="resources"
+              path="records"
               element={<ActivityLogs />}
             />
             <Route

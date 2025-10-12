@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import { useAuthFetch } from "../hooks/useAuthFetch";
 
 const MATERIALS = [
   "PET bottles",
@@ -10,22 +11,54 @@ const MATERIALS = [
   "Used cotton clothes",
 ];
 
-export default function EarnPointsPage() {
-  const [recordId, setRecordId] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [weights, setWeights] = useState(MATERIALS.map(() => 0));
+export default function App() {
+  const [recordId, setRecordId] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [weights, setWeights] = useState<string[]>(MATERIALS.map(() => "0"));
+  const authFetch = useAuthFetch();
 
-  function handleWeightChange(index, value) {
+  function handleWeightChange(index: number, value: string) {
     const newWeights = [...weights];
-    newWeights[index] = Number(value) || 0;
-    setWeights(newWeights);
+    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+      newWeights[index] = value;
+      setWeights(newWeights);
+    }
   }
 
-  const totalPoints = weights.reduce((a, b) => a + b, 0);
+  const totalPoints = useMemo(() => {
+    return weights.reduce((total, weight) => {
+      const numWeight = parseFloat(weight) || 0;
+      return total + numWeight;
+    }, 0);
+  }, [weights]);
 
-  function handleConfirm(e) {
+  const materialsWithValue = useMemo((): string[] => {
+    return MATERIALS.filter((_, index) => {
+      const weight = parseFloat(weights[index]) || 0;
+      return weight > 0;
+    });
+  }, [weights]);
+  
+
+  const handleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`Saved!\n${recordId} ${lastName}\nTotal Points: ${totalPoints}`);
+    
+    try {
+
+      const requestBody = {
+        points: totalPoints,
+        materials: materialsWithValue,
+        lastName
+      };
+
+      const result = await authFetch(`/records/${recordId}`, {
+        method: "PATCH",
+        body: JSON.stringify(requestBody)
+      });
+      alert(`${result.record_id} ${result._lastName} current point is ${result.currentPoints}`);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -52,6 +85,7 @@ export default function EarnPointsPage() {
           <div>
             <label className="text-xs text-gray-500 mb-1 block">Record ID</label>
             <input
+              required
               value={recordId}
               onChange={(e) => setRecordId(e.target.value)}
               className="w-full px-3 py-2 border-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
@@ -61,6 +95,7 @@ export default function EarnPointsPage() {
           <div>
             <label className="text-xs text-gray-500 mb-1 block">Last Name</label>
             <input
+              required
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               className="w-full px-3 py-2 border-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
@@ -84,12 +119,12 @@ export default function EarnPointsPage() {
             </div>
               <div className="col-span-3">
                 <input
-                  type="number"
-                  min="0"
-                  step="0.01"
+                  type="text"
+                  inputMode="decimal"
                   value={weights[idx]}
                   onChange={(e) => handleWeightChange(idx, e.target.value)}
-                  className="w-full px-3 py-2 border-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-3 py-2 border rounded bg-gray-50"
+                  placeholder="0"
                 />
               </div>
             <div className="col-span-3 text-gray-700 flex items-center justify-center">Kilogram</div>

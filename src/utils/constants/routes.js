@@ -32,7 +32,7 @@ export const APP_ROUTES = {
     DASHBOARD: '/admin/dashboard',
     ABOUT: '/admin/about',
     SERVICES: '/admin/services',
-    RESOURCES: '/admin/resources',
+    RESOURCES: '/admin/records',
     TRADING: '/admin/trading',
     NEWS: '/admin/news',
     USERS: '/admin/users',

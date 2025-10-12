@@ -7,21 +7,22 @@ import React, {
 } from 'react';
 
 interface UserData {
-  username: String 
+  username: String;
 }
 
 interface User {
   userData: UserData;
-  accessToken: String
+  accessToken: String;
 }
 
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (username: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<boolean>;
+  refreshToken: () => Promise<User | null>;
   logout: () => void;
   loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,9 +31,9 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider = ({ children } : AuthProviderProps) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const apiURL = import.meta.env.VITE_API_URL;
-  
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
@@ -62,32 +63,55 @@ export const AuthProvider = ({ children } : AuthProviderProps) => {
   //   checkAuthStatus();
   // }, []);
 
-  const login = async (
-    username: string,
-    password: string
-  ): Promise<void> => {
+  const login = async (username: string, password: string): Promise<boolean> => {
     try {
       // Simulate API call
       const response = await fetch(`${apiURL}/auth/login`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          'Content-Type': "application/json"
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, password }),
-        credentials: "include"
-      })
+        credentials: 'include',
+      });
 
       const data = await response.json();
-      
-      if(!response.ok) {
+
+      if (!response.ok) {
         throw new Error(data.message);
       }
 
       setUser(data);
       setIsAuthenticated(true);
+      return true;
     } catch (error) {
       setUser(null);
       setIsAuthenticated(false);
+      return false;
+    }
+  };
+
+  const refreshToken = async (): Promise<User | null> => {
+    try {
+      const response = await fetch(`${apiURL}/auth/refreshToken`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      const data: User = await response.json();
+
+      if (!response.ok) {
+        throw new Error('Failed to refresh token');
+      }
+
+      setUser(data);
+      return data;
+    } catch (error) {
+      console.error(error);
+      return null;
     }
   };
 
@@ -95,7 +119,7 @@ export const AuthProvider = ({ children } : AuthProviderProps) => {
     try {
       await fetch(`${apiURL}/auth/logout`, {
         method: 'POST',
-        credentials: "include"
+        credentials: 'include',
       });
     } catch (error) {
       console.log(error);
@@ -109,9 +133,10 @@ export const AuthProvider = ({ children } : AuthProviderProps) => {
     isAuthenticated,
     user,
     login,
+    refreshToken,
     logout,
     loading,
-    setLoading
+    setLoading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
