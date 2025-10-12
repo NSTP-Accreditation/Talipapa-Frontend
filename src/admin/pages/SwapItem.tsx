@@ -146,41 +146,54 @@ const SwapItem = () => {
   };
 
   return (
-    <main className="flex flex-col gap-5">
-      <div className="flex flex-col items-start text-green-600">
-        <h1 className="font-bold text-2xl tracking-wide">Trade Points</h1>
-        <p>Trade accumulated points to ...</p>
+    <main className="flex flex-col gap-8 p-8">
+      {/* Header Section */}
+      <div className="flex flex-col items-start">
+        <h1 className="font-bold text-4xl tracking-wide text-gray-900 mb-3">
+          Trade Points
+        </h1>
+        <p className="text-lg" style={{ color: '#838383' }}>
+          Exchange accumulated points for community products and rewards
+        </p>
       </div>
 
+      {/* Search Form */}
       <form onSubmit={handleFindRecord}>
-        <h5 className="text-sm text-green-600 font-medium mb-2.5">
-          Enter Record's Information
-        </h5>
-        <div className="flex flex-col sm:flex-row items-stretch gap-5 w-full">
-          <FloatingLabelInput
-            label="Record ID"
-            value={recordId}
-            onChange={(e) => setRecordId(e.target.value)}
-            required
-          />
-
-          <FloatingLabelInput
-            label="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
-
-          <button
-            className="bg-green-600 text-base text-white px-10 py-2 rounded-lg hover:bg-green-primary/80 duration-300 cursor-pointer"
-            type="submit"
+        <div className="bg-white rounded-xl shadow-md p-8">
+          <h5
+            className="text-lg font-semibold mb-6"
+            style={{ color: '#1a4d2e' }}
           >
-            Find Record
-          </button>
+            Find Resident Record
+          </h5>
+          <div className="flex flex-col sm:flex-row items-stretch gap-5 w-full">
+            <FloatingLabelInput
+              label="Record ID"
+              value={recordId}
+              onChange={(e) => setRecordId(e.target.value)}
+              required
+            />
+
+            <FloatingLabelInput
+              label="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+
+            <button
+              className="text-lg font-semibold text-white px-10 py-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+              style={{ backgroundColor: '#1a4d2e' }}
+              type="submit"
+            >
+              🔍 Find Record
+            </button>
+          </div>
         </div>
       </form>
 
-      <div className="flex flex-col md:flex-row gap-5">
+      {/* Content Section */}
+      <div className="flex flex-col lg:flex-row gap-8">
         {recordData && (
           <RecordInformation
             recordData={recordData}
@@ -210,31 +223,40 @@ const RecordInformation = ({
   onConfirmRecord,
 }: RecordInformationProps) => {
   return (
-    <div className="flex flex-col gap-5 w-full md:max-w-96">
-      <div className="px-5 py-8 bg-white rounded-md text-green-600 shadow">
-        <h1 className="font-bold text-xl mb-3">Record Information</h1>
+    <div className="flex flex-col gap-8 w-full lg:max-w-md">
+      <div
+        className="p-10 bg-white rounded-lg shadow-md"
+        style={{ color: '#1a4d2e' }}
+      >
+        <h1 className="font-bold text-3xl mb-8">Record Information</h1>
 
-        <div className="flex flex-col gap-1 font-medium">
+        <div className="flex flex-col gap-4 text-lg">
           <p>
-            Record ID: <span>{recordData._id}</span>
+            <span className="font-semibold">Record ID:</span>{' '}
+            <span>{recordData._id}</span>
           </p>
           <p>
-            Name: <span>{formatName(recordData)}</span>
+            <span className="font-semibold">Name:</span>{' '}
+            <span>{formatName(recordData)}</span>
           </p>
           <p>
-            Address: <span>{recordData.address}</span>
+            <span className="font-semibold">Address:</span>{' '}
+            <span>{recordData.address}</span>
           </p>
           <p>
-            Contact: <span>{recordData.contact_number}</span>
+            <span className="font-semibold">Contact:</span>{' '}
+            <span>{recordData.contact_number}</span>
           </p>
-          <p className="text-2xl font-semibold">
-            Points: <span>{formatPoints(recordData.points)}</span>
+          <p className="text-3xl font-bold mt-4">
+            <span className="font-semibold">Points:</span>{' '}
+            <span>{formatPoints(recordData.points)}</span>
           </p>
         </div>
       </div>
 
       <button
-        className="bg-green-600 text-white py-2 px-3 self-center w-full sm:self-start rounded-md hover:bg-green-primary/80 duration-300 cursor-pointer"
+        className="py-4 px-6 text-lg font-semibold text-white rounded-lg shadow-md hover:opacity-80 transition-opacity duration-300"
+        style={{ backgroundColor: '#1a4d2e' }}
         onClick={onConfirmRecord}
       >
         Confirm Record
@@ -263,12 +285,15 @@ const AvailableProductsSection = ({
   }
 
   return (
-    <div className="grow bg-white shadow p-5 rounded-lg text-green-primary">
-      <h1 className="font-semibold text-xl mb-5">
+    <div
+      className="grow bg-white shadow-md p-10 rounded-lg"
+      style={{ color: '#1a4d2e' }}
+    >
+      <h1 className="font-bold text-3xl mb-8">
         Available Products based on points from record:
       </h1>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {availableProducts.map((product) => (
           <ProductCard
             key={product._id}
@@ -300,26 +325,32 @@ const ProductCard = ({
   redeemInProgress,
 }: ProductCardProps) => {
   return (
-    <div className="bg-green-600/90 px-4 py-4 rounded-lg text-white">
-      <div className="flex xs:flex-row gap-3 mb-2">
-        <div className="bg-white shrink-0 p-2 rounded-md">
+    <div
+      className="px-6 py-6 rounded-lg text-white shadow-md"
+      style={{ backgroundColor: '#1a4d2e' }}
+    >
+      <div className="flex gap-5 mb-5">
+        <div
+          className="shrink-0 p-3 rounded-lg"
+          style={{ backgroundColor: '#F6F6F6' }}
+        >
           <img
             src={product.image || '/placeholder.png'}
             alt={product.name}
-            className="h-16 w-20 sm:h-20 sm:w-24 p-2 bg-gray-1 rounded-md object-contain"
+            className="h-20 w-24 object-contain rounded"
           />
         </div>
 
-        <div className="flex flex-col justify-start gap-0.5 h-full text-xs md:text-sm grow">
-          <h1 className="font-semibold">{product.name}</h1>
-          <p className="opacity-90">{product.description}</p>
+        <div className="flex flex-col justify-start gap-2 grow">
+          <h1 className="font-bold text-xl">{product.name}</h1>
+          <p className="text-base opacity-90">{product.description}</p>
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 text-sm md:text-base">
+      <div className="flex flex-col gap-4 text-base">
         <label
           htmlFor={`quantity-${product._id}`}
-          className="flex items-center gap-2 font-medium grow mt-auto"
+          className="flex items-center gap-3 font-semibold"
         >
           <span>Quantity:</span>
           <input
@@ -327,16 +358,17 @@ const ProductCard = ({
             type="number"
             placeholder="0"
             min="0"
-            className="w-14 placeholder:text-center bg-transparent border-b border-b-white text-center outline-none"
+            className="w-20 px-2 py-1 placeholder:text-center bg-white/10 border-2 border-white rounded text-center outline-none"
             value={quantity || ''}
             onChange={(e) => onQuantityInput(product._id, e.target.value)}
           />
         </label>
 
-        <div className="flex items-center justify-between text-xs md:text-base">
-          <p>{product.requiredPoints} points</p>
+        <div className="flex items-center justify-between text-lg">
+          <p className="font-bold">{product.requiredPoints} points</p>
           <button
-            className="font-medium py-0.5 px-4 rounded-md bg-white text-green-600 self-end hover:bg-green-50 transition"
+            className="font-semibold py-2 px-6 rounded-lg bg-white shadow-md hover:opacity-80 transition-opacity duration-300"
+            style={{ color: '#1a4d2e' }}
             onClick={() => onRedeem(product)}
             disabled={redeemInProgress}
           >

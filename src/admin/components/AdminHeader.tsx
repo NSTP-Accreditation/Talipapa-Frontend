@@ -39,82 +39,118 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
   };
 
   return (
-    <div className="bg-white border-b border-gray-200 py-3 shadow-sm">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-8 gap-4">
-        {/* Mobile hamburger */}
-        <div className="w-full flex items-start justify-between gap-4">
-          <div className="sm:hidden mr-2">
+    <div
+      className="bg-white border-b shadow-md"
+      style={{ borderColor: '#E5E7EB' }}
+    >
+      <div className="flex items-center justify-between px-6 sm:px-10 py-5 gap-4">
+        {/* Left Side - Mobile hamburger + System Info */}
+        <div className="flex items-center gap-4 flex-1">
+          <div className="sm:hidden">
             <button
               onClick={onToggleSidebar}
               aria-label="Open menu"
-              className="p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+              className="p-3 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
+              style={{ backgroundColor: '#F6F6F6' }}
             >
               <svg
-                width="20"
-                height="20"
+                width="24"
+                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
                   d="M4 6h16M4 12h16M4 18h16"
-                  stroke="#111827"
-                  strokeWidth="2"
+                  stroke="#1a4d2e"
+                  strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
             </button>
           </div>
-          {/* Left Side - System Info */}
+
           <div className="flex-1">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
+            <h1
+              className="text-xl sm:text-2xl lg:text-3xl font-black leading-tight"
+              style={{ color: '#1a4d2e' }}
+            >
               {title}
             </h1>
-            <p className="text-sm text-gray-600 mt-1">{subtitle}</p>
-          </div>
-
-          {/* Center - Date & Time Display */}
-          <div className="hidden sm:flex items-center gap-6 bg-gray-50 px-6 py-2 rounded-lg border border-gray-200">
-            <div className="text-center border-r border-gray-300 pr-4">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                Date
-              </p>
-              <p className="text-sm font-semibold text-gray-800">
-                {formatDate(currentTime)}
-              </p>
-            </div>
-            <div className="text-center">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-                Time
-              </p>
-              <p className="text-sm font-semibold text-gray-800 tabular-nums">
-                {formatTime(currentTime)}
-              </p>
-            </div>
-          </div>
-
-          {/* Right Side - Admin User Info */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-semibold text-gray-900 leading-tight">
-                Welcome, Admin User
-              </p>
-              <p className="text-xs text-gray-500 mt-0.5">Super Admin</p>
-            </div>
-            <div
-              className="bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-bold shadow-md leading-none flex-shrink-0 ring-2 ring-green-200"
-              style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                minWidth: '40px',
-                minHeight: '40px',
-                fontSize: '14px',
-              }}
+            <p
+              className="text-sm sm:text-base font-medium mt-1"
+              style={{ color: '#838383' }}
             >
-              A
-            </div>
+              {subtitle}
+            </p>
+          </div>
+        </div>
+
+        {/* Center - Date & Time Display */}
+        <div
+          className="hidden xl:flex items-center gap-6 px-6 py-3 rounded-xl shadow-sm"
+          style={{ backgroundColor: '#F6F6F6' }}
+        >
+          <div
+            className="text-center border-r pr-5"
+            style={{ borderColor: '#D1D5DB' }}
+          >
+            <p
+              className="text-xs font-bold uppercase tracking-wider mb-1.5"
+              style={{ color: '#838383' }}
+            >
+              Date
+            </p>
+            <p className="text-sm font-bold" style={{ color: '#1a4d2e' }}>
+              {formatDate(currentTime)}
+            </p>
+          </div>
+          <div className="text-center">
+            <p
+              className="text-xs font-bold uppercase tracking-wider mb-1.5"
+              style={{ color: '#838383' }}
+            >
+              Time
+            </p>
+            <p
+              className="text-sm font-bold tabular-nums"
+              style={{ color: '#1a4d2e' }}
+            >
+              {formatTime(currentTime)}
+            </p>
+          </div>
+        </div>
+
+        {/* Right Side - Admin User Info */}
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="text-right hidden lg:block">
+            <p
+              className="text-sm font-bold leading-tight"
+              style={{ color: '#1a4d2e' }}
+            >
+              Admin User
+            </p>
+            <p
+              className="text-xs font-medium mt-0.5"
+              style={{ color: '#838383' }}
+            >
+              Super Admin
+            </p>
+          </div>
+          <div
+            className="flex items-center justify-center text-white font-black shadow-md hover:shadow-lg transition-shadow duration-300 leading-none flex-shrink-0 cursor-pointer"
+            style={{
+              backgroundColor: '#1a4d2e',
+              width: '42px',
+              height: '42px',
+              borderRadius: '50%',
+              minWidth: '42px',
+              minHeight: '42px',
+              fontSize: '16px',
+            }}
+          >
+            A
           </div>
         </div>
       </div>
