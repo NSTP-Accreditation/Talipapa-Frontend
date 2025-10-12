@@ -5,6 +5,8 @@ import {
   CardContent,
   CardTitle,
 } from '../../components/ui/card';
+import { useLoadingState } from '../../hooks/useLoadingState';
+import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
 
 interface Step {
   id: string;
@@ -742,6 +744,9 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 };
 
 const Guidelines: React.FC = () => {
+  // Add loading state with minimum 2 second display
+  const { isLoading: pageLoading } = useLoadingState(2000);
+
   const [guidelines, setGuidelines] = useState<Guideline[]>([
     {
       id: '1',
@@ -1018,6 +1023,11 @@ const Guidelines: React.FC = () => {
     'Services',
   ];
   const difficulties = ['Easy', 'Medium', 'Hard'];
+
+  // Show loading skeleton while loading
+  if (pageLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   return (
     <div className="p-4 sm:p-6 md:p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">

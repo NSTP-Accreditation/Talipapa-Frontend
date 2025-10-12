@@ -1,44 +1,50 @@
 // import React from 'react';
+import React, { lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SuspenseWrapper from '@/components/SuspenseWrapper';
+import { FullPageSpinner } from '@/components/LoadingSkeletons';
 
 // import Forms from '@/pages/Admin/subcomponents/Forms'; // Forms.tsx doesn't exist
 import { AuthProvider } from './contexts/AuthContext';
 
-// ADMIN EXPORT HERE
-import AdminLayout from '@/admin/layout/AdminLayout';
-import Dashboard from '@/admin/pages/Dashboard';
-import TradingStatistics from '@/admin/pages/TradingStatistics';
-import Settings from '@/admin/pages/Settings';
-import ActivityLogs from '@/admin/pages/Records';
-import EarnPointsLogs from '@/admin/pages/EarnPoints';
-import SwapLogs from '@/admin/pages/SwapItem';
-import Guidelines from '@/admin/pages/Guidelines';
-import News from '@/admin/pages/NewsEvents';
-import AboutUsAdmin from '@/admin/pages/AboutUs';
-import Achievements from '@/admin/pages/Achievements';
-import AdminLogin from '@/admin/auth/AdminLogin';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import Inventory from '@/admin/pages/Inventory';
-// USER PAGE EXPORT HERE
-import Home from '@/users/page/Home';
-import NavBar from '@/users/components/NavBar';
-import GuidelinesApp from '@/users/page/Guidelines';
-import MoreGuides from '@/users/page/MoreGuides';
-import UnifiedGuide from '@/users/guidelines/guides/UnifiedGuide';
-import Trading from '@/users/page/Trading';
-import AboutUs from '@/users/page/AboutUs';
+// ADMIN EXPORT HERE - Lazy loaded for better performance
+const AdminLayout = lazy(() => import('@/admin/layout/AdminLayout'));
+const Dashboard = lazy(() => import('@/admin/pages/Dashboard'));
+const TradingStatistics = lazy(() => import('@/admin/pages/TradingStatistics'));
+const Settings = lazy(() => import('@/admin/pages/Settings'));
+const ActivityLogs = lazy(() => import('@/admin/pages/Records'));
+const EarnPointsLogs = lazy(() => import('@/admin/pages/EarnPoints'));
+const SwapLogs = lazy(() => import('@/admin/pages/SwapItem'));
+const Guidelines = lazy(() => import('@/admin/pages/Guidelines'));
+const News = lazy(() => import('@/admin/pages/NewsEvents'));
+const AboutUsAdmin = lazy(() => import('@/admin/pages/AboutUs'));
+const Achievements = lazy(() => import('@/admin/pages/Achievements'));
+const AdminLogin = lazy(() => import('@/admin/auth/AdminLogin'));
+const Inventory = lazy(() => import('@/admin/pages/Inventory'));
+const SwapItem = lazy(() => import('@/admin/pages/SwapItem'));
 
+// USER PAGE EXPORT HERE - Lazy loaded
+const Home = lazy(() => import('@/users/page/Home'));
+const GuidelinesApp = lazy(() => import('@/users/page/Guidelines'));
+const MoreGuides = lazy(() => import('@/users/page/MoreGuides'));
+const UnifiedGuide = lazy(() => import('@/users/guidelines/guides/UnifiedGuide'));
+const Trading = lazy(() => import('@/users/page/Trading'));
+const AboutUs = lazy(() => import('@/users/page/AboutUs'));
+
+// These are small and used everywhere, keep them imported normally
+import NavBar from '@/users/components/NavBar';
 import Footer from '@/users/components/Footer';
-import SwapItem from '@/admin/pages/SwapItem';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import NotFound from '@/components/NotFound';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <Routes>
-          {/* Admin Login Route - No protection needed */}
-          <Route path="/admin/login" element={<AdminLogin />} />
+        <SuspenseWrapper fallback={<FullPageSpinner />}>
+          <Routes>
+            {/* Admin Login Route - No protection needed */}
+            <Route path="/admin/login" element={<AdminLogin />} />
 
           {/* Protected Admin Routes - No NavBar/Footer */}
           <Route
@@ -145,6 +151,7 @@ function App() {
             }
           />
         </Routes>
+        </SuspenseWrapper>
       </Router>
     </AuthProvider>
   );

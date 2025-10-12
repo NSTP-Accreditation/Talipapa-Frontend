@@ -14,6 +14,8 @@ import {
   Box,
   Wrench,
 } from 'lucide-react';
+import { useLoadingState } from '@/hooks/useLoadingState';
+import { PageLoadingSkeleton, TableLoadingSkeleton } from '@/components/LoadingSkeletons';
 
 interface InventoryStats {
   totalProducts: number;
@@ -23,6 +25,9 @@ interface InventoryStats {
 }
 
 const Inventory: React.FC = () => {
+  // Add loading state with minimum 2 second display
+  const { isLoading } = useLoadingState(2000);
+
   // Mock stats data - in real implementation, this would come from API
   const stats: InventoryStats = {
     totalProducts: 24,
@@ -30,6 +35,11 @@ const Inventory: React.FC = () => {
     lowStockItems: 5,
     outOfStockItems: 2,
   };
+
+  // Show loading skeleton while data is being fetched
+  if (isLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   const renderContent = () => {
     return (

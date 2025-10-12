@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, Clock, FileText, CheckCircle } from 'lucide-react';
+import { useLoadingState } from '../../hooks/useLoadingState';
+import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
 
 interface GuideStep {
   id: number;
@@ -31,6 +33,9 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
   requirements,
   tips,
 }) => {
+  // Add loading state with minimum 2 second display
+  const { isLoading } = useLoadingState(2000);
+
   const getDifficultyColor = (level: string) => {
     switch (level) {
       case 'Easy':
@@ -43,6 +48,11 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
         return 'text-gray-600 bg-gray-100';
     }
   };
+
+  // Show loading skeleton while loading
+  if (isLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">

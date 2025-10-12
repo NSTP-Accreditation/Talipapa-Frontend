@@ -5,6 +5,8 @@ import {
   CardContent,
   CardTitle,
 } from '../../components/ui/card';
+import { useLoadingState } from '../../hooks/useLoadingState';
+import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
 
 interface AdminUser {
   id: number;
@@ -14,6 +16,9 @@ interface AdminUser {
 }
 
 const Settings: React.FC = () => {
+  // Add loading state with minimum 2 second display
+  const { isLoading } = useLoadingState(2000);
+
   const [barangayName, setBarangayName] = useState('Barangay San Isidro');
   const [colorScheme, setColorScheme] = useState<'Green' | 'White'>('Green');
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -91,6 +96,11 @@ const Settings: React.FC = () => {
     setNewAdmin({ name: '', email: '', password: '', role: 'Editor' });
     alert('Admin added successfully!');
   };
+
+  // Show loading skeleton while loading
+  if (isLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-8">

@@ -6,8 +6,18 @@ import {
   CardContent,
   CardTitle,
 } from '../../components/ui/card';
+import { useLoadingState } from '../../hooks/useLoadingState';
+import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
 
 export default function TradingStatisticsPage() {
+  // Add loading state with minimum 2 second display
+  const { isLoading } = useLoadingState(2000);
+
+  // Show loading skeleton while loading
+  if (isLoading) {
+    return <PageLoadingSkeleton />;
+  }
+
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
       {/* Enhanced Header */}

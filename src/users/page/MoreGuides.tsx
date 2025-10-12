@@ -14,8 +14,13 @@ import {
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Link } from 'react-router-dom';
+import { useLoadingState } from '../../hooks/useLoadingState';
+import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
 
 export default function MoreGuides() {
+  // Add loading state with minimum 2 second display
+  const { isLoading } = useLoadingState(2000);
+
   const guides = [
     {
       icon: FileText,
@@ -79,6 +84,11 @@ export default function MoreGuides() {
       path: '/guidelines/restricted-area-pass',
     },
   ];
+
+  // Show loading skeleton while loading
+  if (isLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">

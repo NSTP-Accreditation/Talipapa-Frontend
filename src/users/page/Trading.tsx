@@ -12,6 +12,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Phone, User, FileText, CheckCircle } from 'lucide-react';
 import { ImageWithFallback } from '@/components/ImageWithFallback';
+import { useLoadingState } from '@/hooks/useLoadingState';
+import { PageLoadingSkeleton } from '@/components/LoadingSkeletons';
 
 const wasteTypes = [
   {
@@ -105,6 +107,9 @@ const programCategories = [
 ];
 
 export default function Trading() {
+  // Add loading state with minimum 2 second display
+  const { isLoading } = useLoadingState(2000);
+
   const [selectedType, setSelectedType] = useState('');
   const [weight, setWeight] = useState('');
   const [result, setResult] = useState<{
@@ -134,6 +139,11 @@ export default function Trading() {
       alert('Please select a recyclable type and enter weight!');
     }
   };
+
+  // Show loading skeleton while loading
+  if (isLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">

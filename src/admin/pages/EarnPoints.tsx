@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useAuthFetch } from '../hooks/useAuthFetch';
+import { useLoadingState } from '../../hooks/useLoadingState';
+import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
 
 const MATERIALS = [
   'PET bottles',
@@ -12,6 +14,9 @@ const MATERIALS = [
 ];
 
 export default function App() {
+  // Add loading state with minimum 2 second display
+  const { isLoading: pageLoading } = useLoadingState(2000);
+
   const [recordId, setRecordId] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [weights, setWeights] = useState<string[]>(MATERIALS.map(() => '0'));
@@ -60,6 +65,11 @@ export default function App() {
       console.log(error);
     }
   };
+
+  // Show loading skeleton while loading
+  if (pageLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
