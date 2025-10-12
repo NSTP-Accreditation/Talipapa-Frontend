@@ -22,6 +22,7 @@ const Achievements = lazy(() => import('@/admin/pages/Achievements'));
 const AdminLogin = lazy(() => import('@/admin/auth/AdminLogin'));
 const Inventory = lazy(() => import('@/admin/pages/Inventory'));
 const SwapItem = lazy(() => import('@/admin/pages/SwapItem'));
+const GreenPages = lazy(() => import('@/admin/pages/GreenPages'));
 
 // USER PAGE EXPORT HERE - Lazy loaded
 const Home = lazy(() => import('@/users/page/Home'));
@@ -66,6 +67,9 @@ function App() {
             <Route path="trading/earn-points" element={<EarnPointsLogs />} />
             <Route path="trading/swap-item" element={<SwapItem />} />
             <Route path="trading/swap" element={<SwapLogs />} />
+
+            {/* Green Pages Route */}
+            <Route path="green-pages" element={<GreenPages />} />
 
             {/* Home Editables Routes */}
             <Route path="about" element={<AboutUsAdmin />} />
