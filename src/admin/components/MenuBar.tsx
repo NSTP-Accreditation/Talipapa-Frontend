@@ -63,6 +63,11 @@ const MenuBar: React.FC<MenuBarProps> = ({ className }) => {
           label: 'Earn Points',
           href: APP_ROUTES.ADMIN.TRADING + '/earn-points',
         },
+        {
+          icon: <Coins className="w-4 h-4" />,
+          label: 'Swap item',
+          href: APP_ROUTES.ADMIN.TRADING + '/swap-item',
+        },
       ],
     },
     {

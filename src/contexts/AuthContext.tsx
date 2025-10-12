@@ -93,7 +93,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const refreshToken = async (): Promise<User | null> => {
     try {
-      const response = await fetch(`${apiURL}/auth/refresh`, {
+      const response = await fetch(`${apiURL}/auth/refreshToken`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
