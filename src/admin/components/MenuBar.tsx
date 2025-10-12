@@ -191,7 +191,9 @@ const MenuBar: React.FC<MenuBarProps> = ({
               />
             </div>
             <div className="flex-shrink-0">
-              <h1 className="text-white font-black text-xl whitespace-nowrap leading-tight">Barangay Admin</h1>
+              <h1 className="text-white font-black text-xl whitespace-nowrap leading-tight">
+                Barangay Admin
+              </h1>
             </div>
           </div>
         </div>

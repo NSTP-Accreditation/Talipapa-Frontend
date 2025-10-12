@@ -87,7 +87,10 @@ const AdminLogin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-8 px-4" style={{ backgroundColor: '#F6F6F6' }}>
+    <div
+      className="min-h-screen flex items-center justify-center py-8 px-4"
+      style={{ backgroundColor: '#F6F6F6' }}
+    >
       <div
         className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden"
         style={{ maxWidth: '1100px', width: '95vw' }}
@@ -98,18 +101,29 @@ const AdminLogin: React.FC = () => {
             <div className="flex flex-col max-w-md mx-auto w-full">
               {/* Logo and Title Section */}
               <div className="text-center mb-10">
-                <div className="flex items-center justify-center w-32 h-32 mx-auto mb-6 rounded-full shadow-lg" style={{ backgroundColor: '#F6F6F6' }}>
+                <div
+                  className="flex items-center justify-center w-32 h-32 mx-auto mb-6 rounded-full shadow-lg"
+                  style={{ backgroundColor: '#F6F6F6' }}
+                >
                   <img
                     src="/brgy talipapa.png"
                     alt="Barangay Talipapa Logo"
                     className="h-28 w-28 object-contain hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-                <h1 className="text-4xl font-bold mb-3" style={{ color: '#1a4d2e' }}>Admin Portal</h1>
+                <h1
+                  className="text-4xl font-bold mb-3"
+                  style={{ color: '#1a4d2e' }}
+                >
+                  Admin Portal
+                </h1>
               </div>
 
               {/* Login Text */}
-              <p className="text-lg mb-8 text-center" style={{ color: '#838383' }}>
+              <p
+                className="text-lg mb-8 text-center"
+                style={{ color: '#838383' }}
+              >
                 Please login to your account
               </p>
 
@@ -118,7 +132,11 @@ const AdminLogin: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-8">
                   {/* Username Field */}
                   <div>
-                    <label htmlFor="form1" className="block text-sm font-semibold mb-3" style={{ color: '#1a4d2e' }}>
+                    <label
+                      htmlFor="form1"
+                      className="block text-sm font-semibold mb-3"
+                      style={{ color: '#1a4d2e' }}
+                    >
                       Username
                     </label>
                     <Input
@@ -140,7 +158,11 @@ const AdminLogin: React.FC = () => {
 
                   {/* Password Field */}
                   <div>
-                    <label htmlFor="form2" className="block text-sm font-semibold mb-3" style={{ color: '#1a4d2e' }}>
+                    <label
+                      htmlFor="form2"
+                      className="block text-sm font-semibold mb-3"
+                      style={{ color: '#1a4d2e' }}
+                    >
                       Password
                     </label>
                     <Input
@@ -163,7 +185,9 @@ const AdminLogin: React.FC = () => {
                   {/* Submit Error */}
                   {errors.submit && (
                     <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
-                      <p className="text-sm text-red-600 font-medium">{errors.submit}</p>
+                      <p className="text-sm text-red-600 font-medium">
+                        {errors.submit}
+                      </p>
                     </div>
                   )}
 
@@ -191,21 +215,28 @@ const AdminLogin: React.FC = () => {
           </div>
 
           {/* Right Column - Branding */}
-          <div className="w-1/2 flex flex-col justify-center text-white p-16 relative overflow-hidden" style={{ backgroundColor: '#1a4d2e' }}>
+          <div
+            className="w-1/2 flex flex-col justify-center text-white p-16 relative overflow-hidden"
+            style={{ backgroundColor: '#1a4d2e' }}
+          >
             {/* Decorative circles */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full -ml-48 -mb-48"></div>
-            
+
             <div className="relative z-10 text-center px-8">
-              <h4 className="text-5xl font-black mb-8 leading-tight">Welcome Back,<br/>Admin</h4>
+              <h4 className="text-5xl font-black mb-8 leading-tight">
+                Welcome Back,
+                <br />
+                Admin
+              </h4>
               <p className="text-white/90 text-lg leading-relaxed font-light">
-                Access the comprehensive Barangay Content Management System. 
-                Manage community services, resources, news, and user accounts 
-                efficiently. Your administrative dashboard provides complete 
-                control over the barangay's digital presence and community 
+                Access the comprehensive Barangay Content Management System.
+                Manage community services, resources, news, and user accounts
+                efficiently. Your administrative dashboard provides complete
+                control over the barangay's digital presence and community
                 engagement platform.
               </p>
-              
+
               {/* Additional decorative element */}
               <div className="mt-12 flex justify-center space-x-3">
                 <div className="w-3 h-3 bg-white rounded-full opacity-50"></div>

@@ -149,7 +149,9 @@ const SwapItem = () => {
     <main className="flex flex-col gap-8 p-8">
       {/* Header Section */}
       <div className="flex flex-col items-start">
-        <h1 className="font-bold text-4xl tracking-wide text-gray-900 mb-3">Trade Points</h1>
+        <h1 className="font-bold text-4xl tracking-wide text-gray-900 mb-3">
+          Trade Points
+        </h1>
         <p className="text-lg" style={{ color: '#838383' }}>
           Exchange accumulated points for community products and rewards
         </p>
@@ -158,7 +160,10 @@ const SwapItem = () => {
       {/* Search Form */}
       <form onSubmit={handleFindRecord}>
         <div className="bg-white rounded-xl shadow-md p-8">
-          <h5 className="text-lg font-semibold mb-6" style={{ color: '#1a4d2e' }}>
+          <h5
+            className="text-lg font-semibold mb-6"
+            style={{ color: '#1a4d2e' }}
+          >
             Find Resident Record
           </h5>
           <div className="flex flex-col sm:flex-row items-stretch gap-5 w-full">
@@ -219,24 +224,32 @@ const RecordInformation = ({
 }: RecordInformationProps) => {
   return (
     <div className="flex flex-col gap-8 w-full lg:max-w-md">
-      <div className="p-10 bg-white rounded-lg shadow-md" style={{ color: '#1a4d2e' }}>
+      <div
+        className="p-10 bg-white rounded-lg shadow-md"
+        style={{ color: '#1a4d2e' }}
+      >
         <h1 className="font-bold text-3xl mb-8">Record Information</h1>
 
         <div className="flex flex-col gap-4 text-lg">
           <p>
-            <span className="font-semibold">Record ID:</span> <span>{recordData._id}</span>
+            <span className="font-semibold">Record ID:</span>{' '}
+            <span>{recordData._id}</span>
           </p>
           <p>
-            <span className="font-semibold">Name:</span> <span>{formatName(recordData)}</span>
+            <span className="font-semibold">Name:</span>{' '}
+            <span>{formatName(recordData)}</span>
           </p>
           <p>
-            <span className="font-semibold">Address:</span> <span>{recordData.address}</span>
+            <span className="font-semibold">Address:</span>{' '}
+            <span>{recordData.address}</span>
           </p>
           <p>
-            <span className="font-semibold">Contact:</span> <span>{recordData.contact_number}</span>
+            <span className="font-semibold">Contact:</span>{' '}
+            <span>{recordData.contact_number}</span>
           </p>
           <p className="text-3xl font-bold mt-4">
-            <span className="font-semibold">Points:</span> <span>{formatPoints(recordData.points)}</span>
+            <span className="font-semibold">Points:</span>{' '}
+            <span>{formatPoints(recordData.points)}</span>
           </p>
         </div>
       </div>
@@ -272,7 +285,10 @@ const AvailableProductsSection = ({
   }
 
   return (
-    <div className="grow bg-white shadow-md p-10 rounded-lg" style={{ color: '#1a4d2e' }}>
+    <div
+      className="grow bg-white shadow-md p-10 rounded-lg"
+      style={{ color: '#1a4d2e' }}
+    >
       <h1 className="font-bold text-3xl mb-8">
         Available Products based on points from record:
       </h1>
@@ -309,12 +325,15 @@ const ProductCard = ({
   redeemInProgress,
 }: ProductCardProps) => {
   return (
-    <div 
-      className="px-6 py-6 rounded-lg text-white shadow-md" 
+    <div
+      className="px-6 py-6 rounded-lg text-white shadow-md"
       style={{ backgroundColor: '#1a4d2e' }}
     >
       <div className="flex gap-5 mb-5">
-        <div className="shrink-0 p-3 rounded-lg" style={{ backgroundColor: '#F6F6F6' }}>
+        <div
+          className="shrink-0 p-3 rounded-lg"
+          style={{ backgroundColor: '#F6F6F6' }}
+        >
           <img
             src={product.image || '/placeholder.png'}
             alt={product.name}

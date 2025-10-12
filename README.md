@@ -177,7 +177,7 @@ src/
 | ---------------------- | ------------------------------- |
 | **Frontend Framework** | React 18.3.1 + TypeScript 5.9.3 |
 | **Build Tool**         | Vite 6.3.5                      |
-| **Styling**            | Tailwind CSS 4.1.14 + PostCSS    |
+| **Styling**            | Tailwind CSS 4.1.14 + PostCSS   |
 | **UI Components**      | shadcn/ui + Radix UI            |
 | **Routing**            | React Router DOM v6             |
 | **Icons**              | Lucide React                    |
