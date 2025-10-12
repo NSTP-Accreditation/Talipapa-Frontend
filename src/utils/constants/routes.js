@@ -39,5 +39,6 @@ export const APP_ROUTES = {
     NOTIFICATIONS: '/admin/notifications',
     INVENTORY: '/admin/inventory',
     SETTINGS: '/admin/settings',
+    ACTIVITYLOGS: '/admin/activity-logs',
   },
 };

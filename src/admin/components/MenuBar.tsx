@@ -132,6 +132,11 @@ const MenuBar: React.FC<MenuBarProps> = ({
       ],
     },
     {
+      icon: <FileText className="w-5 h-5" />,
+      label: 'Activity Logs',
+      href: APP_ROUTES.ADMIN.ACTIVITYLOGS,
+    },
+    {
       icon: <Settings className="w-5 h-5" />,
       label: 'Settings',
       href: APP_ROUTES.ADMIN.SETTINGS,

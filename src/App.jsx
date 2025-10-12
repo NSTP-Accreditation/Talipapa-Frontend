@@ -12,7 +12,7 @@ const AdminLayout = lazy(() => import('@/admin/layout/AdminLayout'));
 const Dashboard = lazy(() => import('@/admin/pages/Dashboard'));
 const TradingStatistics = lazy(() => import('@/admin/pages/TradingStatistics'));
 const Settings = lazy(() => import('@/admin/pages/Settings'));
-const ActivityLogs = lazy(() => import('@/admin/pages/Records'));
+const ActivityLogs = lazy(() => import('@/admin/pages/ActivityLogs'));
 const EarnPointsLogs = lazy(() => import('@/admin/pages/EarnPoints'));
 const SwapLogs = lazy(() => import('@/admin/pages/SwapItem'));
 const Guidelines = lazy(() => import('@/admin/pages/Guidelines'));
@@ -114,7 +114,7 @@ function App() {
                 </div>
               }
             />
-            <Route path="records" element={<ActivityLogs />} />
+            <Route path="activity-logs" element={<ActivityLogs />} />
             <Route
               path="users"
               element={

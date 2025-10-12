@@ -40,7 +40,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
 
   return (
     <div
-      className="bg-white border-b shadow-md"
+      className="bg-white border-b shadow-md sticky top-0 z-30"
       style={{ borderColor: '#E5E7EB' }}
     >
       <div className="flex items-center justify-between px-6 sm:px-10 py-5 gap-4">
