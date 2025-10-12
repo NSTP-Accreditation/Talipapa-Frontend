@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { X, LogIn, LogOut, XCircle } from "lucide-react";
+import { useState } from 'react';
+import { X, LogIn, LogOut, XCircle } from 'lucide-react';
 
-type AlertType = "success" | "logout" | "error";
+type AlertType = 'success' | 'logout' | 'error';
 
 interface AuthAlertProps {
   type: AlertType;
@@ -15,24 +15,24 @@ export default function AuthAlert({ type, title, message }: AuthAlertProps) {
 
   const styles = {
     success: {
-      border: "border-green-300",
-      bg: "bg-green-50",
-      textTitle: "text-green-700",
-      textMsg: "text-green-600",
+      border: 'border-green-300',
+      bg: 'bg-green-50',
+      textTitle: 'text-green-700',
+      textMsg: 'text-green-600',
       icon: <LogIn className="w-6 h-6 text-green-600" />,
     },
     logout: {
-      border: "border-green-300",
-      bg: "bg-green-50",
-      textTitle: "text-green-700",
-      textMsg: "text-green-600",
+      border: 'border-green-300',
+      bg: 'bg-green-50',
+      textTitle: 'text-green-700',
+      textMsg: 'text-green-600',
       icon: <LogOut className="w-6 h-6 text-green-600" />,
     },
     error: {
-      border: "border-red-300",
-      bg: "bg-red-50",
-      textTitle: "text-red-700",
-      textMsg: "text-red-600",
+      border: 'border-red-300',
+      bg: 'bg-red-50',
+      textTitle: 'text-red-700',
+      textMsg: 'text-red-600',
       icon: <XCircle className="w-6 h-6 text-red-600" />,
     },
   };

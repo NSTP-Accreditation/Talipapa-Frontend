@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { CheckCircle, X } from "lucide-react";
+import { useState } from 'react';
+import { CheckCircle, X } from 'lucide-react';
 
-export default function SuccessMessage({ message = "Success Message" }) {
+export default function SuccessMessage({ message = 'Success Message' }) {
   const [visible, setVisible] = useState(true);
 
   if (!visible) return null;

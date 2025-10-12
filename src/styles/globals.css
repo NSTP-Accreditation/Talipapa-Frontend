@@ -27,8 +27,8 @@
 
   body {
     overflow-x: clip; /* Use clip instead of hidden to avoid creating containing block */
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
   }
 
   /* Hide scrollbar for any scrollable element */
@@ -37,8 +37,8 @@
   }
 
   * {
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
   }
 }
 

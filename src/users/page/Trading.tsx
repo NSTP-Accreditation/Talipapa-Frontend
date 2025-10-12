@@ -161,7 +161,8 @@ export default function Trading() {
             EcoCycle
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4 font-medium max-w-3xl mx-auto leading-relaxed">
-            Calculate how much valuable product you can get from your recyclable waste
+            Calculate how much valuable product you can get from your recyclable
+            waste
           </p>
           <div className="mt-6 flex items-center justify-center gap-2 text-sm text-green-700 font-semibold">
             <span className="px-4 py-2 bg-green-100 rounded-full border border-green-200">
@@ -200,7 +201,11 @@ export default function Trading() {
                   </SelectTrigger>
                   <SelectContent>
                     {wasteTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value} className="font-medium">
+                      <SelectItem
+                        key={type.value}
+                        value={type.value}
+                        className="font-medium"
+                      >
                         {type.label}
                       </SelectItem>
                     ))}
@@ -268,22 +273,44 @@ export default function Trading() {
                   <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl flex flex-col items-center border-2 border-green-200">
                     <div className="flex items-center gap-2 mb-4">
                       <span className="text-lg">📦</span>
-                      <span className="text-gray-800 text-sm font-bold">Output Product:</span>
+                      <span className="text-gray-800 text-sm font-bold">
+                        Output Product:
+                      </span>
                     </div>
                     {result ? (
-                      <div className="mb-4 flex-shrink-0 rounded-xl overflow-hidden shadow-lg border-2 border-white" style={{ width: '240px', height: '220px', minWidth: '240px', minHeight: '220px', maxWidth: '240px', maxHeight: '220px' }}>
+                      <div
+                        className="mb-4 flex-shrink-0 rounded-xl overflow-hidden shadow-lg border-2 border-white"
+                        style={{
+                          width: '240px',
+                          height: '220px',
+                          minWidth: '240px',
+                          minHeight: '220px',
+                          maxWidth: '240px',
+                          maxHeight: '220px',
+                        }}
+                      >
                         <ImageWithFallback
                           src={result.image}
                           alt={result.output}
                           className=""
-                          style={{ width: '240px', height: '220px', objectFit: 'cover', display: 'block' }}
+                          style={{
+                            width: '240px',
+                            height: '220px',
+                            objectFit: 'cover',
+                            display: 'block',
+                          }}
                         />
                       </div>
                     ) : (
-                      <div className="mb-4 flex items-center justify-center bg-white rounded-xl border-2 border-dashed border-gray-300" style={{ width: '240px', height: '220px' }}>
+                      <div
+                        className="mb-4 flex items-center justify-center bg-white rounded-xl border-2 border-dashed border-gray-300"
+                        style={{ width: '240px', height: '220px' }}
+                      >
                         <div className="text-center">
                           <span className="text-4xl mb-2 block">📦</span>
-                          <span className="text-gray-400 text-sm font-medium">Awaiting conversion</span>
+                          <span className="text-gray-400 text-sm font-medium">
+                            Awaiting conversion
+                          </span>
                         </div>
                       </div>
                     )}
@@ -346,7 +373,10 @@ export default function Trading() {
             </div>
             <div className="space-y-5">
               <div>
-                <label className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2" htmlFor="record-id">
+                <label
+                  className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2"
+                  htmlFor="record-id"
+                >
                   <span className="text-lg">🎫</span>
                   Record ID
                 </label>
@@ -358,7 +388,10 @@ export default function Trading() {
                 />
               </div>
               <div>
-                <label className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2" htmlFor="last-name">
+                <label
+                  className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2"
+                  htmlFor="last-name"
+                >
                   <span className="text-lg">👤</span>
                   Last Name
                 </label>
@@ -398,8 +431,12 @@ export default function Trading() {
           </CardHeader>
           <CardContent className="p-8 sm:p-10 md:p-12 bg-gradient-to-br from-gray-50 to-white">
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Our Programs</h3>
-              <p className="text-gray-600 font-medium">Transforming waste into community value</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Our Programs
+              </h3>
+              <p className="text-gray-600 font-medium">
+                Transforming waste into community value
+              </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {programCategories.map((category, index) => (
@@ -424,7 +461,9 @@ export default function Trading() {
                         <span className="mr-2 mt-0.5 text-base flex-shrink-0 text-green-600">
                           ✓
                         </span>
-                        <span className="leading-relaxed font-medium">{item}</span>
+                        <span className="leading-relaxed font-medium">
+                          {item}
+                        </span>
                       </li>
                     ))}
                   </ul>

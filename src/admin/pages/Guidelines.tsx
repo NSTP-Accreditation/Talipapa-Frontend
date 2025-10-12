@@ -273,7 +273,10 @@ const EditModal: React.FC<EditModalProps> = ({
           <h2 className="text-xl font-semibold text-gray-900">
             {guideline?.id ? 'Edit Guidelines' : 'Add New Guidelines'}
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1 rounded transition-colors">
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 p-1 rounded transition-colors"
+          >
             ✕
           </button>
         </div>
@@ -289,7 +292,9 @@ const EditModal: React.FC<EditModalProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Title *
+                  </label>
                   <input
                     type="text"
                     value={formData.title}
@@ -302,7 +307,9 @@ const EditModal: React.FC<EditModalProps> = ({
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category *
+                  </label>
                   <select
                     value={formData.category}
                     onChange={(e) =>
@@ -321,7 +328,9 @@ const EditModal: React.FC<EditModalProps> = ({
               </div>
 
               <div className="flex flex-col">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description *
+                </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) =>
@@ -379,7 +388,9 @@ const EditModal: React.FC<EditModalProps> = ({
 
             {/* Steps Section */}
             <div className="mb-8 p-5 bg-gray-50 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2 border-b border-gray-200 pb-2">Steps</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2 border-b border-gray-200 pb-2">
+                Steps
+              </h3>
 
               {/* Add/Edit Step Form */}
               <div className="bg-white rounded-lg p-5 mb-6 border-2 border-dashed border-gray-300 hover:border-blue-500 transition-colors">
@@ -390,7 +401,9 @@ const EditModal: React.FC<EditModalProps> = ({
                 </h4>
 
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Step Title *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Step Title *
+                  </label>
                   <input
                     type="text"
                     value={stepFormData.title}
@@ -406,7 +419,9 @@ const EditModal: React.FC<EditModalProps> = ({
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Description *
+                  </label>
                   <textarea
                     value={stepFormData.description}
                     onChange={(e) =>
@@ -423,7 +438,9 @@ const EditModal: React.FC<EditModalProps> = ({
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Location
+                    </label>
                     <input
                       type="text"
                       value={stepFormData.location}
@@ -538,7 +555,10 @@ const EditModal: React.FC<EditModalProps> = ({
                     Steps ({formData.steps.length})
                   </h4>
                   {formData.steps.map((step, index) => (
-                    <div key={step.id} className="border border-gray-200 rounded-lg mb-3 last:mb-0 overflow-hidden hover:border-blue-500 hover:shadow-md transition-all">
+                    <div
+                      key={step.id}
+                      className="border border-gray-200 rounded-lg mb-3 last:mb-0 overflow-hidden hover:border-blue-500 hover:shadow-md transition-all"
+                    >
                       <div className="flex items-center p-3 bg-gray-50 border-b border-gray-200 gap-3">
                         <div className="bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
                           Step {step.stepNumber}
@@ -649,7 +669,9 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-red-600 mb-1">Delete Guidelines</h2>
+              <h2 className="text-xl font-semibold text-red-600 mb-1">
+                Delete Guidelines
+              </h2>
               <p className="text-sm text-gray-600">
                 This action cannot be undone
               </p>
@@ -1010,7 +1032,8 @@ const Guidelines: React.FC = () => {
             <p className="text-lg text-gray-700 mt-2 font-medium">
               Step-by-step instructions for barangay services
               <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-                {guidelines.length} {guidelines.length === 1 ? 'Guide' : 'Guides'}
+                {guidelines.length}{' '}
+                {guidelines.length === 1 ? 'Guide' : 'Guides'}
               </span>
             </p>
           </div>
@@ -1048,8 +1071,18 @@ const Guidelines: React.FC = () => {
           onClick={handleAddGuideline}
           className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-xl flex items-center gap-2 text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 4v16m8-8H4"
+            />
           </svg>
           Add Guidelines
         </button>
@@ -1061,8 +1094,18 @@ const Guidelines: React.FC = () => {
           {/* Search Input */}
           <div className="flex-1 relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <svg
+                className="h-5 w-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
               </svg>
             </div>
             <input
@@ -1073,7 +1116,7 @@ const Guidelines: React.FC = () => {
               className="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-gray-700 placeholder-gray-400"
             />
           </div>
-          
+
           {/* Category Filter */}
           <div className="relative">
             <select
@@ -1089,12 +1132,20 @@ const Guidelines: React.FC = () => {
               ))}
             </select>
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              <svg
+                className="h-5 w-5 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
           </div>
-          
+
           {/* Difficulty Filter */}
           <div className="relative">
             <select
@@ -1110,8 +1161,16 @@ const Guidelines: React.FC = () => {
               ))}
             </select>
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              <svg
+                className="h-5 w-5 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
           </div>
@@ -1126,173 +1185,8 @@ const Guidelines: React.FC = () => {
               }}
               className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-              Clear
-            </button>
-          )}
-        </div>
-        
-        {/* Results Count */}
-        {(searchTerm || filterCategory || filterDifficulty) && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <p className="text-sm text-gray-600">
-              Showing <span className="font-semibold text-green-600">{filteredGuidelines.length}</span> of {guidelines.length} guidelines
-              {searchTerm && <span className="ml-2">matching "<span className="font-semibold">{searchTerm}</span>"</span>}
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Enhanced Guidelines Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-  {filteredGuidelines.map((guideline) => (
-    <Card
-      key={guideline.id}
-      className="bg-white border-2 border-gray-200 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover:border-green-300 group cursor-pointer overflow-hidden flex flex-col"
-    >
-      <CardHeader className="pb-4 bg-gradient-to-br from-white to-gray-50 group-hover:from-green-50 group-hover:to-white transition-all duration-300">
-  {/* Flex container with checkbox on right */}
-  <div className="flex items-start justify-between gap-3">
-    
-    {/* Left side: Icon + title */}
-    <div className="flex items-start gap-3 pl-1">
-
-      {/* Enhanced Icon Container with gradient */}
-<div 
-  className="bg-gradient-to-br from-green-100 to-green-200 p-1.5 rounded-xl flex items-center justify-center flex-shrink-0 mr-2 group-hover:from-green-200 group-hover:to-green-300 transition-all duration-300 shadow-sm"
-  style={{ width: '40px', height: '40px' }}
->
-  <svg
-    className="text-green-700 group-hover:scale-110 transition-transform duration-300"
-    style={{ width: '24px', height: '24px' }}
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-    />
-  </svg>
-</div>
-
-      {/* Title and Enhanced Tags */}
-      <div className="flex-1 min-w-0 pl-2">
-        <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-green-600 transition-colors duration-300">
-          {guideline.title}
-        </h3>
-        <div className="flex items-center gap-2 mt-2">
-          <span className="px-2.5 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-lg border border-gray-200">
-            📂 {guideline.category}
-          </span>
-          <span className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${
-            guideline.difficulty === 'Easy' 
-              ? 'bg-green-100 text-green-700 border border-green-200' 
-              : guideline.difficulty === 'Medium' 
-              ? 'bg-yellow-100 text-yellow-700 border border-yellow-200' 
-              : 'bg-red-100 text-red-700 border border-red-200'
-          }`}>
-            {guideline.difficulty === 'Easy' && '⚡'}
-            {guideline.difficulty === 'Medium' && '⚡⚡'}
-            {guideline.difficulty === 'Hard' && '⚡⚡⚡'}
-            {' '}{guideline.difficulty}
-          </span>
-        </div>
-      </div>
-    </div>
-
-    {/* Checkbox on right side */}
-    <input
-      type="checkbox"
-      checked={selectedGuidelines.has(guideline.id)}
-      onChange={() => handleSelectGuideline(guideline.id)}
-      className="w-5 h-5 rounded-md border-2 border-gray-300 text-green-600 focus:ring-2 focus:ring-green-500 cursor-pointer transition-all hover:border-green-500"
-    />
-  </div>
-</CardHeader>
-
-      <CardContent className="pt-2 flex-1 flex flex-col">
-        <div className="flex flex-col h-full">
-          <p className="text-sm text-gray-700 leading-relaxed line-clamp-2 mb-4">
-            {guideline.description}
-          </p>
-
-          {/* Enhanced Stats Grid */}
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-3 border border-blue-200">
-              <div className="flex items-center gap-2 mb-1">
-                <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
-                <p className="text-xs font-semibold text-blue-700">Steps</p>
-              </div>
-              <p className="text-lg font-bold text-blue-900">
-                {guideline.steps.length}
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-3 border border-purple-200">
-              <div className="flex items-center gap-2 mb-1">
-                <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-xs font-semibold text-purple-700">Time</p>
-              </div>
-              <p className="text-lg font-bold text-purple-900">
-                {guideline.totalEstimatedTime}
-              </p>
-            </div>
-          </div>
-
-          {/* Enhanced Steps Preview */}
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200 mb-4 flex-1">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-bold text-gray-700 uppercase tracking-wide">
-                📋 Steps Preview
-              </p>
-              {guideline.steps.length > 3 && (
-                <span className="text-xs text-gray-500 font-medium">
-                  {guideline.steps.length} total
-                </span>
-              )}
-            </div>
-            <div className="space-y-2">
-              {guideline.steps.slice(0, 3).map((step, index) => (
-                <div
-                  key={step.id}
-                  className="flex items-start gap-2.5 bg-white rounded-lg p-2 border border-gray-200 hover:border-green-300 transition-all"
-                >
-                  <span className="bg-gradient-to-br from-green-500 to-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">
-                    {step.stepNumber}
-                  </span>
-                  <span className="text-xs text-gray-700 font-medium leading-snug flex-1">{step.title}</span>
-                </div>
-              ))}
-              {guideline.steps.length > 3 && (
-                <div className="text-xs text-gray-500 font-medium ml-8 flex items-center gap-1">
-                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
-                  </svg>
-                  +{guideline.steps.length - 3} more steps
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Enhanced Action Buttons - Fixed at Bottom */}
-          <div className="space-y-2.5 pt-4 mt-auto border-t-2 border-gray-200">
-            <button
-              onClick={() => {
-                // In a real app, this would open a detailed view
-                alert(`Opening detailed view for: ${guideline.title}`);
-              }}
-              className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 px-4 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5"
-            >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -1301,64 +1195,281 @@ const Guidelines: React.FC = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-              View Step-by-Step Guide
+              Clear
             </button>
-
-            <div className="flex gap-2.5">
-              <button
-                onClick={() => handleEdit(guideline.id)}
-                className="flex-1 bg-white hover:bg-gray-50 text-gray-700 py-2.5 px-3 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2 border-2 border-gray-300 hover:border-blue-400 hover:text-blue-600 hover:shadow-md"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
-                </svg>
-                Edit
-              </button>
-
-              <button
-                onClick={() => handleDelete(guideline.id)}
-                className="px-4 py-2.5 text-red-600 hover:text-white hover:bg-red-600 rounded-xl transition-all border-2 border-red-300 hover:border-red-600 font-semibold hover:shadow-md"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
+          )}
         </div>
-      </CardContent>
-    </Card>
-  ))}
-</div>
+
+        {/* Results Count */}
+        {(searchTerm || filterCategory || filterDifficulty) && (
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <p className="text-sm text-gray-600">
+              Showing{' '}
+              <span className="font-semibold text-green-600">
+                {filteredGuidelines.length}
+              </span>{' '}
+              of {guidelines.length} guidelines
+              {searchTerm && (
+                <span className="ml-2">
+                  matching "<span className="font-semibold">{searchTerm}</span>"
+                </span>
+              )}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Enhanced Guidelines Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {filteredGuidelines.map((guideline) => (
+          <Card
+            key={guideline.id}
+            className="bg-white border-2 border-gray-200 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover:border-green-300 group cursor-pointer overflow-hidden flex flex-col"
+          >
+            <CardHeader className="pb-4 bg-gradient-to-br from-white to-gray-50 group-hover:from-green-50 group-hover:to-white transition-all duration-300">
+              {/* Flex container with checkbox on right */}
+              <div className="flex items-start justify-between gap-3">
+                {/* Left side: Icon + title */}
+                <div className="flex items-start gap-3 pl-1">
+                  {/* Enhanced Icon Container with gradient */}
+                  <div
+                    className="bg-gradient-to-br from-green-100 to-green-200 p-1.5 rounded-xl flex items-center justify-center flex-shrink-0 mr-2 group-hover:from-green-200 group-hover:to-green-300 transition-all duration-300 shadow-sm"
+                    style={{ width: '40px', height: '40px' }}
+                  >
+                    <svg
+                      className="text-green-700 group-hover:scale-110 transition-transform duration-300"
+                      style={{ width: '24px', height: '24px' }}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                      />
+                    </svg>
+                  </div>
+
+                  {/* Title and Enhanced Tags */}
+                  <div className="flex-1 min-w-0 pl-2">
+                    <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-green-600 transition-colors duration-300">
+                      {guideline.title}
+                    </h3>
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="px-2.5 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-lg border border-gray-200">
+                        📂 {guideline.category}
+                      </span>
+                      <span
+                        className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${
+                          guideline.difficulty === 'Easy'
+                            ? 'bg-green-100 text-green-700 border border-green-200'
+                            : guideline.difficulty === 'Medium'
+                              ? 'bg-yellow-100 text-yellow-700 border border-yellow-200'
+                              : 'bg-red-100 text-red-700 border border-red-200'
+                        }`}
+                      >
+                        {guideline.difficulty === 'Easy' && '⚡'}
+                        {guideline.difficulty === 'Medium' && '⚡⚡'}
+                        {guideline.difficulty === 'Hard' && '⚡⚡⚡'}{' '}
+                        {guideline.difficulty}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Checkbox on right side */}
+                <input
+                  type="checkbox"
+                  checked={selectedGuidelines.has(guideline.id)}
+                  onChange={() => handleSelectGuideline(guideline.id)}
+                  className="w-5 h-5 rounded-md border-2 border-gray-300 text-green-600 focus:ring-2 focus:ring-green-500 cursor-pointer transition-all hover:border-green-500"
+                />
+              </div>
+            </CardHeader>
+
+            <CardContent className="pt-2 flex-1 flex flex-col">
+              <div className="flex flex-col h-full">
+                <p className="text-sm text-gray-700 leading-relaxed line-clamp-2 mb-4">
+                  {guideline.description}
+                </p>
+
+                {/* Enhanced Stats Grid */}
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-3 border border-blue-200">
+                    <div className="flex items-center gap-2 mb-1">
+                      <svg
+                        className="w-4 h-4 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                        />
+                      </svg>
+                      <p className="text-xs font-semibold text-blue-700">
+                        Steps
+                      </p>
+                    </div>
+                    <p className="text-lg font-bold text-blue-900">
+                      {guideline.steps.length}
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-3 border border-purple-200">
+                    <div className="flex items-center gap-2 mb-1">
+                      <svg
+                        className="w-4 h-4 text-purple-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <p className="text-xs font-semibold text-purple-700">
+                        Time
+                      </p>
+                    </div>
+                    <p className="text-lg font-bold text-purple-900">
+                      {guideline.totalEstimatedTime}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Enhanced Steps Preview */}
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200 mb-4 flex-1">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs font-bold text-gray-700 uppercase tracking-wide">
+                      📋 Steps Preview
+                    </p>
+                    {guideline.steps.length > 3 && (
+                      <span className="text-xs text-gray-500 font-medium">
+                        {guideline.steps.length} total
+                      </span>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    {guideline.steps.slice(0, 3).map((step, index) => (
+                      <div
+                        key={step.id}
+                        className="flex items-start gap-2.5 bg-white rounded-lg p-2 border border-gray-200 hover:border-green-300 transition-all"
+                      >
+                        <span className="bg-gradient-to-br from-green-500 to-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">
+                          {step.stepNumber}
+                        </span>
+                        <span className="text-xs text-gray-700 font-medium leading-snug flex-1">
+                          {step.title}
+                        </span>
+                      </div>
+                    ))}
+                    {guideline.steps.length > 3 && (
+                      <div className="text-xs text-gray-500 font-medium ml-8 flex items-center gap-1">
+                        <svg
+                          className="w-3 h-3"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        +{guideline.steps.length - 3} more steps
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Enhanced Action Buttons - Fixed at Bottom */}
+                <div className="space-y-2.5 pt-4 mt-auto border-t-2 border-gray-200">
+                  <button
+                    onClick={() => {
+                      // In a real app, this would open a detailed view
+                      alert(`Opening detailed view for: ${guideline.title}`);
+                    }}
+                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 px-4 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                    View Step-by-Step Guide
+                  </button>
+
+                  <div className="flex gap-2.5">
+                    <button
+                      onClick={() => handleEdit(guideline.id)}
+                      className="flex-1 bg-white hover:bg-gray-50 text-gray-700 py-2.5 px-3 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2 border-2 border-gray-300 hover:border-blue-400 hover:text-blue-600 hover:shadow-md"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
+                      </svg>
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(guideline.id)}
+                      className="px-4 py-2.5 text-red-600 hover:text-white hover:bg-red-600 rounded-xl transition-all border-2 border-red-300 hover:border-red-600 font-semibold hover:shadow-md"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
       {/* Enhanced Empty State */}
       {filteredGuidelines.length === 0 && (
@@ -1383,7 +1494,7 @@ const Guidelines: React.FC = () => {
           </h3>
           <p className="text-base text-gray-600 mb-6 max-w-md mx-auto">
             {searchTerm || filterCategory || filterDifficulty
-              ? 'Try adjusting your search or filter criteria to find what you\'re looking for.'
+              ? "Try adjusting your search or filter criteria to find what you're looking for."
               : 'Get started by creating your first step-by-step guideline for barangay services.'}
           </p>
           {!searchTerm && !filterCategory && !filterDifficulty && (
@@ -1392,8 +1503,18 @@ const Guidelines: React.FC = () => {
                 onClick={handleAddGuideline}
                 className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-4 rounded-xl flex items-center gap-3 text-base font-bold mx-auto shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
                 </svg>
                 Add Your First Guidelines
               </button>

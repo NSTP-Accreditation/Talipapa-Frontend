@@ -5,7 +5,7 @@ const AboutUs = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
       <AboutBarangay />
-      
+
       {/* Consistent container for officials and map */}
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-6">
@@ -94,7 +94,7 @@ const BarangayMap = () => {
     lat: 14.6879389,
     lng: 121.0252778,
     name: 'Talipapa Barangay Hall',
-    address: '506 Quirino Hwy, Novaliches, Quezon City'
+    address: '506 Quirino Hwy, Novaliches, Quezon City',
   };
 
   const googleMapsUrl = `https://www.google.com/maps?q=${barangayCoordinates.lat},${barangayCoordinates.lng}`;
@@ -153,7 +153,9 @@ const BarangayMap = () => {
                   </p>
                   <p className="flex items-center gap-2">
                     <span>✉️</span>
-                    <span className="font-medium">Email: barangay.talipapa2018@gmail.com</span>
+                    <span className="font-medium">
+                      Email: barangay.talipapa2018@gmail.com
+                    </span>
                   </p>
                 </div>
               </div>

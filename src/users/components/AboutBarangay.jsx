@@ -26,7 +26,7 @@ export default function AboutBarangay() {
           allowFullScreen
           className="absolute inset-0 w-full h-full"
         ></iframe>
-        
+
         {/* Gradient Overlay for better text visibility if needed */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20 pointer-events-none"></div>
       </div>
@@ -43,7 +43,8 @@ export default function AboutBarangay() {
               About Barangay Talipapa
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Serving our community with excellence, transparency, and dedication
+              Serving our community with excellence, transparency, and
+              dedication
             </p>
           </div>
 
@@ -76,14 +77,14 @@ export default function AboutBarangay() {
                   Our Vision
                 </h3>
                 <p className="text-gray-700 text-base leading-relaxed text-justify">
-                  To be a model eco-friendly barangay that exemplifies sustainable
-                  living, where every resident enjoys a high quality of life in
-                  harmony with nature.
+                  To be a model eco-friendly barangay that exemplifies
+                  sustainable living, where every resident enjoys a high quality
+                  of life in harmony with nature.
                 </p>
               </div>
             </div>
           </div>
-          
+
           {/* Barangay History */}
           <div className="max-w-4xl mx-auto">
             <div className="bg-white border-2 border-gray-100 rounded-2xl shadow-xl p-10 hover:shadow-2xl transition-shadow duration-300">
@@ -96,9 +97,9 @@ export default function AboutBarangay() {
                 </h2>
               </div>
               <p className="text-gray-700 text-lg leading-relaxed text-justify">
-                Barangay Talipapa is a vibrant community dedicated to
-                serving its residents with excellence. Established in 1950,
-                we have grown into a progressive barangay that values unity,
+                Barangay Talipapa is a vibrant community dedicated to serving
+                its residents with excellence. Established in 1950, we have
+                grown into a progressive barangay that values unity,
                 development, and sustainable growth.
               </p>
             </div>

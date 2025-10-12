@@ -71,9 +71,7 @@ export default function MissionVision() {
               <Leaf size={32} />
             </div>
             <h4 className="font-bold text-xl mb-2">Sustainability</h4>
-            <p className="text-sm text-green-100">
-              Protecting our environment
-            </p>
+            <p className="text-sm text-green-100">Protecting our environment</p>
           </div>
           <div className="flex flex-col items-center justify-center group hover:-translate-y-2 transition-all duration-300">
             <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-300 backdrop-blur-sm">

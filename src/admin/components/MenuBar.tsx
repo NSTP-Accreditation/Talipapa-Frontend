@@ -39,7 +39,11 @@ interface MenuItem {
   submenu?: MenuItem[];
 }
 
-const MenuBar: React.FC<MenuBarProps> = ({ className, isOpen = true, onClose }) => {
+const MenuBar: React.FC<MenuBarProps> = ({
+  className,
+  isOpen = true,
+  onClose,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
@@ -161,7 +165,10 @@ const MenuBar: React.FC<MenuBarProps> = ({ className, isOpen = true, onClose }) 
     <>
       {/* Mobile overlay */}
       {!isOpen ? null : (
-        <div className="sm:hidden fixed inset-0 z-40 bg-black/40" onClick={onClose} />
+        <div
+          className="sm:hidden fixed inset-0 z-40 bg-black/40"
+          onClick={onClose}
+        />
       )}
 
       <div
@@ -201,7 +208,9 @@ const MenuBar: React.FC<MenuBarProps> = ({ className, isOpen = true, onClose }) 
                   'w-full flex items-center justify-between px-4 py-3 text-left transition-colors duration-200 text-base',
                   location.pathname === item.href ||
                     (item.submenu &&
-                      item.submenu.some((sub) => location.pathname === sub.href))
+                      item.submenu.some(
+                        (sub) => location.pathname === sub.href
+                      ))
                     ? 'bg-green-700 text-white'
                     : 'text-white hover:bg-green-500/50'
                 )}
@@ -226,7 +235,10 @@ const MenuBar: React.FC<MenuBarProps> = ({ className, isOpen = true, onClose }) 
                   {item.submenu.map((subItem, subIndex) => (
                     <div key={subIndex}>
                       {subIndex > 0 && (
-                        <div className="border-t border-green-500/20 my-2" style={{ marginLeft: '3rem', marginRight: '5rem' }} />
+                        <div
+                          className="border-t border-green-500/20 my-2"
+                          style={{ marginLeft: '3rem', marginRight: '5rem' }}
+                        />
                       )}
                       <button
                         onClick={() => navigate(subItem.href!)}

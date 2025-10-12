@@ -118,7 +118,10 @@ const EventModal: React.FC<EventModalProps> = ({
           <h2 className="text-xl font-semibold text-gray-900">
             {event?.id ? 'Edit Calendar Event' : 'Add New Calendar Event'}
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1 rounded transition-colors">
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 p-1 rounded transition-colors"
+          >
             ✕
           </button>
         </div>
@@ -128,10 +131,14 @@ const EventModal: React.FC<EventModalProps> = ({
           <div className="flex flex-col gap-5">
             {/* Basic Information */}
             <div className="mb-8 p-5 bg-gray-50 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2 border-b border-gray-200 pb-2">Event Information</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2 border-b border-gray-200 pb-2">
+                Event Information
+              </h3>
 
               <div className="flex flex-col">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Title *
+                </label>
                 <input
                   type="text"
                   value={formData.title}
@@ -144,7 +151,9 @@ const EventModal: React.FC<EventModalProps> = ({
               </div>
 
               <div className="flex flex-col">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description *
+                </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) =>
@@ -158,7 +167,9 @@ const EventModal: React.FC<EventModalProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Date *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Date *
+                  </label>
                   <input
                     type="date"
                     value={formData.date}
@@ -170,7 +181,9 @@ const EventModal: React.FC<EventModalProps> = ({
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Time *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Time *
+                  </label>
                   <input
                     type="time"
                     value={formData.time}
@@ -183,7 +196,9 @@ const EventModal: React.FC<EventModalProps> = ({
               </div>
 
               <div className="flex flex-col">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Location
+                </label>
                 <input
                   type="text"
                   value={formData.location}
@@ -197,7 +212,9 @@ const EventModal: React.FC<EventModalProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category
+                  </label>
                   <select
                     value={formData.category}
                     onChange={(e) =>
@@ -216,7 +233,9 @@ const EventModal: React.FC<EventModalProps> = ({
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Priority
+                  </label>
                   <select
                     value={formData.priority}
                     onChange={(e) =>
@@ -286,7 +305,9 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-red-600 mb-1">Delete Event</h2>
+              <h2 className="text-xl font-semibold text-red-600 mb-1">
+                Delete Event
+              </h2>
               <p className="text-sm text-gray-600">
                 This action cannot be undone
               </p>
@@ -302,7 +323,9 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
           </p>
 
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-5">
-            <h4 className="text-sm font-semibold text-gray-700 mb-2">Event Details:</h4>
+            <h4 className="text-sm font-semibold text-gray-700 mb-2">
+              Event Details:
+            </h4>
             <p className="text-sm text-gray-600 mb-1 last:mb-0">
               <strong>Description:</strong> {event.description}
             </p>
@@ -400,7 +423,9 @@ const News: React.FC = () => {
   ]);
 
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
-  const [deletingEvent, setDeletingEvent] = useState<CalendarEvent | null>(null);
+  const [deletingEvent, setDeletingEvent] = useState<CalendarEvent | null>(
+    null
+  );
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const handleSaveEvent = (event: CalendarEvent) => {
@@ -495,8 +520,18 @@ const News: React.FC = () => {
           onClick={() => setIsAddModalOpen(true)}
           className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-2"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 4v16m8-8H4"
+            />
           </svg>
           Add New Event
         </button>
@@ -508,8 +543,18 @@ const News: React.FC = () => {
           <CardHeader className="bg-gradient-to-r from-green-50 to-white border-b-2 border-green-100">
             <div className="flex items-center justify-between">
               <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <svg
+                  className="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
                 </svg>
                 Recent Calendar Events & News
               </CardTitle>
@@ -524,7 +569,10 @@ const News: React.FC = () => {
             <div className="space-y-5">
               {events.length > 0 ? (
                 events
-                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                  .sort(
+                    (a, b) =>
+                      new Date(b.date).getTime() - new Date(a.date).getTime()
+                  )
                   .map((event, index) => (
                     <div
                       key={event.id}
@@ -536,7 +584,7 @@ const News: React.FC = () => {
                       {index < events.length - 1 && (
                         <div className="absolute left-[-2px] top-full h-5 w-1 bg-gradient-to-b from-gray-300 to-transparent"></div>
                       )}
-                      
+
                       <div className="flex justify-between items-start gap-4">
                         <div className="flex-1">
                           {/* Header with priority and category */}
@@ -547,15 +595,17 @@ const News: React.FC = () => {
                             <h4 className="font-bold text-lg text-gray-900 group-hover:text-blue-600 transition-colors">
                               {event.title}
                             </h4>
-                            <span className={`text-xs px-3 py-1.5 rounded-full font-bold ${
-                              event.category === 'Event' 
-                                ? 'bg-blue-600 text-white' 
-                                : event.category === 'Announcement' 
-                                ? 'bg-green-600 text-white' 
-                                : event.category === 'Notice' 
-                                ? 'bg-yellow-600 text-white' 
-                                : 'bg-purple-600 text-white'
-                            }`}>
+                            <span
+                              className={`text-xs px-3 py-1.5 rounded-full font-bold ${
+                                event.category === 'Event'
+                                  ? 'bg-blue-600 text-white'
+                                  : event.category === 'Announcement'
+                                    ? 'bg-green-600 text-white'
+                                    : event.category === 'Notice'
+                                      ? 'bg-yellow-600 text-white'
+                                      : 'bg-purple-600 text-white'
+                              }`}
+                            >
                               {event.category}
                             </span>
                             {event.priority === 'High' && (
@@ -564,38 +614,79 @@ const News: React.FC = () => {
                               </span>
                             )}
                           </div>
-                          
+
                           {/* Description */}
                           <p className="text-sm text-gray-700 mb-4 leading-relaxed font-medium">
                             {event.description}
                           </p>
-                          
+
                           {/* Enhanced Event Details */}
                           <div className="flex flex-wrap gap-4 text-sm">
                             <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
-                              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              <svg
+                                className="w-5 h-5 text-blue-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
                               </svg>
-                              <span className="font-bold text-gray-900">{formatDate(event.date)}</span>
+                              <span className="font-bold text-gray-900">
+                                {formatDate(event.date)}
+                              </span>
                             </div>
                             <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
-                              <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              <svg
+                                className="w-5 h-5 text-purple-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
                               </svg>
-                              <span className="font-bold text-gray-900">{formatTime(event.time)}</span>
+                              <span className="font-bold text-gray-900">
+                                {formatTime(event.time)}
+                              </span>
                             </div>
                             {event.location && (
                               <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
-                                <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <svg
+                                  className="w-5 h-5 text-red-600"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                  />
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                  />
                                 </svg>
-                                <span className="font-bold text-gray-900">{event.location}</span>
+                                <span className="font-bold text-gray-900">
+                                  {event.location}
+                                </span>
                               </div>
                             )}
                           </div>
                         </div>
-                        
+
                         {/* Action Buttons */}
                         <div className="flex flex-col gap-2">
                           <button
@@ -603,8 +694,18 @@ const News: React.FC = () => {
                             className="p-2.5 bg-white hover:bg-blue-50 text-blue-600 border-2 border-blue-300 hover:border-blue-500 rounded-xl transition-all hover:shadow-md"
                             title="Edit Event"
                           >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            <svg
+                              className="w-5 h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                              />
                             </svg>
                           </button>
                           <button
@@ -612,8 +713,18 @@ const News: React.FC = () => {
                             className="p-2.5 bg-white hover:bg-red-50 text-red-600 border-2 border-red-300 hover:border-red-500 rounded-xl transition-all hover:shadow-md"
                             title="Delete Event"
                           >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            <svg
+                              className="w-5 h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
                             </svg>
                           </button>
                         </div>
@@ -623,18 +734,43 @@ const News: React.FC = () => {
               ) : (
                 <div className="text-center py-16 bg-white rounded-2xl shadow-lg border-2 border-dashed border-gray-300">
                   <div className="bg-gradient-to-br from-blue-100 to-blue-200 w-24 h-24 rounded-full mx-auto flex items-center justify-center mb-6">
-                    <svg className="h-12 w-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <svg
+                      className="h-12 w-12 text-blue-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
-                  <p className="text-xl font-bold text-gray-900 mb-2">No events found</p>
-                  <p className="text-base font-medium text-gray-600 mb-6">Get started by creating your first calendar event or announcement.</p>
+                  <p className="text-xl font-bold text-gray-900 mb-2">
+                    No events found
+                  </p>
+                  <p className="text-base font-medium text-gray-600 mb-6">
+                    Get started by creating your first calendar event or
+                    announcement.
+                  </p>
                   <button
                     onClick={() => setIsAddModalOpen(true)}
                     className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-4 rounded-xl flex items-center gap-3 text-base font-bold mx-auto shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
                   >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v16m8-8H4"
+                      />
                     </svg>
                     Create Your First Event
                   </button>

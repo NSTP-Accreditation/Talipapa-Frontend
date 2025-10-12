@@ -1,33 +1,33 @@
-import { useState } from "react";
-import { SquarePen, Save } from "lucide-react";
+import { useState } from 'react';
+import { SquarePen, Save } from 'lucide-react';
 
 export default function AboutBarangayEditable() {
   // Initial Data
   const [barangayInfo, setBarangayInfo] = useState(
-    "Barangay Talipapa is a vibrant and progressive community dedicated to public service, sustainable development, and unity among its residents. Established in 1950, the barangay has continuously evolved to support programs that promote safety, health, and prosperity for everyone."
+    'Barangay Talipapa is a vibrant and progressive community dedicated to public service, sustainable development, and unity among its residents. Established in 1950, the barangay has continuously evolved to support programs that promote safety, health, and prosperity for everyone.'
   );
 
   const [barangayHistory, setBarangayHistory] = useState(
-    "Barangay Talipapa traces its roots to a small settlement where residents engaged in trading and agriculture. Over the decades, it transformed into a well-developed barangay that embraces modernization while preserving its cultural heritage and sense of community."
+    'Barangay Talipapa traces its roots to a small settlement where residents engaged in trading and agriculture. Over the decades, it transformed into a well-developed barangay that embraces modernization while preserving its cultural heritage and sense of community.'
   );
 
   const [mission, setMission] = useState(
-    "To create a sustainable, clean, and progressive community that promotes environmental awareness and responsible waste management through innovative programs and community participation."
+    'To create a sustainable, clean, and progressive community that promotes environmental awareness and responsible waste management through innovative programs and community participation.'
   );
 
   const [vision, setVision] = useState(
-    "A model eco-friendly barangay where residents actively participate in environmental conservation, waste reduction, and sustainable living practices for future generations."
+    'A model eco-friendly barangay where residents actively participate in environmental conservation, waste reduction, and sustainable living practices for future generations.'
   );
 
   const [officials, setOfficials] = useState([
-    { role: "Barangay Captain", name: "Juan Dela Cruz" },
-    { role: "Kagawad - Environment", name: "Maria Santos" },
-    { role: "Barangay Secretary", name: "Rosa Garcia" },
-    { role: "Kagawad - Health", name: "Pedro Ramirez" },
-    { role: "Kagawad - Education", name: "Liza Fernandez" },
-    { role: "Kagawad - Infrastructure", name: "Jose Mendoza" },
-    { role: "Barangay Treasurer", name: "Ana Cruz" },
-    { role: "SK Chairman", name: "Mark Dizon" },
+    { role: 'Barangay Captain', name: 'Juan Dela Cruz' },
+    { role: 'Kagawad - Environment', name: 'Maria Santos' },
+    { role: 'Barangay Secretary', name: 'Rosa Garcia' },
+    { role: 'Kagawad - Health', name: 'Pedro Ramirez' },
+    { role: 'Kagawad - Education', name: 'Liza Fernandez' },
+    { role: 'Kagawad - Infrastructure', name: 'Jose Mendoza' },
+    { role: 'Barangay Treasurer', name: 'Ana Cruz' },
+    { role: 'SK Chairman', name: 'Mark Dizon' },
   ]);
 
   // Edit Mode States
@@ -51,10 +51,15 @@ export default function AboutBarangayEditable() {
     setIsEditingMission(false);
     setIsEditingVision(false);
     setIsEditingOfficials(false);
-    alert("✅ All changes saved successfully!");
+    alert('✅ All changes saved successfully!');
   };
 
-  const hasActiveEdits = isEditingInfo || isEditingHistory || isEditingMission || isEditingVision || isEditingOfficials;
+  const hasActiveEdits =
+    isEditingInfo ||
+    isEditingHistory ||
+    isEditingMission ||
+    isEditingVision ||
+    isEditingOfficials;
 
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
@@ -69,7 +74,7 @@ export default function AboutBarangayEditable() {
             Manage barangay information, history, mission, vision, and officials
           </p>
         </div>
-        
+
         {/* Save All Button */}
         {hasActiveEdits && (
           <button
@@ -97,10 +102,10 @@ export default function AboutBarangayEditable() {
                 className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
               >
                 <SquarePen size={14} />
-                {isEditingInfo ? "Cancel" : "Edit"}
+                {isEditingInfo ? 'Cancel' : 'Edit'}
               </button>
             </div>
-            
+
             {isEditingInfo ? (
               <textarea
                 value={barangayInfo}
@@ -127,10 +132,10 @@ export default function AboutBarangayEditable() {
                 className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
               >
                 <SquarePen size={14} />
-                {isEditingHistory ? "Cancel" : "Edit"}
+                {isEditingHistory ? 'Cancel' : 'Edit'}
               </button>
             </div>
-            
+
             {isEditingHistory ? (
               <textarea
                 value={barangayHistory}
@@ -156,13 +161,13 @@ export default function AboutBarangayEditable() {
                 </h2>
                 <button
                   onClick={() => setIsEditingMission(!isEditingMission)}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
-                  >
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                >
                   <SquarePen size={14} />
-                  {isEditingMission ? "Cancel" : "Edit"}
+                  {isEditingMission ? 'Cancel' : 'Edit'}
                 </button>
               </div>
-              
+
               {isEditingMission ? (
                 <textarea
                   value={mission}
@@ -186,13 +191,13 @@ export default function AboutBarangayEditable() {
                 </h2>
                 <button
                   onClick={() => setIsEditingVision(!isEditingVision)}
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
-                  >
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                >
                   <SquarePen size={14} />
-                  {isEditingVision ? "Cancel" : "Edit"}
+                  {isEditingVision ? 'Cancel' : 'Edit'}
                 </button>
               </div>
-              
+
               {isEditingVision ? (
                 <textarea
                   value={vision}
@@ -223,10 +228,10 @@ export default function AboutBarangayEditable() {
                 className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
               >
                 <SquarePen size={14} />
-                {isEditingOfficials ? "Cancel" : "Edit"}
+                {isEditingOfficials ? 'Cancel' : 'Edit'}
               </button>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {officials.map((official, index) => (
                 <div
@@ -239,7 +244,7 @@ export default function AboutBarangayEditable() {
                         type="text"
                         value={official.role}
                         onChange={(e) =>
-                          handleOfficialChange(index, "role", e.target.value)
+                          handleOfficialChange(index, 'role', e.target.value)
                         }
                         className="w-full border-2 border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all font-semibold"
                         placeholder="Role"
@@ -248,7 +253,7 @@ export default function AboutBarangayEditable() {
                         type="text"
                         value={official.name}
                         onChange={(e) =>
-                          handleOfficialChange(index, "name", e.target.value)
+                          handleOfficialChange(index, 'name', e.target.value)
                         }
                         className="w-full border-2 border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                         placeholder="Name"
@@ -256,7 +261,9 @@ export default function AboutBarangayEditable() {
                     </div>
                   ) : (
                     <div>
-                      <p className="font-bold text-gray-900 text-base mb-1">{official.role}</p>
+                      <p className="font-bold text-gray-900 text-base mb-1">
+                        {official.role}
+                      </p>
                       <p className="text-gray-600 text-sm">{official.name}</p>
                     </div>
                   )}

@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // import Forms from '@/pages/Admin/subcomponents/Forms'; // Forms.tsx doesn't exist
 import { AuthProvider } from './contexts/AuthContext';
 
-
 // ADMIN EXPORT HERE
 import AdminLayout from '@/admin/layout/AdminLayout';
 import Dashboard from '@/admin/pages/Dashboard';
@@ -29,11 +28,8 @@ import UnifiedGuide from '@/users/guidelines/guides/UnifiedGuide';
 import Trading from '@/users/page/Trading';
 import AboutUs from '@/users/page/AboutUs';
 
-
-
 import Footer from '@/users/components/Footer';
 import SwapItem from '@/admin/pages/SwapItem';
-
 
 function App() {
   return (
@@ -108,10 +104,7 @@ function App() {
                 </div>
               }
             />
-            <Route
-              path="records"
-              element={<ActivityLogs />}
-            />
+            <Route path="records" element={<ActivityLogs />} />
             <Route
               path="users"
               element={
@@ -133,7 +126,10 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/guidelines" element={<GuidelinesApp />} />
                   <Route path="/guidelines/more" element={<MoreGuides />} />
-                  <Route path="/guidelines/:guideId" element={<UnifiedGuide />} />
+                  <Route
+                    path="/guidelines/:guideId"
+                    element={<UnifiedGuide />}
+                  />
                   <Route path="/trading" element={<Trading />} />
                   <Route path="/aboutus" element={<AboutUs />} />
                 </Routes>

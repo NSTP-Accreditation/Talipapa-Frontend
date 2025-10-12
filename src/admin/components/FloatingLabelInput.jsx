@@ -1,4 +1,10 @@
-const FloatingLabelInput = ({ label, value, onChange, type = "text", required = false }) => {
+const FloatingLabelInput = ({
+  label,
+  value,
+  onChange,
+  type = 'text',
+  required = false,
+}) => {
   return (
     <label className="text-sm sm:text-base flex-1 relative w-full">
       <input
@@ -12,8 +18,8 @@ const FloatingLabelInput = ({ label, value, onChange, type = "text", required = 
         className={`absolute left-3.5 bg-white px-1 text-gray-500 transition-all duration-200 
           ${
             value
-              ? "-top-2 text-xs"
-              : "top-1/2 -translate-y-1/2 peer-focus:-top-2 peer-focus:-translate-y-0 peer-focus:text-xs"
+              ? '-top-2 text-xs'
+              : 'top-1/2 -translate-y-1/2 peer-focus:-top-2 peer-focus:-translate-y-0 peer-focus:text-xs'
           }`}
       >
         {label}

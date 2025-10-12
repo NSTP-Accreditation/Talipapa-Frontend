@@ -9,8 +9,13 @@ export default function Footer() {
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 border-t border-green-800 pt-4 md:pt-6">
         <div>
-          <h3 className="mb-3 md:mb-4 text-base md:text-xl font-bold">Barangay Talipapa</h3>
-          <p className="text-sm md:text-base leading-relaxed" style={{ color: '#cfead6' }}>
+          <h3 className="mb-3 md:mb-4 text-base md:text-xl font-bold">
+            Barangay Talipapa
+          </h3>
+          <p
+            className="text-sm md:text-base leading-relaxed"
+            style={{ color: '#cfead6' }}
+          >
             A progressive community fostering environmental sustainability and
             unity in Quezon City, Philippines.
           </p>
@@ -67,9 +72,14 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="mb-3 md:mb-4 text-base md:text-xl font-bold">Contact Information</h3>
+          <h3 className="mb-3 md:mb-4 text-base md:text-xl font-bold">
+            Contact Information
+          </h3>
           <ul className="space-y-2">
-            <li className="flex items-start text-sm md:text-base" style={{ color: '#cfead6' }}>
+            <li
+              className="flex items-start text-sm md:text-base"
+              style={{ color: '#cfead6' }}
+            >
               <svg
                 className="w-4 h-4 mr-2 mt-1 flex-shrink-0"
                 viewBox="0 0 24 24"
@@ -81,7 +91,10 @@ export default function Footer() {
               <span>506 Quirino Hwy, Novaliches, Quezon City, 1116</span>
             </li>
 
-            <li className="flex items-center text-sm md:text-base" style={{ color: '#cfead6' }}>
+            <li
+              className="flex items-center text-sm md:text-base"
+              style={{ color: '#cfead6' }}
+            >
               <svg
                 className="w-4 h-4 mr-2 flex-shrink-0"
                 viewBox="0 0 24 24"
@@ -93,7 +106,10 @@ export default function Footer() {
               <span>Desk Office: (63) 0917-5586735</span>
             </li>
 
-            <li className="flex items-center text-sm md:text-base" style={{ color: '#cfead6' }}>
+            <li
+              className="flex items-center text-sm md:text-base"
+              style={{ color: '#cfead6' }}
+            >
               <svg
                 className="w-4 h-4 mr-2 flex-shrink-0"
                 viewBox="0 0 24 24"
@@ -105,7 +121,10 @@ export default function Footer() {
               <span>Admin Office: (63) 8-7110745</span>
             </li>
 
-            <li className="flex items-start text-sm md:text-base" style={{ color: '#cfead6' }}>
+            <li
+              className="flex items-start text-sm md:text-base"
+              style={{ color: '#cfead6' }}
+            >
               <svg
                 className="w-4 h-4 mr-2 mt-1 flex-shrink-0"
                 viewBox="0 0 24 24"

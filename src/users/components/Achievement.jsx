@@ -58,7 +58,8 @@ export default function Achievements() {
             Achievements
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
-            Celebrating our community's milestones and recognition for excellence in service
+            Celebrating our community's milestones and recognition for
+            excellence in service
           </p>
         </header>
 
@@ -70,7 +71,7 @@ export default function Achievements() {
               className="bg-white p-8 rounded-2xl flex flex-col items-center text-center border-2 border-gray-100 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 w-full max-w-sm relative overflow-hidden group"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-orange-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              
+
               <div className="relative z-10 flex flex-col items-center w-full">
                 {/* Image Container */}
                 <div className="flex items-center justify-center w-full h-52 mb-6 overflow-hidden rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 shadow-md group-hover:shadow-lg transition-shadow duration-300">
@@ -83,7 +84,9 @@ export default function Achievements() {
                   ) : (
                     <div className="flex flex-col items-center justify-center">
                       <span className="text-6xl mb-2">🏆</span>
-                      <span className="text-gray-400 text-sm font-medium">No image available</span>
+                      <span className="text-gray-400 text-sm font-medium">
+                        No image available
+                      </span>
                     </div>
                   )}
                 </div>
@@ -109,7 +112,9 @@ export default function Achievements() {
                     Learn more →
                   </a>
                 ) : (
-                  <span className="text-gray-400 text-sm">No link available</span>
+                  <span className="text-gray-400 text-sm">
+                    No link available
+                  </span>
                 )}
               </div>
             </div>
@@ -119,4 +124,3 @@ export default function Achievements() {
     </section>
   );
 }
-

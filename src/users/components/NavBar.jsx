@@ -39,9 +39,7 @@ export default function NavBar() {
   return (
     <header className="sticky top-0 z-50 bg-[#1b4c2e] text-white w-full">
       {/* Top bar with date and time */}
-      <div
-        className="bg-[#0d2617] px-4 sm:px-6 py-1 flex justify-between items-center font-bold text-base md:text-lg"
-      >
+      <div className="bg-[#0d2617] px-4 sm:px-6 py-1 flex justify-between items-center font-bold text-base md:text-lg">
         <span className="tracking-wide truncate">{currentDate}</span>
         <span className="tracking-wide ml-2">{currentTime}</span>
       </div>
@@ -65,7 +63,7 @@ export default function NavBar() {
           </button>
 
           {/* Desktop Navigation Links */}
-          <div 
+          <div
             className="items-center space-x-3 sm:space-x-6"
             style={{ display: window.innerWidth >= 768 ? 'flex' : 'none' }}
           >
@@ -134,7 +132,7 @@ export default function NavBar() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div 
+        <div
           className="bg-[#0d2617] px-4 py-3 space-y-2"
           style={{ display: window.innerWidth >= 768 ? 'none' : 'block' }}
         >

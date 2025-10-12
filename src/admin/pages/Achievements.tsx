@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { SquarePen, Plus, Trash2, X } from "lucide-react";
+import React, { useEffect, useState } from 'react';
+import { SquarePen, Plus, Trash2, X } from 'lucide-react';
 
 /**
  * AchievementsAdmin
@@ -11,7 +11,7 @@ import { SquarePen, Plus, Trash2, X } from "lucide-react";
  * Drop this file into your React app. TailwindCSS expected.
  */
 
-const LOCAL_KEY = "achievements_admin_v1";
+const LOCAL_KEY = 'achievements_admin_v1';
 
 /* ---------- utilities ---------- */
 const readFileAsDataURL = (file) =>
@@ -25,51 +25,51 @@ const readFileAsDataURL = (file) =>
 /* ---------- default seed data (you provided) ---------- */
 const DEFAULTS = [
   {
-    title: "Barangay Clean-up Drive Award",
+    title: 'Barangay Clean-up Drive Award',
     description:
-      "Recognized for outstanding environmental efforts in maintaining a clean and green community.",
-    link: "https://example.com/cleanup-award",
+      'Recognized for outstanding environmental efforts in maintaining a clean and green community.',
+    link: 'https://example.com/cleanup-award',
     image:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800&q=80",
+      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800&q=80',
   },
   {
-    title: "Health and Wellness Initiative",
+    title: 'Health and Wellness Initiative',
     description:
-      "Awarded for promoting community health through sustainable wellness programs.",
-    link: "https://example.com/health-initiative",
+      'Awarded for promoting community health through sustainable wellness programs.',
+    link: 'https://example.com/health-initiative',
     image:
-      "https://images.unsplash.com/photo-1588072432836-e10032774350?w=800&q=80",
+      'https://images.unsplash.com/photo-1588072432836-e10032774350?w=800&q=80',
   },
   {
-    title: "Community Safety Recognition",
+    title: 'Community Safety Recognition',
     description:
-      "Acknowledged for exemplary disaster preparedness and safety programs.",
-    link: "https://example.com/safety-recognition",
+      'Acknowledged for exemplary disaster preparedness and safety programs.',
+    link: 'https://example.com/safety-recognition',
     image:
-      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80",
+      'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80',
   },
   {
-    title: "Youth Empowerment Project",
+    title: 'Youth Empowerment Project',
     description:
-      "Honored for empowering youth leaders to contribute actively to barangay programs.",
-    link: "https://example.com/youth-project",
+      'Honored for empowering youth leaders to contribute actively to barangay programs.',
+    link: 'https://example.com/youth-project',
     image:
-      "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=800&q=80",
+      'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=800&q=80',
   },
   {
-    title: "Eco-Friendly Barangay",
+    title: 'Eco-Friendly Barangay',
     description:
-      "Achieved for implementing innovative recycling and environmental conservation measures.",
-    link: "https://example.com/eco-barangay",
+      'Achieved for implementing innovative recycling and environmental conservation measures.',
+    link: 'https://example.com/eco-barangay',
     image:
-      "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80",
+      'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
   },
   {
-    title: "Best Barangay Documentation",
+    title: 'Best Barangay Documentation',
     description:
-      "Awarded for excellence in record keeping, transparency, and governance.",
-    link: "https://example.com/documentation-award",
-    image: "",
+      'Awarded for excellence in record keeping, transparency, and governance.',
+    link: 'https://example.com/documentation-award',
+    image: '',
   },
 ];
 
@@ -78,10 +78,10 @@ export default function AchievementsAdmin() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null); // null => adding
   const [form, setForm] = useState({
-    title: "",
-    description: "",
-    link: "",
-    image: "", // can be URL or base64
+    title: '',
+    description: '',
+    link: '',
+    image: '', // can be URL or base64
   });
   const [fileUploading, setFileUploading] = useState(false);
 
@@ -93,7 +93,7 @@ export default function AchievementsAdmin() {
         setItems(JSON.parse(raw));
         return;
       } catch (e) {
-        console.warn("Invalid local storage data, loading defaults.");
+        console.warn('Invalid local storage data, loading defaults.');
       }
     }
     setItems(DEFAULTS);
@@ -107,7 +107,7 @@ export default function AchievementsAdmin() {
   /* ---------- modal control ---------- */
   const openAdd = () => {
     setEditingIndex(null);
-    setForm({ title: "", description: "", link: "", image: "" });
+    setForm({ title: '', description: '', link: '', image: '' });
     setModalOpen(true);
   };
   const openEdit = (index) => {
@@ -129,9 +129,9 @@ export default function AchievementsAdmin() {
     try {
       const dataUrl = await readFileAsDataURL(file);
       // store base64 blob as image
-      handleChange("image", dataUrl);
+      handleChange('image', dataUrl);
     } catch (e) {
-      alert("Failed to read file.");
+      alert('Failed to read file.');
     } finally {
       setFileUploading(false);
     }
@@ -139,7 +139,7 @@ export default function AchievementsAdmin() {
 
   const handleSave = () => {
     if (!form.title.trim()) {
-      alert("Title is required.");
+      alert('Title is required.');
       return;
     }
     if (editingIndex === null) {
@@ -151,7 +151,8 @@ export default function AchievementsAdmin() {
   };
 
   const handleDelete = (index) => {
-    if (!confirm("Delete this achievement? This action cannot be undone.")) return;
+    if (!confirm('Delete this achievement? This action cannot be undone.'))
+      return;
     setItems((prev) => prev.filter((_, i) => i !== index));
   };
 
@@ -161,17 +162,17 @@ export default function AchievementsAdmin() {
       {/* Image Container - Fixed Height */}
       <div className="relative h-48 overflow-hidden bg-gradient-to-br from-green-50 to-emerald-50">
         {item.image ? (
-          <img 
-            src={item.image} 
-            alt={item.title} 
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+          <img
+            src={item.image}
+            alt={item.title}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <span className="text-7xl">🏆</span>
           </div>
         )}
-        
+
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
@@ -240,7 +241,8 @@ export default function AchievementsAdmin() {
           <p className="text-lg text-gray-700 mt-3 font-medium">
             Manage community achievements and milestones
             <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-              {items.length} {items.length === 1 ? 'Achievement' : 'Achievements'}
+              {items.length}{' '}
+              {items.length === 1 ? 'Achievement' : 'Achievements'}
             </span>
           </p>
         </div>
@@ -260,7 +262,9 @@ export default function AchievementsAdmin() {
             <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl shadow-xl mb-6">
               <span className="text-8xl">🏆</span>
             </div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-3">No achievements yet</h3>
+            <h3 className="text-2xl font-bold text-gray-800 mb-3">
+              No achievements yet
+            </h3>
             <p className="text-gray-600 text-lg mb-6 max-w-md mx-auto">
               Start building your collection by adding your first achievement
             </p>
@@ -276,7 +280,6 @@ export default function AchievementsAdmin() {
         )}
       </div>
 
-
       {/* ---------- modal (enhanced) ---------- */}
       {modalOpen && (
         <div
@@ -289,14 +292,18 @@ export default function AchievementsAdmin() {
             <div className="flex items-center justify-between p-6 border-b-2 border-gray-100 bg-gradient-to-r from-green-50 to-emerald-50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white text-xl">{editingIndex === null ? "➕" : "✏️"}</span>
+                  <span className="text-white text-xl">
+                    {editingIndex === null ? '➕' : '✏️'}
+                  </span>
                 </div>
                 <h3 className="text-2xl font-bold text-gray-800">
-                  {editingIndex === null ? "Add New Achievement" : "Edit Achievement"}
+                  {editingIndex === null
+                    ? 'Add New Achievement'
+                    : 'Edit Achievement'}
                 </h3>
               </div>
-              <button 
-                onClick={closeModal} 
+              <button
+                onClick={closeModal}
                 className="p-2 rounded-lg hover:bg-gray-200 transition-colors"
                 title="Close"
               >
@@ -313,7 +320,7 @@ export default function AchievementsAdmin() {
                 <input
                   type="text"
                   value={form.title}
-                  onChange={(e) => handleChange("title", e.target.value)}
+                  onChange={(e) => handleChange('title', e.target.value)}
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
                   placeholder="Enter achievement title..."
                 />
@@ -325,7 +332,7 @@ export default function AchievementsAdmin() {
                 </div>
                 <textarea
                   value={form.description}
-                  onChange={(e) => handleChange("description", e.target.value)}
+                  onChange={(e) => handleChange('description', e.target.value)}
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none resize-none"
                   rows={5}
                   placeholder="Describe this achievement..."
@@ -339,7 +346,7 @@ export default function AchievementsAdmin() {
                 <input
                   type="url"
                   value={form.link}
-                  onChange={(e) => handleChange("link", e.target.value)}
+                  onChange={(e) => handleChange('link', e.target.value)}
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
                   placeholder="https://example.com/achievement"
                 />
@@ -352,8 +359,12 @@ export default function AchievementsAdmin() {
                   </div>
                   <input
                     type="url"
-                    value={form.image && form.image.startsWith("data:") ? "" : form.image}
-                    onChange={(e) => handleChange("image", e.target.value)}
+                    value={
+                      form.image && form.image.startsWith('data:')
+                        ? ''
+                        : form.image
+                    }
+                    onChange={(e) => handleChange('image', e.target.value)}
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
                     placeholder="https://..."
                   />
@@ -384,15 +395,17 @@ export default function AchievementsAdmin() {
                 </div>
                 <div className="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden flex items-center justify-center border-2 border-gray-200 shadow-inner">
                   {form.image ? (
-                    <img 
-                      src={form.image} 
-                      alt="preview" 
-                      className="w-full h-full object-cover" 
+                    <img
+                      src={form.image}
+                      alt="preview"
+                      className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="text-center">
                       <span className="text-6xl mb-2 block">🖼️</span>
-                      <div className="text-gray-400 font-medium">No image selected</div>
+                      <div className="text-gray-400 font-medium">
+                        No image selected
+                      </div>
                     </div>
                   )}
                 </div>
@@ -401,17 +414,17 @@ export default function AchievementsAdmin() {
 
             {/* Modal Footer */}
             <div className="flex justify-end gap-4 p-6 border-t-2 border-gray-100 bg-gray-50">
-              <button 
-                onClick={closeModal} 
+              <button
+                onClick={closeModal}
                 className="px-6 py-3 rounded-xl border-2 border-gray-300 font-semibold hover:bg-gray-100 transition-all"
               >
                 Cancel
               </button>
-              <button 
-                onClick={handleSave} 
+              <button
+                onClick={handleSave}
                 className="px-8 py-3 rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all"
               >
-                {editingIndex === null ? "Create Achievement" : "Save Changes"}
+                {editingIndex === null ? 'Create Achievement' : 'Save Changes'}
               </button>
             </div>
           </div>

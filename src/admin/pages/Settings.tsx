@@ -174,8 +174,12 @@ const Settings: React.FC = () => {
                     />
                   ) : (
                     <div className="text-center">
-                      <span className="text-gray-500 text-6xl block mb-2">🏛️</span>
-                      <span className="text-gray-700 text-sm font-bold">No Logo</span>
+                      <span className="text-gray-500 text-6xl block mb-2">
+                        🏛️
+                      </span>
+                      <span className="text-gray-700 text-sm font-bold">
+                        No Logo
+                      </span>
                     </div>
                   )}
                 </div>
@@ -251,7 +255,9 @@ const Settings: React.FC = () => {
               </div>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-sm text-blue-800 font-medium">
-                  ✨ Currently using <span className="font-bold">{colorScheme}</span> theme with enhanced styling
+                  ✨ Currently using{' '}
+                  <span className="font-bold">{colorScheme}</span> theme with
+                  enhanced styling
                 </p>
               </div>
             </div>
@@ -285,7 +291,9 @@ const Settings: React.FC = () => {
                       <h4 className="font-bold text-lg text-gray-900">
                         {user.name}
                       </h4>
-                      <p className="text-base text-gray-800 font-medium">{user.email}</p>
+                      <p className="text-base text-gray-800 font-medium">
+                        {user.email}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 flex-shrink-0">

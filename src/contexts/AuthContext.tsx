@@ -63,7 +63,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   //   checkAuthStatus();
   // }, []);
 
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (
+    username: string,
+    password: string
+  ): Promise<boolean> => {
     try {
       // Simulate API call
       const response = await fetch(`${apiURL}/auth/login`, {

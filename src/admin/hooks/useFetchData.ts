@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 import { useAuthFetch } from './useAuthFetch';
 
 // Types
@@ -12,7 +12,7 @@ interface FetchDataResponse<T> {
 interface FetchOptions extends RequestInit {}
 
 const useFetchData = <T = any>(
-  url: string | null, 
+  url: string | null,
   options: FetchOptions = {}
 ): FetchDataResponse<T> => {
   const [data, setData] = useState<T | null>(null);
@@ -33,7 +33,8 @@ const useFetchData = <T = any>(
       setData(result as T);
       return result as T;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An error occurred";
+      const errorMessage =
+        err instanceof Error ? err.message : 'An error occurred';
       setData(null);
       setError(errorMessage);
       throw err;

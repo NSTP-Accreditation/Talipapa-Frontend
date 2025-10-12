@@ -41,15 +41,47 @@ export default function Guidelines() {
   };
 
   const guides = [
-    { icon: FileText, title: 'Barangay Clearance', path: '/guidelines/barangay-clearance' },
-    { icon: File, title: 'Certificate of Indigency', path: '/guidelines/certificate-of-indigency' },
-    { icon: House, title: 'Certificate of Residency', path: '/guidelines/certificate-of-residency' },
-    { icon: Building2, title: 'Business Clearance', path: '/guidelines/business-clearance' },
-    { icon: TrafficCone, title: 'Traffic Clearance', path: '/guidelines/traffic-clearance' },
-    { icon: ThumbsUp, title: 'Good Moral Character', path: '/guidelines/good-moral-character' },
-    { icon: ScrollText, title: 'Barangay Affidavit', path: '/guidelines/barangay-affidavit' },
+    {
+      icon: FileText,
+      title: 'Barangay Clearance',
+      path: '/guidelines/barangay-clearance',
+    },
+    {
+      icon: File,
+      title: 'Certificate of Indigency',
+      path: '/guidelines/certificate-of-indigency',
+    },
+    {
+      icon: House,
+      title: 'Certificate of Residency',
+      path: '/guidelines/certificate-of-residency',
+    },
+    {
+      icon: Building2,
+      title: 'Business Clearance',
+      path: '/guidelines/business-clearance',
+    },
+    {
+      icon: TrafficCone,
+      title: 'Traffic Clearance',
+      path: '/guidelines/traffic-clearance',
+    },
+    {
+      icon: ThumbsUp,
+      title: 'Good Moral Character',
+      path: '/guidelines/good-moral-character',
+    },
+    {
+      icon: ScrollText,
+      title: 'Barangay Affidavit',
+      path: '/guidelines/barangay-affidavit',
+    },
     { icon: IdCard, title: 'Philsys ID', path: '/guidelines/philsys-id' },
-    { icon: IdCard, title: 'Quezon City ID', path: '/guidelines/quezon-city-id' },
+    {
+      icon: IdCard,
+      title: 'Quezon City ID',
+      path: '/guidelines/quezon-city-id',
+    },
   ];
 
   return (
@@ -62,7 +94,9 @@ export default function Guidelines() {
               🏠 Home
             </Link>
             <span className="mx-2 text-gray-400">/</span>
-            <span className="text-green-700 font-semibold">📖 How to Guides</span>
+            <span className="text-green-700 font-semibold">
+              📖 How to Guides
+            </span>
           </nav>
         </div>
       </div>
@@ -90,10 +124,10 @@ export default function Guidelines() {
                 <div className="bg-white border-2 border-gray-100 rounded-2xl p-8 text-center hover:shadow-2xl hover:border-green-300 hover:-translate-y-2 transition-all duration-300 h-full flex flex-col items-center justify-center min-h-[200px] relative overflow-hidden">
                   {/* Background Gradient on Hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  
+
                   {/* Content */}
                   <div className="relative z-10">
-                    <div 
+                    <div
                       className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-md"
                       style={{ backgroundColor: '#e8f5e9' }}
                     >
@@ -114,14 +148,14 @@ export default function Guidelines() {
 
         {/* CTA Section */}
         <div className="text-center bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">Need More Help?</h3>
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">
+            Need More Help?
+          </h3>
           <p className="text-gray-600 mb-6 max-w-xl mx-auto">
             Explore our complete collection of guides and resources
           </p>
           <Link to="/guidelines/more">
-            <Button
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-10 py-6 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-            >
+            <Button className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-10 py-6 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               View All Guides
             </Button>
           </Link>

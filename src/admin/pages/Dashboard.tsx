@@ -133,7 +133,9 @@ const Dashboard: React.FC = () => {
           </CardHeader>
           <CardContent className="px-6 pb-6">
             <div className="text-3xl font-bold text-orange-600 mb-1">🚀</div>
-            <p className="text-xs text-orange-700 font-medium">Feature in development</p>
+            <p className="text-xs text-orange-700 font-medium">
+              Feature in development
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -167,7 +169,9 @@ const Dashboard: React.FC = () => {
                     <p className="text-sm font-bold text-gray-900 mb-1">
                       {activity.points} pts
                     </p>
-                    <p className="text-sm text-gray-700 font-medium">{activity.date}</p>
+                    <p className="text-sm text-gray-700 font-medium">
+                      {activity.date}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -194,7 +198,9 @@ const Dashboard: React.FC = () => {
                     <p className="text-sm font-semibold text-gray-900 mb-1">
                       {achievement.title}
                     </p>
-                    <p className="text-sm text-gray-700 font-medium">{achievement.date}</p>
+                    <p className="text-sm text-gray-700 font-medium">
+                      {achievement.date}
+                    </p>
                   </div>
                   <div>
                     <span

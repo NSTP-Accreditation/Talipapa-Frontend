@@ -64,7 +64,7 @@ const AdminLogin: React.FC = () => {
     }
 
     setLoading(true);
-    try { 
+    try {
       const success = await login(formData.username, formData.password);
 
       if (success) {
