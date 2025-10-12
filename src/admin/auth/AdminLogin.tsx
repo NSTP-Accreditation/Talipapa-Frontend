@@ -87,67 +87,74 @@ const AdminLogin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-5 px-4">
+    <div className="min-h-screen flex items-center justify-center py-8 px-4" style={{ backgroundColor: '#F6F6F6' }}>
       <div
-        className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden"
-        style={{ maxWidth: '1000px', width: '90vw' }}
+        className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden"
+        style={{ maxWidth: '1100px', width: '95vw' }}
       >
-        <div className="flex min-h-[500px]">
+        <div className="flex min-h-[650px]">
           {/* Left Column - Login Form */}
-          <div className="w-1/2 p-12 flex flex-col justify-center">
-            <div className="flex flex-col ml-8">
+          <div className="w-1/2 p-16 flex flex-col justify-center">
+            <div className="flex flex-col max-w-md mx-auto w-full">
               {/* Logo and Title Section */}
-              <div className="text-center mb-8">
-                <div className="flex items-center justify-center w-24 h-24 mx-auto mb-4">
+              <div className="text-center mb-10">
+                <div className="flex items-center justify-center w-32 h-32 mx-auto mb-6 rounded-full shadow-lg" style={{ backgroundColor: '#F6F6F6' }}>
                   <img
                     src="/brgy talipapa.png"
                     alt="Barangay Talipapa Logo"
-                    className="h-[90px] w-[90px] object-contain hover:opacity-80 transition-opacity cursor-pointer"
+                    className="h-28 w-28 object-contain hover:scale-105 transition-transform duration-300"
                   />
                 </div>
+                <h1 className="text-4xl font-bold mb-3" style={{ color: '#1a4d2e' }}>Admin Portal</h1>
               </div>
 
               {/* Login Text */}
-              <p className="text-gray-600 mb-6 text-center">
+              <p className="text-lg mb-8 text-center" style={{ color: '#838383' }}>
                 Please login to your account
               </p>
 
               {/* Form */}
-              <div className="max-w-md mx-auto">
-                <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="w-full">
+                <form onSubmit={handleSubmit} className="space-y-8">
                   {/* Username Field */}
-                  <div className="mb-4">
+                  <div>
+                    <label htmlFor="form1" className="block text-sm font-semibold mb-3" style={{ color: '#1a4d2e' }}>
+                      Username
+                    </label>
                     <Input
                       id="form1"
                       name="username"
                       type="text"
-                      placeholder="Username"
+                      placeholder="Enter your username"
                       value={formData.username}
                       onChange={handleInputChange}
-                      className={`w-full h-[48px] px-3 bg-white border-0 border-b-2 border-gray-300 rounded-none text-base placeholder:text-gray-500 focus:border-blue-500 focus:ring-0 focus:outline-none hover:opacity-80 transition-opacity cursor-pointer ${errors.username ? 'border-red-500 focus:border-red-500' : ''}`}
+                      className={`w-full h-14 px-4 bg-white border-2 rounded-xl text-base placeholder:text-gray-400 focus:ring-0 focus:outline-none transition-all duration-300 ${errors.username ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-[#1a4d2e] hover:border-gray-300'}`}
                       disabled={loading}
                     />
                     {errors.username && (
-                      <p className="text-sm text-red-600 mt-2">
+                      <p className="text-sm text-red-600 mt-2 font-medium">
                         {errors.username}
                       </p>
                     )}
                   </div>
 
                   {/* Password Field */}
-                  <div className="mb-4">
+                  <div>
+                    <label htmlFor="form2" className="block text-sm font-semibold mb-3" style={{ color: '#1a4d2e' }}>
+                      Password
+                    </label>
                     <Input
                       id="form2"
                       name="password"
                       type="password"
-                      placeholder="Password"
+                      placeholder="Enter your password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className={`w-full h-[48px] px-3 bg-white border-0 border-b-2 border-gray-300 rounded-none text-base placeholder:text-gray-500 focus:border-blue-500 focus:ring-0 focus:outline-none hover:opacity-80 transition-opacity cursor-pointer ${errors.password ? 'border-red-500 focus:border-red-500' : ''}`}
+                      className={`w-full h-14 px-4 bg-white border-2 rounded-xl text-base placeholder:text-gray-400 focus:ring-0 focus:outline-none transition-all duration-300 ${errors.password ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-[#1a4d2e] hover:border-gray-300'}`}
                       disabled={loading}
                     />
                     {errors.password && (
-                      <p className="text-sm text-red-600 mt-2">
+                      <p className="text-sm text-red-600 mt-2 font-medium">
                         {errors.password}
                       </p>
                     )}
@@ -155,21 +162,22 @@ const AdminLogin: React.FC = () => {
 
                   {/* Submit Error */}
                   {errors.submit && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-6">
-                      <p className="text-sm text-red-600">{errors.submit}</p>
+                    <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
+                      <p className="text-sm text-red-600 font-medium">{errors.submit}</p>
                     </div>
                   )}
 
                   {/* Submit Button and Links */}
-                  <div className="text-center pt-4 mb-8">
+                  <div className="pt-4">
                     <Button
                       type="submit"
-                      className="w-full h-[64px] bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-md text-lg hover:opacity-80 transition-opacity cursor-pointer mb-6"
+                      className="w-full h-16 text-white font-bold rounded-xl text-lg shadow-lg hover:shadow-xl hover:opacity-90 transition-all duration-300"
+                      style={{ backgroundColor: '#1a4d2e' }}
                       disabled={loading}
                     >
                       {loading ? (
-                        <div className="flex items-center justify-center space-x-2">
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        <div className="flex items-center justify-center space-x-3">
+                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
                           <span>Signing in...</span>
                         </div>
                       ) : (
@@ -183,16 +191,27 @@ const AdminLogin: React.FC = () => {
           </div>
 
           {/* Right Column - Branding */}
-          <div className="w-1/2 bg-gradient-to-br from-green-500 to-green-700 flex flex-col justify-center text-white p-12">
-            <div className="px-6 py-8 text-center">
-              <h4 className="text-3xl font-bold mb-6">Welcome Admin</h4>
-              <p className="text-green-100 leading-relaxed">
-                Access the comprehensive Barangay Content Management System.
-                Manage community services, resources, news, and user accounts
-                efficiently. Your administrative dashboard provides complete
-                control over the barangay's digital presence and community
+          <div className="w-1/2 flex flex-col justify-center text-white p-16 relative overflow-hidden" style={{ backgroundColor: '#1a4d2e' }}>
+            {/* Decorative circles */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full -ml-48 -mb-48"></div>
+            
+            <div className="relative z-10 text-center px-8">
+              <h4 className="text-5xl font-black mb-8 leading-tight">Welcome Back,<br/>Admin</h4>
+              <p className="text-white/90 text-lg leading-relaxed font-light">
+                Access the comprehensive Barangay Content Management System. 
+                Manage community services, resources, news, and user accounts 
+                efficiently. Your administrative dashboard provides complete 
+                control over the barangay's digital presence and community 
                 engagement platform.
               </p>
+              
+              {/* Additional decorative element */}
+              <div className="mt-12 flex justify-center space-x-3">
+                <div className="w-3 h-3 bg-white rounded-full opacity-50"></div>
+                <div className="w-3 h-3 bg-white rounded-full opacity-75"></div>
+                <div className="w-3 h-3 bg-white rounded-full"></div>
+              </div>
             </div>
           </div>
         </div>
