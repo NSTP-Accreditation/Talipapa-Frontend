@@ -3,8 +3,13 @@ import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { Download, Search } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
+import { useLoadingState } from '../../hooks/useLoadingState';
+import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
 
 const ResidentRecords: React.FC = () => {
+  // Add loading state with minimum 2 second display
+  const { isLoading: pageLoading } = useLoadingState(2000);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10;
@@ -65,6 +70,11 @@ const ResidentRecords: React.FC = () => {
   const prevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
+
+  // Show loading skeleton while loading
+  if (pageLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   return (
     <div className="p-4 sm:p-6 md:p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen space-y-8">

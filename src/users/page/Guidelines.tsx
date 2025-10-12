@@ -11,8 +11,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useLoadingState } from '@/hooks/useLoadingState';
+import { PageLoadingSkeleton } from '@/components/LoadingSkeletons';
 
 export default function Guidelines() {
+  // Add loading state with minimum 2 second display
+  const { isLoading: pageLoading } = useLoadingState(2000);
+
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -83,6 +88,11 @@ export default function Guidelines() {
       path: '/guidelines/quezon-city-id',
     },
   ];
+
+  // Show loading skeleton while loading
+  if (pageLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">

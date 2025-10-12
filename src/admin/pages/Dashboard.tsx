@@ -13,8 +13,13 @@ import {
   Trophy,
   Activity,
 } from 'lucide-react';
+import { useLoadingState } from '../../hooks/useLoadingState';
+import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
 
 const Dashboard: React.FC = () => {
+  // Add loading state with minimum 2 second display
+  const { isLoading } = useLoadingState(2000);
+
   const recentActivity = [
     {
       id: 'T001',
@@ -63,6 +68,11 @@ const Dashboard: React.FC = () => {
       status: 'Ongoing',
     },
   ];
+
+  // Show loading skeleton while loading
+  if (isLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-8">

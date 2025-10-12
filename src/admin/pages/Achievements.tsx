@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SquarePen, Plus, Trash2, X } from 'lucide-react';
+import { useLoadingState } from '../../hooks/useLoadingState';
+import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
 
 /**
  * AchievementsAdmin
@@ -74,6 +76,9 @@ const DEFAULTS = [
 ];
 
 export default function AchievementsAdmin() {
+  // Add loading state with minimum 2 second display
+  const { isLoading: pageLoading } = useLoadingState(2000);
+
   const [items, setItems] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null); // null => adding
@@ -228,6 +233,11 @@ export default function AchievementsAdmin() {
       </div>
     </div>
   );
+
+  // Show loading skeleton while loading
+  if (pageLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">

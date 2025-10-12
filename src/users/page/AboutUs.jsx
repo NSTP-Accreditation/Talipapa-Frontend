@@ -1,7 +1,17 @@
 import AboutBarangay from '../components/AboutBarangay';
 import { User, MapPin, ExternalLink } from 'lucide-react';
+import { useLoadingState } from '../../hooks/useLoadingState';
+import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
 
 const AboutUs = () => {
+  // Add loading state with minimum 2 second display
+  const { isLoading } = useLoadingState(2000);
+
+  // Show loading skeleton while loading
+  if (isLoading) {
+    return <PageLoadingSkeleton />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
       <AboutBarangay />

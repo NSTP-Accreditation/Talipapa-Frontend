@@ -2,6 +2,8 @@ import { useCallback, useMemo, useState } from 'react';
 import { formatName, formatPoints } from '@/utils/formatter';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import FloatingLabelInput from '../components/FloatingLabelInput';
+import { Spinner, InlineLoader, PageLoadingSkeleton } from '@/components/LoadingSkeletons';
+import { useLoadingState } from '@/hooks/useLoadingState';
 
 interface Product {
   _id: string;
@@ -20,7 +22,11 @@ interface RecordData {
 }
 
 const SwapItem = () => {
+  // Add loading state with minimum 2 second display
+  const { isLoading: pageLoading } = useLoadingState(2000);
+
   const [redeemInProgress, setRedeemInProgress] = useState(false);
+  const [searchingRecord, setSearchingRecord] = useState(false);
   const [recordId, setRecordId] = useState('');
   const [lastName, setLastName] = useState('');
   const [recordData, setRecordData] = useState<RecordData | null>(null);
@@ -34,7 +40,9 @@ const SwapItem = () => {
 
   const handleFindRecord = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSearchingRecord(true);
     await findRecord();
+    setSearchingRecord(false);
   };
 
   const findRecord = async () => {
@@ -145,6 +153,11 @@ const SwapItem = () => {
     }
   };
 
+  // Show loading skeleton while loading
+  if (pageLoading) {
+    return <PageLoadingSkeleton />;
+  }
+
   return (
     <main className="flex flex-col gap-8 p-8">
       {/* Header Section */}
@@ -182,11 +195,19 @@ const SwapItem = () => {
             />
 
             <button
-              className="text-lg font-semibold text-white px-10 py-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
+              className="text-lg font-semibold text-white px-10 py-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               style={{ backgroundColor: '#1a4d2e' }}
               type="submit"
+              disabled={searchingRecord}
             >
-              🔍 Find Record
+              {searchingRecord ? (
+                <>
+                  <Spinner size="sm" color="#ffffff" />
+                  <span>Searching...</span>
+                </>
+              ) : (
+                <>🔍 Find Record</>
+              )}
             </button>
           </div>
         </div>
@@ -194,20 +215,27 @@ const SwapItem = () => {
 
       {/* Content Section */}
       <div className="flex flex-col lg:flex-row gap-8">
-        {recordData && (
-          <RecordInformation
-            recordData={recordData}
-            onConfirmRecord={confirmRecord}
-          />
-        )}
+        {searchingRecord ? (
+          <InlineLoader text="Searching for record..." />
+        ) : null}
+        {!searchingRecord && (
+          <>
+            {recordData && (
+              <RecordInformation
+                recordData={recordData}
+                onConfirmRecord={confirmRecord}
+              />
+            )}
 
-        <AvailableProductsSection
-          availableProducts={availableProducts}
-          quantityInputs={quantityInputs}
-          onQuantityInput={handleQuantityInput}
-          onRedeem={handleRedeem}
-          redeemInProgress={redeemInProgress}
-        />
+            <AvailableProductsSection
+              availableProducts={availableProducts}
+              quantityInputs={quantityInputs}
+              onQuantityInput={handleQuantityInput}
+              onRedeem={handleRedeem}
+              redeemInProgress={redeemInProgress}
+            />
+          </>
+        )}
       </div>
     </main>
   );

@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { SquarePen, Save } from 'lucide-react';
+import { useLoadingState } from '../../hooks/useLoadingState';
+import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
 
 export default function AboutBarangayEditable() {
+  // Add loading state with minimum 2 second display
+  const { isLoading: pageLoading } = useLoadingState(2000);
+
   // Initial Data
   const [barangayInfo, setBarangayInfo] = useState(
     'Barangay Talipapa is a vibrant and progressive community dedicated to public service, sustainable development, and unity among its residents. Established in 1950, the barangay has continuously evolved to support programs that promote safety, health, and prosperity for everyone.'
@@ -60,6 +65,11 @@ export default function AboutBarangayEditable() {
     isEditingMission ||
     isEditingVision ||
     isEditingOfficials;
+
+  // Show loading skeleton while loading
+  if (pageLoading) {
+    return <PageLoadingSkeleton />;
+  }
 
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
