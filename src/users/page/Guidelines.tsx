@@ -12,11 +12,11 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useLoadingState } from '@/hooks/useLoadingState';
-import { PageLoadingSkeleton } from '@/components/LoadingSkeletons';
+import { GuidelinesPageSkeleton } from '@/components/LoadingSkeletons';
 
 export default function Guidelines() {
-  // Add loading state with minimum 2 second display
-  const { isLoading: pageLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading: pageLoading } = useLoadingState(1000);
 
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -91,7 +91,7 @@ export default function Guidelines() {
 
   // Show loading skeleton while loading
   if (pageLoading) {
-    return <PageLoadingSkeleton />;
+    return <GuidelinesPageSkeleton />;
   }
 
   return (

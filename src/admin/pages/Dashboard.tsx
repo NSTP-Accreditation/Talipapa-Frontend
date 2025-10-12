@@ -14,11 +14,11 @@ import {
   Activity,
 } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
+import { DashboardSkeleton } from '../../components/LoadingSkeletons';
 
 const Dashboard: React.FC = () => {
-  // Add loading state with minimum 2 second display
-  const { isLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading } = useLoadingState(1000);
 
   const recentActivity = [
     {
@@ -71,7 +71,7 @@ const Dashboard: React.FC = () => {
 
   // Show loading skeleton while loading
   if (isLoading) {
-    return <PageLoadingSkeleton />;
+    return <DashboardSkeleton />;
   }
 
   return (

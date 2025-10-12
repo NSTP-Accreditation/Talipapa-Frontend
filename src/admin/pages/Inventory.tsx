@@ -25,8 +25,8 @@ interface InventoryStats {
 }
 
 const Inventory: React.FC = () => {
-  // Add loading state with minimum 2 second display
-  const { isLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading } = useLoadingState(1000);
 
   // Mock stats data - in real implementation, this would come from API
   const stats: InventoryStats = {

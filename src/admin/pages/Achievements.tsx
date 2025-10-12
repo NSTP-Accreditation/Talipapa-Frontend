@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SquarePen, Plus, Trash2, X } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
+import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 
 /**
  * AchievementsAdmin
@@ -76,8 +76,8 @@ const DEFAULTS = [
 ];
 
 export default function AchievementsAdmin() {
-  // Add loading state with minimum 2 second display
-  const { isLoading: pageLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading: pageLoading } = useLoadingState(1000);
 
   const [items, setItems] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -236,7 +236,7 @@ export default function AchievementsAdmin() {
 
   // Show loading skeleton while loading
   if (pageLoading) {
-    return <PageLoadingSkeleton />;
+    return <FormTablePageSkeleton />;
   }
 
   return (

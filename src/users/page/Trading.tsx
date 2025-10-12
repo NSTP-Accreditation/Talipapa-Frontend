@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Phone, User, FileText, CheckCircle } from 'lucide-react';
 import { ImageWithFallback } from '@/components/ImageWithFallback';
 import { useLoadingState } from '@/hooks/useLoadingState';
-import { PageLoadingSkeleton } from '@/components/LoadingSkeletons';
+import { TradingPageSkeleton } from '@/components/LoadingSkeletons';
 
 const wasteTypes = [
   {
@@ -107,8 +107,8 @@ const programCategories = [
 ];
 
 export default function Trading() {
-  // Add loading state with minimum 2 second display
-  const { isLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading } = useLoadingState(1000);
 
   const [selectedType, setSelectedType] = useState('');
   const [weight, setWeight] = useState('');
@@ -142,7 +142,7 @@ export default function Trading() {
 
   // Show loading skeleton while loading
   if (isLoading) {
-    return <PageLoadingSkeleton />;
+    return <TradingPageSkeleton />;
   }
 
   return (

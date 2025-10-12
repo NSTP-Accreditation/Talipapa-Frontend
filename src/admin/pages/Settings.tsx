@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from '../../components/ui/card';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
+import { SettingsPageSkeleton } from '../../components/LoadingSkeletons';
 
 interface AdminUser {
   id: number;
@@ -16,8 +16,8 @@ interface AdminUser {
 }
 
 const Settings: React.FC = () => {
-  // Add loading state with minimum 2 second display
-  const { isLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading } = useLoadingState(1000);
 
   const [barangayName, setBarangayName] = useState('Barangay San Isidro');
   const [colorScheme, setColorScheme] = useState<'Green' | 'White'>('Green');
@@ -99,7 +99,7 @@ const Settings: React.FC = () => {
 
   // Show loading skeleton while loading
   if (isLoading) {
-    return <PageLoadingSkeleton />;
+    return <SettingsPageSkeleton />;
   }
 
   return (

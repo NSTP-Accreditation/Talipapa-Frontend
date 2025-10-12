@@ -4,19 +4,6 @@ import { Target, Eye } from 'lucide-react';
 export default function AboutBarangay() {
   return (
     <>
-      {/* Breadcrumb */}
-      <div className="bg-white py-4 px-6 border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto">
-          <nav className="text-sm text-gray-600">
-            <Link to="/" className="hover:text-green-600 transition-colors">
-              🏠 Home
-            </Link>
-            <span className="mx-2 text-gray-400">/</span>
-            <span className="text-green-700 font-semibold">ℹ️ About Us</span>
-          </nav>
-        </div>
-      </div>
-
       {/* Video Section */}
       <div className="relative w-full h-[500px] overflow-hidden shadow-2xl">
         <iframe

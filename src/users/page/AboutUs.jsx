@@ -1,19 +1,32 @@
 import AboutBarangay from '../components/AboutBarangay';
 import { User, MapPin, ExternalLink } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
+import { AboutUsPageSkeleton } from '../../components/LoadingSkeletons';
 
 const AboutUs = () => {
-  // Add loading state with minimum 2 second display
-  const { isLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading } = useLoadingState(1000);
 
   // Show loading skeleton while loading
   if (isLoading) {
-    return <PageLoadingSkeleton />;
+    return <AboutUsPageSkeleton />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
+      {/* Breadcrumb */}
+      <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-3 shadow-md">
+        <div className="max-w-7xl mx-auto">
+          <nav className="text-sm font-medium text-white flex items-center gap-2">
+            <a href="/" className="hover:text-green-100 transition-colors flex items-center gap-1">
+              🏠 Home
+            </a>
+            <span className="text-green-200">/</span>
+            <span className="text-green-100">About Us</span>
+          </nav>
+        </div>
+      </div>
+
       <AboutBarangay />
 
       {/* Consistent container for officials and map */}

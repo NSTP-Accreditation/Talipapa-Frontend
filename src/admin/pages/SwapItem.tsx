@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { formatName, formatPoints } from '@/utils/formatter';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import FloatingLabelInput from '../components/FloatingLabelInput';
-import { Spinner, InlineLoader, PageLoadingSkeleton } from '@/components/LoadingSkeletons';
+import { Spinner, InlineLoader, FormTablePageSkeleton } from '@/components/LoadingSkeletons';
 import { useLoadingState } from '@/hooks/useLoadingState';
 
 interface Product {
@@ -22,8 +22,8 @@ interface RecordData {
 }
 
 const SwapItem = () => {
-  // Add loading state with minimum 2 second display
-  const { isLoading: pageLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading: pageLoading } = useLoadingState(1000);
 
   const [redeemInProgress, setRedeemInProgress] = useState(false);
   const [searchingRecord, setSearchingRecord] = useState(false);
@@ -155,7 +155,7 @@ const SwapItem = () => {
 
   // Show loading skeleton while loading
   if (pageLoading) {
-    return <PageLoadingSkeleton />;
+    return <FormTablePageSkeleton />;
   }
 
   return (

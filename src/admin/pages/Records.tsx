@@ -4,11 +4,11 @@ import { Button } from '../../components/ui/button';
 import { Download, Search } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
+import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 
 const ResidentRecords: React.FC = () => {
-  // Add loading state with minimum 2 second display
-  const { isLoading: pageLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading: pageLoading } = useLoadingState(1000);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,7 +73,7 @@ const ResidentRecords: React.FC = () => {
 
   // Show loading skeleton while loading
   if (pageLoading) {
-    return <PageLoadingSkeleton />;
+    return <FormTablePageSkeleton />;
   }
 
   return (
