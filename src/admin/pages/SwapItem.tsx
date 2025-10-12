@@ -217,7 +217,8 @@ const SwapItem = () => {
       <div className="flex flex-col lg:flex-row gap-8">
         {searchingRecord ? (
           <InlineLoader text="Searching for record..." />
-        ) : (
+        ) : null}
+        {!searchingRecord && (
           <>
             {recordData && (
               <RecordInformation
