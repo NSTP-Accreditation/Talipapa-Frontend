@@ -191,7 +191,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
               />
             </div>
             <div className="flex-shrink-0">
-              <h1 className="text-white font-black text-xl whitespace-nowrap leading-tight">
+              <h1 className="text-white font-black text-xl sm:text-2xl whitespace-nowrap leading-tight">
                 Barangay Admin
               </h1>
             </div>
@@ -208,7 +208,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
               <button
                 onClick={() => handleItemClick(item)}
                 className={cn(
-                  'w-full flex items-center justify-between px-4 py-3.5 text-left transition-all duration-200 text-base font-medium rounded-lg',
+                  'w-full flex items-center justify-between px-4 py-3.5 text-left transition-all duration-200 text-base sm:text-lg font-medium rounded-lg',
                   location.pathname === item.href ||
                     (item.submenu &&
                       item.submenu.some(
@@ -246,7 +246,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
                       <button
                         onClick={() => navigate(subItem.href!)}
                         className={cn(
-                          'w-full flex items-center space-x-3 pr-4 py-3 text-left transition-all duration-300 ease-in-out text-base rounded-lg transform',
+                          'w-full flex items-center space-x-3 pr-4 py-3 text-left transition-all duration-300 ease-in-out text-base sm:text-lg rounded-lg transform',
                           'hover:scale-[1.02] hover:shadow-md hover:bg-white/10 hover:text-white hover:font-semibold',
                           'active:scale-95',
                           location.pathname === subItem.href
@@ -270,7 +270,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
         <div className="px-4 pb-5 border-t border-white/20 pt-5">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center space-x-3 px-4 py-3.5 text-left transition-all duration-200 text-white/90 hover:bg-red-500/20 hover:text-white text-base font-medium rounded-lg group"
+            className="w-full flex items-center space-x-3 px-4 py-3.5 text-left transition-all duration-200 text-white/90 hover:bg-red-500/20 hover:text-white text-base sm:text-lg font-medium rounded-lg group"
           >
             <LogOut className="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors" />
             <span className="font-semibold">Logout</span>
