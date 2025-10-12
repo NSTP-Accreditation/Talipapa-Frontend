@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
+import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 
 const MATERIALS = [
   'PET bottles',
@@ -14,8 +14,8 @@ const MATERIALS = [
 ];
 
 export default function App() {
-  // Add loading state with minimum 2 second display
-  const { isLoading: pageLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading: pageLoading } = useLoadingState(1000);
 
   const [recordId, setRecordId] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -68,7 +68,7 @@ export default function App() {
 
   // Show loading skeleton while loading
   if (pageLoading) {
-    return <PageLoadingSkeleton />;
+    return <FormTablePageSkeleton />;
   }
 
   return (

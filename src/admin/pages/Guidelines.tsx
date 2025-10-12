@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from '../../components/ui/card';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
+import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 
 interface Step {
   id: string;
@@ -744,8 +744,8 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 };
 
 const Guidelines: React.FC = () => {
-  // Add loading state with minimum 2 second display
-  const { isLoading: pageLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading: pageLoading } = useLoadingState(1000);
 
   const [guidelines, setGuidelines] = useState<Guideline[]>([
     {
@@ -1026,7 +1026,7 @@ const Guidelines: React.FC = () => {
 
   // Show loading skeleton while loading
   if (pageLoading) {
-    return <PageLoadingSkeleton />;
+    return <FormTablePageSkeleton />;
   }
 
   return (
@@ -1495,7 +1495,7 @@ const Guidelines: React.FC = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m-6 9l2 2 4-4"
               />
             </svg>
           </div>

@@ -5,6 +5,8 @@ import {
   CardContent,
   CardTitle,
 } from '../../components/ui/card';
+import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
+import { useLoadingState } from '../../hooks/useLoadingState';
 
 interface CalendarEvent {
   id: string;
@@ -427,6 +429,14 @@ const News: React.FC = () => {
     null
   );
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  // Add loading state with 1 second display
+  const { isLoading: pageLoading } = useLoadingState(1000);
+
+  // Show loading skeleton while loading
+  if (pageLoading) {
+    return <FormTablePageSkeleton />;
+  }
 
   const handleSaveEvent = (event: CalendarEvent) => {
     if (event.id && events.find((e) => e.id === event.id)) {

@@ -15,11 +15,11 @@ import {
 import { Button } from '../../components/ui/button';
 import { Link } from 'react-router-dom';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
+import { GuidelinesPageSkeleton } from '../../components/LoadingSkeletons';
 
 export default function MoreGuides() {
-  // Add loading state with minimum 2 second display
-  const { isLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading } = useLoadingState(1000);
 
   const guides = [
     {
@@ -87,7 +87,7 @@ export default function MoreGuides() {
 
   // Show loading skeleton while loading
   if (isLoading) {
-    return <PageLoadingSkeleton />;
+    return <GuidelinesPageSkeleton />;
   }
 
   return (

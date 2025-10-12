@@ -3,15 +3,15 @@ import MissionVision from '../components/MissionVision';
 import Achievements from '../components/Achievement';
 import CalendarEvents from '../components/CalendarEvents';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
+import { HomePageSkeleton } from '../../components/LoadingSkeletons';
 
 const Home = () => {
-  // Add loading state with minimum 2 second display
-  const { isLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading } = useLoadingState(1000);
 
   // Show loading skeleton while loading
   if (isLoading) {
-    return <PageLoadingSkeleton />;
+    return <HomePageSkeleton />;
   }
 
   return (

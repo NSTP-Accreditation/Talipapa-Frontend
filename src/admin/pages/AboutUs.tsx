@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { SquarePen, Save } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { PageLoadingSkeleton } from '../../components/LoadingSkeletons';
+import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 
 export default function AboutBarangayEditable() {
-  // Add loading state with minimum 2 second display
-  const { isLoading: pageLoading } = useLoadingState(2000);
+  // Add loading state with 1 second display
+  const { isLoading: pageLoading } = useLoadingState(1000);
 
   // Initial Data
   const [barangayInfo, setBarangayInfo] = useState(
@@ -68,7 +68,7 @@ export default function AboutBarangayEditable() {
 
   // Show loading skeleton while loading
   if (pageLoading) {
-    return <PageLoadingSkeleton />;
+    return <FormTablePageSkeleton />;
   }
 
   return (
