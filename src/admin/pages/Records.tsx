@@ -1,64 +1,130 @@
-import React, { useEffect, useState } from 'react';
+import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { Download, Search } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
-import { useLoadingState } from '../../hooks/useLoadingState';
+import { debounce } from 'lodash';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
+import { useAuthFetch } from '../hooks/useAuthFetch';
+import { useAuth } from '@/contexts/AuthContext';
 
 const ResidentRecords: React.FC = () => {
-  // Add loading state with 1 second display
-  const { isLoading: pageLoading } = useLoadingState(1000);
-
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10;
-  const [records, setRecords] = useState([]);
-
+  const [records, setRecords] = useState<any[]>([]); // Explicitly type as array
+  const authFetch = useAuthFetch();
+  const { user } = useAuth();
   const { data, loading, error, refetch } = useFetchData('/records');
 
+  const debouncedSearch = useCallback(
+    debounce((query: string) => {
+      if (!query) {
+        setRecords(data || []); // Ensure array
+        return;
+      }
+
+      const fetchSearch = async () => {
+        try {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/records/search?query=${query}`, {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${user?.accessToken}`
+            },
+            credentials: "include"
+          });
+          
+          const result = await response.json();
+          if (!response.ok) {
+            throw new Error(result.message);
+          }
+          setRecords(result?.results || []); // Ensure array
+        } catch (error) {
+          console.log(error);
+          setRecords([]); // Set to empty array on error
+        }
+      };
+      fetchSearch();
+    }, 700),
+    [data, user?.accessToken]
+  );
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    debouncedSearch(value);
+    setCurrentPage(1);
+  };
+
+  const [isCreating, setIsCreating] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newResident, setNewResident] = useState({
-    recordId: '',
-    name: '',
-    activity: '',
+    firstName: '',
+    lastName: '',
+    middleName: '',
     points: 0,
+    age: 0,
     contact: '',
-    date: '',
+    address: '',
   });
+
   const openAddModal = () => {
     setNewResident({
-      recordId: '',
-      name: '',
-      activity: '',
+      firstName: '',
+      lastName: '',
+      middleName: '',
       points: 0,
+      age: 0,
+      address: '',
       contact: '',
-      date: new Date().toISOString().slice(0, 10),
     });
     setIsAddModalOpen(true);
   };
 
-  const handleCreateResident = () => {
-    // basic validation
-    if (!newResident.recordId || !newResident.name) {
-      alert('Record ID and Name are required');
+  const handleCreateResident = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (isCreating) {
       return;
     }
-    setIsAddModalOpen(false);
+
+    setIsCreating(true);
+
+    if (!newResident.points || !newResident.age) {
+      alert('Points and Age are required!');
+      setIsCreating(false);
+      return;
+    }
+
+    try {
+      const data = await authFetch('/records', {
+        method: 'POST',
+        body: JSON.stringify(newResident),
+      });
+
+      refetch();
+      setIsAddModalOpen(false);
+      alert(`New Record Created! ID: ${data.record_id}`);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   const closeAddModal = () => setIsAddModalOpen(false);
 
   useEffect(() => {
     if (data && !loading && !error) {
-      setRecords(data);
+      setRecords(Array.isArray(data) ? data : []); // Ensure it's always an array
     }
   }, [data, loading, error]);
 
-  // Pagination logic
-  const totalPages = Math.ceil(records.length / recordsPerPage);
+  // Fixed Pagination logic with null checks
+  const safeRecords = records || []; // This ensures we always have an array
+  const totalPages = Math.ceil(safeRecords.length / recordsPerPage);
   const startIndex = (currentPage - 1) * recordsPerPage;
-  const currentResidents = records.slice(
+  const currentResidents = safeRecords.slice(
     startIndex,
     startIndex + recordsPerPage
   );
@@ -72,10 +138,11 @@ const ResidentRecords: React.FC = () => {
   };
 
   // Show loading skeleton while loading
-  if (pageLoading) {
+  if (loading) {
     return <FormTablePageSkeleton />;
   }
 
+  // Update all references to use safeRecords instead of records
   return (
     <div className="p-4 sm:p-6 md:p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen space-y-8">
       {/* Enhanced Header */}
@@ -88,7 +155,7 @@ const ResidentRecords: React.FC = () => {
           <p className="text-gray-700 font-medium">
             List of the resident records created
             <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-              {records.length} {records.length === 1 ? 'Record' : 'Records'}
+              {safeRecords.length} {safeRecords.length === 1 ? 'Record' : 'Records'}
             </span>
           </p>
         </div>
@@ -120,17 +187,14 @@ const ResidentRecords: React.FC = () => {
             placeholder="Search by Record ID or Name..."
             className="w-full rounded-xl border-2 border-gray-300 py-3 pl-12 pr-4 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-base"
             value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1); // reset to first page on new search
-            }}
+            onChange={handleInputChange}
           />
         </div>
         {searchTerm && (
           <div className="mt-3 text-sm text-gray-600">
             Found{' '}
             <span className="font-semibold text-green-600">
-              {records.length}
+              {safeRecords.length}
             </span>{' '}
             matching records
           </div>
@@ -179,7 +243,7 @@ const ResidentRecords: React.FC = () => {
                     <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                          {resident?.firstName.charAt(0)}
+                          {resident?.firstName?.charAt(0)}
                         </div>
                         <span className="text-sm font-semibold text-gray-900">
                           {resident?.firstName}
@@ -236,7 +300,9 @@ const ResidentRecords: React.FC = () => {
               )}
             </tbody>
           </table>
-          <div className="block sm:hidden text-xs text-gray-400 mt-2 text-center">Swipe left/right to see more columns</div>
+          <div className="block sm:hidden text-xs text-gray-400 mt-2 text-center">
+            Swipe left/right to see more columns
+          </div>
         </div>
       </div>
 
@@ -246,9 +312,9 @@ const ResidentRecords: React.FC = () => {
           Showing{' '}
           <span className="font-bold text-gray-900">{startIndex + 1}</span> to{' '}
           <span className="font-bold text-gray-900">
-            {Math.min(startIndex + recordsPerPage, records.length)}
+            {Math.min(startIndex + recordsPerPage, safeRecords.length)}
           </span>{' '}
-          of <span className="font-bold text-gray-900">{records.length}</span>{' '}
+          of <span className="font-bold text-gray-900">{safeRecords.length}</span>{' '}
           records
         </div>
 
@@ -281,13 +347,17 @@ const ResidentRecords: React.FC = () => {
         </div>
       </div>
 
+      {/* Modal - Fixed form structure */}
       {isAddModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
           role="dialog"
           aria-modal="true"
         >
-          <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+          <form
+            onSubmit={handleCreateResident}
+            className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+          >
             <div className="flex items-center justify-between p-6 border-b-2 border-gray-100 bg-gradient-to-r from-green-50 to-emerald-50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
@@ -298,6 +368,7 @@ const ResidentRecords: React.FC = () => {
                 </h3>
               </div>
               <button
+                type="button"
                 onClick={closeAddModal}
                 className="p-2 rounded-lg hover:bg-gray-200 transition-colors"
                 title="Close"
@@ -310,34 +381,56 @@ const ResidentRecords: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <label className="block">
                   <div className="text-sm font-bold text-gray-700 mb-2">
-                    Record ID
+                    First Name
                   </div>
                   <input
+                    required
                     type="text"
-                    value={newResident.recordId}
+                    value={newResident.firstName}
                     onChange={(e) =>
                       setNewResident((s) => ({
                         ...s,
-                        recordId: e.target.value,
+                        firstName: e.target.value,
                       }))
                     }
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                    placeholder="e.g. BT-0012"
+                    placeholder="First Name"
                   />
                 </label>
-
                 <label className="block">
                   <div className="text-sm font-bold text-gray-700 mb-2">
-                    Name
+                    Last Name
                   </div>
                   <input
+                    required
                     type="text"
-                    value={newResident.name}
+                    value={newResident.lastName}
                     onChange={(e) =>
-                      setNewResident((s) => ({ ...s, name: e.target.value }))
+                      setNewResident((s) => ({
+                        ...s,
+                        lastName: e.target.value,
+                      }))
                     }
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                    placeholder="Full name"
+                    placeholder="Last name"
+                  />
+                </label>
+                <label className="block">
+                  <div className="text-sm font-bold text-gray-700 mb-2">
+                    Middle Name
+                  </div>
+                  <input
+                    required
+                    type="text"
+                    value={newResident.middleName}
+                    onChange={(e) =>
+                      setNewResident((s) => ({
+                        ...s,
+                        middleName: e.target.value,
+                      }))
+                    }
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
+                    placeholder="Middle name"
                   />
                 </label>
               </div>
@@ -345,33 +438,33 @@ const ResidentRecords: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <label className="block">
                   <div className="text-sm font-bold text-gray-700 mb-2">
-                    Activity
-                  </div>
-                  <input
-                    type="text"
-                    value={newResident.activity}
-                    onChange={(e) =>
-                      setNewResident((s) => ({
-                        ...s,
-                        activity: e.target.value,
-                      }))
-                    }
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                    placeholder="Create Account / Redeem Points"
-                  />
-                </label>
-
-                <label className="block">
-                  <div className="text-sm font-bold text-gray-700 mb-2">
                     Points
                   </div>
                   <input
+                    required
                     type="number"
                     value={newResident.points}
                     onChange={(e) =>
                       setNewResident((s) => ({
                         ...s,
                         points: Number(e.target.value),
+                      }))
+                    }
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
+                  />
+                </label>
+                <label className="block">
+                  <div className="text-sm font-bold text-gray-700 mb-2">
+                    Age
+                  </div>
+                  <input
+                    required
+                    type="number"
+                    value={newResident.age}
+                    onChange={(e) =>
+                      setNewResident((s) => ({
+                        ...s,
+                        age: Number(e.target.value),
                       }))
                     }
                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
@@ -395,12 +488,14 @@ const ResidentRecords: React.FC = () => {
               </div>
 
               <label className="block">
-                <div className="text-sm font-bold text-gray-700 mb-2">Date</div>
+                <div className="text-sm font-bold text-gray-700 mb-2">
+                  Address
+                </div>
                 <input
-                  type="date"
-                  value={newResident.date}
+                  type="string"
+                  value={newResident.address}
                   onChange={(e) =>
-                    setNewResident((s) => ({ ...s, date: e.target.value }))
+                    setNewResident((s) => ({ ...s, address: e.target.value }))
                   }
                   className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
                 />
@@ -409,19 +504,20 @@ const ResidentRecords: React.FC = () => {
 
             <div className="flex justify-end gap-4 p-6 border-t-2 border-gray-100 bg-gray-50">
               <button
+                type="button"
                 onClick={closeAddModal}
                 className="px-6 py-3 rounded-xl border-2 border-gray-300 font-semibold hover:bg-gray-100 transition-all"
               >
                 Cancel
               </button>
               <button
-                onClick={handleCreateResident}
+                type="submit"
                 className="px-8 py-3 rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all"
               >
                 Create Resident
               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </div>
