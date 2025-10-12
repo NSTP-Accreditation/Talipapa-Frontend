@@ -14,6 +14,19 @@ const AboutUs = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
+      {/* Breadcrumb */}
+      <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-3 shadow-md">
+        <div className="max-w-7xl mx-auto">
+          <nav className="text-sm font-medium text-white flex items-center gap-2">
+            <a href="/" className="hover:text-green-100 transition-colors flex items-center gap-1">
+              🏠 Home
+            </a>
+            <span className="text-green-200">/</span>
+            <span className="text-green-100">About Us</span>
+          </nav>
+        </div>
+      </div>
+
       <AboutBarangay />
 
       {/* Consistent container for officials and map */}
