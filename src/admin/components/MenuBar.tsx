@@ -21,6 +21,7 @@ import {
   Box,
   Wrench,
   Trophy,
+  Recycle,
 } from 'lucide-react';
 
 interface MenuBarProps {
@@ -101,6 +102,11 @@ const MenuBar: React.FC<MenuBarProps> = ({ className, isOpen = true, onClose }) 
           icon: <Trophy className="w-4 h-4" />,
           label: 'Achievements',
           href: APP_ROUTES.ADMIN.ABOUT + '/achievements',
+        },
+        {
+          icon: <Recycle className="w-4 h-4" />,
+          label: 'Talipapa Natin',
+          href: APP_ROUTES.ADMIN.BASE + '/talipapa-natin',
         },
       ],
     },
