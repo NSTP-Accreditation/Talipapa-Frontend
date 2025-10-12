@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SquarePen } from "lucide-react";
+import { SquarePen, Save } from "lucide-react";
 
 export default function AboutBarangayEditable() {
   // Initial Data
@@ -54,168 +54,220 @@ export default function AboutBarangayEditable() {
     alert("✅ All changes saved successfully!");
   };
 
-  const sectionClasses =
-    "mb-6 bg-gray-50 p-8 rounded-lg shadow-sm border border-gray-200";
-
-  // ✨ Bigger, centered Edit Button
-  const EditButton = ({ onClick }) => (
-    <div className="bg-gray-50 py-6 flex justify-center rounded-md mt-6">
-      <button
-        onClick={onClick}
-        className="flex items-center justify-center gap-2 px-7 py-3 
-                   text-gray-800 bg-white rounded-full shadow-md 
-                   hover:bg-green-100 hover:text-green-700 
-                   transition-all duration-200 font-medium w-[200px]"
-      >
-        <SquarePen size={20} strokeWidth={2.2} />
-        <span>Edit Section</span>
-      </button>
-    </div>
-  );
+  const hasActiveEdits = isEditingInfo || isEditingHistory || isEditingMission || isEditingVision || isEditingOfficials;
 
   return (
-    <div className="bg-gray-50 min-h-screen py-10 px-6">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow p-8">
-        {/* Header */}
-        <h1 className="text-3xl font-extrabold text-green-700 mb-2">
-          About Barangay Talipapa
-        </h1>
-        <p className="text-gray-600 mb-10">
-          Learn about our barangay’s information, history, mission, and vision.
-        </p>
-        <br></br>
+    <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+      {/* Enhanced Header */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+        <div>
+          <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
+            <span className="text-4xl">🏘️</span>
+            About Us
+          </h1>
+          <p className="text-lg text-gray-700 mt-3 font-medium">
+            Manage barangay information, history, mission, vision, and officials
+          </p>
+        </div>
+        
+        {/* Save All Button */}
+        {hasActiveEdits && (
+          <button
+            onClick={handleSave}
+            className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-2"
+          >
+            <Save size={20} />
+            Save All Changes
+          </button>
+        )}
+      </div>
+
+      {/* Enhanced Content Grid */}
+      <div className="grid grid-cols-1 gap-6">
         {/* Barangay Information */}
-        <div className={sectionClasses}>
-          <h2 className="text-xl font-semibold text-green-700 mb-2">
-            Barangay Information
-          </h2>
-          {isEditingInfo ? (
-            <textarea
-              value={barangayInfo}
-              onChange={(e) => setBarangayInfo(e.target.value)}
-              className="w-full border border-gray-300 rounded-md p-3 text-gray-800 focus:ring-2 focus:ring-green-500"
-              rows={4}
-            />
-          ) : (
-            <p className="text-gray-700 text-justify leading-relaxed">
-              {barangayInfo}
-            </p>
-          )}
-          <EditButton onClick={() => setIsEditingInfo(!isEditingInfo)} />
+        <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <span>📋</span>
+                Barangay Information
+              </h2>
+              <button
+                onClick={() => setIsEditingInfo(!isEditingInfo)}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+              >
+                <SquarePen size={14} />
+                {isEditingInfo ? "Cancel" : "Edit"}
+              </button>
+            </div>
+            
+            {isEditingInfo ? (
+              <textarea
+                value={barangayInfo}
+                onChange={(e) => setBarangayInfo(e.target.value)}
+                className="w-full border-2 border-gray-300 rounded-lg p-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                rows={4}
+              />
+            ) : (
+              <p className="text-gray-700 leading-relaxed">{barangayInfo}</p>
+            )}
+          </div>
         </div>
 
         {/* Barangay History */}
-        <div className={sectionClasses}>
-          <h2 className="text-xl font-semibold text-green-700 mb-2">
-            Barangay History
-          </h2>
-          {isEditingHistory ? (
-            <textarea
-              value={barangayHistory}
-              onChange={(e) => setBarangayHistory(e.target.value)}
-              className="w-full border border-gray-300 rounded-md p-3 text-gray-800 focus:ring-2 focus:ring-green-500"
-              rows={4}
-            />
-          ) : (
-            <p className="text-gray-700 text-justify leading-relaxed">
-              {barangayHistory}
-            </p>
-          )}
-          <EditButton onClick={() => setIsEditingHistory(!isEditingHistory)} />
+        <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <span>📜</span>
+                Barangay History
+              </h2>
+              <button
+                onClick={() => setIsEditingHistory(!isEditingHistory)}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+              >
+                <SquarePen size={14} />
+                {isEditingHistory ? "Cancel" : "Edit"}
+              </button>
+            </div>
+            
+            {isEditingHistory ? (
+              <textarea
+                value={barangayHistory}
+                onChange={(e) => setBarangayHistory(e.target.value)}
+                className="w-full border-2 border-gray-300 rounded-lg p-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                rows={4}
+              />
+            ) : (
+              <p className="text-gray-700 leading-relaxed">{barangayHistory}</p>
+            )}
+          </div>
         </div>
 
-        {/* Mission */}
-        <div className={sectionClasses}>
-          <h2 className="text-xl font-semibold text-green-700 mb-2">
-            Our Mission
-          </h2>
-          {isEditingMission ? (
-            <textarea
-              value={mission}
-              onChange={(e) => setMission(e.target.value)}
-              className="w-full border border-gray-300 rounded-md p-3 text-gray-800 focus:ring-2 focus:ring-green-500"
-              rows={3}
-            />
-          ) : (
-            <p className="text-gray-700 text-justify leading-relaxed">{mission}</p>
-          )}
-          <EditButton onClick={() => setIsEditingMission(!isEditingMission)} />
-        </div>
-
-        {/* Vision */}
-        <div className={sectionClasses}>
-          <h2 className="text-xl font-semibold text-green-700 mb-2">
-            Our Vision
-          </h2>
-          {isEditingVision ? (
-            <textarea
-              value={vision}
-              onChange={(e) => setVision(e.target.value)}
-              className="w-full border border-gray-300 rounded-md p-3 text-gray-800 focus:ring-2 focus:ring-green-500"
-              rows={3}
-            />
-          ) : (
-            <p className="text-gray-700 text-justify leading-relaxed">{vision}</p>
-          )}
-          <EditButton onClick={() => setIsEditingVision(!isEditingVision)} />
-        </div>
-
-        {/* Officials */}
-        <div className={sectionClasses}>
-          <h2 className="text-xl font-semibold text-green-700 mb-4">
-            Barangay Officials
-          </h2>
-          {officials.map((official, index) => (
-            <div
-              key={index}
-              className="bg-white border border-gray-200 rounded-md p-[10px] mb-3 flex justify-between items-center"
-            >
-              {isEditingOfficials ? (
-                <div className="w-full grid grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    value={official.role}
-                    onChange={(e) =>
-                      handleOfficialChange(index, "role", e.target.value)
-                    }
-                    className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-green-500"
-                  />
-                  <input
-                    type="text"
-                    value={official.name}
-                    onChange={(e) =>
-                      handleOfficialChange(index, "name", e.target.value)
-                    }
-                    className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-green-500"
-                  />
-                </div>
+        {/* Mission & Vision - Side by Side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Mission */}
+          <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                  <span>🎯</span>
+                  Our Mission
+                </h2>
+                <button
+                  onClick={() => setIsEditingMission(!isEditingMission)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                  >
+                  <SquarePen size={14} />
+                  {isEditingMission ? "Cancel" : "Edit"}
+                </button>
+              </div>
+              
+              {isEditingMission ? (
+                <textarea
+                  value={mission}
+                  onChange={(e) => setMission(e.target.value)}
+                  className="w-full border-2 border-gray-300 rounded-lg p-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  rows={5}
+                />
               ) : (
-                <div>
-                  <p className="font-semibold text-gray-800">{official.role}</p>
-                  <p className="text-gray-600 text-sm">{official.name}</p>
-                </div>
+                <p className="text-gray-700 leading-relaxed">{mission}</p>
               )}
             </div>
-          ))}
-          <EditButton onClick={() => setIsEditingOfficials(!isEditingOfficials)} />
+          </div>
+
+          {/* Vision */}
+          <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                  <span>🔭</span>
+                  Our Vision
+                </h2>
+                <button
+                  onClick={() => setIsEditingVision(!isEditingVision)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                  >
+                  <SquarePen size={14} />
+                  {isEditingVision ? "Cancel" : "Edit"}
+                </button>
+              </div>
+              
+              {isEditingVision ? (
+                <textarea
+                  value={vision}
+                  onChange={(e) => setVision(e.target.value)}
+                  className="w-full border-2 border-gray-300 rounded-lg p-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  rows={5}
+                />
+              ) : (
+                <p className="text-gray-700 leading-relaxed">{vision}</p>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* Save Button */}
-        {(isEditingInfo ||
-          isEditingHistory ||
-          isEditingMission ||
-          isEditingVision ||
-          isEditingOfficials) && (
-          <div className="flex justify-end mt-8">
-            <button
-              onClick={handleSave}
-              className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-200 shadow-md font-semibold"
-            >
-              Save Changes
-            </button>
+        {/* Barangay Officials */}
+        <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <span>👥</span>
+                Barangay Officials
+                <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+                  {officials.length} Officials
+                </span>
+              </h2>
+              <button
+                onClick={() => setIsEditingOfficials(!isEditingOfficials)}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+              >
+                <SquarePen size={14} />
+                {isEditingOfficials ? "Cancel" : "Edit"}
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {officials.map((official, index) => (
+                <div
+                  key={index}
+                  className="bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 rounded-lg p-4 hover:border-green-300 transition-all duration-300 hover:shadow-md"
+                >
+                  {isEditingOfficials ? (
+                    <div className="space-y-3">
+                      <input
+                        type="text"
+                        value={official.role}
+                        onChange={(e) =>
+                          handleOfficialChange(index, "role", e.target.value)
+                        }
+                        className="w-full border-2 border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all font-semibold"
+                        placeholder="Role"
+                      />
+                      <input
+                        type="text"
+                        value={official.name}
+                        onChange={(e) =>
+                          handleOfficialChange(index, "name", e.target.value)
+                        }
+                        className="w-full border-2 border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                        placeholder="Name"
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="font-bold text-gray-900 text-base mb-1">{official.role}</p>
+                      <p className="text-gray-600 text-sm">{official.name}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
 }
+
+// (Removed old centered EditButton helper — new implementation uses per-section edit buttons)

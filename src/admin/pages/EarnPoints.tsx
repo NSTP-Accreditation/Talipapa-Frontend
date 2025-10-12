@@ -62,27 +62,33 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-0 m-0">
-      {/* ✅ FULL WIDTH FORM */}
+    <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+        <div>
+          <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
+            <span className="text-4xl">♻️</span>
+            Earn Points
+          </h1>
+          <p className="text-lg text-gray-700 mt-2 font-medium">Accumulate points of residents' record</p>
+        </div>
+        <div />
+      </div>
+
+      {/* Full width card form */}
       <form
-        className="bg-white border border-gray-300 rounded-none shadow p-8 w-full"
+        className="bg-white rounded-xl border-2 border-gray-200 shadow-md p-8 w-full"
         onSubmit={handleConfirm}
       >
-        {/* Header */}
-        <h2 className="text-2xl font-bold text-emerald-800 mb-1">Earn Points</h2>
-        <p className="text-sm text-gray-600 mb-6">
-          Accumulate points of residents' record
-        </p>
-
         {/* Record Info */}
-        <div className="grid grid-cols-2 gap-6 mb-6 w-full">
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 w-full">
           <div>
             <label className="text-xs text-gray-500 mb-1 block">Record ID</label>
             <input
               required
               value={recordId}
               onChange={(e) => setRecordId(e.target.value)}
-              className="w-full px-3 py-2 border rounded bg-gray-100"
+              className="w-full px-3 py-2 border-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
               placeholder="Record ID"
             />
           </div>
@@ -92,7 +98,7 @@ export default function App() {
               required
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className="w-full px-3 py-2 border rounded bg-gray-100"
+              className="w-full px-3 py-2 border-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
               placeholder="Last Name"
             />
           </div>
@@ -109,7 +115,7 @@ export default function App() {
         {MATERIALS.map((mat, idx) => (
           <div key={idx} className="grid grid-cols-12 gap-[23px] items-center mb-3">
             <div className="col-span-6">
-              <div className="bg-green-700 text-white px-3 py-2 rounded">{mat}</div>
+              <div className="bg-gradient-to-r from-green-50 to-white px-3 py-2 rounded font-semibold text-gray-800">{mat}</div>
             </div>
               <div className="col-span-3">
                 <input
@@ -126,14 +132,14 @@ export default function App() {
         ))}
 
         {/* Footer */}
-        <div className="flex justify-between items-center mt-6">
-          <p className="text-lg font-semibold">
-            Total Points:
-          </p>
-          <span className="text-emerald-700 ml-[210px] font-lg">{totalPoints}</span>
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
+          <div className="flex items-center gap-4">
+            <p className="text-lg font-semibold">Total Points:</p>
+            <span className="text-emerald-700 ml-6 font-lg">{totalPoints}</span>
+          </div>
           <button
             type="submit"
-            className="bg-green-700 text-white px-6 py-2 w-[250px] rounded hover:bg-green-800"
+            className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-2 w-full sm:w-[220px] rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
           >
             Confirm
           </button>

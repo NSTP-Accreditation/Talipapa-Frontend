@@ -34,9 +34,9 @@ const Inventory: React.FC = () => {
 
   const renderContent = () => {
     return (
-          <div className="space-y-12">
+          <div className="p-4 sm:p-6 md:p-8 space-y-12">
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
               <Card>
                 <CardContent className="p-10">
                   <div className="flex items-center">

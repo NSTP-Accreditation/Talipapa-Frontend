@@ -65,20 +65,22 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 sm:p-6 md:p-8 space-y-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-3 flex items-center gap-3">
-          <span className="text-4xl">📊</span>
-          Dashboard
-        </h1>
-        <p className="text-lg text-gray-700 font-medium">
-          Overview of your Barangay Information System
-        </p>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-8">
+        <div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-3 flex items-center gap-3">
+            <span className="text-4xl">📊</span>
+            Dashboard
+          </h1>
+          <p className="text-lg text-gray-700 font-medium">
+            Overview of your Barangay Information System
+          </p>
+        </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Today's Visits Card */}
         <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
