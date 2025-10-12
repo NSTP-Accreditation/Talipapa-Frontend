@@ -18,7 +18,7 @@ interface User {
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (username: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<boolean>;
   refreshToken: () => Promise<User | null>;
   logout: () => void;
   loading: boolean;
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   //   checkAuthStatus();
   // }, []);
 
-  const login = async (username: string, password: string): Promise<void> => {
+  const login = async (username: string, password: string): Promise<boolean> => {
     try {
       // Simulate API call
       const response = await fetch(`${apiURL}/auth/login`, {
@@ -83,9 +83,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       setUser(data);
       setIsAuthenticated(true);
+      return true;
     } catch (error) {
       setUser(null);
       setIsAuthenticated(false);
+      return false;
     }
   };
 

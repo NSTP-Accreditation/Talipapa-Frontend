@@ -67,7 +67,7 @@ const AdminLogin: React.FC = () => {
     try { 
       const success = await login(formData.username, formData.password);
 
-      if (isAuthenticated) {
+      if (success) {
         // Redirect to the intended page or dashboard
         const from =
           (location.state as any)?.from?.pathname || APP_ROUTES.ADMIN.DASHBOARD;
