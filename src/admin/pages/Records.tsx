@@ -11,6 +11,25 @@ const ResidentRecords: React.FC = () => {
   const [ records, setRecords ] = useState([]);
 
   const { data, loading, error, refetch } = useFetchData('/records');
+
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [newResident, setNewResident] = useState({ recordId: '', name: '', activity: '', points: 0, contact: '', date: '' });
+  const openAddModal = () => {
+    setNewResident({ recordId: '', name: '', activity: '', points: 0, contact: '', date: new Date().toISOString().slice(0, 10) });
+    setIsAddModalOpen(true);
+  };
+
+
+  const handleCreateResident = () => {
+    // basic validation
+    if (!newResident.recordId || !newResident.name) {
+      alert('Record ID and Name are required');
+      return;
+    }
+    setIsAddModalOpen(false);
+  };
+
+  const closeAddModal = () => setIsAddModalOpen(false);
   
   useEffect(() => {
     if(data && !loading && !error) {
@@ -32,9 +51,9 @@ const ResidentRecords: React.FC = () => {
   };
 
   return (
-    <div className="p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen space-y-8">
+    <div className="p-4 sm:p-6 md:p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen space-y-8">
       {/* Enhanced Header */}
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3 mb-3">
             <span>👥</span>
@@ -48,11 +67,20 @@ const ResidentRecords: React.FC = () => {
           </p>
         </div>
 
-        {/* Right side: Download button */}
-        <Button className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm flex items-center gap-2 px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-          <Download className="w-5 h-5" />
-          Download Excel
-        </Button>
+        {/* Right side: Add Residents and Download button */}
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={openAddModal}
+            className="px-5 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm flex items-center gap-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+          >
+            + Add Residents
+          </Button>
+
+          <Button className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm flex items-center gap-2 px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+            <Download className="w-5 h-5" />
+            Download Excel
+          </Button>
+        </div>
       </div>
 
       {/* Enhanced Search Bar */}
@@ -190,6 +218,108 @@ const ResidentRecords: React.FC = () => {
           </Button>
         </div>
       </div>
+      
+      {isAddModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between p-6 border-b-2 border-gray-100 bg-gradient-to-r from-green-50 to-emerald-50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                  <span className="text-white text-xl">➕</span>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800">Add New Resident</h3>
+              </div>
+              <button onClick={closeAddModal} className="p-2 rounded-lg hover:bg-gray-200 transition-colors" title="Close">
+                ✕
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4 overflow-y-auto flex-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label className="block">
+                  <div className="text-sm font-bold text-gray-700 mb-2">Record ID</div>
+                  <input
+                    type="text"
+                    value={newResident.recordId}
+                    onChange={(e) => setNewResident((s) => ({ ...s, recordId: e.target.value }))}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
+                    placeholder="e.g. BT-0012"
+                  />
+                </label>
+
+                <label className="block">
+                  <div className="text-sm font-bold text-gray-700 mb-2">Name</div>
+                  <input
+                    type="text"
+                    value={newResident.name}
+                    onChange={(e) => setNewResident((s) => ({ ...s, name: e.target.value }))}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
+                    placeholder="Full name"
+                  />
+                </label>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <label className="block">
+                  <div className="text-sm font-bold text-gray-700 mb-2">Activity</div>
+                  <input
+                    type="text"
+                    value={newResident.activity}
+                    onChange={(e) => setNewResident((s) => ({ ...s, activity: e.target.value }))}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
+                    placeholder="Create Account / Redeem Points"
+                  />
+                </label>
+
+                <label className="block">
+                  <div className="text-sm font-bold text-gray-700 mb-2">Points</div>
+                  <input
+                    type="number"
+                    value={newResident.points}
+                    onChange={(e) => setNewResident((s) => ({ ...s, points: Number(e.target.value) }))}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
+                  />
+                </label>
+
+                <label className="block">
+                  <div className="text-sm font-bold text-gray-700 mb-2">Contact</div>
+                  <input
+                    type="text"
+                    value={newResident.contact}
+                    onChange={(e) => setNewResident((s) => ({ ...s, contact: e.target.value }))}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
+                    placeholder="09XXXXXXXXX"
+                  />
+                </label>
+              </div>
+
+              <label className="block">
+                <div className="text-sm font-bold text-gray-700 mb-2">Date</div>
+                <input
+                  type="date"
+                  value={newResident.date}
+                  onChange={(e) => setNewResident((s) => ({ ...s, date: e.target.value }))}
+                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
+                />
+              </label>
+            </div>
+
+            <div className="flex justify-end gap-4 p-6 border-t-2 border-gray-100 bg-gray-50">
+              <button onClick={closeAddModal} className="px-6 py-3 rounded-xl border-2 border-gray-300 font-semibold hover:bg-gray-100 transition-all">
+                Cancel
+              </button>
+              <button onClick={handleCreateResident} className="px-8 py-3 rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all">
+                Create Resident
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
