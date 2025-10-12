@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Card,
   CardHeader,
   CardContent,
   CardTitle,
 } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
 import {
   BarChart,
   Bar,
@@ -14,31 +12,44 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
-  PieChart,
-  Pie,
   Cell,
 } from 'recharts';
 import { MapPin, Users, Sprout, Leaf } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { DashboardSkeleton } from '../../components/LoadingSkeletons';
+import useFetchData from '../hooks/useFetchData';
 
 type TabType = 'profile' | 'skillMap' | 'statistics';
+
+interface Location {
+  lat: number;
+  lng: number;
+}
+
+export interface Farm {
+  location: Location;
+  name: string;
+  size: string;
+  age: string;
+  farmType: string;
+  address: string;
+  description: string;
+  image?: string; // optional as it is not required in the schema
+}
 
 const GreenPages: React.FC = () => {
   const { isLoading } = useLoadingState(1000);
   const [activeTab, setActiveTab] = useState<TabType>('profile');
+  const [selectedFarm, setSelectedFarm] = useState<Farm>();
 
-  // Mock data for demonstration
-  const farmData = {
-    name: 'MWSS Talipapa Eco Park',
-    size: '300 sqm.',
-    age: 2,
-    type: 'Aquaponics, Vertical Garden, Greenhouse',
-    address: 'MWSS Service Road, Quezon City',
-    description: 'some description',
-  };
+  const { data: farmData, loading: farmLoading, error: farmError } = useFetchData('/farms');
+
+  useEffect(() => {
+    if(farmData && !farmLoading && !farmError) {
+      setSelectedFarm(farmData[0])
+    }
+  }, [farmData, farmLoading, farmError])
 
   const staffDirectory = [
     {
@@ -229,7 +240,7 @@ const GreenPages: React.FC = () => {
                 <div className="flex-1 min-w-0">
                   <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">Name</p>
                   <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                    {farmData.name}
+                    {selectedFarm?.name}
                   </p>
                 </div>
               </div>
@@ -240,7 +251,7 @@ const GreenPages: React.FC = () => {
                 <div className="flex-1 min-w-0">
                   <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">Size</p>
                   <p className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed">
-                    {farmData.size}
+                    {selectedFarm?.size}
                   </p>
                 </div>
               </div>
@@ -251,7 +262,7 @@ const GreenPages: React.FC = () => {
                 <div className="flex-1 min-w-0">
                   <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">Age</p>
                   <p className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed">
-                    {farmData.age} years
+                    {selectedFarm?.age} years
                   </p>
                 </div>
               </div>
@@ -262,7 +273,7 @@ const GreenPages: React.FC = () => {
                 <div className="flex-1 min-w-0">
                   <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">Type</p>
                   <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                    {farmData.type}
+                    {selectedFarm?.farmType}
                   </p>
                 </div>
               </div>
@@ -273,7 +284,7 @@ const GreenPages: React.FC = () => {
                 <div className="flex-1 min-w-0">
                   <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">Address</p>
                   <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                    {farmData.address}
+                    {selectedFarm?.address}
                   </p>
                 </div>
               </div>
@@ -286,7 +297,7 @@ const GreenPages: React.FC = () => {
                     Description
                   </p>
                   <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                    {farmData.description}
+                    {selectedFarm?.description}
                   </p>
                 </div>
               </div>
