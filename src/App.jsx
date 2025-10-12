@@ -30,6 +30,7 @@ import AboutUs from '@/users/page/AboutUs';
 
 import Footer from '@/users/components/Footer';
 import SwapItem from '@/admin/pages/SwapItem';
+import NotFound from '@/components/NotFound';
 
 function App() {
   return (
@@ -94,6 +95,9 @@ function App() {
             {/* Settings Route */}
             <Route path="settings" element={<Settings />} />
 
+            {/* 404 for unknown admin routes */}
+            <Route path="*" element={<NotFound />} />
+
             {/* Legacy/Placeholder Routes */}
             <Route
               path="services"
@@ -132,6 +136,9 @@ function App() {
                   />
                   <Route path="/trading" element={<Trading />} />
                   <Route path="/aboutus" element={<AboutUs />} />
+                  
+                  {/* 404 for unknown public routes */}
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
                 <Footer />
               </div>
