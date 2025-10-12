@@ -452,31 +452,38 @@ export default function Trading() {
               {programCategories.map((category, index) => (
                 <div
                   key={index}
-                  className="rounded-xl p-6 bg-white border-2 border-gray-200 shadow-md hover:shadow-xl hover:border-green-400 hover:-translate-y-1 transition-all duration-300"
+                  className="rounded-2xl bg-white border-2 border-gray-200 shadow-lg hover:shadow-2xl hover:border-green-400 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
                 >
-                  <div className="flex items-start mb-5">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mr-3 flex-shrink-0 shadow-md">
-                      <CheckCircle className="w-6 h-6 text-white" />
+                  {/* Card Header with Gradient */}
+                  <div className="bg-gradient-to-br from-green-600 to-green-700 p-4 border-b-2 border-green-500">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 shadow-md">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <h4 className="text-sm font-bold leading-tight text-white">
+                        {category.title}
+                      </h4>
                     </div>
-                    <h4 className="text-sm font-bold leading-tight text-gray-900 pt-1">
-                      {category.title}
-                    </h4>
                   </div>
-                  <ul className="space-y-2.5">
-                    {category.items.map((item, itemIndex) => (
-                      <li
-                        key={itemIndex}
-                        className="text-xs sm:text-sm text-gray-700 flex items-start bg-gray-50 p-2 rounded-lg hover:bg-green-50 transition-colors"
-                      >
-                        <span className="mr-2 mt-0.5 text-base flex-shrink-0 text-green-600">
-                          ✓
-                        </span>
-                        <span className="leading-relaxed font-medium">
-                          {item}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
+
+                  {/* Card Content */}
+                  <div className="p-5">
+                    <ul className="space-y-2.5">
+                      {category.items.map((item, itemIndex) => (
+                        <li
+                          key={itemIndex}
+                          className="text-xs sm:text-sm text-gray-700 flex items-start bg-gradient-to-br from-gray-50 to-green-50/30 p-2.5 rounded-lg hover:from-green-50 hover:to-green-100/50 transition-all duration-200 border border-gray-100"
+                        >
+                          <span className="mr-2 mt-0.5 text-base flex-shrink-0 text-green-600">
+                            ✓
+                          </span>
+                          <span className="leading-relaxed font-medium">
+                            {item}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               ))}
             </div>
