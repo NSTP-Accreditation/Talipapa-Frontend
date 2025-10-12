@@ -70,12 +70,12 @@ const GreenPages: React.FC = () => {
   const staffSkills = [
     { name: 'Traditional Composting', short: 'Traditional', type: 'Composting', color: '#15803d' },
     { name: 'Vermicomposting', short: 'Vermicomposting', type: 'Composting', color: '#16a34a' },
-    { name: 'Traditional Composting', short: 'Traditional', type: 'Composting', color: '#15803d' },
-    { name: 'Vermicomposting', short: 'Vermicomposting', type: 'Composting', color: '#16a34a' },
-    { name: 'Traditional Composting', short: 'Traditional', type: 'Composting', color: '#15803d' },
-    { name: 'Vermicomposting', short: 'Vermicomposting', type: 'Composting', color: '#16a34a' },
-    { name: 'Traditional Composting', short: 'Traditional', type: 'Composting', color: '#15803d' },
-    { name: 'Vermicomposting', short: 'Vermicomposting', type: 'Composting', color: '#16a34a' },
+    { name: 'Bokashi Composting', short: 'Bokashi', type: 'Composting', color: '#a855f7' },
+    { name: 'Mushroom Cultivation', short: 'Mushroom', type: 'Cultivation', color: '#c084fc' },
+    { name: 'Aquaponics', short: 'Aquaponics', type: 'Farming', color: '#cbd5e1' },
+    { name: 'Hydroponic Farming', short: 'Hydroponics', type: 'Farming', color: '#ec4899' },
+    { name: 'Organic Fertilizer Making', short: 'Fertilizer', type: 'Production', color: '#f97316' },
+    { name: 'Vertical Gardening', short: 'Vertical', type: 'Gardening', color: '#22d3ee' },
   ];
 
   // Statistics data
