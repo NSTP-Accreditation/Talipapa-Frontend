@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
  * @param minDisplayTime - Minimum time to show loading (default: 1500ms)
  * @returns isLoading state and setter
  */
-export const useLoadingState = (minDisplayTime: number = 1000) => {
+export const useLoadingState = (minDisplayTime: number = 500) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export const useMinimumLoadingTime = () => {
 
   const executeWithMinLoading = async <T,>(
     asyncFn: () => Promise<T>,
-    minDisplayTime: number = 1000
+    minDisplayTime: number = 500
   ): Promise<T> => {
     setIsLoading(true);
     

@@ -264,7 +264,7 @@ const EditModal: React.FC<EditModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm z-[9999] flex items-center justify-center p-5"
+      className="fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-5"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -652,7 +652,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm z-[9999] flex items-center justify-center p-5"
+      className="fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-5"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
