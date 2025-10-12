@@ -98,8 +98,8 @@ export default function TradingStatisticsPage() {
                   <CardTitle>Recent Transactions</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
+                  <div className="w-full overflow-x-auto sm:overflow-visible">
+                    <table className="w-full text-sm min-w-[600px] sm:min-w-0">
                       <thead>
                         <tr className="border-b">
                           <th className="text-left p-2">Time</th>
@@ -133,6 +133,7 @@ export default function TradingStatisticsPage() {
                         </tr>
                       </tbody>
                     </table>
+                    <div className="block sm:hidden text-xs text-gray-400 mt-2 text-center">Swipe left/right to see more columns</div>
                   </div>
                 </CardContent>
               </Card>

@@ -138,27 +138,27 @@ const ResidentRecords: React.FC = () => {
       </div>
 
       {/* Enhanced Table */}
-      <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-x-auto">
-        <div className="overflow-x-auto">
-          <table className="min-w-full">
+      <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200">
+        <div className="w-full overflow-x-auto sm:overflow-visible scrollbar-thin scrollbar-thumb-green-200 scrollbar-track-green-50">
+          <table className="w-full text-sm min-w-[700px] sm:min-w-0">
             <thead className="bg-gradient-to-r from-green-50 to-green-100 border-b-2 border-green-200">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
+                <th className="px-2 sm:px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
                   Record ID
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
+                <th className="px-2 sm:px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
+                <th className="px-2 sm:px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
                   Age
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
+                <th className="px-2 sm:px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
                   Points
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
+                <th className="px-2 sm:px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
                   Address
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
+                <th className="px-2 sm:px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
                   Created At
                 </th>
               </tr>
@@ -171,12 +171,12 @@ const ResidentRecords: React.FC = () => {
                     key={index}
                     className="hover:bg-green-50 transition-colors duration-150"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                       <span className="text-sm font-bold text-green-700 bg-green-100 px-3 py-1.5 rounded-lg border border-green-200">
                         {resident?._id}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
                           {resident?.firstName.charAt(0)}
@@ -186,12 +186,12 @@ const ResidentRecords: React.FC = () => {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                       <span className={`text-sm font-semibold text-gray-900`}>
                         {resident?.age}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <span className="text-2xl">⭐</span>
                         <span className="text-sm font-bold text-gray-900">
@@ -199,7 +199,7 @@ const ResidentRecords: React.FC = () => {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <span className="text-gray-400">📱</span>
                         <span className="text-sm text-gray-700 font-medium">
@@ -207,7 +207,7 @@ const ResidentRecords: React.FC = () => {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <span className="text-gray-400">📅</span>
                         <span className="text-sm text-gray-700 font-medium">
@@ -219,7 +219,7 @@ const ResidentRecords: React.FC = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center">
+                  <td colSpan={6} className="px-2 sm:px-6 py-12 text-center">
                     <div className="flex flex-col items-center gap-3">
                       <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
                         <Search className="w-8 h-8 text-gray-400" />
@@ -236,6 +236,7 @@ const ResidentRecords: React.FC = () => {
               )}
             </tbody>
           </table>
+          <div className="block sm:hidden text-xs text-gray-400 mt-2 text-center">Swipe left/right to see more columns</div>
         </div>
       </div>
 

@@ -35,7 +35,7 @@ export default function Carousel() {
         <h2 className="text-3xl font-bold mb-1 drop-shadow-lg">
           Welcome to Barangay Talipapa!
         </h2>
-        <p className="text-2xl font-light drop-shadow-md">
+        <p className="text-2xl fosnt-light drop-shadow-md">
           Your community, our pride.
         </p>
       </div>
