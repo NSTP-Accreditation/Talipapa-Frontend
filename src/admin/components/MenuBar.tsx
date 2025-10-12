@@ -173,51 +173,52 @@ const MenuBar: React.FC<MenuBarProps> = ({
 
       <div
         className={cn(
-          'w-[310px] h-screen bg-green-600 text-white flex flex-col fixed left-0 top-0 overflow-hidden transform transition-transform duration-300 z-50',
+          'w-[320px] h-screen text-white flex flex-col fixed left-0 top-0 overflow-hidden transform transition-transform duration-300 z-50 shadow-2xl',
           // hide on small screens unless isOpen
           isOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0',
           className
         )}
+        style={{ backgroundColor: '#1a4d2e' }}
       >
         {/* Header */}
-        <div className="px-4 py-4">
-          <div className="flex items-center justify-center space-x-3">
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0">
+        <div className="px-6 py-8">
+          <div className="flex items-center justify-center space-x-4">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
               <img
                 src="/brgy talipapa.png"
                 alt="Barangay Talipapa Logo"
-                className="w-10 h-10 object-contain"
+                className="w-14 h-14 object-contain"
               />
             </div>
             <div>
-              <h1 className="text-white font-black text-xl">Barangay Admin</h1>
+              <h1 className="text-white font-black text-2xl leading-tight">Barangay<br />Admin</h1>
             </div>
           </div>
         </div>
 
         {/* Separator Line */}
-        <div className="border-t border-green-400/50 mx-4"></div>
+        <div className="border-t border-white/20 mx-6 mb-2"></div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-green-500 scrollbar-track-green-700">
+        <nav className="flex-1 px-4 py-6 space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-green-500 scrollbar-track-transparent">
           {menuItems.map((item, index) => (
             <div key={index}>
               <button
                 onClick={() => handleItemClick(item)}
                 className={cn(
-                  'w-full flex items-center justify-between px-4 py-3 text-left transition-colors duration-200 text-base',
+                  'w-full flex items-center justify-between px-5 py-4 text-left transition-all duration-200 text-base font-medium rounded-lg',
                   location.pathname === item.href ||
                     (item.submenu &&
                       item.submenu.some(
                         (sub) => location.pathname === sub.href
                       ))
-                    ? 'bg-green-700 text-white'
-                    : 'text-white hover:bg-green-500/50'
+                    ? 'bg-white/15 text-white shadow-md'
+                    : 'text-white/90 hover:bg-white/10 hover:text-white'
                 )}
               >
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
                   <span className="flex-shrink-0">{item.icon}</span>
-                  <span className="font-medium">{item.label}</span>
+                  <span className="font-semibold">{item.label}</span>
                 </div>
                 {item.submenu && (
                   <ChevronDown
@@ -236,21 +237,21 @@ const MenuBar: React.FC<MenuBarProps> = ({
                     <div key={subIndex}>
                       {subIndex > 0 && (
                         <div
-                          className="border-t border-green-500/20 my-2"
-                          style={{ marginLeft: '3rem', marginRight: '5rem' }}
+                          className="border-t border-white/10 my-3"
+                          style={{ marginLeft: '3.5rem', marginRight: '4rem' }}
                         />
                       )}
                       <button
                         onClick={() => navigate(subItem.href!)}
                         className={cn(
-                          'w-full flex items-center space-x-3 pr-4 py-3 text-left transition-all duration-300 ease-in-out text-base rounded-md transform',
-                          'hover:scale-105 hover:shadow-lg hover:shadow-green-900/30 hover:bg-green-600/70 hover:text-white hover:font-semibold',
+                          'w-full flex items-center space-x-4 pr-5 py-3.5 text-left transition-all duration-300 ease-in-out text-base rounded-lg transform',
+                          'hover:scale-[1.02] hover:shadow-lg hover:bg-white/10 hover:text-white hover:font-semibold',
                           'active:scale-95',
                           location.pathname === subItem.href
-                            ? 'bg-green-700 text-white font-semibold scale-105 shadow-md'
-                            : 'text-green-100'
+                            ? 'bg-white/15 text-white font-semibold scale-[1.02] shadow-md'
+                            : 'text-white/80'
                         )}
-                        style={{ paddingLeft: '3rem' }}
+                        style={{ paddingLeft: '3.5rem' }}
                       >
                         <span className="flex-shrink-0">{subItem.icon}</span>
                         <span>{subItem.label}</span>
@@ -264,13 +265,13 @@ const MenuBar: React.FC<MenuBarProps> = ({
         </nav>
 
         {/* Logout Button */}
-        <div className="px-4 pb-4 border-t border-green-500 pt-4">
+        <div className="px-4 pb-6 border-t border-white/20 pt-6">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center space-x-3 px-4 py-3 text-left transition-colors duration-200 text-white hover:bg-green-500/50 text-base"
+            className="w-full flex items-center space-x-4 px-5 py-4 text-left transition-all duration-200 text-white/90 hover:bg-red-500/20 hover:text-white text-base font-medium rounded-lg group"
           >
-            <LogOut className="w-5 h-5 text-orange-400" />
-            <span className="font-medium">Logout</span>
+            <LogOut className="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors" />
+            <span className="font-semibold">Logout</span>
           </button>
         </div>
       </div>
