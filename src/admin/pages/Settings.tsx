@@ -138,17 +138,17 @@ const Settings: React.FC = () => {
                       type="text"
                       value={barangayName}
                       onChange={(e) => setBarangayName(e.target.value)}
-                      className="flex-1 px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                      className="flex-1 px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                     />
                     <button
                       onClick={handleBarangayNameSave}
-                      className="px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-all shadow-sm flex-shrink-0"
+                      className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-medium rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-sm flex-shrink-0"
                     >
                       ✓ Save
                     </button>
                     <button
                       onClick={() => setEditingBarangay(false)}
-                      className="px-6 py-3 bg-gray-500 text-white font-medium rounded-lg hover:bg-gray-600 transition-all shadow-sm flex-shrink-0"
+                      className="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white font-medium rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm flex-shrink-0"
                     >
                       ✕ Cancel
                     </button>
@@ -160,7 +160,7 @@ const Settings: React.FC = () => {
                     </div>
                     <button
                       onClick={() => setEditingBarangay(true)}
-                      className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all shadow-sm flex items-center gap-2 flex-shrink-0"
+                      className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-medium rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-sm flex items-center gap-2 flex-shrink-0"
                     >
                       <span>✏️</span>
                       Edit
@@ -175,7 +175,7 @@ const Settings: React.FC = () => {
                 Barangay Logo
               </label>
               <div className="flex items-start gap-8">
-                <div className="w-40 h-40 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0 hover:border-blue-400 transition-colors">
+                <div className="w-40 h-40 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0 hover:border-green-400 transition-colors">
                   {logoPreview ? (
                     <img
                       src={logoPreview}
@@ -203,7 +203,7 @@ const Settings: React.FC = () => {
                   />
                   <label
                     htmlFor="logo-upload"
-                    className="inline-flex items-center justify-center gap-3 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg cursor-pointer hover:bg-blue-700 transition-all shadow-sm w-fit"
+                    className="inline-flex items-center justify-center gap-3 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-medium rounded-lg cursor-pointer hover:from-green-700 hover:to-green-800 transition-all shadow-sm w-fit"
                   >
                     <span className="text-lg">📁</span>
                     Upload New Logo
@@ -353,7 +353,7 @@ const Settings: React.FC = () => {
                   onChange={(e) =>
                     setNewAdmin({ ...newAdmin, name: e.target.value })
                   }
-                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all shadow-sm"
                 />
               </div>
               <div>
@@ -367,7 +367,7 @@ const Settings: React.FC = () => {
                   onChange={(e) =>
                     setNewAdmin({ ...newAdmin, email: e.target.value })
                   }
-                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all shadow-sm"
                 />
               </div>
               <div>
@@ -381,7 +381,7 @@ const Settings: React.FC = () => {
                   onChange={(e) =>
                     setNewAdmin({ ...newAdmin, password: e.target.value })
                   }
-                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all shadow-sm"
                 />
               </div>
               <div>
@@ -396,7 +396,7 @@ const Settings: React.FC = () => {
                       role: e.target.value as 'Super Admin' | 'Editor',
                     })
                   }
-                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm bg-white"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all shadow-sm bg-white"
                 >
                   <option value="Editor">Editor</option>
                   <option value="Super Admin">Super Admin</option>
@@ -406,7 +406,7 @@ const Settings: React.FC = () => {
             <div className="mt-8 pt-6 border-t border-gray-200">
               <button
                 onClick={handleAddAdmin}
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold text-lg rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl flex items-center gap-3"
+                className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold text-lg rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-lg hover:shadow-xl flex items-center gap-3"
               >
                 <span className="text-xl">✨</span>
                 Add Admin Account

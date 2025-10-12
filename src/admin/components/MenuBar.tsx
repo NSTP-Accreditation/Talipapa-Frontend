@@ -22,6 +22,7 @@ import {
   Wrench,
   Trophy,
   Recycle,
+  Sprout,
 } from 'lucide-react';
 
 interface MenuBarProps {
@@ -76,11 +77,16 @@ const MenuBar: React.FC<MenuBarProps> = ({
           href: APP_ROUTES.ADMIN.TRADING + '/statistics',
         },
         {
-          icon: <ArrowRightLeft className="w-4 h-4" />, // Fixed: Changed from Coins to ArrowRightLeft for consistency
+          icon: <ArrowRightLeft className="w-4 h-4" />,
           label: 'Swap item',
           href: APP_ROUTES.ADMIN.TRADING + '/swap-item',
         },
       ],
+    },
+    {
+      icon: <Sprout className="w-5 h-5" />,
+      label: 'Green Pages',
+      href: APP_ROUTES.ADMIN.BASE + '/green-pages',
     },
     {
       icon: <Home className="w-5 h-5" />,
