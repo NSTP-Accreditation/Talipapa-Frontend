@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, Clock, FileText, CheckCircle } from 'lucide-react';
+import { ChevronLeft, Clock, FileText, CheckCircle, Home, ChevronRight, BookOpen } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { GuideTemplateSkeleton } from '../../components/LoadingSkeletons';
 
@@ -56,22 +56,27 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
-      {/* Breadcrumb */}
-      <div className="bg-white py-4 px-6 border-b border-gray-200 shadow-sm">
-        <div className="max-w-4xl mx-auto">
-          <nav className="flex items-center text-sm text-gray-600">
-            <Link to="/" className="hover:text-green-600 transition-colors">
-              🏠 Home
+      {/* Breadcrumb - Seamless with Navbar */}
+      <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <nav className="flex items-center gap-2 text-sm flex-wrap">
+            <Link 
+              to="/" 
+              className="flex items-center gap-1.5 text-green-100 hover:text-white transition-colors group"
+            >
+              <Home className="w-4 h-4" />
+              <span className="font-medium">Home</span>
             </Link>
-            <span className="mx-2 text-gray-400">/</span>
+            <ChevronRight className="w-4 h-4 text-green-400" />
             <Link
               to="/guidelines"
-              className="hover:text-green-600 transition-colors"
+              className="flex items-center gap-1.5 text-green-100 hover:text-white transition-colors group"
             >
-              📖 How to Guides
+              <BookOpen className="w-4 h-4" />
+              <span className="font-medium">Guides</span>
             </Link>
-            <span className="mx-2 text-gray-400">/</span>
-            <span className="text-green-700 font-semibold">{title}</span>
+            <ChevronRight className="w-4 h-4 text-green-400" />
+            <span className="text-white font-semibold truncate max-w-xs">{title}</span>
           </nav>
         </div>
       </div>

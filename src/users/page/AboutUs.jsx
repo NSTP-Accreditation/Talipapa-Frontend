@@ -1,5 +1,6 @@
 import AboutBarangay from '../components/AboutBarangay';
-import { User, MapPin, ExternalLink } from 'lucide-react';
+import { User, MapPin, ExternalLink, Home, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { AboutUsPageSkeleton } from '../../components/LoadingSkeletons';
 
@@ -14,15 +15,19 @@ const AboutUs = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
-      {/* Breadcrumb */}
-      <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-3 shadow-md">
-        <div className="max-w-7xl mx-auto">
-          <nav className="text-sm font-medium text-white flex items-center gap-2">
-            <a href="/" className="hover:text-green-100 transition-colors flex items-center gap-1">
-              🏠 Home
-            </a>
-            <span className="text-green-200">/</span>
-            <span className="text-green-100">About Us</span>
+      {/* Breadcrumb - Seamless with Navbar */}
+      <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <nav className="flex items-center gap-2 text-sm">
+            <Link 
+              to="/" 
+              className="flex items-center gap-1.5 text-green-100 hover:text-white transition-colors group"
+            >
+              <Home className="w-4 h-4" />
+              <span className="font-medium">Home</span>
+            </Link>
+            <ChevronRight className="w-4 h-4 text-green-400" />
+            <span className="text-white font-semibold">About Us</span>
           </nav>
         </div>
       </div>

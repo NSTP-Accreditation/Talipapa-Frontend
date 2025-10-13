@@ -6,7 +6,7 @@ import AdminHeader from '../components/AdminHeader';
 const AdminLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100/50 to-green-50">
       {/* Fixed Admin MenuBar */}
       <MenuBar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 

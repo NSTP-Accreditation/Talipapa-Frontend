@@ -283,13 +283,13 @@ export const HomePageSkeleton: React.FC = () => {
 export const AboutUsPageSkeleton: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
-      {/* Breadcrumb */}
-      <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-3 shadow-md">
-        <div className="max-w-7xl mx-auto">
+      {/* Breadcrumb - Seamless with Navbar */}
+      <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
           <div className="flex items-center gap-2">
-            <Skeleton className="h-5 w-16 bg-white/30" />
-            <Skeleton className="h-5 w-4 bg-white/20" />
             <Skeleton className="h-5 w-20 bg-white/30" />
+            <Skeleton className="h-4 w-4 bg-white/20" />
+            <Skeleton className="h-5 w-24 bg-white/30" />
           </div>
         </div>
       </div>
@@ -449,10 +449,14 @@ export const AboutUsPageSkeleton: React.FC = () => {
 export const TradingPageSkeleton: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      {/* Enhanced Breadcrumb */}
-      <div className="bg-white py-4 px-6 border-b-2 border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto">
-          <Skeleton className="h-5 w-40" />
+      {/* Breadcrumb - Seamless with Navbar */}
+      <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-5 w-20 bg-white/30" />
+            <Skeleton className="h-4 w-4 bg-white/20" />
+            <Skeleton className="h-5 w-36 bg-white/30" />
+          </div>
         </div>
       </div>
 
@@ -546,10 +550,14 @@ export const TradingPageSkeleton: React.FC = () => {
 export const GuidelinesPageSkeleton: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
-      {/* Breadcrumb */}
-      <div className="bg-white py-4 px-6 border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto">
-          <Skeleton className="h-5 w-40" />
+      {/* Breadcrumb - Seamless with Navbar */}
+      <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-5 w-20 bg-white/30" />
+            <Skeleton className="h-4 w-4 bg-white/20" />
+            <Skeleton className="h-5 w-32 bg-white/30" />
+          </div>
         </div>
       </div>
 
@@ -586,10 +594,16 @@ export const GuidelinesPageSkeleton: React.FC = () => {
 export const GuideTemplateSkeleton: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
-      {/* Breadcrumb */}
-      <div className="bg-white py-4 px-6 border-b border-gray-200 shadow-sm">
-        <div className="max-w-4xl mx-auto">
-          <Skeleton className="h-5 w-80" />
+      {/* Breadcrumb - Seamless with Navbar */}
+      <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Skeleton className="h-5 w-16 bg-white/30" />
+            <Skeleton className="h-4 w-4 bg-white/20" />
+            <Skeleton className="h-5 w-20 bg-white/30" />
+            <Skeleton className="h-4 w-4 bg-white/20" />
+            <Skeleton className="h-5 w-40 bg-white/30" />
+          </div>
         </div>
       </div>
 

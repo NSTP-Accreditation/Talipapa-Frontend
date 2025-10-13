@@ -20,7 +20,7 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import { MapPin, Users, Sprout, Leaf, BarChart3 } from 'lucide-react';
+import { MapPin, Users, Sprout, Leaf, BarChart3, User, Phone, Mail, Briefcase, Calendar, X } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { GreenPagesSkeleton } from '../../components/LoadingSkeletons';
 
@@ -29,6 +29,18 @@ type TabType = 'profile' | 'skillMap' | 'statistics';
 const GreenPages: React.FC = () => {
   const { isLoading } = useLoadingState(1000);
   const [activeTab, setActiveTab] = useState<TabType>('profile');
+  
+  // Modal state for adding staff
+  const [isAddStaffModalOpen, setIsAddStaffModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [staffForm, setStaffForm] = useState({
+    name: '',
+    age: '',
+    gender: '',
+    position: '',
+    email: '',
+    contact: '',
+  });
 
   // Mock data for demonstration
   const farmData = {
@@ -103,6 +115,47 @@ const GreenPages: React.FC = () => {
     { name: '56-65', value: 2, color: '#cbd5e1' },
     { name: '65+', value: 1, color: '#ec4899' },
   ];
+
+  // Modal handlers
+  const openAddStaffModal = () => {
+    setStaffForm({
+      name: '',
+      age: '',
+      gender: '',
+      position: '',
+      email: '',
+      contact: '',
+    });
+    setIsAddStaffModalOpen(true);
+  };
+
+  const closeAddStaffModal = () => {
+    setIsAddStaffModalOpen(false);
+    setIsSubmitting(false);
+  };
+
+  const handleStaffFormChange = (field: string, value: string) => {
+    setStaffForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmitStaff = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate required fields
+    if (!staffForm.name || !staffForm.position || !staffForm.contact) {
+      alert('Please fill in all required fields (Name, Position, Contact)');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // Simulate API call
+    setTimeout(() => {
+      console.log('New staff:', staffForm);
+      alert('Staff added successfully!');
+      closeAddStaffModal();
+    }, 1500);
+  };
 
   if (isLoading) {
     return <GreenPagesSkeleton />;
@@ -306,8 +359,11 @@ const GreenPages: React.FC = () => {
                     </div>
                     Staff Directory
                   </CardTitle>
-                  <button className="bg-white text-green-700 hover:bg-green-50 px-4 sm:px-6 py-2.5 rounded-xl font-bold shadow-lg text-sm sm:text-base transition-all hover:shadow-xl hover:scale-105 flex items-center gap-2">
-                    <span className="text-lg">➕</span>
+                  <button 
+                    onClick={openAddStaffModal}
+                    className="bg-white text-green-700 hover:bg-green-50 px-4 sm:px-6 py-2.5 rounded-xl font-bold shadow-lg text-sm sm:text-base transition-all hover:shadow-xl hover:scale-105 flex items-center gap-2"
+                  >
+                    <Users className="w-5 h-5" />
                     <span>Add Staff</span>
                   </button>
                 </div>
@@ -814,6 +870,212 @@ const GreenPages: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Enhanced Add Staff Modal */}
+      {isAddStaffModalOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeAddStaffModal();
+          }}
+        >
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden animate-slideUp">
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-green-600 via-green-600 to-green-700 px-8 py-6 relative overflow-hidden">
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
+              <div className="relative flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center ring-2 ring-white/30">
+                    <Users className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-3xl font-bold text-white mb-1">Add New Staff Member</h3>
+                    <p className="text-green-100 text-sm font-medium">Enter staff details below</p>
+                  </div>
+                </div>
+                <button
+                  onClick={closeAddStaffModal}
+                  className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center transition-all hover:scale-110 ring-1 ring-white/30"
+                  aria-label="Close modal"
+                >
+                  <X className="w-5 h-5 text-white" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body - Scrollable */}
+            <form onSubmit={handleSubmitStaff} className="overflow-y-auto max-h-[calc(90vh-200px)]">
+              <div className="px-8 py-6 space-y-6">
+                {/* Personal Information Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 pb-3 border-b-2 border-green-100">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+                      <User className="w-5 h-5 text-white" />
+                    </div>
+                    <h4 className="text-xl font-bold text-gray-900">Personal Information</h4>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Full Name */}
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                        <User className="w-4 h-4 text-green-600" />
+                        Full Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={staffForm.name}
+                        onChange={(e) => handleStaffFormChange('name', e.target.value)}
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium"
+                        placeholder="Enter full name"
+                        required
+                      />
+                    </div>
+
+                    {/* Position */}
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                        <Briefcase className="w-4 h-4 text-green-600" />
+                        Position <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={staffForm.position}
+                        onChange={(e) => handleStaffFormChange('position', e.target.value)}
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium"
+                        placeholder="e.g., Machine Operator"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Age Range */}
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                        <Calendar className="w-4 h-4 text-green-600" />
+                        Age Range
+                      </label>
+                      <select
+                        value={staffForm.age}
+                        onChange={(e) => handleStaffFormChange('age', e.target.value)}
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium bg-white"
+                      >
+                        <option value="">Select age range</option>
+                        <option value="18-25 years old">18-25 years old</option>
+                        <option value="26-35 years old">26-35 years old</option>
+                        <option value="36-45 years old">36-45 years old</option>
+                        <option value="46-55 years old">46-55 years old</option>
+                        <option value="Above 50 years old">Above 50 years old</option>
+                      </select>
+                    </div>
+
+                    {/* Gender */}
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                        <User className="w-4 h-4 text-green-600" />
+                        Gender
+                      </label>
+                      <select
+                        value={staffForm.gender}
+                        onChange={(e) => handleStaffFormChange('gender', e.target.value)}
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium bg-white"
+                      >
+                        <option value="">Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Information Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 pb-3 border-b-2 border-green-100">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+                      <Phone className="w-5 h-5 text-white" />
+                    </div>
+                    <h4 className="text-xl font-bold text-gray-900">Contact Information</h4>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Email */}
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                        <Mail className="w-4 h-4 text-green-600" />
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        value={staffForm.email}
+                        onChange={(e) => handleStaffFormChange('email', e.target.value)}
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all outline-none text-gray-900 font-medium"
+                        placeholder="email@example.com"
+                      />
+                    </div>
+
+                    {/* Contact Number */}
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                        <Phone className="w-4 h-4 text-green-600" />
+                        Contact Number <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        value={staffForm.contact}
+                        onChange={(e) => handleStaffFormChange('contact', e.target.value)}
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium"
+                        placeholder="09123456789"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Info Box */}
+                <div className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 rounded-xl p-4">
+                  <p className="text-sm text-gray-700 font-medium flex items-start gap-2">
+                    <span className="text-green-600 text-lg flex-shrink-0">ℹ️</span>
+                    <span>Fields marked with <span className="text-red-500 font-bold">*</span> are required. Make sure all information is accurate before submitting.</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="px-8 py-5 bg-gradient-to-r from-gray-50 to-white border-t-2 border-gray-100 flex gap-3 justify-end">
+                <button
+                  type="button"
+                  onClick={closeAddStaffModal}
+                  disabled={isSubmitting}
+                  className="px-6 py-3 rounded-xl font-bold text-gray-700 bg-white border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-8 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Adding...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Users className="w-5 h-5" />
+                      <span>Add Staff</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
     </>
   );
