@@ -116,7 +116,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
         {
           icon: <Recycle className="w-4 h-4" />,
           label: 'Talipapa Natin',
-          href: APP_ROUTES.ADMIN.BASE + '/talipapa-natin',
+          href: APP_ROUTES.ADMIN.TALIPAPANATIN,
         },
       ],
     },

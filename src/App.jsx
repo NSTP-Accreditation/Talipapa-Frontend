@@ -24,6 +24,7 @@ const Inventory = lazy(() => import('@/admin/pages/Inventory'));
 const SwapItem = lazy(() => import('@/admin/pages/SwapItem'));
 const GreenPages = lazy(() => import('@/admin/pages/GreenPages'));
 const Records = lazy(() => import('@/admin/pages/Records'));
+const TalipapaNatin = lazy(() => import('@/admin/pages/TalipapaNatin'));
 
 // USER PAGE EXPORT HERE - Lazy loaded
 const Home = lazy(() => import('@/users/page/Home'));
@@ -81,6 +82,7 @@ function App() {
               <Route path="about" element={<AboutUsAdmin />} />
               <Route path="about/achievements" element={<Achievements />} />
               <Route path="news" element={<News />} />
+              <Route path="talipapa-natin" element={<TalipapaNatin />} />
 
               {/* Forms Route (Admin version) - Disabled: Forms.tsx doesn't exist */}
               {/* <Route path="forms" element={<Forms />} /> */}
