@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Phone, User, FileText, CheckCircle } from 'lucide-react';
+import { MapPin, Phone, User, FileText, CheckCircle, Home, ChevronRight, Recycle } from 'lucide-react';
 import { ImageWithFallback } from '@/components/ImageWithFallback';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { TradingPageSkeleton } from '@/components/LoadingSkeletons';
@@ -147,15 +147,22 @@ export default function Trading() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      {/* Enhanced Breadcrumb */}
-      <div className="bg-white py-4 px-6 border-b-2 border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto">
-          <nav className="text-sm text-gray-700 font-medium">
-            <Link to="/" className="hover:text-green-600 transition-colors">
-              🏠 Home
+      {/* Breadcrumb - Seamless with Navbar */}
+      <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <nav className="flex items-center gap-2 text-sm">
+            <Link 
+              to="/" 
+              className="flex items-center gap-1.5 text-green-100 hover:text-white transition-colors group"
+            >
+              <Home className="w-4 h-4" />
+              <span className="font-medium">Home</span>
             </Link>
-            <span className="mx-2 text-gray-400">/</span>
-            <span className="text-green-700 font-semibold">♻️ EcoCycle</span>
+            <ChevronRight className="w-4 h-4 text-green-400" />
+            <div className="flex items-center gap-1.5 text-white font-semibold">
+              <Recycle className="w-4 h-4" />
+              <span>EcoCycle Trading</span>
+            </div>
           </nav>
         </div>
       </div>
@@ -249,9 +256,9 @@ export default function Trading() {
 
           {/* Enhanced Result Panel */}
           <Card className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 hover:border-green-400 hover:shadow-2xl transition-all duration-300">
-            <CardHeader className="pb-5 bg-gradient-to-br from-blue-50 to-white border-b-2 border-blue-100">
+            <CardHeader className="pb-5 bg-gradient-to-br from-green-50 to-white border-b-2 border-green-100">
               <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-md">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 shadow-md">
                   <CheckCircle className="w-6 h-6 text-white" />
                 </div>
                 <span>Conversion Result</span>

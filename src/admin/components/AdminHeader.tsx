@@ -39,10 +39,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
   };
 
   return (
-    <div
-      className="bg-white border-b shadow-md sticky top-0 z-30"
-      style={{ borderColor: '#E5E7EB' }}
-    >
+    <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-b border-green-700/30 shadow-xl sticky top-0 z-30 backdrop-blur-sm">
       <div className="flex items-center justify-between px-6 sm:px-10 py-5 gap-4">
         {/* Left Side - Mobile hamburger + System Info */}
         <div className="flex items-center gap-4 flex-1">
@@ -50,8 +47,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
             <button
               onClick={onToggleSidebar}
               aria-label="Open menu"
-              className="p-3 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
-              style={{ backgroundColor: '#F6F6F6' }}
+              className="p-3 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 bg-white/20 backdrop-blur-sm hover:bg-white/30"
             >
               <svg
                 width="24"
@@ -62,7 +58,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
               >
                 <path
                   d="M4 6h16M4 12h16M4 18h16"
-                  stroke="#1a4d2e"
+                  stroke="white"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -72,51 +68,30 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
           </div>
 
           <div className="flex-1">
-            <h1
-              className="text-xl sm:text-2xl lg:text-3xl font-black leading-tight"
-              style={{ color: '#1a4d2e' }}
-            >
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black leading-tight text-white">
               {title}
             </h1>
-            <p
-              className="text-sm sm:text-base font-medium mt-1"
-              style={{ color: '#838383' }}
-            >
+            <p className="text-sm sm:text-base font-medium mt-1 text-green-100">
               {subtitle}
             </p>
           </div>
         </div>
 
         {/* Center - Date & Time Display */}
-        <div
-          className="hidden xl:flex items-center gap-6 px-6 py-3 rounded-xl shadow-sm"
-          style={{ backgroundColor: '#F6F6F6' }}
-        >
-          <div
-            className="text-center border-r pr-5"
-            style={{ borderColor: '#D1D5DB' }}
-          >
-            <p
-              className="text-xs font-bold uppercase tracking-wider mb-1.5"
-              style={{ color: '#838383' }}
-            >
+        <div className="hidden xl:flex items-center gap-6 px-6 py-3 rounded-xl shadow-lg bg-white/20 backdrop-blur-sm ring-1 ring-white/30">
+          <div className="text-center border-r pr-5 border-white/20">
+            <p className="text-xs font-bold uppercase tracking-wider mb-1.5 text-green-100">
               Date
             </p>
-            <p className="text-sm font-bold" style={{ color: '#1a4d2e' }}>
+            <p className="text-sm font-bold text-white">
               {formatDate(currentTime)}
             </p>
           </div>
           <div className="text-center">
-            <p
-              className="text-xs font-bold uppercase tracking-wider mb-1.5"
-              style={{ color: '#838383' }}
-            >
+            <p className="text-xs font-bold uppercase tracking-wider mb-1.5 text-green-100">
               Time
             </p>
-            <p
-              className="text-sm font-bold tabular-nums"
-              style={{ color: '#1a4d2e' }}
-            >
+            <p className="text-sm font-bold tabular-nums text-white">
               {formatTime(currentTime)}
             </p>
           </div>
@@ -125,31 +100,14 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
         {/* Right Side - Admin User Info */}
         <div className="flex items-center gap-3 flex-shrink-0">
           <div className="text-right hidden lg:block">
-            <p
-              className="text-sm font-bold leading-tight"
-              style={{ color: '#1a4d2e' }}
-            >
+            <p className="text-sm font-bold leading-tight text-white">
               Admin User
             </p>
-            <p
-              className="text-xs font-medium mt-0.5"
-              style={{ color: '#838383' }}
-            >
+            <p className="text-xs font-medium mt-0.5 text-green-100">
               Super Admin
             </p>
           </div>
-          <div
-            className="flex items-center justify-center text-white font-black shadow-md hover:shadow-lg transition-shadow duration-300 leading-none flex-shrink-0 cursor-pointer"
-            style={{
-              backgroundColor: '#1a4d2e',
-              width: '42px',
-              height: '42px',
-              borderRadius: '50%',
-              minWidth: '42px',
-              minHeight: '42px',
-              fontSize: '16px',
-            }}
-          >
+          <div className="flex items-center justify-center text-green-900 font-black shadow-lg hover:shadow-xl transition-all duration-300 leading-none flex-shrink-0 cursor-pointer bg-white ring-2 ring-white/30 hover:scale-110 w-[42px] h-[42px] min-w-[42px] min-h-[42px] rounded-full text-base">
             A
           </div>
         </div>

@@ -293,148 +293,207 @@ export default function AchievementsAdmin() {
       {/* ---------- modal (enhanced) ---------- */}
       {modalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeModal();
+          }}
         >
-          <div className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+          <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col animate-slideUp">
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b-2 border-gray-100 bg-gradient-to-r from-green-50 to-emerald-50">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white text-xl">
-                    {editingIndex === null ? '➕' : '✏️'}
-                  </span>
+            <div className="bg-gradient-to-r from-green-600 via-green-600 to-green-700 px-6 sm:px-8 py-5 sm:py-6 relative overflow-hidden">
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
+              <div className="relative flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30 flex-shrink-0">
+                    {editingIndex === null ? (
+                      <Plus className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                    ) : (
+                      <SquarePen className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-0.5 sm:mb-1 truncate">
+                      {editingIndex === null
+                        ? 'Add New Achievement'
+                        : 'Edit Achievement'}
+                    </h3>
+                    <p className="text-green-100 text-xs sm:text-sm font-medium truncate">
+                      {editingIndex === null
+                        ? 'Create a new achievement entry'
+                        : 'Update achievement details'}
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-800">
-                  {editingIndex === null
-                    ? 'Add New Achievement'
-                    : 'Edit Achievement'}
-                </h3>
+                <button
+                  onClick={closeModal}
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center transition-all hover:scale-110 ring-1 ring-white/30 flex-shrink-0"
+                  aria-label="Close modal"
+                >
+                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                </button>
               </div>
-              <button
-                onClick={closeModal}
-                className="p-2 rounded-lg hover:bg-gray-200 transition-colors"
-                title="Close"
-              >
-                <X size={24} />
-              </button>
             </div>
 
             {/* Modal Body - Scrollable */}
-            <div className="p-8 space-y-6 overflow-y-auto flex-1">
-              <label className="block">
-                <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                  <span>📝</span> Title <span className="text-red-500">*</span>
+            <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-5 md:space-y-6 overflow-y-auto flex-1">
+              {/* Achievement Details Section */}
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex items-center gap-2 sm:gap-3 pb-2 sm:pb-3 border-b-2 border-green-100">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+                    <SquarePen className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                  </div>
+                  <h4 className="text-lg sm:text-xl font-bold text-gray-900">Achievement Details</h4>
                 </div>
-                <input
-                  type="text"
-                  value={form.title}
-                  onChange={(e) => handleChange('title', e.target.value)}
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                  placeholder="Enter achievement title..."
-                />
-              </label>
 
-              <label className="block">
-                <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                  <span>📄</span> Description
-                </div>
-                <textarea
-                  value={form.description}
-                  onChange={(e) => handleChange('description', e.target.value)}
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none resize-none"
-                  rows={5}
-                  placeholder="Describe this achievement..."
-                />
-              </label>
-
-              <label className="block">
-                <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                  <span>🔗</span> Link (optional)
-                </div>
-                <input
-                  type="url"
-                  value={form.link}
-                  onChange={(e) => handleChange('link', e.target.value)}
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                  placeholder="https://example.com/achievement"
-                />
-              </label>
-
-              <div className="grid sm:grid-cols-2 gap-6">
                 <label className="block">
                   <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                    <span>🌐</span> Image URL
+                    <SquarePen className="w-4 h-4 text-green-600" />
+                    Title <span className="text-red-500">*</span>
+                  </div>
+                  <input
+                    type="text"
+                    value={form.title}
+                    onChange={(e) => handleChange('title', e.target.value)}
+                    className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                    placeholder="Enter achievement title..."
+                  />
+                </label>
+
+                <label className="block">
+                  <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                    <SquarePen className="w-4 h-4 text-green-600" />
+                    Description
+                  </div>
+                  <textarea
+                    value={form.description}
+                    onChange={(e) => handleChange('description', e.target.value)}
+                    className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none resize-none text-gray-900 font-medium text-sm sm:text-base"
+                    rows={5}
+                    placeholder="Describe this achievement..."
+                  />
+                </label>
+
+                <label className="block">
+                  <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                    <span className="text-lg">🔗</span>
+                    Link (optional)
                   </div>
                   <input
                     type="url"
-                    value={
-                      form.image && form.image.startsWith('data:')
-                        ? ''
-                        : form.image
-                    }
-                    onChange={(e) => handleChange('image', e.target.value)}
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                    placeholder="https://..."
+                    value={form.link}
+                    onChange={(e) => handleChange('link', e.target.value)}
+                    className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                    placeholder="https://example.com/achievement"
                   />
-                </label>
-
-                <label className="block">
-                  <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                    <span>📸</span> Or Upload Image
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleFile(e.target.files?.[0])}
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-green-50 file:text-green-700 hover:file:bg-green-100 file:cursor-pointer"
-                  />
-                  {fileUploading && (
-                    <div className="text-sm text-green-600 mt-2 font-medium flex items-center gap-2">
-                      <span className="animate-spin">⏳</span> Uploading...
-                    </div>
-                  )}
                 </label>
               </div>
 
-              {/* Preview */}
-              <div className="pt-2">
-                <div className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
-                  <span>👁️</span> Image Preview
+              {/* Image Upload Section */}
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex items-center gap-2 sm:gap-3 pb-2 sm:pb-3 border-b-2 border-green-100">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+                    <span className="text-lg sm:text-xl">🖼️</span>
+                  </div>
+                  <h4 className="text-lg sm:text-xl font-bold text-gray-900">Image</h4>
                 </div>
-                <div className="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden flex items-center justify-center border-2 border-gray-200 shadow-inner">
-                  {form.image ? (
-                    <img
-                      src={form.image}
-                      alt="preview"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="text-center">
-                      <span className="text-6xl mb-2 block">🖼️</span>
-                      <div className="text-gray-400 font-medium">
-                        No image selected
-                      </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <label className="block">
+                    <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                      <span className="text-lg">🌐</span>
+                      Image URL
                     </div>
-                  )}
+                    <input
+                      type="url"
+                      value={
+                        form.image && form.image.startsWith('data:')
+                          ? ''
+                          : form.image
+                      }
+                      onChange={(e) => handleChange('image', e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                      placeholder="https://..."
+                    />
+                  </label>
+
+                  <label className="block">
+                    <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                      <span className="text-lg">📸</span>
+                      Or Upload Image
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleFile(e.target.files?.[0])}
+                      className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base file:mr-3 sm:file:mr-4 file:py-1.5 sm:file:py-2 file:px-3 sm:file:px-4 file:rounded-lg file:border-0 file:bg-green-50 file:text-green-700 file:font-bold hover:file:bg-green-100 file:cursor-pointer transition-all"
+                    />
+                    {fileUploading && (
+                      <div className="text-xs sm:text-sm text-green-600 mt-2 font-medium flex items-center gap-2">
+                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-green-600/30 border-t-green-600 rounded-full animate-spin"></div>
+                        <span>Uploading...</span>
+                      </div>
+                    )}
+                  </label>
                 </div>
+
+                {/* Preview */}
+                <div className="pt-2">
+                  <div className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                    <span className="text-lg">👁️</span> Image Preview
+                  </div>
+                  <div className="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden flex items-center justify-center border-2 border-gray-200 shadow-inner">
+                    {form.image ? (
+                      <img
+                        src={form.image}
+                        alt="preview"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="text-center">
+                        <span className="text-6xl mb-2 block">🖼️</span>
+                        <div className="text-gray-400 font-medium">
+                          No image selected
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Info Box */}
+              <div className="bg-gradient-to-r from-green-50 to-green-50 border-2 border-green-200 rounded-xl p-3 sm:p-4">
+                <p className="text-xs sm:text-sm text-gray-700 font-medium flex items-start gap-2">
+                  <span className="text-green-600 text-base sm:text-lg flex-shrink-0">ℹ️</span>
+                  <span>Title is required. You can provide an image URL or upload a file. The preview shows how it will appear.</span>
+                </p>
               </div>
             </div>
 
             {/* Modal Footer */}
-            <div className="flex justify-end gap-4 p-6 border-t-2 border-gray-100 bg-gray-50">
+            <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 bg-gradient-to-r from-gray-50 to-white border-t-2 border-gray-100 flex gap-2 sm:gap-3 justify-end">
               <button
                 onClick={closeModal}
-                className="px-6 py-3 rounded-xl border-2 border-gray-300 font-semibold hover:bg-gray-100 transition-all"
+                className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-gray-700 bg-white border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm hover:shadow-md text-sm sm:text-base"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
-                className="px-8 py-3 rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all"
+                className="px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all flex items-center gap-2 text-sm sm:text-base"
               >
-                {editingIndex === null ? 'Create Achievement' : 'Save Changes'}
+                {editingIndex === null ? (
+                  <>
+                    <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span>Create Achievement</span>
+                  </>
+                ) : (
+                  <>
+                    <SquarePen className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span>Save Changes</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
