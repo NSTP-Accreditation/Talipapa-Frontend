@@ -5,7 +5,7 @@ import {
   CardContent,
   CardTitle,
 } from '../../components/ui/card';
-import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
+import { NewsEventsPageSkeleton } from '../../components/LoadingSkeletons';
 import { useLoadingState } from '../../hooks/useLoadingState';
 
 interface CalendarEvent {
@@ -435,7 +435,7 @@ const News: React.FC = () => {
 
   // Show loading skeleton while loading
   if (pageLoading) {
-    return <FormTablePageSkeleton />;
+    return <NewsEventsPageSkeleton />;
   }
 
   const handleSaveEvent = (event: CalendarEvent) => {

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useLoadingState } from '../../hooks/useLoadingState';
+import { ActivityLogsPageSkeleton } from '../../components/LoadingSkeletons';
 
 const mockLogs = [
   {
@@ -22,9 +24,15 @@ const categories = [
 ];
 
 const ActivityLogs = () => {
+  const { isLoading } = useLoadingState(1000);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [sort, setSort] = useState('desc');
+
+  // Show loading skeleton while loading
+  if (isLoading) {
+    return <ActivityLogsPageSkeleton />;
+  }
 
   // Filtered logs
   const filteredLogs = mockLogs.filter(

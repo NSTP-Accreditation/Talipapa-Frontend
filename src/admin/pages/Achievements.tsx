@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SquarePen, Plus, Trash2, X } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
+import { AchievementsPageSkeleton } from '../../components/LoadingSkeletons';
 
 /**
  * AchievementsAdmin
@@ -236,7 +236,7 @@ export default function AchievementsAdmin() {
 
   // Show loading skeleton while loading
   if (pageLoading) {
-    return <FormTablePageSkeleton />;
+    return <AchievementsPageSkeleton />;
   }
 
   return (

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, Clock, FileText, CheckCircle } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { GuidelinesPageSkeleton } from '../../components/LoadingSkeletons';
+import { GuideTemplateSkeleton } from '../../components/LoadingSkeletons';
 
 interface GuideStep {
   id: number;
@@ -51,7 +51,7 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
 
   // Show loading skeleton while loading
   if (isLoading) {
-    return <GuidelinesPageSkeleton />;
+    return <GuideTemplateSkeleton />;
   }
 
   return (

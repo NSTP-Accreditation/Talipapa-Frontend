@@ -22,7 +22,7 @@ import {
 } from 'recharts';
 import { MapPin, Users, Sprout, Leaf, BarChart3 } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { DashboardSkeleton } from '../../components/LoadingSkeletons';
+import { GreenPagesSkeleton } from '../../components/LoadingSkeletons';
 
 type TabType = 'profile' | 'skillMap' | 'statistics';
 
@@ -105,7 +105,7 @@ const GreenPages: React.FC = () => {
   ];
 
   if (isLoading) {
-    return <DashboardSkeleton />;
+    return <GreenPagesSkeleton />;
   }
 
   return (

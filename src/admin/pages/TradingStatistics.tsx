@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from '../../components/ui/card';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { DashboardSkeleton } from '../../components/LoadingSkeletons';
+import { TradingStatisticsSkeleton } from '../../components/LoadingSkeletons';
 
 export default function TradingStatisticsPage() {
   // Add loading state with 1 second display
@@ -15,7 +15,7 @@ export default function TradingStatisticsPage() {
 
   // Show loading skeleton while loading
   if (isLoading) {
-    return <DashboardSkeleton />;
+    return <TradingStatisticsSkeleton />;
   }
 
   return (
