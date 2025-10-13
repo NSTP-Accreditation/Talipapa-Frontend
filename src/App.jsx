@@ -23,6 +23,7 @@ const AdminLogin = lazy(() => import('@/admin/auth/AdminLogin'));
 const Inventory = lazy(() => import('@/admin/pages/Inventory'));
 const SwapItem = lazy(() => import('@/admin/pages/SwapItem'));
 const GreenPages = lazy(() => import('@/admin/pages/GreenPages'));
+const Records = lazy(() => import('@/admin/pages/Records'));
 
 // USER PAGE EXPORT HERE - Lazy loaded
 const Home = lazy(() => import('@/users/page/Home'));
@@ -104,6 +105,8 @@ function App() {
 
             {/* Settings Route */}
             <Route path="settings" element={<Settings />} />
+            {/* Records Route */}
+            <Route path="records" element={<Records />} />
 
             {/* 404 for unknown admin routes */}
             <Route path="*" element={<NotFound />} />
