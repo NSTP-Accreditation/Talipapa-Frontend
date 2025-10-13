@@ -133,7 +133,9 @@ export default function TradingStatisticsPage() {
                         </tr>
                       </tbody>
                     </table>
-                    <div className="block sm:hidden text-xs text-gray-400 mt-2 text-center">Swipe left/right to see more columns</div>
+                    <div className="block sm:hidden text-xs text-gray-400 mt-2 text-center">
+                      Swipe left/right to see more columns
+                    </div>
                   </div>
                 </CardContent>
               </Card>

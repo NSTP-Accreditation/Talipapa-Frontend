@@ -5,10 +5,10 @@
  */
 
 /* Import CSS variables first */
-@import './variables.css';
+@import url('./variables.css');
 
 /* Tailwind CSS directives - will be processed by PostCSS */
-@import 'tailwindcss';
+@import url('tailwindcss');
 
 /* Base layer styles */
 @layer base {
@@ -151,6 +151,7 @@ html {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -161,6 +162,7 @@ html {
     opacity: 0;
     transform: translateY(20px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -172,6 +174,7 @@ html {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

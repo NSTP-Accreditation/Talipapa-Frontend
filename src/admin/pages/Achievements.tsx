@@ -344,7 +344,9 @@ export default function AchievementsAdmin() {
                   <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
                     <SquarePen className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <h4 className="text-lg sm:text-xl font-bold text-gray-900">Achievement Details</h4>
+                  <h4 className="text-lg sm:text-xl font-bold text-gray-900">
+                    Achievement Details
+                  </h4>
                 </div>
 
                 <label className="block">
@@ -368,7 +370,9 @@ export default function AchievementsAdmin() {
                   </div>
                   <textarea
                     value={form.description}
-                    onChange={(e) => handleChange('description', e.target.value)}
+                    onChange={(e) =>
+                      handleChange('description', e.target.value)
+                    }
                     className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none resize-none text-gray-900 font-medium text-sm sm:text-base"
                     rows={5}
                     placeholder="Describe this achievement..."
@@ -396,7 +400,9 @@ export default function AchievementsAdmin() {
                   <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
                     <span className="text-lg sm:text-xl">🖼️</span>
                   </div>
-                  <h4 className="text-lg sm:text-xl font-bold text-gray-900">Image</h4>
+                  <h4 className="text-lg sm:text-xl font-bold text-gray-900">
+                    Image
+                  </h4>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -465,8 +471,13 @@ export default function AchievementsAdmin() {
               {/* Info Box */}
               <div className="bg-gradient-to-r from-green-50 to-green-50 border-2 border-green-200 rounded-xl p-3 sm:p-4">
                 <p className="text-xs sm:text-sm text-gray-700 font-medium flex items-start gap-2">
-                  <span className="text-green-600 text-base sm:text-lg flex-shrink-0">ℹ️</span>
-                  <span>Title is required. You can provide an image URL or upload a file. The preview shows how it will appear.</span>
+                  <span className="text-green-600 text-base sm:text-lg flex-shrink-0">
+                    ℹ️
+                  </span>
+                  <span>
+                    Title is required. You can provide an image URL or upload a
+                    file. The preview shows how it will appear.
+                  </span>
                 </p>
               </div>
             </div>

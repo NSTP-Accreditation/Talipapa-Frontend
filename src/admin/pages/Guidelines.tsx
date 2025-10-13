@@ -562,7 +562,10 @@ const EditModal: React.FC<EditModalProps> = ({
                       type="text"
                       value={stepFormData.tips}
                       onChange={(e) =>
-                        setStepFormData({ ...stepFormData, tips: e.target.value })
+                        setStepFormData({
+                          ...stepFormData,
+                          tips: e.target.value,
+                        })
                       }
                       className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
                       placeholder="e.g., Bring exact change, Come early to avoid lines"
@@ -670,7 +673,9 @@ const EditModal: React.FC<EditModalProps> = ({
                         </div>
                       </div>
                       <div className="p-3 sm:p-4">
-                        <p className="text-sm text-gray-700 mb-2">{step.description}</p>
+                        <p className="text-sm text-gray-700 mb-2">
+                          {step.description}
+                        </p>
                         <div className="flex flex-wrap gap-2">
                           {step.location && (
                             <div className="inline-flex items-center gap-1.5 text-xs text-green-700 bg-green-50 border border-green-200 px-2.5 py-1.5 rounded-lg">
@@ -772,7 +777,9 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
             </div>
             <div className="space-y-2">
               <p className="text-xs sm:text-sm text-gray-700">
-                <span className="font-semibold text-gray-900">Description:</span>{' '}
+                <span className="font-semibold text-gray-900">
+                  Description:
+                </span>{' '}
                 {guideline.description}
               </p>
               <p className="text-xs sm:text-sm text-gray-700">

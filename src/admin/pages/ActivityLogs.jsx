@@ -95,7 +95,13 @@ const ActivityLogs = () => {
           </svg>
         </button>
         <button className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-all ml-auto">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
             <path d="M12 4v16m8-8H4" />
           </svg>
           Download as Excel
@@ -105,24 +111,45 @@ const ActivityLogs = () => {
         <table className="min-w-full text-sm">
           <thead className="bg-gradient-to-r from-green-50 to-green-100 border-b-2 border-green-200">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">Performed By</th>
-              <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">Role</th>
-              <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">Action</th>
-              <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">Description</th>
-              <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">Type</th>
-              <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">Timestamp</th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
+                Performed By
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
+                Role
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
+                Action
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
+                Description
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
+                Type
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-green-800 uppercase tracking-wider">
+                Timestamp
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {sortedLogs.length > 0 ? (
               sortedLogs.map((log, idx) => (
-                <tr key={idx} className="hover:bg-green-50 transition-colors duration-150">
-                  <td className="px-6 py-4 whitespace-nowrap">{log.performedBy}</td>
+                <tr
+                  key={idx}
+                  className="hover:bg-green-50 transition-colors duration-150"
+                >
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {log.performedBy}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">{log.role}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{log.action}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{log.description}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {log.description}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">{log.type}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{log.timestamp}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {log.timestamp}
+                  </td>
                 </tr>
               ))
             ) : (
@@ -137,11 +164,19 @@ const ActivityLogs = () => {
       </div>
       {/* Pagination (mocked for now) */}
       <div className="flex justify-center items-center gap-2 mt-6">
-        <button className="px-4 py-2 rounded-xl bg-green-100 text-green-800 font-bold" disabled>
+        <button
+          className="px-4 py-2 rounded-xl bg-green-100 text-green-800 font-bold"
+          disabled
+        >
           &lt;
         </button>
-        <span className="px-4 py-2 rounded-xl bg-green-50 text-green-900 font-bold">1</span>
-        <button className="px-4 py-2 rounded-xl bg-green-100 text-green-800 font-bold" disabled>
+        <span className="px-4 py-2 rounded-xl bg-green-50 text-green-900 font-bold">
+          1
+        </span>
+        <button
+          className="px-4 py-2 rounded-xl bg-green-100 text-green-800 font-bold"
+          disabled
+        >
           &gt;
         </button>
       </div>

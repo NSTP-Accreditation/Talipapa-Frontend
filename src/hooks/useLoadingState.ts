@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 /**
  * Custom hook for simulating loading states with minimum display time
  * Ensures loading screen is visible for at least the minimum duration
- * 
+ *
  * @param minDisplayTime - Minimum time to show loading (default: 1500ms)
  * @returns isLoading state and setter
  */
@@ -29,25 +29,25 @@ export const useLoadingState = (minDisplayTime: number = 500) => {
 export const useMinimumLoadingTime = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const executeWithMinLoading = async <T,>(
+  const executeWithMinLoading = async <T>(
     asyncFn: () => Promise<T>,
     minDisplayTime: number = 500
   ): Promise<T> => {
     setIsLoading(true);
-    
+
     const startTime = Date.now();
-    
+
     try {
       const result = await asyncFn();
       const elapsedTime = Date.now() - startTime;
-      
+
       // If operation finished too quickly, wait for remaining time
       if (elapsedTime < minDisplayTime) {
-        await new Promise(resolve => 
+        await new Promise((resolve) =>
           setTimeout(resolve, minDisplayTime - elapsedTime)
         );
       }
-      
+
       return result;
     } finally {
       setIsLoading(false);
@@ -60,7 +60,7 @@ export const useMinimumLoadingTime = () => {
 /**
  * Custom hook for data fetching with loading state
  */
-export const useDataFetch = <T,>(
+export const useDataFetch = <T>(
   fetchFn: () => Promise<T>,
   deps: any[] = []
 ) => {

@@ -1,5 +1,13 @@
 import React from 'react';
-import { Globe, MapPin, Phone, Mail, Clock, Facebook, Youtube } from 'lucide-react';
+import {
+  Globe,
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  Facebook,
+  Youtube,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Footer() {
@@ -29,7 +37,7 @@ export default function Footer() {
                 <p className="text-green-200 text-xs">Quezon City, PH</p>
               </div>
             </div>
-            
+
             <p className="text-green-100 text-sm leading-relaxed mb-4">
               Building a sustainable, united community for a greener future.
             </p>
@@ -148,9 +156,7 @@ export default function Footer() {
 
               <li className="flex items-start gap-2 text-sm">
                 <Clock className="w-4 h-4 text-green-300 flex-shrink-0 mt-0.5" />
-                <span className="text-green-100">
-                  Mon-Fri: 8AM - 5PM
-                </span>
+                <span className="text-green-100">Mon-Fri: 8AM - 5PM</span>
               </li>
             </ul>
           </div>

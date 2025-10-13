@@ -2,7 +2,11 @@ import { useCallback, useMemo, useState } from 'react';
 import { formatName, formatPoints } from '@/utils/formatter';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import FloatingLabelInput from '../components/FloatingLabelInput';
-import { Spinner, InlineLoader, FormTablePageSkeleton } from '@/components/LoadingSkeletons';
+import {
+  Spinner,
+  InlineLoader,
+  FormTablePageSkeleton,
+} from '@/components/LoadingSkeletons';
 import { useLoadingState } from '@/hooks/useLoadingState';
 
 interface Product {

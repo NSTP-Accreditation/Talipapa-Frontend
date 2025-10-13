@@ -1,7 +1,9 @@
 import React from 'react';
 
 // Base Skeleton Component
-export const Skeleton: React.FC<{ className?: string }> = ({ className = '' }) => {
+export const Skeleton: React.FC<{ className?: string }> = ({
+  className = '',
+}) => {
   return (
     <div
       className={`animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] rounded ${className}`}
@@ -15,7 +17,10 @@ export const Skeleton: React.FC<{ className?: string }> = ({ className = '' }) =
 // Page Loading Skeleton
 export const PageLoadingSkeleton: React.FC = () => {
   return (
-    <div className="min-h-screen p-6 sm:p-10" style={{ backgroundColor: '#F6F6F6' }}>
+    <div
+      className="min-h-screen p-6 sm:p-10"
+      style={{ backgroundColor: '#F6F6F6' }}
+    >
       {/* Header Skeleton */}
       <div className="mb-8">
         <Skeleton className="h-10 w-64 mb-4" />
@@ -53,7 +58,9 @@ export const PageLoadingSkeleton: React.FC = () => {
 };
 
 // Card Loading Skeleton
-export const CardLoadingSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) => {
+export const CardLoadingSkeleton: React.FC<{ count?: number }> = ({
+  count = 3,
+}) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {Array.from({ length: count }).map((_, i) => (
@@ -73,17 +80,22 @@ export const CardLoadingSkeleton: React.FC<{ count?: number }> = ({ count = 3 })
 };
 
 // Table Loading Skeleton
-export const TableLoadingSkeleton: React.FC<{ rows?: number }> = ({ rows = 5 }) => {
+export const TableLoadingSkeleton: React.FC<{ rows?: number }> = ({
+  rows = 5,
+}) => {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden">
       {/* Table Header */}
-      <div className="border-b px-6 py-4 flex gap-4" style={{ backgroundColor: '#F6F6F6' }}>
+      <div
+        className="border-b px-6 py-4 flex gap-4"
+        style={{ backgroundColor: '#F6F6F6' }}
+      >
         <Skeleton className="h-4 w-32" />
         <Skeleton className="h-4 w-48 flex-1" />
         <Skeleton className="h-4 w-24" />
         <Skeleton className="h-4 w-24" />
       </div>
-      
+
       {/* Table Rows */}
       <div className="divide-y">
         {Array.from({ length: rows }).map((_, i) => (
@@ -101,10 +113,10 @@ export const TableLoadingSkeleton: React.FC<{ rows?: number }> = ({ rows = 5 }) 
 };
 
 // Spinner Component
-export const Spinner: React.FC<{ size?: 'sm' | 'md' | 'lg'; color?: string }> = ({
-  size = 'md',
-  color = '#1a4d2e',
-}) => {
+export const Spinner: React.FC<{
+  size?: 'sm' | 'md' | 'lg';
+  color?: string;
+}> = ({ size = 'md', color = '#1a4d2e' }) => {
   const sizeClasses = {
     sm: 'h-4 w-4',
     md: 'h-8 w-8',
@@ -159,7 +171,9 @@ export const ButtonSpinner: React.FC = () => {
 };
 
 // Inline Loading
-export const InlineLoader: React.FC<{ text?: string }> = ({ text = 'Loading...' }) => {
+export const InlineLoader: React.FC<{ text?: string }> = ({
+  text = 'Loading...',
+}) => {
   return (
     <div className="flex items-center justify-center gap-3 p-8">
       <Spinner size="md" />
@@ -241,7 +255,10 @@ export const HomePageSkeleton: React.FC = () => {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-gradient-to-br from-green-50 to-white p-6 rounded-xl shadow-md border-2 border-green-100">
+              <div
+                key={i}
+                className="bg-gradient-to-br from-green-50 to-white p-6 rounded-xl shadow-md border-2 border-green-100"
+              >
                 <div className="flex items-center gap-2 mb-3">
                   <Skeleton className="h-5 w-5 rounded" />
                   <Skeleton className="h-5 w-32" />
@@ -267,7 +284,10 @@ export const HomePageSkeleton: React.FC = () => {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <div key={i} className="bg-white p-4 sm:p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow group">
+            <div
+              key={i}
+              className="bg-white p-4 sm:p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow group"
+            >
               <Skeleton className="h-40 sm:h-48 w-full rounded-lg mb-4" />
               <Skeleton className="h-5 w-full mb-2" />
               <Skeleton className="h-4 w-4/5" />
@@ -531,7 +551,10 @@ export const TradingPageSkeleton: React.FC = () => {
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
+                <div
+                  key={i}
+                  className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center"
+                >
                   <Skeleton className="h-12 w-12 rounded-full mx-auto mb-4 bg-white/30" />
                   <Skeleton className="h-6 w-3/4 mx-auto mb-3 bg-white/30" />
                   <Skeleton className="h-4 w-full bg-white/20 mb-2" />
@@ -572,7 +595,10 @@ export const GuidelinesPageSkeleton: React.FC = () => {
         {/* Guide Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-white border-2 border-gray-100 rounded-2xl p-8 text-center hover:shadow-2xl transition-all h-full min-h-[200px]">
+            <div
+              key={i}
+              className="bg-white border-2 border-gray-100 rounded-2xl p-8 text-center hover:shadow-2xl transition-all h-full min-h-[200px]"
+            >
               <Skeleton className="h-20 w-20 rounded-2xl mx-auto mb-6" />
               <Skeleton className="h-6 w-3/4 mx-auto" />
             </div>
@@ -712,7 +738,10 @@ export const DashboardSkeleton: React.FC = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="bg-white p-6 rounded-xl shadow-md border border-green-200">
+          <div
+            key={i}
+            className="bg-white p-6 rounded-xl shadow-md border border-green-200"
+          >
             <div className="flex justify-between items-start mb-4">
               <Skeleton className="h-5 w-24" />
               <Skeleton className="h-5 w-5 rounded" />
@@ -740,7 +769,10 @@ export const DashboardSkeleton: React.FC = () => {
         <Skeleton className="h-6 w-48 mb-6" />
         <div className="space-y-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="flex items-center gap-4 p-4 border rounded-lg">
+            <div
+              key={i}
+              className="flex items-center gap-4 p-4 border rounded-lg"
+            >
               <Skeleton className="h-12 w-12 rounded-full" />
               <div className="flex-1">
                 <Skeleton className="h-5 w-32 mb-2" />
@@ -787,7 +819,10 @@ export const SettingsPageSkeleton: React.FC = () => {
           <Skeleton className="h-7 w-48 mb-6" />
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-4 p-4 border rounded-lg">
+              <div
+                key={i}
+                className="flex items-center gap-4 p-4 border rounded-lg"
+              >
                 <Skeleton className="h-12 w-12 rounded-full" />
                 <div className="flex-1">
                   <Skeleton className="h-5 w-40 mb-2" />
@@ -836,7 +871,7 @@ export const FormTablePageSkeleton: React.FC = () => {
             <Skeleton className="h-5 w-16" />
           </div>
         </div>
-        
+
         {/* Table Rows */}
         <div className="divide-y divide-gray-200">
           {[1, 2, 3, 4, 5, 6, 7].map((i) => (
@@ -909,7 +944,10 @@ export const GreenPagesSkeleton: React.FC = () => {
             </div>
             <div className="p-4 sm:p-5 space-y-3">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="flex items-start gap-3 p-3 sm:p-3.5 bg-gray-50 rounded-lg">
+                <div
+                  key={i}
+                  className="flex items-start gap-3 p-3 sm:p-3.5 bg-gray-50 rounded-lg"
+                >
                   <Skeleton className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex-shrink-0" />
                   <div className="flex-1">
                     <Skeleton className="h-3 w-16 mb-1" />
@@ -933,7 +971,10 @@ export const GreenPagesSkeleton: React.FC = () => {
             <div className="p-3 sm:p-5 md:p-6 bg-gradient-to-br from-gray-50 to-white">
               <div className="space-y-3 sm:space-y-4">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="bg-white p-3 sm:p-4 md:p-5 border-2 border-gray-200 rounded-2xl">
+                  <div
+                    key={i}
+                    className="bg-white p-3 sm:p-4 md:p-5 border-2 border-gray-200 rounded-2xl"
+                  >
                     <div className="flex items-center gap-2 sm:gap-3 pb-2 border-b border-gray-100 mb-3">
                       <Skeleton className="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full" />
                       <div className="flex-1">
@@ -979,7 +1020,10 @@ export const TradingStatisticsSkeleton: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Summary Cards */}
             {[1, 2].map((i) => (
-              <div key={i} className="bg-white border-2 border-gray-200 rounded-xl shadow-md p-6">
+              <div
+                key={i}
+                className="bg-white border-2 border-gray-200 rounded-xl shadow-md p-6"
+              >
                 <Skeleton className="h-6 w-48 mb-4" />
                 <div className="space-y-4">
                   {[1, 2, 3].map((j) => (
@@ -1038,7 +1082,10 @@ export const InventoryPageSkeleton: React.FC = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="bg-white p-6 rounded-xl shadow-md border-2 border-gray-200">
+          <div
+            key={i}
+            className="bg-white p-6 rounded-xl shadow-md border-2 border-gray-200"
+          >
             <div className="flex items-center justify-between mb-3">
               <Skeleton className="h-5 w-24" />
               <Skeleton className="h-8 w-8 rounded-lg" />
@@ -1052,7 +1099,10 @@ export const InventoryPageSkeleton: React.FC = () => {
       {/* Inventory Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-200">
+          <div
+            key={i}
+            className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-200"
+          >
             <div className="flex justify-between items-start mb-4">
               <Skeleton className="h-12 w-12 rounded-xl" />
               <Skeleton className="h-6 w-16 rounded-full" />
@@ -1093,7 +1143,10 @@ export const NewsEventsPageSkeleton: React.FC = () => {
       {/* News/Events Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden">
+          <div
+            key={i}
+            className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden"
+          >
             <Skeleton className="w-full h-48" />
             <div className="p-6">
               <div className="flex items-center gap-2 mb-3">
@@ -1134,7 +1187,10 @@ export const AchievementsPageSkeleton: React.FC = () => {
       {/* Achievement Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-          <div key={i} className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
+          <div
+            key={i}
+            className="bg-white rounded-xl shadow-lg border-2 border-gray-200 overflow-hidden hover:shadow-xl transition-shadow"
+          >
             <Skeleton className="w-full h-56" />
             <div className="p-5">
               <Skeleton className="h-6 w-full mb-2" />

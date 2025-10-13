@@ -1,6 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, Clock, FileText, CheckCircle, Home, ChevronRight, BookOpen } from 'lucide-react';
+import {
+  ChevronLeft,
+  Clock,
+  FileText,
+  CheckCircle,
+  Home,
+  ChevronRight,
+  BookOpen,
+} from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { GuideTemplateSkeleton } from '../../components/LoadingSkeletons';
 
@@ -60,8 +68,8 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
       <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
           <nav className="flex items-center gap-2 text-sm flex-wrap">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="flex items-center gap-1.5 text-green-100 hover:text-white transition-colors group"
             >
               <Home className="w-4 h-4" />
@@ -76,7 +84,9 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
               <span className="font-medium">Guides</span>
             </Link>
             <ChevronRight className="w-4 h-4 text-green-400" />
-            <span className="text-white font-semibold truncate max-w-xs">{title}</span>
+            <span className="text-white font-semibold truncate max-w-xs">
+              {title}
+            </span>
           </nav>
         </div>
       </div>
