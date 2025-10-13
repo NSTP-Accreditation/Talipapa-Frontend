@@ -20,7 +20,7 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import { MapPin, Users, Sprout, Leaf } from 'lucide-react';
+import { MapPin, Users, Sprout, Leaf, BarChart3 } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { DashboardSkeleton } from '../../components/LoadingSkeletons';
 
@@ -421,18 +421,34 @@ const GreenPages: React.FC = () => {
                 <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 border-b-2 border-green-500 pb-4">
                   <CardTitle className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
                     <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                      <BarChart className="w-6 h-6 text-white" />
+                      <BarChart3 className="w-6 h-6 text-white" />
                     </div>
                     Farm Analytics & Statistics
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-3 sm:p-5 md:p-6 space-y-4 sm:space-y-6 md:space-y-8 bg-gradient-to-br from-gray-50 to-white">
+                <CardContent className="p-3 sm:p-5 md:p-6 space-y-4 sm:space-y-6 md:space-y-8 bg-gradient-to-br from-gray-50 to-white overflow-y-auto pr-2 custom-scrollbar max-h-[calc(100vh-20rem)] lg:max-h-[795px]">
+                  {/* Stats Summary */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                    <div className="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                      <p className="text-green-100 text-xs sm:text-sm font-semibold mb-1">Total Farms</p>
+                      <p className="text-white text-2xl sm:text-3xl font-bold">{memberEachFarmData.length}</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                      <p className="text-blue-100 text-xs sm:text-sm font-semibold mb-1">Total Skills</p>
+                      <p className="text-white text-2xl sm:text-3xl font-bold">{skillsCountData.length}</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-purple-500 to-purple-600 p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                      <p className="text-purple-100 text-xs sm:text-sm font-semibold mb-1">Age Groups</p>
+                      <p className="text-white text-2xl sm:text-3xl font-bold">{agesInAllFarmData.length}</p>
+                    </div>
+                  </div>
+
                   {/* Member Each Farm Chart */}
-                  <div className="bg-gradient-to-br from-white via-green-50/30 to-white p-3 sm:p-5 md:p-6 rounded-2xl border-2 border-green-100 shadow-xl">
-                    <div className="flex items-center justify-between mb-2 sm:mb-3">
+                  <div className="bg-gradient-to-br from-white via-green-50/30 to-white p-3 sm:p-5 md:p-6 rounded-2xl border-2 border-green-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
                       <div>
                         <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 flex items-center gap-1.5 sm:gap-2">
-                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
                             <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" />
                           </div>
                           Member Each Farm
@@ -442,96 +458,122 @@ const GreenPages: React.FC = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="sm:hidden">
-                      <ResponsiveContainer width="100%" height={240}>
-                        <BarChart data={memberEachFarmData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis
-                            dataKey="name"
-                            angle={-45}
-                            textAnchor="end"
-                            height={80}
-                            tick={{ fontSize: 9, fill: '#4b5563' }}
-                          />
-                          <YAxis tick={{ fontSize: 10, fill: '#4b5563' }} />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: '#fff',
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '8px',
-                              fontSize: '11px',
-                            }}
-                          />
-                          <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                            {memberEachFarmData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                    <div className="hidden sm:block md:hidden">
-                      <ResponsiveContainer width="100%" height={280}>
-                        <BarChart data={memberEachFarmData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis
-                            dataKey="name"
-                            angle={-25}
-                            textAnchor="end"
-                            height={90}
-                            tick={{ fontSize: 11, fill: '#4b5563' }}
-                          />
-                          <YAxis tick={{ fontSize: 11, fill: '#4b5563' }} />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: '#fff',
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '8px',
-                            }}
-                          />
-                          <Bar dataKey="value" radius={[7, 7, 0, 0]}>
-                            {memberEachFarmData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                    <div className="hidden md:block">
-                      <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={memberEachFarmData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis
-                            dataKey="name"
-                            angle={-15}
-                            textAnchor="end"
-                            height={100}
-                            tick={{ fontSize: 12, fill: '#4b5563' }}
-                          />
-                          <YAxis tick={{ fontSize: 12, fill: '#4b5563' }} />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: '#fff',
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '8px',
-                            }}
-                          />
-                          <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-                            {memberEachFarmData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
+                    <div className="bg-white/50 backdrop-blur-sm p-3 sm:p-4 rounded-xl">
+                      <div className="sm:hidden">
+                        <ResponsiveContainer width="100%" height={260}>
+                          <BarChart data={memberEachFarmData} margin={{ top: 20, right: 10, left: -10, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" opacity={0.5} />
+                            <XAxis
+                              dataKey="name"
+                              angle={-45}
+                              textAnchor="end"
+                              height={80}
+                              tick={{ fontSize: 9, fill: '#374151', fontWeight: 500 }}
+                            />
+                            <YAxis tick={{ fontSize: 10, fill: '#374151', fontWeight: 500 }} />
+                            <Tooltip
+                              cursor={{ fill: 'rgba(16, 185, 129, 0.1)' }}
+                              contentStyle={{
+                                backgroundColor: '#fff',
+                                border: '2px solid #10b981',
+                                borderRadius: '12px',
+                                fontSize: '11px',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                padding: '8px 12px'
+                              }}
+                              labelStyle={{ color: '#059669', fontWeight: 'bold' }}
+                            />
+                            <Legend 
+                              wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }}
+                              iconType="circle"
+                            />
+                            <Bar dataKey="value" name="Members" radius={[8, 8, 0, 0]} label={{ position: 'top', fontSize: 10, fill: '#374151' }}>
+                              {memberEachFarmData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="hidden sm:block md:hidden">
+                        <ResponsiveContainer width="100%" height={320}>
+                          <BarChart data={memberEachFarmData} margin={{ top: 20, right: 20, left: 0, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" opacity={0.5} />
+                            <XAxis
+                              dataKey="name"
+                              angle={-25}
+                              textAnchor="end"
+                              height={90}
+                              tick={{ fontSize: 11, fill: '#374151', fontWeight: 500 }}
+                            />
+                            <YAxis tick={{ fontSize: 11, fill: '#374151', fontWeight: 500 }} />
+                            <Tooltip
+                              cursor={{ fill: 'rgba(16, 185, 129, 0.1)' }}
+                              contentStyle={{
+                                backgroundColor: '#fff',
+                                border: '2px solid #10b981',
+                                borderRadius: '12px',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                padding: '10px 14px'
+                              }}
+                              labelStyle={{ color: '#059669', fontWeight: 'bold' }}
+                            />
+                            <Legend 
+                              wrapperStyle={{ fontSize: '11px', paddingTop: '12px' }}
+                              iconType="circle"
+                            />
+                            <Bar dataKey="value" name="Members" radius={[10, 10, 0, 0]} label={{ position: 'top', fontSize: 11, fill: '#374151', fontWeight: 600 }}>
+                              {memberEachFarmData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="hidden md:block">
+                        <ResponsiveContainer width="100%" height={350}>
+                          <BarChart data={memberEachFarmData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" opacity={0.5} />
+                            <XAxis
+                              dataKey="name"
+                              angle={-15}
+                              textAnchor="end"
+                              height={100}
+                              tick={{ fontSize: 12, fill: '#374151', fontWeight: 500 }}
+                            />
+                            <YAxis tick={{ fontSize: 12, fill: '#374151', fontWeight: 500 }} />
+                            <Tooltip
+                              cursor={{ fill: 'rgba(16, 185, 129, 0.1)' }}
+                              contentStyle={{
+                                backgroundColor: '#fff',
+                                border: '2px solid #10b981',
+                                borderRadius: '12px',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                padding: '12px 16px'
+                              }}
+                              labelStyle={{ color: '#059669', fontWeight: 'bold', fontSize: '13px' }}
+                            />
+                            <Legend 
+                              wrapperStyle={{ fontSize: '12px', paddingTop: '15px' }}
+                              iconType="circle"
+                            />
+                            <Bar dataKey="value" name="Members" radius={[10, 10, 0, 0]} label={{ position: 'top', fontSize: 12, fill: '#374151', fontWeight: 600 }}>
+                              {memberEachFarmData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
                     </div>
                   </div>
 
                   {/* Skills Count Chart */}
-                  <div className="bg-gradient-to-br from-white via-blue-50/30 to-white p-3 sm:p-5 md:p-6 rounded-2xl border-2 border-blue-100 shadow-xl">
-                    <div className="flex items-center justify-between mb-2 sm:mb-3">
+                  <div className="bg-gradient-to-br from-white via-blue-50/30 to-white p-3 sm:p-5 md:p-6 rounded-2xl border-2 border-blue-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
                       <div>
                         <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 flex items-center gap-1.5 sm:gap-2">
-                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md">
                             <Leaf className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" />
                           </div>
                           Skills Count
@@ -541,178 +583,229 @@ const GreenPages: React.FC = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="sm:hidden">
-                      <ResponsiveContainer width="100%" height={240}>
-                        <BarChart data={skillsCountData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis
-                            dataKey="name"
-                            angle={-45}
-                            textAnchor="end"
-                            height={110}
-                            tick={{ fontSize: 8, fill: '#4b5563' }}
-                          />
-                          <YAxis tick={{ fontSize: 10, fill: '#4b5563' }} />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: '#fff',
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '8px',
-                              fontSize: '11px',
-                            }}
-                          />
-                          <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                            {skillsCountData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                    <div className="hidden sm:block md:hidden">
-                      <ResponsiveContainer width="100%" height={280}>
-                        <BarChart data={skillsCountData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis
-                            dataKey="name"
-                            angle={-35}
-                            textAnchor="end"
-                            height={115}
-                            tick={{ fontSize: 9, fill: '#4b5563' }}
-                          />
-                          <YAxis tick={{ fontSize: 11, fill: '#4b5563' }} />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: '#fff',
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '8px',
-                            }}
-                          />
-                          <Bar dataKey="value" radius={[7, 7, 0, 0]}>
-                            {skillsCountData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                    <div className="hidden md:block">
-                      <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={skillsCountData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis
-                            dataKey="name"
-                            angle={-25}
-                            textAnchor="end"
-                            height={120}
-                            tick={{ fontSize: 10, fill: '#4b5563' }}
-                          />
-                          <YAxis tick={{ fontSize: 12, fill: '#4b5563' }} />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: '#fff',
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '8px',
-                            }}
-                          />
-                          <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-                            {skillsCountData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
+                    <div className="bg-white/50 backdrop-blur-sm p-3 sm:p-4 rounded-xl">
+                      <div className="sm:hidden">
+                        <ResponsiveContainer width="100%" height={280}>
+                          <BarChart data={skillsCountData} margin={{ top: 20, right: 10, left: -10, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" opacity={0.5} />
+                            <XAxis
+                              dataKey="name"
+                              angle={-45}
+                              textAnchor="end"
+                              height={110}
+                              tick={{ fontSize: 8, fill: '#374151', fontWeight: 500 }}
+                            />
+                            <YAxis tick={{ fontSize: 10, fill: '#374151', fontWeight: 500 }} />
+                            <Tooltip
+                              cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                              contentStyle={{
+                                backgroundColor: '#fff',
+                                border: '2px solid #3b82f6',
+                                borderRadius: '12px',
+                                fontSize: '11px',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                padding: '8px 12px'
+                              }}
+                              labelStyle={{ color: '#2563eb', fontWeight: 'bold' }}
+                            />
+                            <Legend 
+                              wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }}
+                              iconType="circle"
+                            />
+                            <Bar dataKey="value" name="Staff Count" radius={[8, 8, 0, 0]} label={{ position: 'top', fontSize: 9, fill: '#374151' }}>
+                              {skillsCountData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="hidden sm:block md:hidden">
+                        <ResponsiveContainer width="100%" height={320}>
+                          <BarChart data={skillsCountData} margin={{ top: 20, right: 20, left: 0, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" opacity={0.5} />
+                            <XAxis
+                              dataKey="name"
+                              angle={-35}
+                              textAnchor="end"
+                              height={115}
+                              tick={{ fontSize: 9, fill: '#374151', fontWeight: 500 }}
+                            />
+                            <YAxis tick={{ fontSize: 11, fill: '#374151', fontWeight: 500 }} />
+                            <Tooltip
+                              cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                              contentStyle={{
+                                backgroundColor: '#fff',
+                                border: '2px solid #3b82f6',
+                                borderRadius: '12px',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                padding: '10px 14px'
+                              }}
+                              labelStyle={{ color: '#2563eb', fontWeight: 'bold' }}
+                            />
+                            <Legend 
+                              wrapperStyle={{ fontSize: '11px', paddingTop: '12px' }}
+                              iconType="circle"
+                            />
+                            <Bar dataKey="value" name="Staff Count" radius={[10, 10, 0, 0]} label={{ position: 'top', fontSize: 10, fill: '#374151', fontWeight: 600 }}>
+                              {skillsCountData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="hidden md:block">
+                        <ResponsiveContainer width="100%" height={350}>
+                          <BarChart data={skillsCountData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" opacity={0.5} />
+                            <XAxis
+                              dataKey="name"
+                              angle={-25}
+                              textAnchor="end"
+                              height={120}
+                              tick={{ fontSize: 10, fill: '#374151', fontWeight: 500 }}
+                            />
+                            <YAxis tick={{ fontSize: 12, fill: '#374151', fontWeight: 500 }} />
+                            <Tooltip
+                              cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                              contentStyle={{
+                                backgroundColor: '#fff',
+                                border: '2px solid #3b82f6',
+                                borderRadius: '12px',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                padding: '12px 16px'
+                              }}
+                              labelStyle={{ color: '#2563eb', fontWeight: 'bold', fontSize: '13px' }}
+                            />
+                            <Legend 
+                              wrapperStyle={{ fontSize: '12px', paddingTop: '15px' }}
+                              iconType="circle"
+                            />
+                            <Bar dataKey="value" name="Staff Count" radius={[10, 10, 0, 0]} label={{ position: 'top', fontSize: 11, fill: '#374151', fontWeight: 600 }}>
+                              {skillsCountData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
                     </div>
                   </div>
 
                   {/* Ages in All Farm Chart */}
-                  <div className="bg-gradient-to-br from-white via-purple-50/30 to-white p-3 sm:p-5 md:p-6 rounded-2xl border-2 border-purple-100 shadow-xl">
-                    <div className="flex items-center justify-between mb-2 sm:mb-3">
+                  <div className="bg-gradient-to-br from-white via-purple-50/30 to-white p-3 sm:p-5 md:p-6 rounded-2xl border-2 border-purple-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
                       <div>
                         <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 flex items-center gap-1.5 sm:gap-2">
-                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
                             <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" />
                           </div>
-                          Ages in all Farm
+                          Age Distribution
                         </h3>
                         <p className="text-xs sm:text-sm text-gray-600 mt-0.5 sm:mt-1 ml-8 sm:ml-10">
                           Age distribution of all farm staff members
                         </p>
                       </div>
                     </div>
-                    <div className="sm:hidden">
-                      <ResponsiveContainer width="100%" height={240}>
-                        <BarChart data={agesInAllFarmData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis
-                            dataKey="name"
-                            tick={{ fontSize: 10, fill: '#4b5563' }}
-                          />
-                          <YAxis tick={{ fontSize: 10, fill: '#4b5563' }} />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: '#fff',
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '8px',
-                              fontSize: '11px',
-                            }}
-                          />
-                          <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                            {agesInAllFarmData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                    <div className="hidden sm:block md:hidden">
-                      <ResponsiveContainer width="100%" height={280}>
-                        <BarChart data={agesInAllFarmData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis
-                            dataKey="name"
-                            tick={{ fontSize: 11, fill: '#4b5563' }}
-                          />
-                          <YAxis tick={{ fontSize: 11, fill: '#4b5563' }} />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: '#fff',
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '8px',
-                            }}
-                          />
-                          <Bar dataKey="value" radius={[7, 7, 0, 0]}>
-                            {agesInAllFarmData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                    <div className="hidden md:block">
-                      <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={agesInAllFarmData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                          <XAxis
-                            dataKey="name"
-                            tick={{ fontSize: 12, fill: '#4b5563' }}
-                          />
-                          <YAxis tick={{ fontSize: 12, fill: '#4b5563' }} />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: '#fff',
-                              border: '2px solid #e5e7eb',
-                              borderRadius: '8px',
-                              fontSize: '12px',
-                            }}
-                          />
-                          <Bar dataKey="value" radius={[8, 8, 0, 0]}>
-                            {agesInAllFarmData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
+                    <div className="bg-white/50 backdrop-blur-sm p-3 sm:p-4 rounded-xl">
+                      <div className="sm:hidden">
+                        <ResponsiveContainer width="100%" height={260}>
+                          <BarChart data={agesInAllFarmData} margin={{ top: 20, right: 10, left: -10, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" opacity={0.5} />
+                            <XAxis
+                              dataKey="name"
+                              tick={{ fontSize: 10, fill: '#374151', fontWeight: 500 }}
+                            />
+                            <YAxis tick={{ fontSize: 10, fill: '#374151', fontWeight: 500 }} />
+                            <Tooltip
+                              cursor={{ fill: 'rgba(168, 85, 247, 0.1)' }}
+                              contentStyle={{
+                                backgroundColor: '#fff',
+                                border: '2px solid #a855f7',
+                                borderRadius: '12px',
+                                fontSize: '11px',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                padding: '8px 12px'
+                              }}
+                              labelStyle={{ color: '#9333ea', fontWeight: 'bold' }}
+                            />
+                            <Legend 
+                              wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }}
+                              iconType="circle"
+                            />
+                            <Bar dataKey="value" name="Staff Members" radius={[8, 8, 0, 0]} label={{ position: 'top', fontSize: 10, fill: '#374151' }}>
+                              {agesInAllFarmData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="hidden sm:block md:hidden">
+                        <ResponsiveContainer width="100%" height={320}>
+                          <BarChart data={agesInAllFarmData} margin={{ top: 20, right: 20, left: 0, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" opacity={0.5} />
+                            <XAxis
+                              dataKey="name"
+                              tick={{ fontSize: 11, fill: '#374151', fontWeight: 500 }}
+                            />
+                            <YAxis tick={{ fontSize: 11, fill: '#374151', fontWeight: 500 }} />
+                            <Tooltip
+                              cursor={{ fill: 'rgba(168, 85, 247, 0.1)' }}
+                              contentStyle={{
+                                backgroundColor: '#fff',
+                                border: '2px solid #a855f7',
+                                borderRadius: '12px',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                padding: '10px 14px'
+                              }}
+                              labelStyle={{ color: '#9333ea', fontWeight: 'bold' }}
+                            />
+                            <Legend 
+                              wrapperStyle={{ fontSize: '11px', paddingTop: '12px' }}
+                              iconType="circle"
+                            />
+                            <Bar dataKey="value" name="Staff Members" radius={[10, 10, 0, 0]} label={{ position: 'top', fontSize: 11, fill: '#374151', fontWeight: 600 }}>
+                              {agesInAllFarmData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="hidden md:block">
+                        <ResponsiveContainer width="100%" height={350}>
+                          <BarChart data={agesInAllFarmData} margin={{ top: 20, right: 30, left: 10, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" opacity={0.5} />
+                            <XAxis
+                              dataKey="name"
+                              tick={{ fontSize: 12, fill: '#374151', fontWeight: 500 }}
+                            />
+                            <YAxis tick={{ fontSize: 12, fill: '#374151', fontWeight: 500 }} />
+                            <Tooltip
+                              cursor={{ fill: 'rgba(168, 85, 247, 0.1)' }}
+                              contentStyle={{
+                                backgroundColor: '#fff',
+                                border: '2px solid #a855f7',
+                                borderRadius: '12px',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                padding: '12px 16px'
+                              }}
+                              labelStyle={{ color: '#9333ea', fontWeight: 'bold', fontSize: '13px' }}
+                            />
+                            <Legend 
+                              wrapperStyle={{ fontSize: '12px', paddingTop: '15px' }}
+                              iconType="circle"
+                            />
+                            <Bar dataKey="value" name="Staff Members" radius={[10, 10, 0, 0]} label={{ position: 'top', fontSize: 12, fill: '#374151', fontWeight: 600 }}>
+                              {agesInAllFarmData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Bar>
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

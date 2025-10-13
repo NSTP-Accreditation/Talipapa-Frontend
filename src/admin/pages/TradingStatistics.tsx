@@ -43,7 +43,7 @@ export default function TradingStatisticsPage() {
                 <CardHeader>
                   <CardTitle>Today's Trading Summary</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="overflow-y-auto pr-2 custom-scrollbar max-h-[calc(100vh-20rem)] lg:max-h-[740px]">
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Total Trades</span>
