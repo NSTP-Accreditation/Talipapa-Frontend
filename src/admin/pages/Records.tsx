@@ -10,6 +10,7 @@ import {
   Calendar,
   Award,
   X,
+  UserRoundPen,
 } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 import { debounce } from 'lodash';
@@ -161,7 +162,7 @@ const ResidentRecords: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3 mb-3">
-            <span>👥</span>
+            <UserRoundPen className="w-10 h-10 text-green-600" />
             Resident Records
           </h1>
           <p className="text-gray-700 font-medium">

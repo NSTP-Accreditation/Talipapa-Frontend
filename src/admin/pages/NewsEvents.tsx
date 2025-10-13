@@ -612,7 +612,7 @@ const News: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <span className="text-4xl">📅</span>
+            <Calendar className="w-10 h-10 text-green-600" />
             Calendar Events & News
           </h1>
           <p className="text-lg text-gray-700 mt-3 font-medium">

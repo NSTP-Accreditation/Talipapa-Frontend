@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Activity } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { ActivityLogsPageSkeleton } from '../../components/LoadingSkeletons';
 
@@ -53,10 +54,11 @@ const ActivityLogs = () => {
   return (
     <div className="p-6 md:p-10">
       <div className="mb-8">
-        <h1 className="text-4xl font-black text-black flex items-center gap-3 mb-1">
-          <span className="text-4xl">🗒️</span>
+        <h1 className="text-4xl font-black text-black flex items-center gap-4 mb-1">
+          <Activity className="w-10 h-10 text-green-600" />
           Activity Log
         </h1>
+        <div className="h-3" /> {/* Breathing space between h1 and p */}
         <p className="text-gray-600 font-medium">List of Recent Activities</p>
       </div>
       <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 p-6 mb-8 flex flex-col md:flex-row md:items-center gap-3">

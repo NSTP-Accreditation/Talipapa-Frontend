@@ -1,12 +1,4 @@
-import {
-  CheckCircle,
-  Eye,
-  Target,
-  Leaf,
-  Heart,
-  Award,
-  ShieldCheck,
-} from 'lucide-react';
+import { Eye, Target, Leaf, Heart, Award, ShieldCheck } from 'lucide-react';
 export default function MissionVision() {
   return (
     <section className="bg-gradient-to-br from-green-50 to-white py-20 px-6 flex flex-col items-center">
@@ -47,10 +39,10 @@ export default function MissionVision() {
 
         {/* Vision */}
         <div className="bg-white border-2 border-green-100 shadow-xl rounded-2xl p-10 flex flex-col items-center hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="relative z-10 flex flex-col items-center w-full">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-              <Eye className="text-blue-700" size={48} />
+            <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+              <Eye className="text-green-700" size={48} />
             </div>
             <h3 className="text-2xl font-bold mb-6 text-gray-800">
               Our Vision
