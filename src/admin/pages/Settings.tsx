@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Building, Palette, Users, Cog } from 'lucide-react';
 import {
   Card,
   CardHeader,
@@ -105,13 +106,14 @@ const Settings: React.FC = () => {
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-8">
-        <div>
+      <div className="mb-8">
+        <div className="flex flex-row items-center gap-4">
+          <Cog className="w-10 h-10 text-green-600 flex-shrink-0" />
           <h1 className="text-4xl font-bold text-gray-900">Settings</h1>
-          <p className="text-lg text-gray-700 mt-3 font-medium">
-            Manage system configuration and preferences
-          </p>
         </div>
+        <p className="text-lg text-gray-700 mt-3 font-medium">
+          Manage system configuration and preferences
+        </p>
       </div>
 
       {/* Content */}
@@ -121,7 +123,7 @@ const Settings: React.FC = () => {
           <CardHeader className="pb-6">
             <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-3">
               <div className="p-2 rounded-lg bg-blue-50">
-                <span className="text-2xl">🏛️</span>
+                <Building className="w-6 h-6 text-blue-600" />
               </div>
               Barangay Information
             </CardTitle>
@@ -229,7 +231,7 @@ const Settings: React.FC = () => {
           <CardHeader className="pb-6">
             <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-3">
               <div className="p-2 rounded-lg bg-purple-50">
-                <span className="text-2xl">🎨</span>
+                <Palette className="w-6 h-6 text-purple-600" />
               </div>
               Theme Settings
             </CardTitle>
@@ -279,7 +281,7 @@ const Settings: React.FC = () => {
           <CardHeader className="pb-6">
             <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-3">
               <div className="p-2 rounded-lg bg-green-50">
-                <span className="text-2xl">👥</span>
+                <Users className="w-6 h-6 text-green-600" />
               </div>
               Admin Accounts
             </CardTitle>

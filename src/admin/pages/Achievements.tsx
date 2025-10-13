@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SquarePen, Plus, Trash2, X } from 'lucide-react';
+import { SquarePen, Plus, Trash2, X, Trophy, Image } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { AchievementsPageSkeleton } from '../../components/LoadingSkeletons';
 
@@ -174,7 +174,7 @@ export default function AchievementsAdmin() {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <span className="text-7xl">🏆</span>
+            <Trophy className="w-20 h-20 text-yellow-500" />
           </div>
         )}
 
@@ -186,7 +186,7 @@ export default function AchievementsAdmin() {
       <div className="p-5 flex flex-col flex-1">
         {/* Icon Badge */}
         <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 text-white mb-3 shadow-md group-hover:scale-110 transition-transform duration-300">
-          <span className="text-xl">🏆</span>
+          <Trophy className="w-5 h-5" />
         </div>
 
         {/* Title */}
@@ -245,7 +245,7 @@ export default function AchievementsAdmin() {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <span className="text-4xl">🏆</span>
+            <Trophy className="w-10 h-10 text-yellow-500" />
             Achievements
           </h1>
           <p className="text-lg text-gray-700 mt-3 font-medium">
@@ -270,7 +270,7 @@ export default function AchievementsAdmin() {
         {items.length === 0 ? (
           <div className="col-span-full text-center py-24">
             <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl shadow-xl mb-6">
-              <span className="text-8xl">🏆</span>
+              <Trophy className="w-20 h-20 text-yellow-500" />
             </div>
             <h3 className="text-2xl font-bold text-gray-800 mb-3">
               No achievements yet
@@ -344,7 +344,9 @@ export default function AchievementsAdmin() {
                   <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
                     <SquarePen className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <h4 className="text-lg sm:text-xl font-bold text-gray-900">Achievement Details</h4>
+                  <h4 className="text-lg sm:text-xl font-bold text-gray-900">
+                    Achievement Details
+                  </h4>
                 </div>
 
                 <label className="block">
@@ -368,7 +370,9 @@ export default function AchievementsAdmin() {
                   </div>
                   <textarea
                     value={form.description}
-                    onChange={(e) => handleChange('description', e.target.value)}
+                    onChange={(e) =>
+                      handleChange('description', e.target.value)
+                    }
                     className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none resize-none text-gray-900 font-medium text-sm sm:text-base"
                     rows={5}
                     placeholder="Describe this achievement..."
@@ -394,9 +398,11 @@ export default function AchievementsAdmin() {
               <div className="space-y-3 sm:space-y-4">
                 <div className="flex items-center gap-2 sm:gap-3 pb-2 sm:pb-3 border-b-2 border-green-100">
                   <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
-                    <span className="text-lg sm:text-xl">🖼️</span>
+                    <Image className="w-5 h-5 text-white" />
                   </div>
-                  <h4 className="text-lg sm:text-xl font-bold text-gray-900">Image</h4>
+                  <h4 className="text-lg sm:text-xl font-bold text-gray-900">
+                    Image
+                  </h4>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -452,7 +458,7 @@ export default function AchievementsAdmin() {
                       />
                     ) : (
                       <div className="text-center">
-                        <span className="text-6xl mb-2 block">🖼️</span>
+                        <Image className="w-16 h-16 mb-2 mx-auto text-gray-400" />
                         <div className="text-gray-400 font-medium">
                           No image selected
                         </div>
@@ -465,8 +471,13 @@ export default function AchievementsAdmin() {
               {/* Info Box */}
               <div className="bg-gradient-to-r from-green-50 to-green-50 border-2 border-green-200 rounded-xl p-3 sm:p-4">
                 <p className="text-xs sm:text-sm text-gray-700 font-medium flex items-start gap-2">
-                  <span className="text-green-600 text-base sm:text-lg flex-shrink-0">ℹ️</span>
-                  <span>Title is required. You can provide an image URL or upload a file. The preview shows how it will appear.</span>
+                  <span className="text-green-600 text-base sm:text-lg flex-shrink-0">
+                    ℹ️
+                  </span>
+                  <span>
+                    Title is required. You can provide an image URL or upload a
+                    file. The preview shows how it will appear.
+                  </span>
                 </p>
               </div>
             </div>

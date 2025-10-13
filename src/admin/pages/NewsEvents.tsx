@@ -7,7 +7,17 @@ import {
 } from '../../components/ui/card';
 import { NewsEventsPageSkeleton } from '../../components/LoadingSkeletons';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { Calendar, Clock, MapPin, Tag, AlertCircle, X, Plus, SquarePen, Trash2 } from 'lucide-react';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Tag,
+  AlertCircle,
+  X,
+  Plus,
+  SquarePen,
+  Trash2,
+} from 'lucide-react';
 
 interface CalendarEvent {
   id: string;
@@ -133,7 +143,9 @@ const EventModal: React.FC<EventModalProps> = ({
                   {event?.id ? 'Edit Calendar Event' : 'Add New Calendar Event'}
                 </h3>
                 <p className="text-green-100 text-xs sm:text-sm font-medium truncate">
-                  {event?.id ? 'Update event details' : 'Create a new calendar event'}
+                  {event?.id
+                    ? 'Update event details'
+                    : 'Create a new calendar event'}
                 </p>
               </div>
             </div>
@@ -155,7 +167,9 @@ const EventModal: React.FC<EventModalProps> = ({
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
                 <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <h4 className="text-lg sm:text-xl font-bold text-gray-900">Event Information</h4>
+              <h4 className="text-lg sm:text-xl font-bold text-gray-900">
+                Event Information
+              </h4>
             </div>
 
             <div className="space-y-3 sm:space-y-4">
@@ -199,7 +213,9 @@ const EventModal: React.FC<EventModalProps> = ({
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
                 <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <h4 className="text-lg sm:text-xl font-bold text-gray-900">Schedule</h4>
+              <h4 className="text-lg sm:text-xl font-bold text-gray-900">
+                Schedule
+              </h4>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -257,7 +273,9 @@ const EventModal: React.FC<EventModalProps> = ({
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
                 <Tag className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <h4 className="text-lg sm:text-xl font-bold text-gray-900">Classification</h4>
+              <h4 className="text-lg sm:text-xl font-bold text-gray-900">
+                Classification
+              </h4>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -309,8 +327,14 @@ const EventModal: React.FC<EventModalProps> = ({
           {/* Info Box */}
           <div className="bg-gradient-to-r from-green-50 to-green-50 border-2 border-green-200 rounded-xl p-3 sm:p-4">
             <p className="text-xs sm:text-sm text-gray-700 font-medium flex items-start gap-2">
-              <span className="text-green-600 text-base sm:text-lg flex-shrink-0">ℹ️</span>
-              <span>Fields marked with <span className="text-red-500 font-bold">*</span> are required. Make sure all information is accurate before saving.</span>
+              <span className="text-green-600 text-base sm:text-lg flex-shrink-0">
+                ℹ️
+              </span>
+              <span>
+                Fields marked with{' '}
+                <span className="text-red-500 font-bold">*</span> are required.
+                Make sure all information is accurate before saving.
+              </span>
             </p>
           </div>
         </div>
@@ -370,7 +394,9 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                 <AlertCircle className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-0.5 sm:mb-1">Delete Event</h3>
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-0.5 sm:mb-1">
+                  Delete Event
+                </h3>
                 <p className="text-red-100 text-xs sm:text-sm font-medium">
                   This action cannot be undone
                 </p>
@@ -586,7 +612,7 @@ const News: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <span className="text-4xl">📅</span>
+            <Calendar className="w-10 h-10 text-green-600" />
             Calendar Events & News
           </h1>
           <p className="text-lg text-gray-700 mt-3 font-medium">

@@ -103,8 +103,8 @@ export default function Guidelines() {
       <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
           <nav className="flex items-center gap-2 text-sm">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="flex items-center gap-1.5 text-green-100 hover:text-white transition-colors group"
             >
               <Home className="w-4 h-4" />

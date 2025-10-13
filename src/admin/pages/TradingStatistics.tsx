@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { BarChart3 } from 'lucide-react';
 import {
   Card,
   CardHeader,
@@ -24,7 +24,7 @@ export default function TradingStatisticsPage() {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
         <div>
           <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <span className="text-4xl">📊</span>
+            <BarChart3 className="w-10 h-10 text-green-600" />
             Trading Statistics
           </h1>
           <p className="text-lg text-gray-700 mt-2 font-medium">
@@ -133,7 +133,9 @@ export default function TradingStatisticsPage() {
                         </tr>
                       </tbody>
                     </table>
-                    <div className="block sm:hidden text-xs text-gray-400 mt-2 text-center">Swipe left/right to see more columns</div>
+                    <div className="block sm:hidden text-xs text-gray-400 mt-2 text-center">
+                      Swipe left/right to see more columns
+                    </div>
                   </div>
                 </CardContent>
               </Card>

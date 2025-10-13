@@ -204,7 +204,9 @@ const MenuBar: React.FC<MenuBarProps> = ({
               <h1 className="text-white font-black text-xl sm:text-2xl whitespace-nowrap leading-tight">
                 Barangay Admin
               </h1>
-              <p className="text-green-200 text-xs font-medium">Content Management</p>
+              <p className="text-green-200 text-xs font-medium">
+                Content Management
+              </p>
             </div>
           </div>
         </div>

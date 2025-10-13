@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Home, BookOpen, Recycle, Info, Calendar, Clock } from 'lucide-react';
+import {
+  Menu,
+  X,
+  Home,
+  BookOpen,
+  Recycle,
+  Info,
+  Calendar,
+  Clock,
+} from 'lucide-react';
 
 export default function NavBar() {
   const [currentDate, setCurrentDate] = useState('');
@@ -73,11 +82,15 @@ export default function NavBar() {
         <div className="max-w-7xl mx-auto flex justify-between items-center text-sm">
           <div className="flex items-center gap-2 text-green-100">
             <Calendar className="w-4 h-4 text-green-300" />
-            <span className="font-medium tracking-wide truncate">{currentDate}</span>
+            <span className="font-medium tracking-wide truncate">
+              {currentDate}
+            </span>
           </div>
           <div className="flex items-center gap-2 text-green-100">
             <Clock className="w-4 h-4 text-green-300" />
-            <span className="font-semibold tracking-wider tabular-nums">{currentTime}</span>
+            <span className="font-semibold tracking-wider tabular-nums">
+              {currentTime}
+            </span>
           </div>
         </div>
       </div>
@@ -103,7 +116,9 @@ export default function NavBar() {
             {/* Brand Name (Desktop) */}
             <Link to="/" className="hidden md:block group">
               <div>
-                <h1 className="text-lg font-bold text-white leading-tight group-hover:text-green-200 transition-colors">Barangay Talipapa</h1>
+                <h1 className="text-lg font-bold text-white leading-tight group-hover:text-green-200 transition-colors">
+                  Barangay Talipapa
+                </h1>
                 <p className="text-xs text-green-200">Quezon City</p>
               </div>
             </Link>
@@ -188,9 +203,11 @@ export default function NavBar() {
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                  isActive(path) ? 'bg-white/20' : 'bg-white/10'
-                }`}>
+                <div
+                  className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                    isActive(path) ? 'bg-white/20' : 'bg-white/10'
+                  }`}
+                >
                   <Icon className="w-5 h-5" />
                 </div>
                 <span>{label}</span>

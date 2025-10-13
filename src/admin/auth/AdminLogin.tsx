@@ -129,7 +129,10 @@ const AdminLogin: React.FC = () => {
 
               {/* Form */}
               <div className="w-full">
-                <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-6 sm:space-y-8"
+                >
                   {/* Username Field */}
                   <div>
                     <label

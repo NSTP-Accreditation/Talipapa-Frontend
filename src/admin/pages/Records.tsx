@@ -1,7 +1,17 @@
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
-import { Download, Search, User, Phone, MapPin, Calendar, Award, X } from 'lucide-react';
+import {
+  Download,
+  Search,
+  User,
+  Phone,
+  MapPin,
+  Calendar,
+  Award,
+  X,
+  UserRoundPen,
+} from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 import { debounce } from 'lodash';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
@@ -26,14 +36,17 @@ const ResidentRecords: React.FC = () => {
 
       const fetchSearch = async () => {
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/records/search?query=${query}`, {
-            method: "GET",
-            headers: {
-              "Authorization": `Bearer ${user?.accessToken}`
-            },
-            credentials: "include"
-          });
-          
+          const response = await fetch(
+            `${import.meta.env.VITE_API_URL}/records/search?query=${query}`,
+            {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${user?.accessToken}`,
+              },
+              credentials: 'include',
+            }
+          );
+
           const result = await response.json();
           if (!response.ok) {
             throw new Error(result.message);
@@ -149,13 +162,14 @@ const ResidentRecords: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3 mb-3">
-            <span>👥</span>
+            <UserRoundPen className="w-10 h-10 text-green-600" />
             Resident Records
           </h1>
           <p className="text-gray-700 font-medium">
             List of the resident records created
             <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-              {safeRecords.length} {safeRecords.length === 1 ? 'Record' : 'Records'}
+              {safeRecords.length}{' '}
+              {safeRecords.length === 1 ? 'Record' : 'Records'}
             </span>
           </p>
         </div>
@@ -314,7 +328,8 @@ const ResidentRecords: React.FC = () => {
           <span className="font-bold text-gray-900">
             {Math.min(startIndex + recordsPerPage, safeRecords.length)}
           </span>{' '}
-          of <span className="font-bold text-gray-900">{safeRecords.length}</span>{' '}
+          of{' '}
+          <span className="font-bold text-gray-900">{safeRecords.length}</span>{' '}
           records
         </div>
 
@@ -365,15 +380,19 @@ const ResidentRecords: React.FC = () => {
             <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
               <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
-              
+
               <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center ring-4 ring-white/30 shadow-lg">
                     <User className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-3xl font-bold mb-1">Add New Resident</h3>
-                    <p className="text-green-100 text-sm font-medium">Fill in the details to create a new record</p>
+                    <h3 className="text-3xl font-bold mb-1">
+                      Add New Resident
+                    </h3>
+                    <p className="text-green-100 text-sm font-medium">
+                      Fill in the details to create a new record
+                    </p>
                   </div>
                 </div>
                 <button
@@ -395,7 +414,9 @@ const ResidentRecords: React.FC = () => {
                   <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md">
                     <User className="w-4 h-4 text-white" />
                   </div>
-                  <h4 className="text-lg font-bold text-gray-800">Personal Information</h4>
+                  <h4 className="text-lg font-bold text-gray-800">
+                    Personal Information
+                  </h4>
                   <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
                 </div>
 
@@ -474,7 +495,9 @@ const ResidentRecords: React.FC = () => {
                   <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
                     <Award className="w-4 h-4 text-white" />
                   </div>
-                  <h4 className="text-lg font-bold text-gray-800">Additional Details</h4>
+                  <h4 className="text-lg font-bold text-gray-800">
+                    Additional Details
+                  </h4>
                   <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
                 </div>
 
@@ -533,7 +556,10 @@ const ResidentRecords: React.FC = () => {
                       type="text"
                       value={newResident.contact}
                       onChange={(e) =>
-                        setNewResident((s) => ({ ...s, contact: e.target.value }))
+                        setNewResident((s) => ({
+                          ...s,
+                          contact: e.target.value,
+                        }))
                       }
                       className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
                       placeholder="09XXXXXXXXX"
@@ -576,7 +602,10 @@ const ResidentRecords: React.FC = () => {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm text-blue-800 font-medium">
-                    <span className="font-bold">Note:</span> Fields marked with <span className="text-red-500 font-bold">*</span> are required. Please ensure all information is accurate before submitting.
+                    <span className="font-bold">Note:</span> Fields marked with{' '}
+                    <span className="text-red-500 font-bold">*</span> are
+                    required. Please ensure all information is accurate before
+                    submitting.
                   </p>
                 </div>
               </div>
@@ -599,9 +628,25 @@ const ResidentRecords: React.FC = () => {
               >
                 {isCreating ? (
                   <>
-                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     <span>Creating...</span>
                   </>
