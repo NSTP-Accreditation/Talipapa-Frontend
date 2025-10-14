@@ -118,6 +118,11 @@ const MenuBar: React.FC<MenuBarProps> = ({
           label: 'Talipapa Natin',
           href: APP_ROUTES.ADMIN.TALIPAPANATIN,
         },
+        {
+          icon: <Wrench className="w-4 h-4 text-red-600" />,
+          label: 'Emergency',
+          href: APP_ROUTES.ADMIN.EMERGENCY,
+        },
       ],
     },
     {

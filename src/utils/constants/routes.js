@@ -41,5 +41,6 @@ export const APP_ROUTES = {
     SETTINGS: '/admin/settings',
     ACTIVITYLOGS: '/admin/activity-logs',
     TALIPAPANATIN: '/admin/talipapa-natin',
+    EMERGENCY: '/admin/emergency',
   },
 };

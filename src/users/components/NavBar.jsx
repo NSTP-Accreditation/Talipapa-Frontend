@@ -9,6 +9,7 @@ import {
   Info,
   Calendar,
   Clock,
+  FireExtinguisher,
 } from 'lucide-react';
 
 export default function NavBar() {
@@ -68,6 +69,7 @@ export default function NavBar() {
     { path: '/', label: 'Home', icon: Home },
     { path: '/guidelines', label: 'Guides', icon: BookOpen },
     { path: '/trading', label: 'EcoCycle', icon: Recycle },
+    { path: '/emergency', label: 'Emergency Services', icon: FireExtinguisher },
     { path: '/aboutus', label: 'About Us', icon: Info },
   ];
 
