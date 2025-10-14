@@ -3,6 +3,7 @@ import { SquarePen, Save, Home } from 'lucide-react';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import useFetchData from '../hooks/useFetchData';
 import { useAuthFetch } from '../hooks/useAuthFetch';
+import OfficialsPanel from '../components/OfficialsPanel';
 
 export default function AboutBarangayEditable() {
   const {
@@ -10,7 +11,7 @@ export default function AboutBarangayEditable() {
     loading: dataLoading,
     error,
     refetch,
-  } = useFetchData<any>(`/pageContent/${process.env.VITE_PAGE_CONTENT_ID}`);
+  } = useFetchData<any>(`/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`);
 
   const [pageContent, setPageContent] = useState<{
     barangayName: string;
@@ -19,17 +20,6 @@ export default function AboutBarangayEditable() {
     barangayHistory?: string;
     barangayDescription?: string;
   }>();
-
-  const [officials, setOfficials] = useState([
-    { role: 'Barangay Captain', name: 'Juan Dela Cruz' },
-    { role: 'Kagawad - Environment', name: 'Maria Santos' },
-    { role: 'Barangay Secretary', name: 'Rosa Garcia' },
-    { role: 'Kagawad - Health', name: 'Pedro Ramirez' },
-    { role: 'Kagawad - Education', name: 'Liza Fernandez' },
-    { role: 'Kagawad - Infrastructure', name: 'Jose Mendoza' },
-    { role: 'Barangay Treasurer', name: 'Ana Cruz' },
-    { role: 'SK Chairman', name: 'Mark Dizon' },
-  ]);
 
   // Edit Mode States
   const [isEditingInfo, setIsEditingInfo] = useState(false);
@@ -77,11 +67,6 @@ export default function AboutBarangayEditable() {
   }
 
   // Editable Handlers
-  const handleOfficialChange = (index, key, value) => {
-    const updated = [...officials];
-    updated[index][key] = value;
-    setOfficials(updated);
-  };
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -314,65 +299,7 @@ export default function AboutBarangayEditable() {
         </div>
 
         {/* Barangay Officials */}
-        <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <span>👥</span>
-                Barangay Officials
-                <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-                  {officials.length} Officials
-                </span>
-              </h2>
-              <button
-                onClick={() => setIsEditingOfficials(!isEditingOfficials)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
-              >
-                <SquarePen size={14} />
-                {isEditingOfficials ? 'Cancel' : 'Edit'}
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {officials.map((official, index) => (
-                <div
-                  key={index}
-                  className="bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 rounded-lg p-4 hover:border-green-300 transition-all duration-300 hover:shadow-md"
-                >
-                  {isEditingOfficials ? (
-                    <div className="space-y-3">
-                      <input
-                        type="text"
-                        value={official.role}
-                        onChange={(e) =>
-                          handleOfficialChange(index, 'role', e.target.value)
-                        }
-                        className="w-full border-2 border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all font-semibold"
-                        placeholder="Role"
-                      />
-                      <input
-                        type="text"
-                        value={official.name}
-                        onChange={(e) =>
-                          handleOfficialChange(index, 'name', e.target.value)
-                        }
-                        className="w-full border-2 border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                        placeholder="Name"
-                      />
-                    </div>
-                  ) : (
-                    <div>
-                      <p className="font-bold text-gray-900 text-base mb-1">
-                        {official.role}
-                      </p>
-                      <p className="text-gray-600 text-sm">{official.name}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <OfficialsPanel />
       </div>
     </div>
   );
