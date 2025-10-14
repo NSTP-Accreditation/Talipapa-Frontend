@@ -7,6 +7,23 @@ import {
 } from '../../components/ui/card';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
+import {
+  BookOpen,
+  FileText,
+  Tag,
+  Clock,
+  TrendingUp,
+  MapPin,
+  FileCheck,
+  Lightbulb,
+  ChevronUp,
+  ChevronDown,
+  Edit2,
+  Trash2,
+  Plus,
+  X,
+  AlertCircle,
+} from 'lucide-react';
 
 interface Step {
   id: string;
@@ -264,37 +281,55 @@ const EditModal: React.FC<EditModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-5"
+      className="fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-4 sm:p-5"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white rounded-2xl shadow-2xl max-w-[900px] w-full max-h-[95vh] overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-[900px] w-full max-h-[95vh] overflow-hidden animate-in fade-in zoom-in duration-300">
         {/* Header */}
-        <div className="px-6 pt-6 pb-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-gray-900">
-            {guideline?.id ? 'Edit Guidelines' : 'Add New Guidelines'}
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 p-1 rounded transition-colors"
-          >
-            ✕
-          </button>
+        <div className="px-6 sm:px-8 py-5 sm:py-6 bg-gradient-to-r from-green-600 via-green-600 to-green-700">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30">
+              <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
+                {guideline?.id ? 'Edit Guidelines' : 'Add New Guidelines'}
+              </h2>
+              <p className="text-xs sm:text-sm text-green-50 mt-0.5 sm:mt-1">
+                {guideline?.id
+                  ? 'Update step-by-step instructions'
+                  : 'Create comprehensive step-by-step guide'}
+              </p>
+            </div>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 sm:w-9 sm:h-9 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105 ring-1 ring-white/30"
+            >
+              <X className="w-5 h-5 text-white" />
+            </button>
+          </div>
         </div>
 
         {/* Form Content */}
-        <div className="px-6 py-6 max-h-[calc(95vh-200px)] overflow-y-auto">
-          <div className="flex flex-col gap-5">
+        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-6 max-h-[calc(95vh-200px)] overflow-y-auto">
+          <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
             {/* Basic Information */}
-            <div className="mb-8 p-5 bg-gray-50 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2 border-b border-gray-200 pb-2">
-                📋 Basic Information
-              </h3>
+            <div className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-green-50 to-white rounded-xl sm:rounded-2xl border-2 border-green-100">
+              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+                  <FileText className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-gray-900">
+                  Basic Information
+                </h3>
+              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                    <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
                     Title *
                   </label>
                   <input
@@ -303,13 +338,14 @@ const EditModal: React.FC<EditModalProps> = ({
                     onChange={(e) =>
                       setFormData({ ...formData, title: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
                     placeholder="e.g., How to Get a Barangay Clearance"
                   />
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                    <Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
                     Category *
                   </label>
                   <select
@@ -317,7 +353,7 @@ const EditModal: React.FC<EditModalProps> = ({
                     onChange={(e) =>
                       setFormData({ ...formData, category: e.target.value })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm bg-white cursor-pointer focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
                   >
                     <option value="">Select Category</option>
                     <option value="Clearances">Clearances</option>
@@ -329,8 +365,9 @@ const EditModal: React.FC<EditModalProps> = ({
                 </div>
               </div>
 
-              <div className="flex flex-col">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="flex flex-col mb-3 sm:mb-4">
+                <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                  <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
                   Description *
                 </label>
                 <textarea
@@ -339,14 +376,15 @@ const EditModal: React.FC<EditModalProps> = ({
                     setFormData({ ...formData, description: e.target.value })
                   }
                   rows={3}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm resize-none focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
                   placeholder="Brief description of what this guideline covers"
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                    <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
                     Difficulty Level
                   </label>
                   <select
@@ -360,7 +398,7 @@ const EditModal: React.FC<EditModalProps> = ({
                           | 'Hard',
                       })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm bg-white cursor-pointer focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
                   >
                     <option value="Easy">Easy</option>
                     <option value="Medium">Medium</option>
@@ -369,7 +407,8 @@ const EditModal: React.FC<EditModalProps> = ({
                 </div>
 
                 <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                    <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
                     Total Estimated Time *
                   </label>
                   <input
@@ -381,7 +420,7 @@ const EditModal: React.FC<EditModalProps> = ({
                         totalEstimatedTime: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
                     placeholder="e.g., 2-3 hours"
                   />
                 </div>
@@ -389,138 +428,164 @@ const EditModal: React.FC<EditModalProps> = ({
             </div>
 
             {/* Steps Section */}
-            <div className="mb-8 p-5 bg-gray-50 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2 border-b border-gray-200 pb-2">
-                Steps
-              </h3>
+            <div className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-green-50 to-white rounded-xl sm:rounded-2xl border-2 border-green-100">
+              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+                  <FileCheck className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-gray-900">
+                  Step-by-Step Instructions
+                </h3>
+              </div>
 
               {/* Add/Edit Step Form */}
-              <div className="bg-white rounded-lg p-5 mb-6 border-2 border-dashed border-gray-300 hover:border-blue-500 transition-colors">
-                <h4 className="text-base font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                  {editingStepIndex !== null
-                    ? `Edit Step ${editingStepIndex + 1}`
-                    : `Add Step ${formData.steps.length + 1}`}
-                </h4>
-
-                <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Step Title *
-                  </label>
-                  <input
-                    type="text"
-                    value={stepFormData.title}
-                    onChange={(e) =>
-                      setStepFormData({
-                        ...stepFormData,
-                        title: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                    placeholder="e.g., Go to Barangay Hall"
-                  />
+              <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-5 mb-4 sm:mb-6 border-2 border-dashed border-green-300 hover:border-green-500 transition-colors">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
+                    {editingStepIndex !== null ? (
+                      <Edit2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-700" />
+                    ) : (
+                      <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-green-700" />
+                    )}
+                  </div>
+                  <h4 className="text-sm sm:text-base font-bold text-gray-700">
+                    {editingStepIndex !== null
+                      ? `Edit Step ${editingStepIndex + 1}`
+                      : `Add Step ${formData.steps.length + 1}`}
+                  </h4>
                 </div>
 
-                <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Description *
-                  </label>
-                  <textarea
-                    value={stepFormData.description}
-                    onChange={(e) =>
-                      setStepFormData({
-                        ...stepFormData,
-                        description: e.target.value,
-                      })
-                    }
-                    rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                    placeholder="Detailed instructions for this step"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div className="flex flex-col">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Location
+                    <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                      <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
+                      Step Title *
                     </label>
                     <input
                       type="text"
-                      value={stepFormData.location}
+                      value={stepFormData.title}
                       onChange={(e) =>
                         setStepFormData({
                           ...stepFormData,
-                          location: e.target.value,
+                          title: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                      placeholder="e.g., Barangay Hall, 2nd Floor"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
+                      placeholder="e.g., Go to Barangay Hall"
                     />
                   </div>
 
                   <div className="flex flex-col">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Estimated Time
+                    <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                      <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
+                      Description *
                     </label>
-                    <input
-                      type="text"
-                      value={stepFormData.estimatedTime}
+                    <textarea
+                      value={stepFormData.description}
                       onChange={(e) =>
                         setStepFormData({
                           ...stepFormData,
-                          estimatedTime: e.target.value,
+                          description: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                      placeholder="e.g., 15 minutes"
+                      rows={3}
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm resize-none focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
+                      placeholder="Detailed instructions for this step"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div className="flex flex-col">
+                      <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                        <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
+                        Location
+                      </label>
+                      <input
+                        type="text"
+                        value={stepFormData.location}
+                        onChange={(e) =>
+                          setStepFormData({
+                            ...stepFormData,
+                            location: e.target.value,
+                          })
+                        }
+                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
+                        placeholder="e.g., Barangay Hall, 2nd Floor"
+                      />
+                    </div>
+
+                    <div className="flex flex-col">
+                      <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                        <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
+                        Estimated Time
+                      </label>
+                      <input
+                        type="text"
+                        value={stepFormData.estimatedTime}
+                        onChange={(e) =>
+                          setStepFormData({
+                            ...stepFormData,
+                            estimatedTime: e.target.value,
+                          })
+                        }
+                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
+                        placeholder="e.g., 15 minutes"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                      <FileCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
+                      Required Documents (comma-separated)
+                    </label>
+                    <input
+                      type="text"
+                      value={stepFormData.requiredDocuments}
+                      onChange={(e) =>
+                        setStepFormData({
+                          ...stepFormData,
+                          requiredDocuments: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
+                      placeholder="e.g., Valid ID, Cedula, Proof of Residency"
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
+                      <Lightbulb className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
+                      Tips (comma-separated)
+                    </label>
+                    <input
+                      type="text"
+                      value={stepFormData.tips}
+                      onChange={(e) =>
+                        setStepFormData({
+                          ...stepFormData,
+                          tips: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
+                      placeholder="e.g., Bring exact change, Come early to avoid lines"
                     />
                   </div>
                 </div>
 
-                <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Required Documents (comma-separated)
-                  </label>
-                  <input
-                    type="text"
-                    value={stepFormData.requiredDocuments}
-                    onChange={(e) =>
-                      setStepFormData({
-                        ...stepFormData,
-                        requiredDocuments: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                    placeholder="e.g., Valid ID, Cedula, Proof of Residency"
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tips (comma-separated)
-                  </label>
-                  <input
-                    type="text"
-                    value={stepFormData.tips}
-                    onChange={(e) =>
-                      setStepFormData({ ...stepFormData, tips: e.target.value })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                    placeholder="e.g., Bring exact change, Come early to avoid lines"
-                  />
-                </div>
-
-                <div className="flex gap-3 justify-start mt-4">
+                <div className="flex gap-2 sm:gap-3 justify-start mt-4">
                   {editingStepIndex !== null ? (
                     <>
                       <button
                         type="button"
                         onClick={handleUpdateStep}
-                        className="px-5 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-all hover:-translate-y-0.5"
+                        className="flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg sm:rounded-xl text-sm font-semibold hover:from-green-700 hover:to-green-800 transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={
                           !stepFormData.title.trim() ||
                           !stepFormData.description.trim()
                         }
                       >
+                        <Edit2 className="w-4 h-4" />
                         Update Step
                       </button>
                       <button
@@ -529,21 +594,22 @@ const EditModal: React.FC<EditModalProps> = ({
                           setEditingStepIndex(null);
                           resetStepForm();
                         }}
-                        className="px-5 py-2.5 border border-gray-300 bg-white text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all"
+                        className="px-4 sm:px-5 py-2.5 sm:py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-lg sm:rounded-xl text-sm font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all"
                       >
-                        Cancel Edit
+                        Cancel
                       </button>
                     </>
                   ) : (
                     <button
                       type="button"
                       onClick={handleAddStep}
-                      className="px-5 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-all hover:-translate-y-0.5"
+                      className="flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg sm:rounded-xl text-sm font-semibold hover:from-green-700 hover:to-green-800 transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={
                         !stepFormData.title.trim() ||
                         !stepFormData.description.trim()
                       }
                     >
+                      <Plus className="w-4 h-4" />
                       Add Step
                     </button>
                   )}
@@ -552,67 +618,78 @@ const EditModal: React.FC<EditModalProps> = ({
 
               {/* Steps List */}
               {formData.steps.length > 0 && (
-                <div className="bg-white rounded-lg p-5 border border-gray-200">
-                  <h4 className="text-base font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                    Steps ({formData.steps.length})
-                  </h4>
+                <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-5 border-2 border-green-200">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                      <FileCheck className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </div>
+                    <h4 className="text-sm sm:text-base font-bold text-gray-700">
+                      Steps ({formData.steps.length})
+                    </h4>
+                  </div>
                   {formData.steps.map((step, index) => (
                     <div
                       key={step.id}
-                      className="border border-gray-200 rounded-lg mb-3 last:mb-0 overflow-hidden hover:border-blue-500 hover:shadow-md transition-all"
+                      className="border-2 border-gray-200 rounded-lg sm:rounded-xl mb-3 last:mb-0 overflow-hidden hover:border-green-500 hover:shadow-lg transition-all"
                     >
-                      <div className="flex items-center p-3 bg-gray-50 border-b border-gray-200 gap-3">
-                        <div className="bg-blue-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0">
-                          Step {step.stepNumber}
+                      <div className="flex items-center p-3 sm:p-4 bg-gradient-to-r from-green-50 to-white border-b-2 border-green-100 gap-2 sm:gap-3">
+                        <div className="bg-gradient-to-br from-green-600 to-green-700 text-white w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold flex-shrink-0 shadow-md">
+                          {step.stepNumber}
                         </div>
-                        <div className="flex-1 font-semibold text-gray-700 min-w-0">
+                        <div className="flex-1 font-bold text-gray-800 min-w-0 text-sm sm:text-base">
                           {step.title}
                         </div>
                         <div className="flex gap-1 flex-shrink-0">
                           <button
                             onClick={() => moveStep(index, 'up')}
                             disabled={index === 0}
-                            className="w-7 h-7 border border-gray-300 bg-white rounded hover:bg-gray-100 hover:border-gray-400 cursor-pointer flex items-center justify-center text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-7 h-7 sm:w-8 sm:h-8 border-2 border-gray-300 bg-white rounded-lg hover:bg-gray-50 hover:border-gray-400 cursor-pointer flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                             title="Move Up"
                           >
-                            ↑
+                            <ChevronUp className="w-4 h-4 text-gray-600" />
                           </button>
                           <button
                             onClick={() => moveStep(index, 'down')}
                             disabled={index === formData.steps.length - 1}
-                            className="w-7 h-7 border border-gray-300 bg-white rounded hover:bg-gray-100 hover:border-gray-400 cursor-pointer flex items-center justify-center text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-7 h-7 sm:w-8 sm:h-8 border-2 border-gray-300 bg-white rounded-lg hover:bg-gray-50 hover:border-gray-400 cursor-pointer flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                             title="Move Down"
                           >
-                            ↓
+                            <ChevronDown className="w-4 h-4 text-gray-600" />
                           </button>
                           <button
                             onClick={() => handleEditStep(index)}
-                            className="w-7 h-7 border border-gray-300 bg-white rounded hover:bg-yellow-50 hover:border-yellow-500 cursor-pointer flex items-center justify-center text-xs transition-all"
+                            className="w-7 h-7 sm:w-8 sm:h-8 border-2 border-green-300 bg-white rounded-lg hover:bg-green-50 hover:border-green-500 cursor-pointer flex items-center justify-center transition-all"
                             title="Edit"
                           >
-                            ✏️
+                            <Edit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
                           </button>
                           <button
                             onClick={() => handleDeleteStep(index)}
-                            className="w-7 h-7 border border-gray-300 bg-white rounded hover:bg-red-50 hover:border-red-500 cursor-pointer flex items-center justify-center text-xs transition-all"
+                            className="w-7 h-7 sm:w-8 sm:h-8 border-2 border-red-300 bg-white rounded-lg hover:bg-red-50 hover:border-red-500 cursor-pointer flex items-center justify-center transition-all"
                             title="Delete"
                           >
-                            🗑️
+                            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600" />
                           </button>
                         </div>
                       </div>
-                      <div className="p-4">
-                        <p>{step.description}</p>
-                        {step.location && (
-                          <div className="inline-block mr-4 text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded mb-1">
-                            📍 {step.location}
-                          </div>
-                        )}
-                        {step.estimatedTime && (
-                          <div className="inline-block mr-4 text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded mb-1">
-                            ⏱️ {step.estimatedTime}
-                          </div>
-                        )}
+                      <div className="p-3 sm:p-4">
+                        <p className="text-sm text-gray-700 mb-2">
+                          {step.description}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {step.location && (
+                            <div className="inline-flex items-center gap-1.5 text-xs text-green-700 bg-green-50 border border-green-200 px-2.5 py-1.5 rounded-lg">
+                              <MapPin className="w-3 h-3" />
+                              {step.location}
+                            </div>
+                          )}
+                          {step.estimatedTime && (
+                            <div className="inline-flex items-center gap-1.5 text-xs text-green-700 bg-green-50 border border-green-200 px-2.5 py-1.5 rounded-lg">
+                              <Clock className="w-3 h-3" />
+                              {step.estimatedTime}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -623,18 +700,19 @@ const EditModal: React.FC<EditModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 border border-gray-300 bg-white text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-lg sm:rounded-xl text-sm font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all order-2 sm:order-1"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="px-5 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-all hover:-translate-y-0.5"
+            className="flex items-center justify-center gap-2 px-5 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg sm:rounded-xl text-sm font-bold hover:from-green-700 hover:to-green-800 transition-all hover:-translate-y-0.5 shadow-lg hover:shadow-xl order-1 sm:order-2"
           >
-            {guideline?.id ? 'Update' : 'Create'}
+            <FileCheck className="w-4 h-4" />
+            {guideline?.id ? 'Update Guidelines' : 'Create Guidelines'}
           </button>
         </div>
       </div>
@@ -652,89 +730,110 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-5"
+      className="fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-4 sm:p-5"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white rounded-2xl shadow-2xl max-w-[480px] w-full overflow-hidden">
+      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-[480px] w-full overflow-hidden animate-in fade-in zoom-in duration-300">
         {/* Header */}
-        <div className="px-6 pt-6 pb-4 border-b border-gray-200 bg-red-50">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-red-600"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-              </svg>
+        <div className="px-6 sm:px-8 py-5 sm:py-6 bg-gradient-to-r from-red-600 via-red-600 to-red-700">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30">
+              <AlertCircle className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
             </div>
-            <div>
-              <h2 className="text-xl font-semibold text-red-600 mb-1">
+            <div className="flex-1">
+              <h2 className="text-xl sm:text-2xl font-bold text-white">
                 Delete Guidelines
               </h2>
-              <p className="text-sm text-gray-600">
+              <p className="text-xs sm:text-sm text-red-50 mt-0.5 sm:mt-1">
                 This action cannot be undone
               </p>
             </div>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 sm:w-9 sm:h-9 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105 ring-1 ring-white/30"
+            >
+              <X className="w-5 h-5 text-white" />
+            </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-6">
-          <p className="text-base text-gray-700 mb-4 leading-relaxed">
+        <div className="p-4 sm:p-6 md:p-8">
+          <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-5 leading-relaxed">
             Are you sure you want to delete the guidelines{' '}
-            <strong>"{guideline.title}"</strong>?
+            <strong className="text-red-600">"{guideline.title}"</strong>?
           </p>
 
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-5">
-            <h4 className="text-sm font-semibold text-gray-700 mb-2">
-              Guidelines Details:
-            </h4>
-            <p className="text-sm text-gray-600 mb-1 last:mb-0">
-              <strong>Description:</strong> {guideline.description}
-            </p>
-            <p className="text-sm text-gray-600 mb-1 last:mb-0">
-              <strong>Category:</strong> {guideline.category}
-            </p>
-            <p className="text-sm text-gray-600 mb-1 last:mb-0">
-              <strong>Steps:</strong> {guideline.steps.length} steps
-            </p>
-            <p className="text-sm text-gray-600 mb-1 last:mb-0">
-              <strong>Total Time:</strong> {guideline.totalEstimatedTime}
-            </p>
+          <div className="bg-gradient-to-r from-green-50 to-green-50 border-2 border-green-200 rounded-xl sm:rounded-2xl p-4 sm:p-5 mb-4 sm:mb-5">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                <BookOpen className="w-4 h-4 text-white" />
+              </div>
+              <h4 className="text-sm font-bold text-gray-900">
+                Guidelines Details
+              </h4>
+            </div>
+            <div className="space-y-2">
+              <p className="text-xs sm:text-sm text-gray-700">
+                <span className="font-semibold text-gray-900">
+                  Description:
+                </span>{' '}
+                {guideline.description}
+              </p>
+              <p className="text-xs sm:text-sm text-gray-700">
+                <span className="font-semibold text-gray-900">Category:</span>{' '}
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 border border-green-300 rounded-md text-green-700 font-medium">
+                  <Tag className="w-3 h-3" />
+                  {guideline.category}
+                </span>
+              </p>
+              <p className="text-xs sm:text-sm text-gray-700">
+                <span className="font-semibold text-gray-900">Steps:</span>{' '}
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 border border-green-300 rounded-md text-green-700 font-medium">
+                  <FileCheck className="w-3 h-3" />
+                  {guideline.steps.length} steps
+                </span>
+              </p>
+              <p className="text-xs sm:text-sm text-gray-700">
+                <span className="font-semibold text-gray-900">Total Time:</span>{' '}
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 border border-green-300 rounded-md text-green-700 font-medium">
+                  <Clock className="w-3 h-3" />
+                  {guideline.totalEstimatedTime}
+                </span>
+              </p>
+            </div>
           </div>
 
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-5 flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <svg
-                className="w-4 h-4 text-red-600"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-              </svg>
-              <p className="text-sm text-red-600 font-medium">
-                Warning: This will permanently remove these guidelines and all
-                its steps from the system.
-              </p>
+          <div className="bg-gradient-to-r from-red-50 to-red-50 border-2 border-red-200 rounded-xl sm:rounded-2xl p-3 sm:p-4">
+            <div className="flex items-start gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-xs sm:text-sm text-red-700 font-semibold leading-relaxed">
+                  Warning: This will permanently remove these guidelines and all
+                  its steps from the system.
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 border border-gray-300 bg-white text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-lg sm:rounded-xl text-sm font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all order-2 sm:order-1"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="px-5 py-2.5 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-all hover:-translate-y-0.5"
+            className="flex items-center justify-center gap-2 px-5 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg sm:rounded-xl text-sm font-bold hover:from-red-700 hover:to-red-800 transition-all hover:-translate-y-0.5 shadow-lg hover:shadow-xl order-1 sm:order-2"
           >
+            <Trash2 className="w-4 h-4" />
             Delete Guidelines
           </button>
         </div>
@@ -1036,7 +1135,7 @@ const Guidelines: React.FC = () => {
         <div className="flex items-center gap-4">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-              <span className="text-4xl">📖</span>
+              <BookOpen className="w-10 h-10 text-green-600" />
               Guidelines
             </h1>
             <p className="text-lg text-gray-700 mt-2 font-medium">

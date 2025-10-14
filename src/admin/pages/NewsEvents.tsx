@@ -5,8 +5,19 @@ import {
   CardContent,
   CardTitle,
 } from '../../components/ui/card';
-import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
+import { NewsEventsPageSkeleton } from '../../components/LoadingSkeletons';
 import { useLoadingState } from '../../hooks/useLoadingState';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Tag,
+  AlertCircle,
+  X,
+  Plus,
+  SquarePen,
+  Trash2,
+} from 'lucide-react';
 
 interface CalendarEvent {
   id: string;
@@ -109,37 +120,63 @@ const EventModal: React.FC<EventModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-5"
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 animate-fadeIn"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white rounded-2xl shadow-2xl max-w-[600px] w-full max-h-[90vh] overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-[650px] w-full max-h-[90vh] overflow-hidden animate-slideUp">
         {/* Header */}
-        <div className="px-6 pt-6 pb-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-gray-900">
-            {event?.id ? 'Edit Calendar Event' : 'Add New Calendar Event'}
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 p-1 rounded transition-colors"
-          >
-            ✕
-          </button>
+        <div className="bg-gradient-to-r from-green-600 via-green-600 to-green-700 px-6 sm:px-8 py-5 sm:py-6 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
+          <div className="relative flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30 flex-shrink-0">
+                {event?.id ? (
+                  <SquarePen className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                ) : (
+                  <Plus className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-0.5 sm:mb-1 truncate">
+                  {event?.id ? 'Edit Calendar Event' : 'Add New Calendar Event'}
+                </h3>
+                <p className="text-green-100 text-xs sm:text-sm font-medium truncate">
+                  {event?.id
+                    ? 'Update event details'
+                    : 'Create a new calendar event'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center transition-all hover:scale-110 ring-1 ring-white/30 flex-shrink-0"
+              aria-label="Close modal"
+            >
+              <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            </button>
+          </div>
         </div>
 
         {/* Form Content */}
-        <div className="px-6 py-6 max-h-[calc(90vh-200px)] overflow-y-auto">
-          <div className="flex flex-col gap-5">
-            {/* Basic Information */}
-            <div className="mb-8 p-5 bg-gray-50 rounded-xl border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2 border-b border-gray-200 pb-2">
+        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 max-h-[calc(90vh-200px)] overflow-y-auto space-y-4 sm:space-y-5 md:space-y-6">
+          {/* Event Information Section */}
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex items-center gap-2 sm:gap-3 pb-2 sm:pb-3 border-b-2 border-green-100">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              </div>
+              <h4 className="text-lg sm:text-xl font-bold text-gray-900">
                 Event Information
-              </h3>
+              </h4>
+            </div>
 
+            <div className="space-y-3 sm:space-y-4">
               <div className="flex flex-col">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Title *
+                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <SquarePen className="w-4 h-4 text-green-600" />
+                  Title <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -147,14 +184,15 @@ const EventModal: React.FC<EventModalProps> = ({
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
                   }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
                   placeholder="e.g., Community Clean-up Drive"
                 />
               </div>
 
               <div className="flex flex-col">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description *
+                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <SquarePen className="w-4 h-4 text-green-600" />
+                  Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   value={formData.description}
@@ -162,115 +200,168 @@ const EventModal: React.FC<EventModalProps> = ({
                     setFormData({ ...formData, description: e.target.value })
                   }
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none resize-none text-gray-900 font-medium text-sm sm:text-base"
                   placeholder="Provide details about the event..."
                 />
               </div>
+            </div>
+          </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Date *
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.date}
-                    onChange={(e) =>
-                      setFormData({ ...formData, date: e.target.value })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Time *
-                  </label>
-                  <input
-                    type="time"
-                    value={formData.time}
-                    onChange={(e) =>
-                      setFormData({ ...formData, time: e.target.value })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                  />
-                </div>
+          {/* Date & Time Section */}
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex items-center gap-2 sm:gap-3 pb-2 sm:pb-3 border-b-2 border-green-100">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
+              <h4 className="text-lg sm:text-xl font-bold text-gray-900">
+                Schedule
+              </h4>
+            </div>
 
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="flex flex-col">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Location
+                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <Calendar className="w-4 h-4 text-green-600" />
+                  Date <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="text"
-                  value={formData.location}
+                  type="date"
+                  value={formData.date}
                   onChange={(e) =>
-                    setFormData({ ...formData, location: e.target.value })
+                    setFormData({ ...formData, date: e.target.value })
                   }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                  placeholder="e.g., Barangay Hall"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Category
-                  </label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        category: e.target.value as CalendarEvent['category'],
-                      })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                  >
-                    <option value="Announcement">Announcement</option>
-                    <option value="Meeting">Meeting</option>
-                    <option value="Event">Event</option>
-                    <option value="Notice">Notice</option>
-                  </select>
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Priority
-                  </label>
-                  <select
-                    value={formData.priority}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        priority: e.target.value as CalendarEvent['priority'],
-                      })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                  >
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                  </select>
-                </div>
+              <div className="flex flex-col">
+                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <Clock className="w-4 h-4 text-green-600" />
+                  Time <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="time"
+                  value={formData.time}
+                  onChange={(e) =>
+                    setFormData({ ...formData, time: e.target.value })
+                  }
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                />
               </div>
             </div>
+
+            <div className="flex flex-col">
+              <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <MapPin className="w-4 h-4 text-green-600" />
+                Location
+              </label>
+              <input
+                type="text"
+                value={formData.location}
+                onChange={(e) =>
+                  setFormData({ ...formData, location: e.target.value })
+                }
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                placeholder="e.g., Barangay Hall"
+              />
+            </div>
+          </div>
+
+          {/* Category & Priority Section */}
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex items-center gap-2 sm:gap-3 pb-2 sm:pb-3 border-b-2 border-green-100">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+                <Tag className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              </div>
+              <h4 className="text-lg sm:text-xl font-bold text-gray-900">
+                Classification
+              </h4>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="flex flex-col">
+                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <Tag className="w-4 h-4 text-green-600" />
+                  Category
+                </label>
+                <select
+                  value={formData.category}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      category: e.target.value as CalendarEvent['category'],
+                    })
+                  }
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none bg-white cursor-pointer text-gray-900 font-medium text-sm sm:text-base"
+                >
+                  <option value="Announcement">Announcement</option>
+                  <option value="Meeting">Meeting</option>
+                  <option value="Event">Event</option>
+                  <option value="Notice">Notice</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col">
+                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                  <AlertCircle className="w-4 h-4 text-green-600" />
+                  Priority
+                </label>
+                <select
+                  value={formData.priority}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      priority: e.target.value as CalendarEvent['priority'],
+                    })
+                  }
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none bg-white cursor-pointer text-gray-900 font-medium text-sm sm:text-base"
+                >
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Info Box */}
+          <div className="bg-gradient-to-r from-green-50 to-green-50 border-2 border-green-200 rounded-xl p-3 sm:p-4">
+            <p className="text-xs sm:text-sm text-gray-700 font-medium flex items-start gap-2">
+              <span className="text-green-600 text-base sm:text-lg flex-shrink-0">
+                ℹ️
+              </span>
+              <span>
+                Fields marked with{' '}
+                <span className="text-red-500 font-bold">*</span> are required.
+                Make sure all information is accurate before saving.
+              </span>
+            </p>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 bg-gradient-to-r from-gray-50 to-white border-t-2 border-gray-100 flex gap-2 sm:gap-3 justify-end">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 border border-gray-300 bg-white text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-gray-700 bg-white border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm hover:shadow-md text-sm sm:text-base"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="px-5 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-all hover:-translate-y-0.5"
+            className="px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl font-bold text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 text-sm sm:text-base"
           >
-            {event?.id ? 'Update' : 'Create'}
+            {event?.id ? (
+              <>
+                <SquarePen className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Update</span>
+              </>
+            ) : (
+              <>
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Create</span>
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -288,95 +379,100 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-5"
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 animate-fadeIn"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white rounded-2xl shadow-2xl max-w-[480px] w-full overflow-hidden">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-[520px] w-full overflow-hidden animate-slideUp">
         {/* Header */}
-        <div className="px-6 pt-6 pb-4 border-b border-gray-200 bg-red-50">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-red-600"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-              </svg>
+        <div className="bg-gradient-to-r from-red-600 via-red-600 to-red-700 px-6 sm:px-8 py-5 sm:py-6 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
+          <div className="relative flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30 flex-shrink-0">
+                <AlertCircle className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-0.5 sm:mb-1">
+                  Delete Event
+                </h3>
+                <p className="text-red-100 text-xs sm:text-sm font-medium">
+                  This action cannot be undone
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xl font-semibold text-red-600 mb-1">
-                Delete Event
-              </h2>
-              <p className="text-sm text-gray-600">
-                This action cannot be undone
-              </p>
-            </div>
+            <button
+              onClick={onClose}
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center transition-all hover:scale-110 ring-1 ring-white/30 flex-shrink-0"
+              aria-label="Close modal"
+            >
+              <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-6">
-          <p className="text-base text-gray-700 mb-4 leading-relaxed">
+        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 md:py-6 space-y-3 sm:space-y-4">
+          <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
             Are you sure you want to delete the event{' '}
-            <strong>"{event.title}"</strong>?
+            <strong className="text-gray-900">"{event.title}"</strong>?
           </p>
 
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-5">
-            <h4 className="text-sm font-semibold text-gray-700 mb-2">
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl p-4 sm:p-5 space-y-2">
+            <h4 className="text-sm font-bold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-gray-600" />
               Event Details:
             </h4>
-            <p className="text-sm text-gray-600 mb-1 last:mb-0">
-              <strong>Description:</strong> {event.description}
-            </p>
-            <p className="text-sm text-gray-600 mb-1 last:mb-0">
-              <strong>Date:</strong> {event.date}
-            </p>
-            <p className="text-sm text-gray-600 mb-1 last:mb-0">
-              <strong>Time:</strong> {event.time}
-            </p>
-            {event.location && (
-              <p className="text-sm text-gray-600 mb-1 last:mb-0">
-                <strong>Location:</strong> {event.location}
+            <div className="space-y-1.5 sm:space-y-2">
+              <p className="text-xs sm:text-sm text-gray-700 flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-2">
+                <span className="font-bold min-w-[90px]">Description:</span>
+                <span className="break-words">{event.description}</span>
               </p>
-            )}
-            <p className="text-sm text-gray-600 mb-1 last:mb-0">
-              <strong>Category:</strong> {event.category}
-            </p>
-          </div>
-
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-5 flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <svg
-                className="w-4 h-4 text-red-600"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-              </svg>
-              <p className="text-sm text-red-600 font-medium">
-                Warning: This will permanently remove this event from the
-                calendar.
+              <p className="text-xs sm:text-sm text-gray-700 flex items-center gap-2">
+                <span className="font-bold min-w-[90px]">Date:</span>
+                <span>{event.date}</span>
+              </p>
+              <p className="text-xs sm:text-sm text-gray-700 flex items-center gap-2">
+                <span className="font-bold min-w-[90px]">Time:</span>
+                <span>{event.time}</span>
+              </p>
+              {event.location && (
+                <p className="text-xs sm:text-sm text-gray-700 flex items-center gap-2">
+                  <span className="font-bold min-w-[90px]">Location:</span>
+                  <span>{event.location}</span>
+                </p>
+              )}
+              <p className="text-xs sm:text-sm text-gray-700 flex items-center gap-2">
+                <span className="font-bold min-w-[90px]">Category:</span>
+                <span>{event.category}</span>
               </p>
             </div>
+          </div>
+
+          <div className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-300 rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
+            <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <p className="text-xs sm:text-sm text-red-700 font-medium leading-relaxed">
+              Warning: This will permanently remove this event from the
+              calendar. This action cannot be undone.
+            </p>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 bg-gradient-to-r from-gray-50 to-white border-t-2 border-gray-100 flex gap-2 sm:gap-3 justify-end">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 border border-gray-300 bg-white text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold text-gray-700 bg-white border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm hover:shadow-md text-sm sm:text-base"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="px-5 py-2.5 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700 transition-all hover:-translate-y-0.5"
+            className="px-5 sm:px-8 py-2.5 sm:py-3 rounded-xl font-bold text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 text-sm sm:text-base"
           >
-            Delete Event
+            <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span>Delete Event</span>
           </button>
         </div>
       </div>
@@ -435,7 +531,7 @@ const News: React.FC = () => {
 
   // Show loading skeleton while loading
   if (pageLoading) {
-    return <FormTablePageSkeleton />;
+    return <NewsEventsPageSkeleton />;
   }
 
   const handleSaveEvent = (event: CalendarEvent) => {
@@ -516,7 +612,7 @@ const News: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <span className="text-4xl">📅</span>
+            <Calendar className="w-10 h-10 text-green-600" />
             Calendar Events & News
           </h1>
           <p className="text-lg text-gray-700 mt-3 font-medium">

@@ -7,6 +7,9 @@ import {
   ThumbsUp,
   ScrollText,
   IdCard,
+  Home,
+  ChevronRight,
+  BookOpen,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -96,17 +99,22 @@ export default function Guidelines() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
-      {/* Breadcrumb */}
-      <div className="bg-white py-4 px-6 border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto">
-          <nav className="text-sm text-gray-600">
-            <Link to="/" className="hover:text-green-600 transition-colors">
-              🏠 Home
+      {/* Breadcrumb - Seamless with Navbar */}
+      <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <nav className="flex items-center gap-2 text-sm">
+            <Link
+              to="/"
+              className="flex items-center gap-1.5 text-green-100 hover:text-white transition-colors group"
+            >
+              <Home className="w-4 h-4" />
+              <span className="font-medium">Home</span>
             </Link>
-            <span className="mx-2 text-gray-400">/</span>
-            <span className="text-green-700 font-semibold">
-              📖 How to Guides
-            </span>
+            <ChevronRight className="w-4 h-4 text-green-400" />
+            <div className="flex items-center gap-1.5 text-white font-semibold">
+              <BookOpen className="w-4 h-4" />
+              <span>How-To Guides</span>
+            </div>
           </nav>
         </div>
       </div>

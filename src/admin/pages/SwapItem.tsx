@@ -2,8 +2,13 @@ import { useCallback, useMemo, useState } from 'react';
 import { formatName, formatPoints } from '@/utils/formatter';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import FloatingLabelInput from '../components/FloatingLabelInput';
-import { Spinner, InlineLoader, FormTablePageSkeleton } from '@/components/LoadingSkeletons';
+import {
+  Spinner,
+  InlineLoader,
+  FormTablePageSkeleton,
+} from '@/components/LoadingSkeletons';
 import { useLoadingState } from '@/hooks/useLoadingState';
+import { ArrowLeftRight } from 'lucide-react';
 
 interface Product {
   _id: string;
@@ -161,13 +166,18 @@ const SwapItem = () => {
   return (
     <main className="flex flex-col gap-8 p-8">
       {/* Header Section */}
-      <div className="flex flex-col items-start">
-        <h1 className="font-bold text-4xl tracking-wide text-gray-900 mb-3">
-          Trade Points
-        </h1>
-        <p className="text-lg" style={{ color: '#838383' }}>
-          Exchange accumulated points for community products and rewards
-        </p>
+      <div>
+        <div className="flex items-center gap-3">
+          <ArrowLeftRight className="w-10 h-10 text-green-600" />
+          <h1 className="font-bold text-4xl tracking-wide text-gray-900">
+            Trade Points
+          </h1>
+        </div>
+        <div className="mt-3">
+          <p className="text-lg" style={{ color: '#838383' }}>
+            Exchange accumulated points for community products and rewards
+          </p>
+        </div>
       </div>
 
       {/* Search Form */}

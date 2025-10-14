@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Target, Eye } from 'lucide-react';
+import { Target, Eye, Scroll } from 'lucide-react';
 
 export default function AboutBarangay() {
   return (
@@ -54,11 +54,11 @@ export default function AboutBarangay() {
               </div>
             </div>
 
-            <div className="bg-white border-2 border-blue-100 rounded-2xl shadow-xl p-10 text-center hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="bg-white border-2 border-green-100 rounded-2xl shadow-xl p-10 text-center hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div className="relative z-10">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                  <Eye className="w-10 h-10 text-blue-700" />
+                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mb-6 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <Eye className="w-10 h-10 text-green-700" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-6">
                   Our Vision
@@ -76,8 +76,8 @@ export default function AboutBarangay() {
           <div className="max-w-4xl mx-auto">
             <div className="bg-white border-2 border-gray-100 rounded-2xl shadow-xl p-10 hover:shadow-2xl transition-shadow duration-300">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl flex items-center justify-center shadow-md">
-                  <span className="text-3xl">📜</span>
+                <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-md">
+                  <Scroll className="w-8 h-8 text-green-700" />
                 </div>
                 <h2 className="text-3xl font-bold text-gray-800">
                   Barangay History

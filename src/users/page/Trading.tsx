@@ -10,7 +10,18 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Phone, User, FileText, CheckCircle } from 'lucide-react';
+import {
+  FileText,
+  CheckCircle,
+  Home,
+  ChevronRight,
+  Recycle,
+  Trash2,
+  Scale,
+  RotateCcw,
+  Inbox,
+  Package,
+} from 'lucide-react';
 import { ImageWithFallback } from '@/components/ImageWithFallback';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { TradingPageSkeleton } from '@/components/LoadingSkeletons';
@@ -147,15 +158,22 @@ export default function Trading() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      {/* Enhanced Breadcrumb */}
-      <div className="bg-white py-4 px-6 border-b-2 border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto">
-          <nav className="text-sm text-gray-700 font-medium">
-            <Link to="/" className="hover:text-green-600 transition-colors">
-              🏠 Home
+      {/* Breadcrumb - Seamless with Navbar */}
+      <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+          <nav className="flex items-center gap-2 text-sm">
+            <Link
+              to="/"
+              className="flex items-center gap-1.5 text-green-100 hover:text-white transition-colors group"
+            >
+              <Home className="w-4 h-4" />
+              <span className="font-medium">Home</span>
             </Link>
-            <span className="mx-2 text-gray-400">/</span>
-            <span className="text-green-700 font-semibold">♻️ EcoCycle</span>
+            <ChevronRight className="w-4 h-4 text-green-400" />
+            <div className="flex items-center gap-1.5 text-white font-semibold">
+              <Recycle className="w-4 h-4" />
+              <span>EcoCycle Trading</span>
+            </div>
           </nav>
         </div>
       </div>
@@ -202,7 +220,7 @@ export default function Trading() {
             <CardContent className="space-y-6 p-6">
               <div>
                 <label className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2">
-                  <span className="text-lg">🗑️</span>
+                  <Trash2 className="w-4 h-4 text-green-600" />
                   Select Recyclable Type:
                 </label>
                 <Select value={selectedType} onValueChange={setSelectedType}>
@@ -225,7 +243,7 @@ export default function Trading() {
 
               <div>
                 <label className=" text-sm mb-3 font-bold text-gray-800 flex items-center gap-2">
-                  <span className="text-lg">⚖️</span>
+                  <Scale className="w-4 h-4 text-green-600" />
                   Enter weight (kg):
                 </label>
                 <Input
@@ -241,7 +259,7 @@ export default function Trading() {
                 onClick={handleConvert}
                 className="w-full h-12 text-base font-bold bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 mt-4"
               >
-                <span className="mr-2">🔄</span>
+                <RotateCcw className="w-4 h-4 mr-2" />
                 Convert Now
               </Button>
             </CardContent>
@@ -249,9 +267,9 @@ export default function Trading() {
 
           {/* Enhanced Result Panel */}
           <Card className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 hover:border-green-400 hover:shadow-2xl transition-all duration-300">
-            <CardHeader className="pb-5 bg-gradient-to-br from-blue-50 to-white border-b-2 border-blue-100">
+            <CardHeader className="pb-5 bg-gradient-to-br from-green-50 to-white border-b-2 border-green-100">
               <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-md">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 shadow-md">
                   <CheckCircle className="w-6 h-6 text-white" />
                 </div>
                 <span>Conversion Result</span>
@@ -260,14 +278,14 @@ export default function Trading() {
             <CardContent className="space-y-5 p-6">
               <div>
                 <p className="text-center text-base mb-6 font-bold text-gray-800 flex items-center justify-center gap-2">
-                  <span className="text-xl">📊</span>
+                  <span className="text-xl"></span>
                   Your Conversion Summary
                 </p>
 
                 <div className="space-y-4">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl gap-2 sm:gap-0 border-2 border-gray-200">
                     <span className="text-gray-700 text-sm font-bold flex items-center gap-2">
-                      <span className="text-lg">📥</span>
+                      <Inbox className="w-4 h-4 text-green-600" />
                       Input:
                     </span>
                     <span className="text-gray-900 text-sm font-bold break-words">
@@ -282,7 +300,7 @@ export default function Trading() {
 
                   <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl flex flex-col items-center border-2 border-green-200">
                     <div className="flex items-center gap-2 mb-4">
-                      <span className="text-lg">📦</span>
+                      <Package className="w-4 h-4 text-green-600" />
                       <span className="text-gray-800 text-sm font-bold">
                         Output Product:
                       </span>
@@ -317,7 +335,7 @@ export default function Trading() {
                         style={{ width: '240px', height: '220px' }}
                       >
                         <div className="text-center">
-                          <span className="text-4xl mb-2 block">📦</span>
+                          <Package className="w-16 h-16 mb-2 mx-auto text-gray-400" />
                           <span className="text-gray-400 text-sm font-medium">
                             Awaiting conversion
                           </span>
@@ -332,23 +350,11 @@ export default function Trading() {
                       </span>
                     </div>
                   </div>
-
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-xl gap-2 sm:gap-0 bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-200">
-                    <span className="text-sm font-bold text-gray-800 flex items-center gap-2">
-                      <span className="text-lg">⭐</span>
-                      Estimated Value:
-                    </span>
-                    <span className="text-base font-bold text-yellow-700">
-                      {result
-                        ? `${result.points} ${result.points === 1 ? 'point' : 'points'}`
-                        : '0 points'}
-                    </span>
-                  </div>
                 </div>
 
                 <div className="mt-6 text-center pt-6 border-t-2  bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-200">
                   <p className="text-gray-700 text-sm mb-3 font-bold tracking-wide flex items-center justify-center gap-2">
-                    <span className="text-xl">🎯</span>
+                    <span className="text-xl"></span>
                     TOTAL POINTS:
                   </p>
                   <p className="text-4xl font-bold text-green-700">
@@ -387,7 +393,7 @@ export default function Trading() {
                   className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2"
                   htmlFor="record-id"
                 >
-                  <span className="text-lg">🎫</span>
+                  <span className="text-lg"></span>
                   Record ID
                 </label>
                 <Input
@@ -402,7 +408,7 @@ export default function Trading() {
                   className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2"
                   htmlFor="last-name"
                 >
-                  <span className="text-lg">👤</span>
+                  <span className="text-lg"></span>
                   Last Name
                 </label>
                 <Input

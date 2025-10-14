@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { Recycle } from 'lucide-react';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
@@ -77,7 +78,7 @@ export default function App() {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
         <div>
           <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <span className="text-4xl">♻️</span>
+            <Recycle className="w-10 h-10 text-green-600" />
             Earn Points
           </h1>
           <p className="text-lg text-gray-700 mt-2 font-medium">

@@ -15,7 +15,7 @@ import {
   Wrench,
 } from 'lucide-react';
 import { useLoadingState } from '@/hooks/useLoadingState';
-import { PageLoadingSkeleton, TableLoadingSkeleton } from '@/components/LoadingSkeletons';
+import { InventoryPageSkeleton } from '@/components/LoadingSkeletons';
 
 interface InventoryStats {
   totalProducts: number;
@@ -38,7 +38,7 @@ const Inventory: React.FC = () => {
 
   // Show loading skeleton while data is being fetched
   if (isLoading) {
-    return <PageLoadingSkeleton />;
+    return <InventoryPageSkeleton />;
   }
 
   const renderContent = () => {
@@ -372,7 +372,7 @@ const Inventory: React.FC = () => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-3 flex items-center gap-3">
-          <span className="text-4xl">📦</span>
+          <Package className="w-10 h-10 text-green-600" />
           Inventory Management
         </h1>
         <p className="text-lg text-gray-700 font-medium">

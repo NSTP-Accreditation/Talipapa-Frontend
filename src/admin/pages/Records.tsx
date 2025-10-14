@@ -1,7 +1,17 @@
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
-import { Download, Search } from 'lucide-react';
+import {
+  Download,
+  Search,
+  User,
+  Phone,
+  MapPin,
+  Calendar,
+  Award,
+  X,
+  UserRoundPen,
+} from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 import { debounce } from 'lodash';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
@@ -26,14 +36,17 @@ const ResidentRecords: React.FC = () => {
 
       const fetchSearch = async () => {
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/records/search?query=${query}`, {
-            method: "GET",
-            headers: {
-              "Authorization": `Bearer ${user?.accessToken}`
-            },
-            credentials: "include"
-          });
-          
+          const response = await fetch(
+            `${import.meta.env.VITE_API_URL}/records/search?query=${query}`,
+            {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${user?.accessToken}`,
+              },
+              credentials: 'include',
+            }
+          );
+
           const result = await response.json();
           if (!response.ok) {
             throw new Error(result.message);
@@ -149,13 +162,14 @@ const ResidentRecords: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3 mb-3">
-            <span>👥</span>
+            <UserRoundPen className="w-10 h-10 text-green-600" />
             Resident Records
           </h1>
           <p className="text-gray-700 font-medium">
             List of the resident records created
             <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-              {safeRecords.length} {safeRecords.length === 1 ? 'Record' : 'Records'}
+              {safeRecords.length}{' '}
+              {safeRecords.length === 1 ? 'Record' : 'Records'}
             </span>
           </p>
         </div>
@@ -314,7 +328,8 @@ const ResidentRecords: React.FC = () => {
           <span className="font-bold text-gray-900">
             {Math.min(startIndex + recordsPerPage, safeRecords.length)}
           </span>{' '}
-          of <span className="font-bold text-gray-900">{safeRecords.length}</span>{' '}
+          of{' '}
+          <span className="font-bold text-gray-900">{safeRecords.length}</span>{' '}
           records
         </div>
 
@@ -347,174 +362,300 @@ const ResidentRecords: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal - Fixed form structure */}
+      {/* Enhanced Modal with Better UI */}
       {isAddModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeAddModal();
+          }}
         >
           <form
             onSubmit={handleCreateResident}
-            className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+            className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[95vh] flex flex-col animate-slideUp"
           >
-            <div className="flex items-center justify-between p-6 border-b-2 border-gray-100 bg-gradient-to-r from-green-50 to-emerald-50">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white text-xl">➕</span>
+            {/* Enhanced Header */}
+            <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
+
+              <div className="relative flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center ring-4 ring-white/30 shadow-lg">
+                    <User className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-3xl font-bold mb-1">
+                      Add New Resident
+                    </h3>
+                    <p className="text-green-100 text-sm font-medium">
+                      Fill in the details to create a new record
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-800">
-                  Add New Resident
-                </h3>
+                <button
+                  type="button"
+                  onClick={closeAddModal}
+                  className="w-10 h-10 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all hover:rotate-90 duration-300 ring-2 ring-white/30"
+                  title="Close"
+                >
+                  <X className="w-5 h-5 text-white" />
+                </button>
               </div>
+            </div>
+
+            {/* Enhanced Form Content */}
+            <div className="p-8 space-y-6 overflow-y-auto flex-1 bg-gradient-to-br from-gray-50 to-white">
+              {/* Personal Information Section */}
+              <div className="space-y-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md">
+                    <User className="w-4 h-4 text-white" />
+                  </div>
+                  <h4 className="text-lg font-bold text-gray-800">
+                    Personal Information
+                  </h4>
+                  <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  <label className="block group">
+                    <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                      <span className="text-red-500">*</span>
+                      <span>First Name</span>
+                    </div>
+                    <div className="relative">
+                      <input
+                        required
+                        type="text"
+                        value={newResident.firstName}
+                        onChange={(e) =>
+                          setNewResident((s) => ({
+                            ...s,
+                            firstName: e.target.value,
+                          }))
+                        }
+                        className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
+                        placeholder="Enter first name"
+                      />
+                    </div>
+                  </label>
+
+                  <label className="block group">
+                    <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                      <span className="text-red-500">*</span>
+                      <span>Last Name</span>
+                    </div>
+                    <div className="relative">
+                      <input
+                        required
+                        type="text"
+                        value={newResident.lastName}
+                        onChange={(e) =>
+                          setNewResident((s) => ({
+                            ...s,
+                            lastName: e.target.value,
+                          }))
+                        }
+                        className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
+                        placeholder="Enter last name"
+                      />
+                    </div>
+                  </label>
+
+                  <label className="block group">
+                    <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                      <span className="text-red-500">*</span>
+                      <span>Middle Name</span>
+                    </div>
+                    <div className="relative">
+                      <input
+                        required
+                        type="text"
+                        value={newResident.middleName}
+                        onChange={(e) =>
+                          setNewResident((s) => ({
+                            ...s,
+                            middleName: e.target.value,
+                          }))
+                        }
+                        className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
+                        placeholder="Enter middle name"
+                      />
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {/* Additional Details Section */}
+              <div className="space-y-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
+                    <Award className="w-4 h-4 text-white" />
+                  </div>
+                  <h4 className="text-lg font-bold text-gray-800">
+                    Additional Details
+                  </h4>
+                  <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  <label className="block group">
+                    <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                      <Award className="w-4 h-4 text-amber-500" />
+                      <span className="text-red-500">*</span>
+                      <span>Points</span>
+                    </div>
+                    <input
+                      required
+                      type="number"
+                      min="0"
+                      value={newResident.points}
+                      onChange={(e) =>
+                        setNewResident((s) => ({
+                          ...s,
+                          points: Number(e.target.value),
+                        }))
+                      }
+                      className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
+                      placeholder="0"
+                    />
+                  </label>
+
+                  <label className="block group">
+                    <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                      <Calendar className="w-4 h-4 text-blue-500" />
+                      <span className="text-red-500">*</span>
+                      <span>Age</span>
+                    </div>
+                    <input
+                      required
+                      type="number"
+                      min="0"
+                      max="150"
+                      value={newResident.age}
+                      onChange={(e) =>
+                        setNewResident((s) => ({
+                          ...s,
+                          age: Number(e.target.value),
+                        }))
+                      }
+                      className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
+                      placeholder="0"
+                    />
+                  </label>
+
+                  <label className="block group">
+                    <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                      <Phone className="w-4 h-4 text-green-500" />
+                      <span>Contact</span>
+                    </div>
+                    <input
+                      type="text"
+                      value={newResident.contact}
+                      onChange={(e) =>
+                        setNewResident((s) => ({
+                          ...s,
+                          contact: e.target.value,
+                        }))
+                      }
+                      className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
+                      placeholder="09XXXXXXXXX"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {/* Address Section */}
+              <div className="space-y-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center shadow-md">
+                    <MapPin className="w-4 h-4 text-white" />
+                  </div>
+                  <h4 className="text-lg font-bold text-gray-800">Location</h4>
+                  <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+                </div>
+
+                <label className="block group">
+                  <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                    <MapPin className="w-4 h-4 text-red-500" />
+                    <span>Address</span>
+                  </div>
+                  <textarea
+                    rows={3}
+                    value={newResident.address}
+                    onChange={(e) =>
+                      setNewResident((s) => ({ ...s, address: e.target.value }))
+                    }
+                    className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none"
+                    placeholder="Enter complete address..."
+                  />
+                </label>
+              </div>
+
+              {/* Info Note */}
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 flex items-start gap-3">
+                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-white text-xs font-bold">i</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-blue-800 font-medium">
+                    <span className="font-bold">Note:</span> Fields marked with{' '}
+                    <span className="text-red-500 font-bold">*</span> are
+                    required. Please ensure all information is accurate before
+                    submitting.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Enhanced Footer */}
+            <div className="flex justify-end gap-4 p-6 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white">
               <button
                 type="button"
                 onClick={closeAddModal}
-                className="p-2 rounded-lg hover:bg-gray-200 transition-colors"
-                title="Close"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="p-6 space-y-4 overflow-y-auto flex-1">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <label className="block">
-                  <div className="text-sm font-bold text-gray-700 mb-2">
-                    First Name
-                  </div>
-                  <input
-                    required
-                    type="text"
-                    value={newResident.firstName}
-                    onChange={(e) =>
-                      setNewResident((s) => ({
-                        ...s,
-                        firstName: e.target.value,
-                      }))
-                    }
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                    placeholder="First Name"
-                  />
-                </label>
-                <label className="block">
-                  <div className="text-sm font-bold text-gray-700 mb-2">
-                    Last Name
-                  </div>
-                  <input
-                    required
-                    type="text"
-                    value={newResident.lastName}
-                    onChange={(e) =>
-                      setNewResident((s) => ({
-                        ...s,
-                        lastName: e.target.value,
-                      }))
-                    }
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                    placeholder="Last name"
-                  />
-                </label>
-                <label className="block">
-                  <div className="text-sm font-bold text-gray-700 mb-2">
-                    Middle Name
-                  </div>
-                  <input
-                    required
-                    type="text"
-                    value={newResident.middleName}
-                    onChange={(e) =>
-                      setNewResident((s) => ({
-                        ...s,
-                        middleName: e.target.value,
-                      }))
-                    }
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                    placeholder="Middle name"
-                  />
-                </label>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <label className="block">
-                  <div className="text-sm font-bold text-gray-700 mb-2">
-                    Points
-                  </div>
-                  <input
-                    required
-                    type="number"
-                    value={newResident.points}
-                    onChange={(e) =>
-                      setNewResident((s) => ({
-                        ...s,
-                        points: Number(e.target.value),
-                      }))
-                    }
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                  />
-                </label>
-                <label className="block">
-                  <div className="text-sm font-bold text-gray-700 mb-2">
-                    Age
-                  </div>
-                  <input
-                    required
-                    type="number"
-                    value={newResident.age}
-                    onChange={(e) =>
-                      setNewResident((s) => ({
-                        ...s,
-                        age: Number(e.target.value),
-                      }))
-                    }
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                  />
-                </label>
-
-                <label className="block">
-                  <div className="text-sm font-bold text-gray-700 mb-2">
-                    Contact
-                  </div>
-                  <input
-                    type="text"
-                    value={newResident.contact}
-                    onChange={(e) =>
-                      setNewResident((s) => ({ ...s, contact: e.target.value }))
-                    }
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                    placeholder="09XXXXXXXXX"
-                  />
-                </label>
-              </div>
-
-              <label className="block">
-                <div className="text-sm font-bold text-gray-700 mb-2">
-                  Address
-                </div>
-                <input
-                  type="string"
-                  value={newResident.address}
-                  onChange={(e) =>
-                    setNewResident((s) => ({ ...s, address: e.target.value }))
-                  }
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none"
-                />
-              </label>
-            </div>
-
-            <div className="flex justify-end gap-4 p-6 border-t-2 border-gray-100 bg-gray-50">
-              <button
-                type="button"
-                onClick={closeAddModal}
-                className="px-6 py-3 rounded-xl border-2 border-gray-300 font-semibold hover:bg-gray-100 transition-all"
+                disabled={isCreating}
+                className="px-8 py-3.5 rounded-xl border-2 border-gray-300 font-bold text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-8 py-3 rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all"
+                disabled={isCreating}
+                className="px-10 py-3.5 rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
-                Create Resident
+                {isCreating ? (
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    <span>Creating...</span>
+                  </>
+                ) : (
+                  <>
+                    <User className="w-5 h-5" />
+                    <span>Create Resident</span>
+                  </>
+                )}
               </button>
             </div>
           </form>
