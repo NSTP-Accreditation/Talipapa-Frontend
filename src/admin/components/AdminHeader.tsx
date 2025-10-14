@@ -39,7 +39,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
   };
 
   return (
-    <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-b border-green-700/30 shadow-xl sticky top-0 z-30 backdrop-blur-sm">
+    <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-b border-green-700/30 shadow-xl sticky top-0 backdrop-blur-sm z-[1001]">
       <div className="flex items-center justify-between px-6 sm:px-10 py-5 gap-4">
         {/* Left Side - Mobile hamburger + System Info */}
         <div className="flex items-center gap-4 flex-1">

@@ -45,6 +45,7 @@ interface Location {
 }
 
 export interface Farm {
+  _id?: string;
   location: Location;
   name: string;
   size: string;
@@ -442,7 +443,7 @@ const GreenPages: React.FC = () => {
           {/* Right Side - Tab Content */}
           <div className="lg:col-span-2">
             {activeTab === 'profile' && (
-              <ProfileTab staffDirectory={staffDirectory} openAddStaffModal={openAddStaffModal} />
+              <ProfileTab farmId={farmData?._id ?? null} openAddStaffModal={openAddStaffModal} />
             )}
 
             {activeTab === 'skillMap' && <SkillMapTab staffSkills={staffSkills} />}
