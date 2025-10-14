@@ -1,28 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SquarePen, Save, Home } from 'lucide-react';
-import { useLoadingState } from '../../hooks/useLoadingState';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
+import useFetchData from '../hooks/useFetchData';
+import { useAuthFetch } from '../hooks/useAuthFetch';
 
 export default function AboutBarangayEditable() {
-  // Add loading state with 1 second display
-  const { isLoading: pageLoading } = useLoadingState(1000);
+  const {
+    data,
+    loading: dataLoading,
+    error,
+    refetch,
+  } = useFetchData<any>(`/pageContent/${process.env.VITE_PAGE_CONTENT_ID}`);
 
-  // Initial Data
-  const [barangayInfo, setBarangayInfo] = useState(
-    'Barangay Talipapa is a vibrant and progressive community dedicated to public service, sustainable development, and unity among its residents. Established in 1950, the barangay has continuously evolved to support programs that promote safety, health, and prosperity for everyone.'
-  );
-
-  const [barangayHistory, setBarangayHistory] = useState(
-    'Barangay Talipapa traces its roots to a small settlement where residents engaged in trading and agriculture. Over the decades, it transformed into a well-developed barangay that embraces modernization while preserving its cultural heritage and sense of community.'
-  );
-
-  const [mission, setMission] = useState(
-    'To create a sustainable, clean, and progressive community that promotes environmental awareness and responsible waste management through innovative programs and community participation.'
-  );
-
-  const [vision, setVision] = useState(
-    'A model eco-friendly barangay where residents actively participate in environmental conservation, waste reduction, and sustainable living practices for future generations.'
-  );
+  const [pageContent, setPageContent] = useState<{
+    barangayName: string;
+    mission?: string;
+    vision?: string;
+    barangayHistory?: string;
+    barangayDescription?: string;
+  }>();
 
   const [officials, setOfficials] = useState([
     { role: 'Barangay Captain', name: 'Juan Dela Cruz' },
@@ -41,6 +37,44 @@ export default function AboutBarangayEditable() {
   const [isEditingMission, setIsEditingMission] = useState(false);
   const [isEditingVision, setIsEditingVision] = useState(false);
   const [isEditingOfficials, setIsEditingOfficials] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const authFetch = useAuthFetch();
+
+  // Populate local state when data loads
+  useEffect(() => {
+    if (data && !dataLoading && !error) {
+      setPageContent({
+        barangayName: data.barangayName || 'Name',
+        mission: data.mission || '',
+        vision: data.vision || '',
+        barangayHistory: data.barangayHistory || '',
+        barangayDescription: data.barangayDescription || '',
+      });
+    }
+  }, [data, dataLoading, error]);
+
+  if (dataLoading) {
+    return <FormTablePageSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <h2 className="text-xl font-bold text-red-700">
+          Failed to load barangay data
+        </h2>
+        <p className="mt-2 text-sm text-gray-600">{error}</p>
+        <div className="mt-4">
+          <button
+            onClick={() => refetch()}
+            className="px-4 py-2 bg-green-600 text-white rounded-md"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Editable Handlers
   const handleOfficialChange = (index, key, value) => {
@@ -49,14 +83,39 @@ export default function AboutBarangayEditable() {
     setOfficials(updated);
   };
 
-  // Save Handler
-  const handleSave = () => {
-    setIsEditingInfo(false);
-    setIsEditingHistory(false);
-    setIsEditingMission(false);
-    setIsEditingVision(false);
-    setIsEditingOfficials(false);
-    alert('✅ All changes saved successfully!');
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const url = '/pageContent/68ebc632bdb9c78d031eb89c';
+      const result = await authFetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(pageContent),
+      });
+
+      // If API returns updated object, update local state
+      if (result && typeof result === 'object' && !(result as any).message) {
+        setPageContent(result as any);
+      }
+
+      console.log(result);
+
+      // Clear edit flags
+      setIsEditingInfo(false);
+      setIsEditingHistory(false);
+      setIsEditingMission(false);
+      setIsEditingVision(false);
+      setIsEditingOfficials(false);
+
+      await refetch();
+
+      alert('✅ All changes saved successfully!');
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Failed to save changes';
+      alert('❌ Save failed: ' + message);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const hasActiveEdits =
@@ -66,10 +125,7 @@ export default function AboutBarangayEditable() {
     isEditingVision ||
     isEditingOfficials;
 
-  // Show loading skeleton while loading
-  if (pageLoading) {
-    return <FormTablePageSkeleton />;
-  }
+  // (page loading already handled above)
 
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
@@ -89,10 +145,17 @@ export default function AboutBarangayEditable() {
         {hasActiveEdits && (
           <button
             onClick={handleSave}
-            className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-2"
+            disabled={isSaving}
+            className={`px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-2 ${isSaving ? 'opacity-60 cursor-not-allowed' : ''}`}
           >
-            <Save size={20} />
-            Save All Changes
+            {isSaving ? (
+              'Saving...'
+            ) : (
+              <>
+                <Save size={20} />
+                Save All Changes
+              </>
+            )}
           </button>
         )}
       </div>
@@ -118,13 +181,20 @@ export default function AboutBarangayEditable() {
 
             {isEditingInfo ? (
               <textarea
-                value={barangayInfo}
-                onChange={(e) => setBarangayInfo(e.target.value)}
+                value={pageContent?.barangayDescription || ''}
+                onChange={(e) =>
+                  setPageContent((prev) => ({
+                    ...prev,
+                    barangayDescription: e.target.value,
+                  }))
+                }
                 className="w-full border-2 border-gray-300 rounded-lg p-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                 rows={4}
               />
             ) : (
-              <p className="text-gray-700 leading-relaxed">{barangayInfo}</p>
+              <p className="text-gray-700 leading-relaxed">
+                {pageContent?.barangayDescription}
+              </p>
             )}
           </div>
         </div>
@@ -148,13 +218,20 @@ export default function AboutBarangayEditable() {
 
             {isEditingHistory ? (
               <textarea
-                value={barangayHistory}
-                onChange={(e) => setBarangayHistory(e.target.value)}
+                value={pageContent?.barangayHistory || ''}
+                onChange={(e) =>
+                  setPageContent((prev) => ({
+                    ...prev,
+                    barangayHistory: e.target.value,
+                  }))
+                }
                 className="w-full border-2 border-gray-300 rounded-lg p-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                 rows={4}
               />
             ) : (
-              <p className="text-gray-700 leading-relaxed">{barangayHistory}</p>
+              <p className="text-gray-700 leading-relaxed">
+                {pageContent?.barangayHistory}
+              </p>
             )}
           </div>
         </div>
@@ -180,13 +257,20 @@ export default function AboutBarangayEditable() {
 
               {isEditingMission ? (
                 <textarea
-                  value={mission}
-                  onChange={(e) => setMission(e.target.value)}
+                  value={pageContent?.mission || ''}
+                  onChange={(e) =>
+                    setPageContent((prev) => ({
+                      ...prev,
+                      mission: e.target.value,
+                    }))
+                  }
                   className="w-full border-2 border-gray-300 rounded-lg p-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                   rows={5}
                 />
               ) : (
-                <p className="text-gray-700 leading-relaxed">{mission}</p>
+                <p className="text-gray-700 leading-relaxed">
+                  {pageContent?.mission}
+                </p>
               )}
             </div>
           </div>
@@ -210,13 +294,20 @@ export default function AboutBarangayEditable() {
 
               {isEditingVision ? (
                 <textarea
-                  value={vision}
-                  onChange={(e) => setVision(e.target.value)}
+                  value={pageContent?.vision || ''}
+                  onChange={(e) =>
+                    setPageContent((prev) => ({
+                      ...prev,
+                      vision: e.target.value,
+                    }))
+                  }
                   className="w-full border-2 border-gray-300 rounded-lg p-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
                   rows={5}
                 />
               ) : (
-                <p className="text-gray-700 leading-relaxed">{vision}</p>
+                <p className="text-gray-700 leading-relaxed">
+                  {pageContent?.vision}
+                </p>
               )}
             </div>
           </div>

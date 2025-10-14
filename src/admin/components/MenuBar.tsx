@@ -184,7 +184,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
 
       <div
         className={cn(
-          'w-[280px] sm:w-[320px] h-screen text-white flex flex-col fixed left-0 top-0 overflow-hidden transform transition-transform duration-300 z-50 shadow-2xl bg-gradient-to-b from-green-900 via-green-800 to-green-900',
+          'w-[280px] sm:w-[320px] h-screen text-white flex flex-col fixed left-0 top-0 overflow-hidden transform transition-transform duration-300 z-[1002] shadow-2xl bg-gradient-to-b from-green-900 via-green-800 to-green-900',
           // hide on small screens unless isOpen
           isOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0',
           className

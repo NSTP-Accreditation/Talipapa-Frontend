@@ -43,7 +43,9 @@ export const useAuthFetch = () => {
       };
 
       try {
-        let response = await fetch(`${apiURL}${url}`, {
+        const finalUrl = /^https?:\/\//i.test(url) ? url : `${apiURL}${url}`;
+
+        let response = await fetch(finalUrl, {
           ...options,
           headers,
           credentials: 'include',
@@ -60,7 +62,7 @@ export const useAuthFetch = () => {
               ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
             };
 
-            response = await fetch(`${apiURL}${url}`, {
+            response = await fetch(finalUrl, {
               ...options,
               headers: retryHeaders,
               credentials: 'include',

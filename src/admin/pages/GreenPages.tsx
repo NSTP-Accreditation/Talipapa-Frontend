@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Card,
   CardHeader,
   CardContent,
   CardTitle,
 } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
 import {
   BarChart,
   Bar,
@@ -14,11 +12,9 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
-  PieChart,
-  Pie,
   Cell,
+  Legend,
 } from 'recharts';
 import {
   MapPin,
@@ -33,10 +29,32 @@ import {
   Calendar,
   X,
 } from 'lucide-react';
+import LeafletMap from './green-pages/LeafletMap';
+import useFetchData from '../hooks/useFetchData';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { GreenPagesSkeleton } from '../../components/LoadingSkeletons';
+import ProfileTab from './green-pages/ProfileTab';
+import SkillMapTab from './green-pages/SkillMapTab';
+import StatisticsTab from './green-pages/StatisticsTab';
 
 type TabType = 'profile' | 'skillMap' | 'statistics';
+
+interface Location {
+  lat: number;
+  lng: number;
+}
+
+export interface Farm {
+  _id?: string;
+  location: Location;
+  name: string;
+  size: string;
+  age: string;
+  farmType: string;
+  address: string;
+  description: string;
+  image?: string; // optional as it is not required in the schema
+}
 
 const GreenPages: React.FC = () => {
   const { isLoading } = useLoadingState(1000);
@@ -54,15 +72,15 @@ const GreenPages: React.FC = () => {
     contact: '',
   });
 
-  // Mock data for demonstration
-  const farmData = {
-    name: 'MWSS Talipapa Eco Park',
-    size: '300 sqm.',
-    age: 2,
-    type: 'Aquaponics, Vertical Garden, Greenhouse',
-    address: 'MWSS Service Road, Quezon City',
-    description: 'some description',
-  };
+  // Fetch farms and use the first as the selected farm
+  const { data: farmsData, loading: farmsLoading, error: farmsError } = useFetchData<Farm[]>('/farms');
+  const [farmData, setFarmData] = useState<Farm | null>(null);
+
+  useEffect(() => {
+    if (Array.isArray(farmsData) && farmsData.length > 0) {
+      setFarmData(farmsData[0]);
+    }
+  }, [farmsData]);
 
   const staffDirectory = [
     {
@@ -244,7 +262,7 @@ const GreenPages: React.FC = () => {
           </div>
         </div>
 
-        {/* Google Map - Full Width on Top */}
+        {/* Leaflet Map - Full Width on Top */}
         <Card className="rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl border-2 border-gray-200 overflow-hidden hover:shadow-3xl transition-shadow duration-300">
           <div className="w-full h-56 sm:h-80 md:h-96 relative">
             <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10 bg-white/95 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl shadow-lg border border-gray-200">
@@ -253,16 +271,13 @@ const GreenPages: React.FC = () => {
                 Talipapa Location
               </p>
             </div>
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d965.2284682435453!2d121.02444617082957!3d14.687906698469316!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397ba0142bacae1%3A0x1d4df110b3ed21dd!2sTalipapa%20Barangay%20Hall!5e0!3m2!1sen!2sph!4v1697000000000!5m2!1sen!2sph"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Talipapa Location Map"
-            ></iframe>
+            <div style={{ width: '100%', height: '100%' }}>
+              <LeafletMap
+                farmsData={farmsData as any}
+                selectedFarm={farmData as any}
+                onSelectFarm={(f: any) => setFarmData(f)}
+              />
+            </div>
           </div>
         </Card>
 
@@ -341,9 +356,9 @@ const GreenPages: React.FC = () => {
                     <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
                       Name
                     </p>
-                    <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                      {farmData.name}
-                    </p>
+                            <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
+                              {farmData?.name ?? '—'}
+                            </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
@@ -357,7 +372,7 @@ const GreenPages: React.FC = () => {
                       Size
                     </p>
                     <p className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed">
-                      {farmData.size}
+                      {farmData?.size ?? '—'}
                     </p>
                   </div>
                 </div>
@@ -372,7 +387,7 @@ const GreenPages: React.FC = () => {
                       Age
                     </p>
                     <p className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed">
-                      {farmData.age} years
+                      {farmData?.age ?? '—'} years
                     </p>
                   </div>
                 </div>
@@ -387,7 +402,7 @@ const GreenPages: React.FC = () => {
                       Type
                     </p>
                     <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                      {farmData.type}
+                      {farmData?.farmType ?? '—'}
                     </p>
                   </div>
                 </div>
@@ -402,7 +417,7 @@ const GreenPages: React.FC = () => {
                       Address
                     </p>
                     <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                      {farmData.address}
+                      {farmData?.address ?? '—'}
                     </p>
                   </div>
                 </div>
@@ -417,7 +432,7 @@ const GreenPages: React.FC = () => {
                       Description
                     </p>
                     <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                      {farmData.description}
+                      {farmData?.description ?? '—'}
                     </p>
                   </div>
                 </div>
@@ -428,915 +443,17 @@ const GreenPages: React.FC = () => {
           {/* Right Side - Tab Content */}
           <div className="lg:col-span-2">
             {activeTab === 'profile' && (
-              <Card className="rounded-2xl shadow-2xl border-2 border-gray-200">
-                <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 border-b-2 border-green-500 pb-4">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                    <CardTitle className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
-                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <Users className="w-6 h-6 text-white" />
-                      </div>
-                      Staff Directory
-                    </CardTitle>
-                    <button
-                      onClick={openAddStaffModal}
-                      className="bg-white text-green-700 hover:bg-green-50 px-4 sm:px-6 py-2.5 rounded-xl font-bold shadow-lg text-sm sm:text-base transition-all hover:shadow-xl hover:scale-105 flex items-center gap-2"
-                    >
-                      <Users className="w-5 h-5" />
-                      <span>Add Staff</span>
-                    </button>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-3 sm:p-5 md:p-6 bg-gradient-to-br from-gray-50 to-white">
-                  <div className="space-y-3 sm:space-y-4 overflow-y-auto pr-2 custom-scrollbar max-h-[calc(100vh-20rem)] lg:max-h-[740px]">
-                    {staffDirectory.map((staff, index) => (
-                      <Card
-                        key={index}
-                        className="p-3 sm:p-4 md:p-5 bg-white border-2 border-gray-200 hover:border-green-400 hover:shadow-xl transition-all duration-300 rounded-2xl group"
-                      >
-                        <div className="space-y-2 sm:space-y-2.5">
-                          <div className="flex items-center gap-2 sm:gap-3 pb-2 border-b border-gray-100">
-                            <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base">
-                              {staff.name.charAt(0)}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm sm:text-base md:text-lg font-bold text-gray-900 truncate">
-                                {staff.name}
-                              </p>
-                              <p className="text-xs sm:text-sm text-green-600 font-semibold truncate">
-                                {staff.position}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-2 gap-2">
-                            <div className="bg-gray-50 p-2 sm:p-2.5 rounded-lg">
-                              <p className="text-xs sm:text-xs text-gray-600 font-semibold">
-                                Age
-                              </p>
-                              <p className="text-sm sm:text-sm md:text-base font-bold text-gray-900">
-                                {staff.age}
-                              </p>
-                            </div>
-                            <div className="bg-gray-50 p-2 sm:p-2.5 rounded-lg">
-                              <p className="text-xs sm:text-xs text-gray-600 font-semibold">
-                                Gender
-                              </p>
-                              <p className="text-sm sm:text-sm md:text-base font-bold text-gray-900">
-                                {staff.gender}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="bg-blue-50 p-2 sm:p-2.5 rounded-lg">
-                            <p className="text-xs sm:text-xs text-gray-600 font-semibold">
-                              Email
-                            </p>
-                            <p className="text-xs sm:text-sm md:text-base font-bold text-gray-900 break-all">
-                              {staff.email}
-                            </p>
-                          </div>
-                          <div className="bg-green-50 p-2 sm:p-2.5 rounded-lg">
-                            <p className="text-xs sm:text-xs text-gray-600 font-semibold">
-                              Contact Number
-                            </p>
-                            <p className="text-xs sm:text-sm md:text-base font-bold text-gray-900">
-                              {staff.contact}
-                            </p>
-                          </div>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              <ProfileTab farmId={farmData?._id ?? null} openAddStaffModal={openAddStaffModal} />
             )}
 
-            {activeTab === 'skillMap' && (
-              <Card className="rounded-2xl shadow-2xl border-2 border-gray-200">
-                <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 border-b-2 border-green-500 pb-4">
-                  <CardTitle className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
-                    <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                      <Leaf className="w-6 h-6 text-white" />
-                    </div>
-                    Staff Skills Matrix
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-3 sm:p-5 md:p-6 bg-gradient-to-br from-gray-50 to-white">
-                  <div className="mb-3 sm:mb-4 p-3 sm:p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border-2 border-green-200">
-                    <p className="text-xs sm:text-sm md:text-base text-gray-700 font-semibold">
-                      💡 Skills Overview: {staffSkills.length} skill entries
-                      across the team
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
-                    {staffSkills.map((skill, index) => (
-                      <div
-                        key={index}
-                        className="rounded-xl p-3 sm:p-4 md:p-5 text-center font-bold text-white shadow-lg hover:shadow-2xl transition-all hover:scale-105 cursor-pointer relative overflow-hidden group"
-                        style={{ backgroundColor: skill.color }}
-                      >
-                        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/20 transition-colors duration-300"></div>
-                        <p className="text-sm sm:text-base md:text-lg leading-tight relative z-10">
-                          {skill.short}
-                        </p>
-                        <div className="mt-1.5 sm:mt-2 pt-1.5 sm:pt-2 border-t border-white/40">
-                          <span className="text-xs sm:text-sm opacity-90 font-semibold">
-                            {skill.type}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+            {activeTab === 'skillMap' && <SkillMapTab staffSkills={staffSkills} />}
 
             {activeTab === 'statistics' && (
-              <div className="space-y-4 sm:space-y-6">
-                {/* Statistics Header */}
-                <Card className="rounded-2xl shadow-2xl border-2 border-gray-200">
-                  <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 border-b-2 border-green-500 pb-4">
-                    <CardTitle className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
-                      <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <BarChart3 className="w-6 h-6 text-white" />
-                      </div>
-                      Farm Analytics & Statistics
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-3 sm:p-5 md:p-6 space-y-4 sm:space-y-6 md:space-y-8 bg-gradient-to-br from-gray-50 to-white overflow-y-auto pr-2 custom-scrollbar max-h-[calc(100vh-20rem)] lg:max-h-[795px]">
-                    {/* Stats Summary */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                      <div className="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                        <p className="text-green-100 text-xs sm:text-sm font-semibold mb-1">
-                          Total Farms
-                        </p>
-                        <p className="text-white text-2xl sm:text-3xl font-bold">
-                          {memberEachFarmData.length}
-                        </p>
-                      </div>
-                      <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                        <p className="text-blue-100 text-xs sm:text-sm font-semibold mb-1">
-                          Total Skills
-                        </p>
-                        <p className="text-white text-2xl sm:text-3xl font-bold">
-                          {skillsCountData.length}
-                        </p>
-                      </div>
-                      <div className="bg-gradient-to-br from-purple-500 to-purple-600 p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                        <p className="text-purple-100 text-xs sm:text-sm font-semibold mb-1">
-                          Age Groups
-                        </p>
-                        <p className="text-white text-2xl sm:text-3xl font-bold">
-                          {agesInAllFarmData.length}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Member Each Farm Chart */}
-                    <div className="bg-gradient-to-br from-white via-green-50/30 to-white p-3 sm:p-5 md:p-6 rounded-2xl border-2 border-green-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
-                      <div className="flex items-center justify-between mb-3 sm:mb-4">
-                        <div>
-                          <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 flex items-center gap-1.5 sm:gap-2">
-                            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
-                              <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" />
-                            </div>
-                            Member Each Farm
-                          </h3>
-                          <p className="text-xs sm:text-sm text-gray-600 mt-0.5 sm:mt-1 ml-8 sm:ml-10">
-                            Distribution of members across different farm
-                            locations
-                          </p>
-                        </div>
-                      </div>
-                      <div className="bg-white/50 backdrop-blur-sm p-3 sm:p-4 rounded-xl">
-                        <div className="sm:hidden">
-                          <ResponsiveContainer width="100%" height={260}>
-                            <BarChart
-                              data={memberEachFarmData}
-                              margin={{
-                                top: 20,
-                                right: 10,
-                                left: -10,
-                                bottom: 5,
-                              }}
-                            >
-                              <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="#d1d5db"
-                                opacity={0.5}
-                              />
-                              <XAxis
-                                dataKey="name"
-                                angle={-45}
-                                textAnchor="end"
-                                height={80}
-                                tick={{
-                                  fontSize: 9,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <YAxis
-                                tick={{
-                                  fontSize: 10,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <Tooltip
-                                cursor={{ fill: 'rgba(16, 185, 129, 0.1)' }}
-                                contentStyle={{
-                                  backgroundColor: '#fff',
-                                  border: '2px solid #10b981',
-                                  borderRadius: '12px',
-                                  fontSize: '11px',
-                                  boxShadow:
-                                    '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                  padding: '8px 12px',
-                                }}
-                                labelStyle={{
-                                  color: '#059669',
-                                  fontWeight: 'bold',
-                                }}
-                              />
-                              <Legend
-                                wrapperStyle={{
-                                  fontSize: '10px',
-                                  paddingTop: '10px',
-                                }}
-                                iconType="circle"
-                              />
-                              <Bar
-                                dataKey="value"
-                                name="Members"
-                                radius={[8, 8, 0, 0]}
-                                label={{
-                                  position: 'top',
-                                  fontSize: 10,
-                                  fill: '#374151',
-                                }}
-                              >
-                                {memberEachFarmData.map((entry, index) => (
-                                  <Cell
-                                    key={`cell-${index}`}
-                                    fill={entry.color}
-                                  />
-                                ))}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                        <div className="hidden sm:block md:hidden">
-                          <ResponsiveContainer width="100%" height={320}>
-                            <BarChart
-                              data={memberEachFarmData}
-                              margin={{
-                                top: 20,
-                                right: 20,
-                                left: 0,
-                                bottom: 5,
-                              }}
-                            >
-                              <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="#d1d5db"
-                                opacity={0.5}
-                              />
-                              <XAxis
-                                dataKey="name"
-                                angle={-25}
-                                textAnchor="end"
-                                height={90}
-                                tick={{
-                                  fontSize: 11,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <YAxis
-                                tick={{
-                                  fontSize: 11,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <Tooltip
-                                cursor={{ fill: 'rgba(16, 185, 129, 0.1)' }}
-                                contentStyle={{
-                                  backgroundColor: '#fff',
-                                  border: '2px solid #10b981',
-                                  borderRadius: '12px',
-                                  boxShadow:
-                                    '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                  padding: '10px 14px',
-                                }}
-                                labelStyle={{
-                                  color: '#059669',
-                                  fontWeight: 'bold',
-                                }}
-                              />
-                              <Legend
-                                wrapperStyle={{
-                                  fontSize: '11px',
-                                  paddingTop: '12px',
-                                }}
-                                iconType="circle"
-                              />
-                              <Bar
-                                dataKey="value"
-                                name="Members"
-                                radius={[10, 10, 0, 0]}
-                                label={{
-                                  position: 'top',
-                                  fontSize: 11,
-                                  fill: '#374151',
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {memberEachFarmData.map((entry, index) => (
-                                  <Cell
-                                    key={`cell-${index}`}
-                                    fill={entry.color}
-                                  />
-                                ))}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                        <div className="hidden md:block">
-                          <ResponsiveContainer width="100%" height={350}>
-                            <BarChart
-                              data={memberEachFarmData}
-                              margin={{
-                                top: 20,
-                                right: 30,
-                                left: 10,
-                                bottom: 5,
-                              }}
-                            >
-                              <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="#d1d5db"
-                                opacity={0.5}
-                              />
-                              <XAxis
-                                dataKey="name"
-                                angle={-15}
-                                textAnchor="end"
-                                height={100}
-                                tick={{
-                                  fontSize: 12,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <YAxis
-                                tick={{
-                                  fontSize: 12,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <Tooltip
-                                cursor={{ fill: 'rgba(16, 185, 129, 0.1)' }}
-                                contentStyle={{
-                                  backgroundColor: '#fff',
-                                  border: '2px solid #10b981',
-                                  borderRadius: '12px',
-                                  boxShadow:
-                                    '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                  padding: '12px 16px',
-                                }}
-                                labelStyle={{
-                                  color: '#059669',
-                                  fontWeight: 'bold',
-                                  fontSize: '13px',
-                                }}
-                              />
-                              <Legend
-                                wrapperStyle={{
-                                  fontSize: '12px',
-                                  paddingTop: '15px',
-                                }}
-                                iconType="circle"
-                              />
-                              <Bar
-                                dataKey="value"
-                                name="Members"
-                                radius={[10, 10, 0, 0]}
-                                label={{
-                                  position: 'top',
-                                  fontSize: 12,
-                                  fill: '#374151',
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {memberEachFarmData.map((entry, index) => (
-                                  <Cell
-                                    key={`cell-${index}`}
-                                    fill={entry.color}
-                                  />
-                                ))}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Skills Count Chart */}
-                    <div className="bg-gradient-to-br from-white via-blue-50/30 to-white p-3 sm:p-5 md:p-6 rounded-2xl border-2 border-blue-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
-                      <div className="flex items-center justify-between mb-3 sm:mb-4">
-                        <div>
-                          <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 flex items-center gap-1.5 sm:gap-2">
-                            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md">
-                              <Leaf className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" />
-                            </div>
-                            Skills Count
-                          </h3>
-                          <p className="text-xs sm:text-sm text-gray-600 mt-0.5 sm:mt-1 ml-8 sm:ml-10">
-                            Total number of staff members with each skill type
-                          </p>
-                        </div>
-                      </div>
-                      <div className="bg-white/50 backdrop-blur-sm p-3 sm:p-4 rounded-xl">
-                        <div className="sm:hidden">
-                          <ResponsiveContainer width="100%" height={280}>
-                            <BarChart
-                              data={skillsCountData}
-                              margin={{
-                                top: 20,
-                                right: 10,
-                                left: -10,
-                                bottom: 5,
-                              }}
-                            >
-                              <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="#d1d5db"
-                                opacity={0.5}
-                              />
-                              <XAxis
-                                dataKey="name"
-                                angle={-45}
-                                textAnchor="end"
-                                height={110}
-                                tick={{
-                                  fontSize: 8,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <YAxis
-                                tick={{
-                                  fontSize: 10,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <Tooltip
-                                cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
-                                contentStyle={{
-                                  backgroundColor: '#fff',
-                                  border: '2px solid #3b82f6',
-                                  borderRadius: '12px',
-                                  fontSize: '11px',
-                                  boxShadow:
-                                    '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                  padding: '8px 12px',
-                                }}
-                                labelStyle={{
-                                  color: '#2563eb',
-                                  fontWeight: 'bold',
-                                }}
-                              />
-                              <Legend
-                                wrapperStyle={{
-                                  fontSize: '10px',
-                                  paddingTop: '10px',
-                                }}
-                                iconType="circle"
-                              />
-                              <Bar
-                                dataKey="value"
-                                name="Staff Count"
-                                radius={[8, 8, 0, 0]}
-                                label={{
-                                  position: 'top',
-                                  fontSize: 9,
-                                  fill: '#374151',
-                                }}
-                              >
-                                {skillsCountData.map((entry, index) => (
-                                  <Cell
-                                    key={`cell-${index}`}
-                                    fill={entry.color}
-                                  />
-                                ))}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                        <div className="hidden sm:block md:hidden">
-                          <ResponsiveContainer width="100%" height={320}>
-                            <BarChart
-                              data={skillsCountData}
-                              margin={{
-                                top: 20,
-                                right: 20,
-                                left: 0,
-                                bottom: 5,
-                              }}
-                            >
-                              <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="#d1d5db"
-                                opacity={0.5}
-                              />
-                              <XAxis
-                                dataKey="name"
-                                angle={-35}
-                                textAnchor="end"
-                                height={115}
-                                tick={{
-                                  fontSize: 9,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <YAxis
-                                tick={{
-                                  fontSize: 11,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <Tooltip
-                                cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
-                                contentStyle={{
-                                  backgroundColor: '#fff',
-                                  border: '2px solid #3b82f6',
-                                  borderRadius: '12px',
-                                  boxShadow:
-                                    '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                  padding: '10px 14px',
-                                }}
-                                labelStyle={{
-                                  color: '#2563eb',
-                                  fontWeight: 'bold',
-                                }}
-                              />
-                              <Legend
-                                wrapperStyle={{
-                                  fontSize: '11px',
-                                  paddingTop: '12px',
-                                }}
-                                iconType="circle"
-                              />
-                              <Bar
-                                dataKey="value"
-                                name="Staff Count"
-                                radius={[10, 10, 0, 0]}
-                                label={{
-                                  position: 'top',
-                                  fontSize: 10,
-                                  fill: '#374151',
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {skillsCountData.map((entry, index) => (
-                                  <Cell
-                                    key={`cell-${index}`}
-                                    fill={entry.color}
-                                  />
-                                ))}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                        <div className="hidden md:block">
-                          <ResponsiveContainer width="100%" height={350}>
-                            <BarChart
-                              data={skillsCountData}
-                              margin={{
-                                top: 20,
-                                right: 30,
-                                left: 10,
-                                bottom: 5,
-                              }}
-                            >
-                              <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="#d1d5db"
-                                opacity={0.5}
-                              />
-                              <XAxis
-                                dataKey="name"
-                                angle={-25}
-                                textAnchor="end"
-                                height={120}
-                                tick={{
-                                  fontSize: 10,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <YAxis
-                                tick={{
-                                  fontSize: 12,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <Tooltip
-                                cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
-                                contentStyle={{
-                                  backgroundColor: '#fff',
-                                  border: '2px solid #3b82f6',
-                                  borderRadius: '12px',
-                                  boxShadow:
-                                    '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                  padding: '12px 16px',
-                                }}
-                                labelStyle={{
-                                  color: '#2563eb',
-                                  fontWeight: 'bold',
-                                  fontSize: '13px',
-                                }}
-                              />
-                              <Legend
-                                wrapperStyle={{
-                                  fontSize: '12px',
-                                  paddingTop: '15px',
-                                }}
-                                iconType="circle"
-                              />
-                              <Bar
-                                dataKey="value"
-                                name="Staff Count"
-                                radius={[10, 10, 0, 0]}
-                                label={{
-                                  position: 'top',
-                                  fontSize: 11,
-                                  fill: '#374151',
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {skillsCountData.map((entry, index) => (
-                                  <Cell
-                                    key={`cell-${index}`}
-                                    fill={entry.color}
-                                  />
-                                ))}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Ages in All Farm Chart */}
-                    <div className="bg-gradient-to-br from-white via-purple-50/30 to-white p-3 sm:p-5 md:p-6 rounded-2xl border-2 border-purple-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
-                      <div className="flex items-center justify-between mb-3 sm:mb-4">
-                        <div>
-                          <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-800 flex items-center gap-1.5 sm:gap-2">
-                            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
-                              <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" />
-                            </div>
-                            Age Distribution
-                          </h3>
-                          <p className="text-xs sm:text-sm text-gray-600 mt-0.5 sm:mt-1 ml-8 sm:ml-10">
-                            Age distribution of all farm staff members
-                          </p>
-                        </div>
-                      </div>
-                      <div className="bg-white/50 backdrop-blur-sm p-3 sm:p-4 rounded-xl">
-                        <div className="sm:hidden">
-                          <ResponsiveContainer width="100%" height={260}>
-                            <BarChart
-                              data={agesInAllFarmData}
-                              margin={{
-                                top: 20,
-                                right: 10,
-                                left: -10,
-                                bottom: 5,
-                              }}
-                            >
-                              <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="#d1d5db"
-                                opacity={0.5}
-                              />
-                              <XAxis
-                                dataKey="name"
-                                tick={{
-                                  fontSize: 10,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <YAxis
-                                tick={{
-                                  fontSize: 10,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <Tooltip
-                                cursor={{ fill: 'rgba(168, 85, 247, 0.1)' }}
-                                contentStyle={{
-                                  backgroundColor: '#fff',
-                                  border: '2px solid #a855f7',
-                                  borderRadius: '12px',
-                                  fontSize: '11px',
-                                  boxShadow:
-                                    '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                  padding: '8px 12px',
-                                }}
-                                labelStyle={{
-                                  color: '#9333ea',
-                                  fontWeight: 'bold',
-                                }}
-                              />
-                              <Legend
-                                wrapperStyle={{
-                                  fontSize: '10px',
-                                  paddingTop: '10px',
-                                }}
-                                iconType="circle"
-                              />
-                              <Bar
-                                dataKey="value"
-                                name="Staff Members"
-                                radius={[8, 8, 0, 0]}
-                                label={{
-                                  position: 'top',
-                                  fontSize: 10,
-                                  fill: '#374151',
-                                }}
-                              >
-                                {agesInAllFarmData.map((entry, index) => (
-                                  <Cell
-                                    key={`cell-${index}`}
-                                    fill={entry.color}
-                                  />
-                                ))}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                        <div className="hidden sm:block md:hidden">
-                          <ResponsiveContainer width="100%" height={320}>
-                            <BarChart
-                              data={agesInAllFarmData}
-                              margin={{
-                                top: 20,
-                                right: 20,
-                                left: 0,
-                                bottom: 5,
-                              }}
-                            >
-                              <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="#d1d5db"
-                                opacity={0.5}
-                              />
-                              <XAxis
-                                dataKey="name"
-                                tick={{
-                                  fontSize: 11,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <YAxis
-                                tick={{
-                                  fontSize: 11,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <Tooltip
-                                cursor={{ fill: 'rgba(168, 85, 247, 0.1)' }}
-                                contentStyle={{
-                                  backgroundColor: '#fff',
-                                  border: '2px solid #a855f7',
-                                  borderRadius: '12px',
-                                  boxShadow:
-                                    '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                  padding: '10px 14px',
-                                }}
-                                labelStyle={{
-                                  color: '#9333ea',
-                                  fontWeight: 'bold',
-                                }}
-                              />
-                              <Legend
-                                wrapperStyle={{
-                                  fontSize: '11px',
-                                  paddingTop: '12px',
-                                }}
-                                iconType="circle"
-                              />
-                              <Bar
-                                dataKey="value"
-                                name="Staff Members"
-                                radius={[10, 10, 0, 0]}
-                                label={{
-                                  position: 'top',
-                                  fontSize: 11,
-                                  fill: '#374151',
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {agesInAllFarmData.map((entry, index) => (
-                                  <Cell
-                                    key={`cell-${index}`}
-                                    fill={entry.color}
-                                  />
-                                ))}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                        <div className="hidden md:block">
-                          <ResponsiveContainer width="100%" height={350}>
-                            <BarChart
-                              data={agesInAllFarmData}
-                              margin={{
-                                top: 20,
-                                right: 30,
-                                left: 10,
-                                bottom: 5,
-                              }}
-                            >
-                              <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="#d1d5db"
-                                opacity={0.5}
-                              />
-                              <XAxis
-                                dataKey="name"
-                                tick={{
-                                  fontSize: 12,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <YAxis
-                                tick={{
-                                  fontSize: 12,
-                                  fill: '#374151',
-                                  fontWeight: 500,
-                                }}
-                              />
-                              <Tooltip
-                                cursor={{ fill: 'rgba(168, 85, 247, 0.1)' }}
-                                contentStyle={{
-                                  backgroundColor: '#fff',
-                                  border: '2px solid #a855f7',
-                                  borderRadius: '12px',
-                                  boxShadow:
-                                    '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                  padding: '12px 16px',
-                                }}
-                                labelStyle={{
-                                  color: '#9333ea',
-                                  fontWeight: 'bold',
-                                  fontSize: '13px',
-                                }}
-                              />
-                              <Legend
-                                wrapperStyle={{
-                                  fontSize: '12px',
-                                  paddingTop: '15px',
-                                }}
-                                iconType="circle"
-                              />
-                              <Bar
-                                dataKey="value"
-                                name="Staff Members"
-                                radius={[10, 10, 0, 0]}
-                                label={{
-                                  position: 'top',
-                                  fontSize: 12,
-                                  fill: '#374151',
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {agesInAllFarmData.map((entry, index) => (
-                                  <Cell
-                                    key={`cell-${index}`}
-                                    fill={entry.color}
-                                  />
-                                ))}
-                              </Bar>
-                            </BarChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+              <StatisticsTab
+                memberEachFarmData={memberEachFarmData}
+                skillsCountData={skillsCountData}
+                agesInAllFarmData={agesInAllFarmData}
+              />
             )}
           </div>
         </div>
