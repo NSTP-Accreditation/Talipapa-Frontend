@@ -10,7 +10,6 @@ import { AuthProvider } from './contexts/AuthContext';
 // ADMIN EXPORT HERE - Lazy loaded for better performance
 const AdminLayout = lazy(() => import('@/admin/layout/AdminLayout'));
 const Dashboard = lazy(() => import('@/admin/pages/Dashboard'));
-const Records = lazy(() => import('@/admin/pages/Records'));
 const TradingStatistics = lazy(() => import('@/admin/pages/TradingStatistics'));
 const Settings = lazy(() => import('@/admin/pages/Settings'));
 const ActivityLogs = lazy(() => import('@/admin/pages/ActivityLogs'));
