@@ -6,20 +6,20 @@ import {
   CardContent,
   CardTitle,
 } from '../../components/ui/card';
-import { useLoadingState } from '../../hooks/useLoadingState';
 import { TradingStatisticsSkeleton } from '../../components/LoadingSkeletons';
+import useFetchData from '../hooks/useFetchData';
 
 export default function TradingStatisticsPage() {
   // Add loading state with 1 second display
   // const { isLoading } = useLoadingState(1000);
 
   const { data, loading, error } = useFetchData('/logs?category=RECORD%20MANAGEMENT');
-  
+
   console.log(data);
-  
+
 
   // Show loading skeleton while loading
-  if (isLoading) {
+  if (loading) {
     return <TradingStatisticsSkeleton />;
   }
 

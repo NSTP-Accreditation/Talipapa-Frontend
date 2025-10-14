@@ -29,6 +29,8 @@ import {
   Calendar,
   X,
 } from 'lucide-react';
+import LeafletMap from './green-pages/LeafletMap';
+import useFetchData from '../hooks/useFetchData';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { GreenPagesSkeleton } from '../../components/LoadingSkeletons';
 import ProfileTab from './green-pages/ProfileTab';
@@ -69,15 +71,15 @@ const GreenPages: React.FC = () => {
     contact: '',
   });
 
-  // Mock data for demonstration
-  const farmData = {
-    name: 'MWSS Talipapa Eco Park',
-    size: '300 sqm.',
-    age: 2,
-    type: 'Aquaponics, Vertical Garden, Greenhouse',
-    address: 'MWSS Service Road, Quezon City',
-    description: 'some description',
-  };
+  // Fetch farms and use the first as the selected farm
+  const { data: farmsData, loading: farmsLoading, error: farmsError } = useFetchData<Farm[]>('/farms');
+  const [farmData, setFarmData] = useState<Farm | null>(null);
+
+  useEffect(() => {
+    if (Array.isArray(farmsData) && farmsData.length > 0) {
+      setFarmData(farmsData[0]);
+    }
+  }, [farmsData]);
 
   const staffDirectory = [
     {
@@ -259,7 +261,7 @@ const GreenPages: React.FC = () => {
           </div>
         </div>
 
-        {/* Google Map - Full Width on Top */}
+        {/* Leaflet Map - Full Width on Top */}
         <Card className="rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl border-2 border-gray-200 overflow-hidden hover:shadow-3xl transition-shadow duration-300">
           <div className="w-full h-56 sm:h-80 md:h-96 relative">
             <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10 bg-white/95 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl shadow-lg border border-gray-200">
@@ -268,16 +270,13 @@ const GreenPages: React.FC = () => {
                 Talipapa Location
               </p>
             </div>
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d965.2284682435453!2d121.02444617082957!3d14.687906698469316!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397ba0142bacae1%3A0x1d4df110b3ed21dd!2sTalipapa%20Barangay%20Hall!5e0!3m2!1sen!2sph!4v1697000000000!5m2!1sen!2sph"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Talipapa Location Map"
-            ></iframe>
+            <div style={{ width: '100%', height: '100%' }}>
+              <LeafletMap
+                farmsData={farmsData as any}
+                selectedFarm={farmData as any}
+                onSelectFarm={(f: any) => setFarmData(f)}
+              />
+            </div>
           </div>
         </Card>
 
@@ -356,9 +355,9 @@ const GreenPages: React.FC = () => {
                     <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
                       Name
                     </p>
-                    <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                      {farmData.name}
-                    </p>
+                            <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
+                              {farmData?.name ?? '—'}
+                            </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
@@ -372,7 +371,7 @@ const GreenPages: React.FC = () => {
                       Size
                     </p>
                     <p className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed">
-                      {farmData.size}
+                      {farmData?.size ?? '—'}
                     </p>
                   </div>
                 </div>
@@ -387,7 +386,7 @@ const GreenPages: React.FC = () => {
                       Age
                     </p>
                     <p className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed">
-                      {farmData.age} years
+                      {farmData?.age ?? '—'} years
                     </p>
                   </div>
                 </div>
@@ -402,7 +401,7 @@ const GreenPages: React.FC = () => {
                       Type
                     </p>
                     <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                      {farmData.type}
+                      {farmData?.farmType ?? '—'}
                     </p>
                   </div>
                 </div>
@@ -417,7 +416,7 @@ const GreenPages: React.FC = () => {
                       Address
                     </p>
                     <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                      {farmData.address}
+                      {farmData?.address ?? '—'}
                     </p>
                   </div>
                 </div>
@@ -432,7 +431,7 @@ const GreenPages: React.FC = () => {
                       Description
                     </p>
                     <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                      {farmData.description}
+                      {farmData?.description ?? '—'}
                     </p>
                   </div>
                 </div>
