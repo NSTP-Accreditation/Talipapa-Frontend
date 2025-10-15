@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { GuidelinesPageSkeleton } from '@/components/LoadingSkeletons';
+import useFetchData from '../../admin/hooks/useFetchData';
 
 export default function Guidelines() {
   // Add loading state with 1 second display
@@ -48,49 +49,22 @@ export default function Guidelines() {
     });
   };
 
-  const guides = [
-    {
-      icon: FileText,
-      title: 'Barangay Clearance',
-      path: '/guidelines/barangay-clearance',
-    },
-    {
-      icon: File,
-      title: 'Certificate of Indigency',
-      path: '/guidelines/certificate-of-indigency',
-    },
-    {
-      icon: House,
-      title: 'Certificate of Residency',
-      path: '/guidelines/certificate-of-residency',
-    },
-    {
-      icon: Building2,
-      title: 'Business Clearance',
-      path: '/guidelines/business-clearance',
-    },
-    {
-      icon: TrafficCone,
-      title: 'Traffic Clearance',
-      path: '/guidelines/traffic-clearance',
-    },
-    {
-      icon: ThumbsUp,
-      title: 'Good Moral Character',
-      path: '/guidelines/good-moral-character',
-    },
-    {
-      icon: ScrollText,
-      title: 'Barangay Affidavit',
-      path: '/guidelines/barangay-affidavit',
-    },
-    { icon: IdCard, title: 'Philsys ID', path: '/guidelines/philsys-id' },
-    {
-      icon: IdCard,
-      title: 'Quezon City ID',
-      path: '/guidelines/quezon-city-id',
-    },
-  ];
+  // fetch guides from server
+  const { data, loading, error } = useFetchData('/guidelines');
+  const guides = Array.isArray(data) ? data : [];
+
+  // normalize category and return appropriate lucide icon component
+  const getIconForCategory = (category: string | undefined) => {
+    const c = (category || '').toLowerCase().replace(/[^a-z]/g, '');
+    if (!c) return BookOpen;
+    if (c.includes('clear')) return FileText; // Clearances
+    if (c.includes('permit')) return TrafficCone; // Permits
+    if (c.includes('cert') || c.includes('certificate')) return ScrollText; // Certificates
+    if (c.includes('appl') || c.includes('application')) return File; // Applications
+    if (c.includes('service')) return Building2; // Services
+    if (c === 'id' || c.includes('idcard') || c.includes('philsys')) return IdCard; // ID
+    return BookOpen; // default
+  };
 
   // Show loading skeleton while loading
   if (pageLoading) {
@@ -135,10 +109,12 @@ export default function Guidelines() {
 
         {/* Guide Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {guides.map((guide, index) => {
-            const IconComponent = guide.icon;
+          {loading && <p>Loading guides...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          {guides.map((guide: any) => {
+            const IconComponent = getIconForCategory(guide.category);
             return (
-              <Link key={index} to={guide.path} className="group">
+              <Link key={guide._id} to={`/guidelines/${guide._id}`} className="group">
                 <div className="bg-white border-2 border-gray-100 rounded-2xl p-8 text-center hover:shadow-2xl hover:border-green-300 hover:-translate-y-2 transition-all duration-300 h-full flex flex-col items-center justify-center min-h-[200px] relative overflow-hidden">
                   {/* Background Gradient on Hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -157,6 +133,9 @@ export default function Guidelines() {
                     <h3 className="text-gray-800 text-lg font-semibold leading-relaxed group-hover:text-green-700 transition-colors">
                       {guide.title}
                     </h3>
+                    {guide.description && (
+                      <p className="text-sm text-gray-500 mt-2">{guide.description}</p>
+                    )}
                   </div>
                 </div>
               </Link>
