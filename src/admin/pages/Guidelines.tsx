@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardHeader,
@@ -6,6 +6,8 @@ import {
   CardTitle,
 } from '../../components/ui/card';
 import { useLoadingState } from '../../hooks/useLoadingState';
+import useFetchData from '../hooks/useFetchData';
+import { useAuthFetch } from '../hooks/useAuthFetch';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import {
   BookOpen,
@@ -24,6 +26,7 @@ import {
   X,
   AlertCircle,
 } from 'lucide-react';
+import GuidelineEditModal from '../components/Guidelines/GuidelineEditModal';
 
 interface Step {
   id: string;
@@ -47,678 +50,12 @@ interface Guideline {
   lastUpdated: string;
 }
 
-interface EditModalProps {
-  guideline: Guideline | null;
-  isOpen: boolean;
-  onClose: () => void;
-  onSave: (guideline: Guideline) => void;
-}
-
 interface DeleteModalProps {
   guideline: Guideline | null;
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }
-
-interface StepFormData {
-  title: string;
-  description: string;
-  location: string;
-  requiredDocuments: string;
-  estimatedTime: string;
-  tips: string;
-}
-
-const EditModal: React.FC<EditModalProps> = ({
-  guideline,
-  isOpen,
-  onClose,
-  onSave,
-}) => {
-  const [formData, setFormData] = useState<Guideline>({
-    id: guideline?.id || '',
-    title: guideline?.title || '',
-    description: guideline?.description || '',
-    category: guideline?.category || '',
-    steps: guideline?.steps || [],
-    totalEstimatedTime: guideline?.totalEstimatedTime || '',
-    difficulty: guideline?.difficulty || 'Easy',
-    lastUpdated: guideline?.lastUpdated || new Date().toISOString(),
-  });
-
-  const [editingStepIndex, setEditingStepIndex] = useState<number | null>(null);
-  const [stepFormData, setStepFormData] = useState<StepFormData>({
-    title: '',
-    description: '',
-    location: '',
-    requiredDocuments: '',
-    estimatedTime: '',
-    tips: '',
-  });
-
-  React.useEffect(() => {
-    if (guideline) {
-      setFormData(guideline);
-    } else {
-      const newGuideline = {
-        id: '',
-        title: '',
-        description: '',
-        category: '',
-        steps: [],
-        totalEstimatedTime: '',
-        difficulty: 'Easy' as const,
-        lastUpdated: new Date().toISOString(),
-      };
-      setFormData(newGuideline);
-    }
-    setEditingStepIndex(null);
-    resetStepForm();
-  }, [guideline]);
-
-  const resetStepForm = () => {
-    setStepFormData({
-      title: '',
-      description: '',
-      location: '',
-      requiredDocuments: '',
-      estimatedTime: '',
-      tips: '',
-    });
-  };
-
-  const handleAddStep = () => {
-    const newStep: Step = {
-      id: Date.now().toString(),
-      stepNumber: formData.steps.length + 1,
-      title: stepFormData.title,
-      description: stepFormData.description,
-      location: stepFormData.location || undefined,
-      requiredDocuments: stepFormData.requiredDocuments
-        ? stepFormData.requiredDocuments
-            .split(',')
-            .map((doc) => doc.trim())
-            .filter((doc) => doc)
-        : undefined,
-      estimatedTime: stepFormData.estimatedTime || undefined,
-      tips: stepFormData.tips
-        ? stepFormData.tips
-            .split(',')
-            .map((tip) => tip.trim())
-            .filter((tip) => tip)
-        : undefined,
-    };
-
-    setFormData({
-      ...formData,
-      steps: [...formData.steps, newStep],
-    });
-    resetStepForm();
-  };
-
-  const handleEditStep = (index: number) => {
-    const step = formData.steps[index];
-    setEditingStepIndex(index);
-    setStepFormData({
-      title: step.title,
-      description: step.description,
-      location: step.location || '',
-      requiredDocuments: step.requiredDocuments?.join(', ') || '',
-      estimatedTime: step.estimatedTime || '',
-      tips: step.tips?.join(', ') || '',
-    });
-  };
-
-  const handleUpdateStep = () => {
-    if (editingStepIndex === null) return;
-
-    const updatedStep: Step = {
-      id: formData.steps[editingStepIndex].id,
-      stepNumber: formData.steps[editingStepIndex].stepNumber,
-      title: stepFormData.title,
-      description: stepFormData.description,
-      location: stepFormData.location || undefined,
-      requiredDocuments: stepFormData.requiredDocuments
-        ? stepFormData.requiredDocuments
-            .split(',')
-            .map((doc) => doc.trim())
-            .filter((doc) => doc)
-        : undefined,
-      estimatedTime: stepFormData.estimatedTime || undefined,
-      tips: stepFormData.tips
-        ? stepFormData.tips
-            .split(',')
-            .map((tip) => tip.trim())
-            .filter((tip) => tip)
-        : undefined,
-    };
-
-    const updatedSteps = [...formData.steps];
-    updatedSteps[editingStepIndex] = updatedStep;
-
-    setFormData({
-      ...formData,
-      steps: updatedSteps,
-    });
-
-    setEditingStepIndex(null);
-    resetStepForm();
-  };
-
-  const handleDeleteStep = (index: number) => {
-    const updatedSteps = formData.steps.filter((_, i) => i !== index);
-    // Renumber steps
-    const renumberedSteps = updatedSteps.map((step, i) => ({
-      ...step,
-      stepNumber: i + 1,
-    }));
-
-    setFormData({
-      ...formData,
-      steps: renumberedSteps,
-    });
-  };
-
-  const moveStep = (index: number, direction: 'up' | 'down') => {
-    const steps = [...formData.steps];
-    const newIndex = direction === 'up' ? index - 1 : index + 1;
-
-    if (newIndex < 0 || newIndex >= steps.length) return;
-
-    [steps[index], steps[newIndex]] = [steps[newIndex], steps[index]];
-
-    // Renumber steps
-    const renumberedSteps = steps.map((step, i) => ({
-      ...step,
-      stepNumber: i + 1,
-    }));
-
-    setFormData({
-      ...formData,
-      steps: renumberedSteps,
-    });
-  };
-
-  const handleSave = () => {
-    // Enhanced validation
-    const errors = [];
-
-    if (!formData.title.trim()) {
-      errors.push('Title is required');
-    }
-
-    if (!formData.description.trim()) {
-      errors.push('Description is required');
-    }
-
-    if (!formData.category.trim()) {
-      errors.push('Category is required');
-    }
-
-    if (formData.steps.length === 0) {
-      errors.push('At least one step is required');
-    }
-
-    if (!formData.totalEstimatedTime.trim()) {
-      errors.push('Total estimated time is required');
-    }
-
-    if (errors.length > 0) {
-      alert('Please fix the following errors:\n\n• ' + errors.join('\n• '));
-      return;
-    }
-
-    const updatedGuideline = {
-      ...formData,
-      lastUpdated: new Date().toISOString(),
-    };
-
-    onSave(updatedGuideline);
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div
-      className="fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-4 sm:p-5"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-[900px] w-full max-h-[95vh] overflow-hidden animate-in fade-in zoom-in duration-300">
-        {/* Header */}
-        <div className="px-6 sm:px-8 py-5 sm:py-6 bg-gradient-to-r from-green-600 via-green-600 to-green-700">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30">
-              <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
-                {guideline?.id ? 'Edit Guidelines' : 'Add New Guidelines'}
-              </h2>
-              <p className="text-xs sm:text-sm text-green-50 mt-0.5 sm:mt-1">
-                {guideline?.id
-                  ? 'Update step-by-step instructions'
-                  : 'Create comprehensive step-by-step guide'}
-              </p>
-            </div>
-            <button
-              onClick={onClose}
-              className="w-8 h-8 sm:w-9 sm:h-9 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105 ring-1 ring-white/30"
-            >
-              <X className="w-5 h-5 text-white" />
-            </button>
-          </div>
-        </div>
-
-        {/* Form Content */}
-        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-6 max-h-[calc(95vh-200px)] overflow-y-auto">
-          <div className="flex flex-col gap-4 sm:gap-5 md:gap-6">
-            {/* Basic Information */}
-            <div className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-green-50 to-white rounded-xl sm:rounded-2xl border-2 border-green-100">
-              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
-                  <FileText className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="text-base sm:text-lg font-bold text-gray-900">
-                  Basic Information
-                </h3>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
-                <div className="flex flex-col">
-                  <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                    <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                    Title *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) =>
-                      setFormData({ ...formData, title: e.target.value })
-                    }
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
-                    placeholder="e.g., How to Get a Barangay Clearance"
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                    <Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                    Category *
-                  </label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) =>
-                      setFormData({ ...formData, category: e.target.value })
-                    }
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm bg-white cursor-pointer focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
-                  >
-                    <option value="">Select Category</option>
-                    <option value="Clearances">Clearances</option>
-                    <option value="Permits">Permits</option>
-                    <option value="Certificates">Certificates</option>
-                    <option value="Applications">Applications</option>
-                    <option value="Services">Services</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex flex-col mb-3 sm:mb-4">
-                <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                  <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                  Description *
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  rows={3}
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm resize-none focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
-                  placeholder="Brief description of what this guideline covers"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div className="flex flex-col">
-                  <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                    <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                    Difficulty Level
-                  </label>
-                  <select
-                    value={formData.difficulty}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        difficulty: e.target.value as
-                          | 'Easy'
-                          | 'Medium'
-                          | 'Hard',
-                      })
-                    }
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm bg-white cursor-pointer focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
-                  >
-                    <option value="Easy">Easy</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Hard">Hard</option>
-                  </select>
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                    <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                    Total Estimated Time *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.totalEstimatedTime}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        totalEstimatedTime: e.target.value,
-                      })
-                    }
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
-                    placeholder="e.g., 2-3 hours"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Steps Section */}
-            <div className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-green-50 to-white rounded-xl sm:rounded-2xl border-2 border-green-100">
-              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
-                  <FileCheck className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="text-base sm:text-lg font-bold text-gray-900">
-                  Step-by-Step Instructions
-                </h3>
-              </div>
-
-              {/* Add/Edit Step Form */}
-              <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-5 mb-4 sm:mb-6 border-2 border-dashed border-green-300 hover:border-green-500 transition-colors">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
-                    {editingStepIndex !== null ? (
-                      <Edit2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-700" />
-                    ) : (
-                      <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-green-700" />
-                    )}
-                  </div>
-                  <h4 className="text-sm sm:text-base font-bold text-gray-700">
-                    {editingStepIndex !== null
-                      ? `Edit Step ${editingStepIndex + 1}`
-                      : `Add Step ${formData.steps.length + 1}`}
-                  </h4>
-                </div>
-
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="flex flex-col">
-                    <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                      <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                      Step Title *
-                    </label>
-                    <input
-                      type="text"
-                      value={stepFormData.title}
-                      onChange={(e) =>
-                        setStepFormData({
-                          ...stepFormData,
-                          title: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
-                      placeholder="e.g., Go to Barangay Hall"
-                    />
-                  </div>
-
-                  <div className="flex flex-col">
-                    <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                      <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                      Description *
-                    </label>
-                    <textarea
-                      value={stepFormData.description}
-                      onChange={(e) =>
-                        setStepFormData({
-                          ...stepFormData,
-                          description: e.target.value,
-                        })
-                      }
-                      rows={3}
-                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm resize-none focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
-                      placeholder="Detailed instructions for this step"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                    <div className="flex flex-col">
-                      <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                        <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                        Location
-                      </label>
-                      <input
-                        type="text"
-                        value={stepFormData.location}
-                        onChange={(e) =>
-                          setStepFormData({
-                            ...stepFormData,
-                            location: e.target.value,
-                          })
-                        }
-                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
-                        placeholder="e.g., Barangay Hall, 2nd Floor"
-                      />
-                    </div>
-
-                    <div className="flex flex-col">
-                      <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                        <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                        Estimated Time
-                      </label>
-                      <input
-                        type="text"
-                        value={stepFormData.estimatedTime}
-                        onChange={(e) =>
-                          setStepFormData({
-                            ...stepFormData,
-                            estimatedTime: e.target.value,
-                          })
-                        }
-                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
-                        placeholder="e.g., 15 minutes"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col">
-                    <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                      <FileCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                      Required Documents (comma-separated)
-                    </label>
-                    <input
-                      type="text"
-                      value={stepFormData.requiredDocuments}
-                      onChange={(e) =>
-                        setStepFormData({
-                          ...stepFormData,
-                          requiredDocuments: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
-                      placeholder="e.g., Valid ID, Cedula, Proof of Residency"
-                    />
-                  </div>
-
-                  <div className="flex flex-col">
-                    <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-                      <Lightbulb className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                      Tips (comma-separated)
-                    </label>
-                    <input
-                      type="text"
-                      value={stepFormData.tips}
-                      onChange={(e) =>
-                        setStepFormData({
-                          ...stepFormData,
-                          tips: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all"
-                      placeholder="e.g., Bring exact change, Come early to avoid lines"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex gap-2 sm:gap-3 justify-start mt-4">
-                  {editingStepIndex !== null ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={handleUpdateStep}
-                        className="flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg sm:rounded-xl text-sm font-semibold hover:from-green-700 hover:to-green-800 transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={
-                          !stepFormData.title.trim() ||
-                          !stepFormData.description.trim()
-                        }
-                      >
-                        <Edit2 className="w-4 h-4" />
-                        Update Step
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setEditingStepIndex(null);
-                          resetStepForm();
-                        }}
-                        className="px-4 sm:px-5 py-2.5 sm:py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-lg sm:rounded-xl text-sm font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all"
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={handleAddStep}
-                      className="flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg sm:rounded-xl text-sm font-semibold hover:from-green-700 hover:to-green-800 transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={
-                        !stepFormData.title.trim() ||
-                        !stepFormData.description.trim()
-                      }
-                    >
-                      <Plus className="w-4 h-4" />
-                      Add Step
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Steps List */}
-              {formData.steps.length > 0 && (
-                <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-5 border-2 border-green-200">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
-                      <FileCheck className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                    </div>
-                    <h4 className="text-sm sm:text-base font-bold text-gray-700">
-                      Steps ({formData.steps.length})
-                    </h4>
-                  </div>
-                  {formData.steps.map((step, index) => (
-                    <div
-                      key={step.id}
-                      className="border-2 border-gray-200 rounded-lg sm:rounded-xl mb-3 last:mb-0 overflow-hidden hover:border-green-500 hover:shadow-lg transition-all"
-                    >
-                      <div className="flex items-center p-3 sm:p-4 bg-gradient-to-r from-green-50 to-white border-b-2 border-green-100 gap-2 sm:gap-3">
-                        <div className="bg-gradient-to-br from-green-600 to-green-700 text-white w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold flex-shrink-0 shadow-md">
-                          {step.stepNumber}
-                        </div>
-                        <div className="flex-1 font-bold text-gray-800 min-w-0 text-sm sm:text-base">
-                          {step.title}
-                        </div>
-                        <div className="flex gap-1 flex-shrink-0">
-                          <button
-                            onClick={() => moveStep(index, 'up')}
-                            disabled={index === 0}
-                            className="w-7 h-7 sm:w-8 sm:h-8 border-2 border-gray-300 bg-white rounded-lg hover:bg-gray-50 hover:border-gray-400 cursor-pointer flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                            title="Move Up"
-                          >
-                            <ChevronUp className="w-4 h-4 text-gray-600" />
-                          </button>
-                          <button
-                            onClick={() => moveStep(index, 'down')}
-                            disabled={index === formData.steps.length - 1}
-                            className="w-7 h-7 sm:w-8 sm:h-8 border-2 border-gray-300 bg-white rounded-lg hover:bg-gray-50 hover:border-gray-400 cursor-pointer flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                            title="Move Down"
-                          >
-                            <ChevronDown className="w-4 h-4 text-gray-600" />
-                          </button>
-                          <button
-                            onClick={() => handleEditStep(index)}
-                            className="w-7 h-7 sm:w-8 sm:h-8 border-2 border-green-300 bg-white rounded-lg hover:bg-green-50 hover:border-green-500 cursor-pointer flex items-center justify-center transition-all"
-                            title="Edit"
-                          >
-                            <Edit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteStep(index)}
-                            className="w-7 h-7 sm:w-8 sm:h-8 border-2 border-red-300 bg-white rounded-lg hover:bg-red-50 hover:border-red-500 cursor-pointer flex items-center justify-center transition-all"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="p-3 sm:p-4">
-                        <p className="text-sm text-gray-700 mb-2">
-                          {step.description}
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {step.location && (
-                            <div className="inline-flex items-center gap-1.5 text-xs text-green-700 bg-green-50 border border-green-200 px-2.5 py-1.5 rounded-lg">
-                              <MapPin className="w-3 h-3" />
-                              {step.location}
-                            </div>
-                          )}
-                          {step.estimatedTime && (
-                            <div className="inline-flex items-center gap-1.5 text-xs text-green-700 bg-green-50 border border-green-200 px-2.5 py-1.5 rounded-lg">
-                              <Clock className="w-3 h-3" />
-                              {step.estimatedTime}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-          <button
-            onClick={onClose}
-            className="px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-lg sm:rounded-xl text-sm font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all order-2 sm:order-1"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSave}
-            className="flex items-center justify-center gap-2 px-5 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg sm:rounded-xl text-sm font-bold hover:from-green-700 hover:to-green-800 transition-all hover:-translate-y-0.5 shadow-lg hover:shadow-xl order-1 sm:order-2"
-          >
-            <FileCheck className="w-4 h-4" />
-            {guideline?.id ? 'Update Guidelines' : 'Create Guidelines'}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const DeleteModal: React.FC<DeleteModalProps> = ({
   guideline,
@@ -729,57 +66,25 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   if (!isOpen || !guideline) return null;
 
   return (
-    <div
-      className="fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-4 sm:p-5"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-[480px] w-full overflow-hidden animate-in fade-in zoom-in duration-300">
-        {/* Header */}
-        <div className="px-6 sm:px-8 py-5 sm:py-6 bg-gradient-to-r from-red-600 via-red-600 to-red-700">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30">
-              <AlertCircle className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-2xl bg-white rounded-xl shadow-xl overflow-hidden">
+        <div className="p-6">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
+              <AlertCircle className="w-5 h-5 text-red-600" />
             </div>
             <div className="flex-1">
-              <h2 className="text-xl sm:text-2xl font-bold text-white">
-                Delete Guidelines
-              </h2>
-              <p className="text-xs sm:text-sm text-red-50 mt-0.5 sm:mt-1">
-                This action cannot be undone
+              <h3 className="text-lg font-bold text-gray-900">Delete Guidelines</h3>
+              <p className="text-sm text-gray-700 mt-1">
+                Are you sure you want to delete "{guideline.title}"?
               </p>
             </div>
-            <button
-              onClick={onClose}
-              className="w-8 h-8 sm:w-9 sm:h-9 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105 ring-1 ring-white/30"
-            >
-              <X className="w-5 h-5 text-white" />
-            </button>
           </div>
-        </div>
 
-        {/* Content */}
-        <div className="p-4 sm:p-6 md:p-8">
-          <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-5 leading-relaxed">
-            Are you sure you want to delete the guidelines{' '}
-            <strong className="text-red-600">"{guideline.title}"</strong>?
-          </p>
-
-          <div className="bg-gradient-to-r from-green-50 to-green-50 border-2 border-green-200 rounded-xl sm:rounded-2xl p-4 sm:p-5 mb-4 sm:mb-5">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-white" />
-              </div>
-              <h4 className="text-sm font-bold text-gray-900">
-                Guidelines Details
-              </h4>
-            </div>
+          <div className="mt-6 grid grid-cols-1 gap-4">
             <div className="space-y-2">
               <p className="text-xs sm:text-sm text-gray-700">
-                <span className="font-semibold text-gray-900">
-                  Description:
-                </span>{' '}
+                <span className="font-semibold text-gray-900">Description:</span>{' '}
                 {guideline.description}
               </p>
               <p className="text-xs sm:text-sm text-gray-700">
@@ -804,18 +109,17 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                 </span>
               </p>
             </div>
-          </div>
 
-          <div className="bg-gradient-to-r from-red-50 to-red-50 border-2 border-red-200 rounded-xl sm:rounded-2xl p-3 sm:p-4">
-            <div className="flex items-start gap-2 sm:gap-3">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
-              </div>
-              <div className="flex-1">
-                <p className="text-xs sm:text-sm text-red-700 font-semibold leading-relaxed">
-                  Warning: This will permanently remove these guidelines and all
-                  its steps from the system.
-                </p>
+            <div className="bg-gradient-to-r from-red-50 to-red-50 border-2 border-red-200 rounded-xl p-3">
+              <div className="flex items-start gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs sm:text-sm text-red-700 font-semibold leading-relaxed">
+                    Warning: This will permanently remove these guidelines and all its steps from the system.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -846,109 +150,49 @@ const Guidelines: React.FC = () => {
   // Add loading state with 1 second display
   const { isLoading: pageLoading } = useLoadingState(1000);
 
-  const [guidelines, setGuidelines] = useState<Guideline[]>([
-    {
-      id: '1',
-      title: 'How to Get a Barangay Clearance',
-      description:
-        'Step-by-step guide for obtaining a barangay clearance certificate',
-      category: 'Clearances',
-      totalEstimatedTime: '1-2 hours',
-      difficulty: 'Easy',
-      lastUpdated: '2024-10-01T10:00:00.000Z',
-      steps: [
-        {
-          id: '1-1',
-          stepNumber: 1,
-          title: 'Prepare Required Documents',
-          description:
-            'Gather all necessary documents before going to the barangay hall.',
-          requiredDocuments: ['Valid ID', 'Cedula', 'Proof of Residency'],
-          estimatedTime: '15 minutes',
-          tips: [
-            'Make photocopies of all documents',
-            'Bring originals for verification',
-          ],
-        },
-        {
-          id: '1-2',
-          stepNumber: 2,
-          title: 'Go to Barangay Hall',
-          description:
-            'Visit the barangay hall during office hours to submit your application.',
-          location: 'Barangay Hall, Ground Floor',
-          estimatedTime: '30 minutes',
-          tips: [
-            'Come early to avoid long lines',
-            'Bring exact change for fees',
-          ],
-        },
-        {
-          id: '1-3',
-          stepNumber: 3,
-          title: 'Fill Out Application Form',
-          description:
-            'Complete the barangay clearance application form with accurate information.',
-          location: 'Information Desk',
-          estimatedTime: '10 minutes',
-          tips: ['Write clearly and legibly', 'Double-check all information'],
-        },
-        {
-          id: '1-4',
-          stepNumber: 4,
-          title: 'Submit Documents and Pay Fee',
-          description:
-            'Submit your completed form and documents, then pay the required fee.',
-          location: "Secretary's Office",
-          estimatedTime: '15 minutes',
-        },
-        {
-          id: '1-5',
-          stepNumber: 5,
-          title: 'Claim Your Clearance',
-          description: 'Return to claim your barangay clearance certificate.',
-          estimatedTime: '5 minutes',
-          tips: [
-            'Bring your receipt',
-            'Processing usually takes 1-2 working days',
-          ],
-        },
-      ],
-    },
-    {
-      id: '2',
-      title: 'How to Apply for Business Permit',
-      description: 'Complete guide for obtaining a barangay business permit',
-      category: 'Permits',
-      totalEstimatedTime: '3-4 hours',
-      difficulty: 'Medium',
-      lastUpdated: '2024-09-28T14:30:00.000Z',
-      steps: [
-        {
-          id: '2-1',
-          stepNumber: 1,
-          title: 'Prepare Business Documents',
-          description: 'Gather all required business registration documents.',
-          requiredDocuments: [
-            'DTI Registration',
-            'SEC Registration (if corporation)',
-            'Valid ID',
-            'Barangay Clearance',
-          ],
-          estimatedTime: '30 minutes',
-        },
-        {
-          id: '2-2',
-          stepNumber: 2,
-          title: 'Complete Application Form',
-          description:
-            'Fill out the business permit application form completely.',
-          location: 'Business Permits Office',
-          estimatedTime: '20 minutes',
-        },
-      ],
-    },
-  ]);
+  // fetch guidelines from backend
+  const {
+    data: guidelinesData,
+    loading: guidelinesLoading,
+    error: guidelinesError,
+    refetch: refetchGuidelines,
+  } = useFetchData('/guidelines');
+
+  const [guidelines, setGuidelines] = useState<Guideline[]>([]);
+
+  // map server response to local Guideline model
+  useEffect(() => {
+    if (!guidelinesData) return;
+
+    try {
+      const mapped: Guideline[] = guidelinesData.map((g: any) => ({
+        id: g._id,
+        title: g.title,
+        description: g.description,
+        category: g.category,
+        totalEstimatedTime: g.totalEstimatedTime || g.total_time || '',
+        difficulty: g.difficulty || 'Easy',
+        lastUpdated: g.lastUpdated || g.createdAt || new Date().toISOString(),
+        steps: (g.steps || []).map((s: any, idx: number) => ({
+          id: s._id || `${g._id}-step-${idx}`,
+          stepNumber: s.stepNumber || idx + 1,
+          title: s.title || s.name || '',
+          description: s.description || '',
+          location: s.location,
+          requiredDocuments: s.requiredDocuments || s.required_docs,
+          estimatedTime: s.estimatedTime || s.estimated_time,
+          tips: s.tips || undefined,
+        })),
+      }));
+
+      setGuidelines(mapped);
+    } catch (err) {
+      // fallback: set raw data as guidelines when mapping fails
+      setGuidelines(guidelinesData as any[]);
+    }
+  }, [guidelinesData]);
+
+  const authFetch = useAuthFetch();
 
   const [editingGuideline, setEditingGuideline] = useState<Guideline | null>(
     null
@@ -995,14 +239,22 @@ const Guidelines: React.FC = () => {
   };
 
   const handleConfirmDelete = () => {
-    if (deletingGuideline) {
-      setGuidelines(guidelines.filter((g) => g.id !== deletingGuideline.id));
-      setIsDeleteModalOpen(false);
-      setDeletingGuideline(null);
-      alert(
-        `Guidelines "${deletingGuideline.title}" has been successfully deleted!`
-      );
-    }
+    const doDelete = async () => {
+      if (!deletingGuideline) return;
+      try {
+        // call API to delete
+        await authFetch(`/guidelines/${deletingGuideline.id}`, { method: 'DELETE' });
+        await refetchGuidelines();
+        setIsDeleteModalOpen(false);
+        setDeletingGuideline(null);
+        alert(`Guidelines "${deletingGuideline.title}" has been successfully deleted!`);
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Failed to delete guideline';
+        alert(msg);
+      }
+    };
+
+    void doDelete();
   };
 
   const handleCloseDeleteModal = () => {
@@ -1047,7 +299,24 @@ const Guidelines: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSaveGuideline = (updatedGuideline: Guideline) => {
+  const buildGuidelinePayload = (g: Guideline) => {
+    return {
+      title: g.title,
+      description: g.description,
+      category: g.category,
+      totalEstimatedTime: g.totalEstimatedTime,
+      difficulty: g.difficulty,
+      steps: g.steps.map((s) => ({
+        title: s.title,
+        description: s.description,
+        requiredDocuments: s.requiredDocuments || [],
+        estimatedTime: s.estimatedTime || '',
+        tips: s.tips || [],
+      })),
+    };
+  };
+
+  const handleSaveGuideline = async (updatedGuideline: Guideline, opts?: { keepOpen?: boolean }) => {
     // Check for duplicate titles (case insensitive)
     const existingTitles = guidelines
       .filter((g) => g.id !== updatedGuideline.id) // Exclude current guideline if editing
@@ -1062,38 +331,44 @@ const Guidelines: React.FC = () => {
       return;
     }
 
-    if (
-      updatedGuideline.id &&
-      guidelines.find((g) => g.id === updatedGuideline.id)
-    ) {
-      // Update existing guideline
-      setGuidelines(
-        guidelines.map((g) =>
-          g.id === updatedGuideline.id ? updatedGuideline : g
-        )
-      );
-      alert(
-        `Guidelines "${updatedGuideline.title}" has been successfully updated!`
-      );
-    } else {
-      // Add new guideline
-      const newGuideline = {
-        ...updatedGuideline,
-        id: Date.now().toString(),
-        lastUpdated: new Date().toISOString(),
-      };
-      setGuidelines([...guidelines, newGuideline]);
-      alert(
-        `New guidelines "${updatedGuideline.title}" has been successfully created!`
-      );
+    try {
+      const payload = buildGuidelinePayload(updatedGuideline);
+
+      if (updatedGuideline.id && guidelines.find((g) => g.id === updatedGuideline.id)) {
+        // Update existing guideline using PUT
+        await authFetch(`/guidelines/${updatedGuideline.id}`, {
+          method: 'PUT',
+          body: JSON.stringify(payload),
+        });
+        alert(`Guidelines "${updatedGuideline.title}" has been successfully updated!`);
+      } else {
+        // Create new guideline using POST
+        await authFetch('/guidelines', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
+        alert(`New guidelines "${updatedGuideline.title}" has been successfully created!`);
+      }
+
+      // refresh list
+      await refetchGuidelines();
+
+      // If parent requested to keep the modal open (for creating multiple), do not close
+      const keepOpen = opts?.keepOpen === true;
+      if (!keepOpen) {
+        setIsModalOpen(false);
+        setEditingGuideline(null);
+      } else {
+        // keep modal open but reset editingGuideline so the modal treats as create
+        setEditingGuideline(null);
+      }
+
+      setSelectedGuidelines(new Set());
+      setShowBulkActions(false);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to save guideline';
+      alert(msg);
     }
-
-    setIsModalOpen(false);
-    setEditingGuideline(null);
-
-    // Clear any selected items when adding/editing
-    setSelectedGuidelines(new Set());
-    setShowBulkActions(false);
   };
 
   const handleCloseModal = () => {
@@ -1633,7 +908,7 @@ const Guidelines: React.FC = () => {
       )}
 
       {/* Edit Modal */}
-      <EditModal
+      <GuidelineEditModal
         guideline={editingGuideline}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
