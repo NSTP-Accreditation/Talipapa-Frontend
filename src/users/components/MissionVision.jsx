@@ -1,5 +1,13 @@
 import { Eye, Target, Leaf, Heart, Award, ShieldCheck } from 'lucide-react';
+import useFetchData from '../../admin/hooks/useFetchData';
+
 export default function MissionVision() {
+  const { data, loading, error } = useFetchData(
+    `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`
+  );
+
+  const mission = data?.mission ?? null;
+  const vision = data?.vision ?? null;
   return (
     <section className="bg-gradient-to-br from-green-50 to-white py-20 px-6 flex flex-col items-center">
       {/* Header */}
@@ -29,11 +37,14 @@ export default function MissionVision() {
             <h3 className="text-2xl font-bold mb-6 text-gray-800">
               Our Mission
             </h3>
-            <p className="text-gray-700 text-base leading-relaxed text-justify">
-              To provide efficient, transparent, and sustainable governance that
-              promotes the welfare of all residents while preserving our
-              environment for future generations.
-            </p>
+            {loading && <p className="text-gray-700">Loading mission...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+            {!loading && !error && (
+              <p className="text-gray-700 text-base leading-relaxed text-center">
+                {mission ||
+                  'To provide efficient, transparent, and sustainable governance that promotes the welfare of all residents while preserving our environment for future generations.'}
+              </p>
+            )}
           </div>
         </div>
 
@@ -47,11 +58,14 @@ export default function MissionVision() {
             <h3 className="text-2xl font-bold mb-6 text-gray-800">
               Our Vision
             </h3>
-            <p className="text-gray-700 text-base leading-relaxed text-justify">
-              To be a model eco-friendly barangay that exemplifies sustainable
-              living, where every resident enjoys a high quality of life in
-              harmony with nature.
-            </p>
+            {loading && <p className="text-gray-700">Loading vision...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+            {!loading && !error && (
+              <p className="text-gray-700 text-base leading-relaxed text-center">
+                {vision ||
+                  'To be a model eco-friendly barangay that exemplifies sustainable living, where every resident enjoys a high quality of life in harmony with nature.'}
+              </p>
+            )}
           </div>
         </div>
       </div>
