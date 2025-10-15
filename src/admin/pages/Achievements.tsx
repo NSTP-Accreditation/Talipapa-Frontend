@@ -2,18 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { SquarePen, Plus, Trash2, X, Trophy, Image } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { AchievementsPageSkeleton } from '../../components/LoadingSkeletons';
-
-/**
- * AchievementsAdmin
- * - Editable admin UI for your Achievements grid
- * - Stores data in localStorage under "achievements_admin_v1"
- * - Supports adding/editing/removing, image upload (base64) or image URL
- * - Export/Import JSON for migration or backup
- *
- * Drop this file into your React app. TailwindCSS expected.
- */
-
-const LOCAL_KEY = 'achievements_admin_v1';
+import { useAuth } from '@/contexts/AuthContext';
+import { useAuthFetch } from '../hooks/useAuthFetch';
+import useFetchData from '../hooks/useFetchData';
 
 /* ---------- utilities ---------- */
 const readFileAsDataURL = (file) =>
@@ -24,60 +15,16 @@ const readFileAsDataURL = (file) =>
     reader.readAsDataURL(file);
   });
 
-/* ---------- default seed data (you provided) ---------- */
-const DEFAULTS = [
-  {
-    title: 'Barangay Clean-up Drive Award',
-    description:
-      'Recognized for outstanding environmental efforts in maintaining a clean and green community.',
-    link: 'https://example.com/cleanup-award',
-    image:
-      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800&q=80',
-  },
-  {
-    title: 'Health and Wellness Initiative',
-    description:
-      'Awarded for promoting community health through sustainable wellness programs.',
-    link: 'https://example.com/health-initiative',
-    image:
-      'https://images.unsplash.com/photo-1588072432836-e10032774350?w=800&q=80',
-  },
-  {
-    title: 'Community Safety Recognition',
-    description:
-      'Acknowledged for exemplary disaster preparedness and safety programs.',
-    link: 'https://example.com/safety-recognition',
-    image:
-      'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&q=80',
-  },
-  {
-    title: 'Youth Empowerment Project',
-    description:
-      'Honored for empowering youth leaders to contribute actively to barangay programs.',
-    link: 'https://example.com/youth-project',
-    image:
-      'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=800&q=80',
-  },
-  {
-    title: 'Eco-Friendly Barangay',
-    description:
-      'Achieved for implementing innovative recycling and environmental conservation measures.',
-    link: 'https://example.com/eco-barangay',
-    image:
-      'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800&q=80',
-  },
-  {
-    title: 'Best Barangay Documentation',
-    description:
-      'Awarded for excellence in record keeping, transparency, and governance.',
-    link: 'https://example.com/documentation-award',
-    image: '',
-  },
-];
-
 export default function AchievementsAdmin() {
   // Add loading state with 1 second display
-  const { isLoading: pageLoading } = useLoadingState(1000);
+  const {
+    data: achievements,
+    loading: achievementsLoading,
+    error: achievementsError,
+    refetch: refetchAchievements,
+  } = useFetchData('/achievements');
+
+  const authFetch = useAuthFetch();
 
   const [items, setItems] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -86,40 +33,51 @@ export default function AchievementsAdmin() {
     title: '',
     description: '',
     link: '',
-    image: '', // can be URL or base64
+    imageFile: null,
+    imagePreview: '',
   });
   const [fileUploading, setFileUploading] = useState(false);
 
-  /* ---------- load from localStorage or defaults ---------- */
   useEffect(() => {
-    const raw = localStorage.getItem(LOCAL_KEY);
-    if (raw) {
-      try {
-        setItems(JSON.parse(raw));
-        return;
-      } catch (e) {
-        console.warn('Invalid local storage data, loading defaults.');
-      }
+    if (achievements && !achievementsLoading && !achievementsError) {
+      setItems(achievements);
     }
-    setItems(DEFAULTS);
-  }, []);
-
-  /* ---------- persist whenever items change ---------- */
-  useEffect(() => {
-    localStorage.setItem(LOCAL_KEY, JSON.stringify(items));
-  }, [items]);
+  }, [achievements, achievementsLoading, achievementsError]);
 
   /* ---------- modal control ---------- */
   const openAdd = () => {
     setEditingIndex(null);
-    setForm({ title: '', description: '', link: '', image: '' });
+    setForm({
+      title: '',
+      description: '',
+      link: '',
+      imageFile: null,
+      imagePreview: '',
+    });
     setModalOpen(true);
   };
+
   const openEdit = (index) => {
     setEditingIndex(index);
-    setForm(items[index]);
+    const item = items[index];
+
+    console.log(form);
+
+    setForm({
+      title: item.title || '',
+      description: item.description || '',
+      link: item.link || '',
+      imageFile: null,
+      imagePreview:
+        item && item.image
+          ? typeof item.image === 'string'
+            ? item.image
+            : item.image.url
+          : '',
+    });
     setModalOpen(true);
   };
+
   const closeModal = () => {
     setModalOpen(false);
     setFileUploading(false);
@@ -133,8 +91,12 @@ export default function AchievementsAdmin() {
     setFileUploading(true);
     try {
       const dataUrl = await readFileAsDataURL(file);
-      // store base64 blob as image
-      handleChange('image', dataUrl);
+      setForm((prev) => ({
+        ...prev,
+        image: '', // Clear URL when file is selected
+        imageFile: file, // Store the File object
+        imagePreview: dataUrl as string, // Use base64 for preview
+      }));
     } catch (e) {
       alert('Failed to read file.');
     } finally {
@@ -142,35 +104,79 @@ export default function AchievementsAdmin() {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.title.trim()) {
       alert('Title is required.');
       return;
     }
-    if (editingIndex === null) {
-      setItems((prev) => [form, ...prev]);
-    } else {
-      setItems((prev) => prev.map((it, i) => (i === editingIndex ? form : it)));
+
+    const isCreating = editingIndex === null;
+
+    // For creation require an image file. For update, image is optional.
+    if (isCreating && !form.imageFile) {
+      alert('Image is required.');
+      return;
     }
-    closeModal();
+
+    try {
+      const formData = new FormData();
+      formData.append('title', form.title);
+      formData.append('description', form.description || '');
+      formData.append('link', form.link || '');
+      if (form.imageFile) formData.append('image', form.imageFile);
+
+      let url = '/achievements';
+      let method = 'POST';
+
+      if (!isCreating) {
+        const id = items?.[editingIndex]?._id;
+        if (!id) throw new Error('Missing achievement id for update');
+        url = `/achievements/${id}`;
+        method = 'PATCH';
+      }
+
+      await authFetch(url, {
+        method,
+        body: formData,
+      });
+
+      // refresh list from server
+      refetchAchievements();
+
+      closeModal();
+    } catch (error) {
+      console.error('Save failed:', error);
+      alert(error?.message || String(error));
+    }
   };
 
-  const handleDelete = (index) => {
-    if (!confirm('Delete this achievement? This action cannot be undone.'))
-      return;
-    setItems((prev) => prev.filter((_, i) => i !== index));
+  const handleDelete = async (id: string) => {
+    console.log(id);
+    
+    try {
+      const response =  await authFetch(`/achievements/${id}`, {
+        method: 'DELETE',
+      });
+
+      console.log(response);
+      
+
+      refetchAchievements();
+    } catch (error) {
+      alert(error || String(error));
+    }
   };
 
   /* ---------- small card component ---------- */
   const Card = ({ item, index }) => (
     <div className="group bg-white rounded-xl overflow-hidden border-2 border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
       {/* Image Container - Fixed Height */}
-      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-green-50 to-emerald-50">
+      <div className="relative h-48 overflow-hidden bg-gradient-to-br ">
         {item.image ? (
           <img
-            src={item.image}
+            src={item.image.url}
             alt={item.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -223,7 +229,7 @@ export default function AchievementsAdmin() {
           </button>
 
           <button
-            onClick={() => handleDelete(index)}
+            onClick={() => handleDelete(item._id)}
             className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 font-semibold text-sm"
             title="Delete"
           >
@@ -235,7 +241,7 @@ export default function AchievementsAdmin() {
   );
 
   // Show loading skeleton while loading
-  if (pageLoading) {
+  if (achievementsLoading) {
     return <AchievementsPageSkeleton />;
   }
 
@@ -293,7 +299,7 @@ export default function AchievementsAdmin() {
       {/* ---------- modal (enhanced) ---------- */}
       {modalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn"
+          className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
           onClick={(e) => {
@@ -405,44 +411,24 @@ export default function AchievementsAdmin() {
                   </h4>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <label className="block">
-                    <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                      <span className="text-lg">🌐</span>
-                      Image URL
+                <label className="block">
+                  <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                    <span className="text-lg">📸</span>
+                    Upload Image
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleFile(e.target.files?.[0])}
+                    className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base file:mr-3 sm:file:mr-4 file:py-1.5 sm:file:py-2 file:px-3 sm:file:px-4 file:rounded-lg file:border-0 file:bg-green-50 file:text-green-700 file:font-bold hover:file:bg-green-100 file:cursor-pointer transition-all"
+                  />
+                  {fileUploading && (
+                    <div className="text-xs sm:text-sm text-green-600 mt-2 font-medium flex items-center gap-2">
+                      <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-green-600/30 border-t-green-600 rounded-full animate-spin"></div>
+                      <span>Uploading...</span>
                     </div>
-                    <input
-                      type="url"
-                      value={
-                        form.image && form.image.startsWith('data:')
-                          ? ''
-                          : form.image
-                      }
-                      onChange={(e) => handleChange('image', e.target.value)}
-                      className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
-                      placeholder="https://..."
-                    />
-                  </label>
-
-                  <label className="block">
-                    <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                      <span className="text-lg">📸</span>
-                      Or Upload Image
-                    </div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleFile(e.target.files?.[0])}
-                      className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base file:mr-3 sm:file:mr-4 file:py-1.5 sm:file:py-2 file:px-3 sm:file:px-4 file:rounded-lg file:border-0 file:bg-green-50 file:text-green-700 file:font-bold hover:file:bg-green-100 file:cursor-pointer transition-all"
-                    />
-                    {fileUploading && (
-                      <div className="text-xs sm:text-sm text-green-600 mt-2 font-medium flex items-center gap-2">
-                        <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-green-600/30 border-t-green-600 rounded-full animate-spin"></div>
-                        <span>Uploading...</span>
-                      </div>
-                    )}
-                  </label>
-                </div>
+                  )}
+                </label>
 
                 {/* Preview */}
                 <div className="pt-2">
@@ -450,9 +436,9 @@ export default function AchievementsAdmin() {
                     <span className="text-lg">👁️</span> Image Preview
                   </div>
                   <div className="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden flex items-center justify-center border-2 border-gray-200 shadow-inner">
-                    {form.image ? (
+                    {form.imagePreview ? (
                       <img
-                        src={form.image}
+                        src={form.imagePreview}
                         alt="preview"
                         className="w-full h-full object-cover"
                       />
