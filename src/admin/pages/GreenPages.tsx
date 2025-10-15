@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import LeafletMap from './green-pages/LeafletMap';
 import useFetchData from '../hooks/useFetchData';
+import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { GreenPagesSkeleton } from '../../components/LoadingSkeletons';
 import ProfileTab from './green-pages/ProfileTab';
@@ -77,6 +78,12 @@ interface Staff {
   email_address?: string;
   position?: Position[];
   skills?: Skill[];
+  // farms this staff is assigned to (matches backend `assigned_farm` shape)
+  assigned_farm?: Array<{
+    _id?: string;
+    name?: string;
+    location?: Location;
+  }>;
   contact_number?: string;
   time_in_field?: string;
 }
@@ -111,9 +118,6 @@ const GreenPages: React.FC = () => {
   const { data: staffDirectoryData, loading: staffLoading, error: staffError } = useFetchData<Staff[]>(
     farmData?._id ? `http://localhost:5555/staff/farm/${farmData._id}` : null
   );
-
-  console.log(staffDirectoryData);
-  
 
   const staffSkills = [
     {
@@ -167,8 +171,8 @@ const GreenPages: React.FC = () => {
   ];
 
   // derive flat skills from staffDirectoryData (unique by name)
-  const flatSkills: { name: string; short: string; type: string; color: string }[] = useMemo(() => {
-    const map = new Map<string, { name: string; short: string; type: string; color: string }>();
+  const flatSkills: { _id?: string; name: string; short: string; type: string; color: string }[] = useMemo(() => {
+  const map = new Map<string, { _id?: string; name: string; short: string; type: string; color: string }>();
     if (Array.isArray(staffDirectoryData)) {
       for (const staff of staffDirectoryData) {
         if (!Array.isArray(staff.skills)) continue;
@@ -181,6 +185,7 @@ const GreenPages: React.FC = () => {
               short: s.short || s.name?.split(' ').slice(0,2).join('') || s.name || key,
               type: s.type || 'General',
               color: '#16a34a',
+              _id: (s as any)._id || undefined,
             });
           }
         }
@@ -188,6 +193,32 @@ const GreenPages: React.FC = () => {
     }
     return Array.from(map.values());
   }, [staffDirectoryData]);
+
+  // Skill modal state
+  const [skillModalOpen, setSkillModalOpen] = useState(false);
+  const [skillStaff, setSkillStaff] = useState<Staff[] | null>(null);
+  const [skillLoading, setSkillLoading] = useState(false);
+
+  const authFetch = useAuthFetch();
+
+  const handleSkillClick = async (skill: { _id?: string; name: string }) => {
+    if (!farmData?._id || !skill._id) {
+      alert('Missing farm or skill id');
+      return;
+    }
+
+    setSkillLoading(true);
+    try {
+      const res = await authFetch<any>(`/staff/farm/${farmData._id}/skill/${skill._id}`);
+      setSkillStaff(Array.isArray(res?.staff) ? res.staff : []);
+      setSkillModalOpen(true);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Failed to fetch staff by skill';
+      alert(msg);
+    } finally {
+      setSkillLoading(false);
+    }
+  };
 
   // Statistics data
   const memberEachFarmData = [
@@ -250,7 +281,6 @@ const GreenPages: React.FC = () => {
 
     // Simulate API call
     setTimeout(() => {
-      console.log('New staff:', staffForm);
       alert('Staff added successfully!');
       closeAddStaffModal();
     }, 1500);
@@ -475,7 +505,7 @@ const GreenPages: React.FC = () => {
               <ProfileTab staffDirectory={staffDirectoryData ?? null} openAddStaffModal={openAddStaffModal} />
             )}
 
-            {activeTab === 'skillMap' && <SkillMapTab staffSkills={flatSkills} />}
+            {activeTab === 'skillMap' && <SkillMapTab staffSkills={flatSkills} onSkillClick={handleSkillClick} />}
 
             {activeTab === 'statistics' && (
               <StatisticsTab
@@ -729,6 +759,52 @@ const GreenPages: React.FC = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Skill -> Staff Modal */}
+        {skillModalOpen && (
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1003] p-4"
+            onClick={(e) => { if (e.target === e.currentTarget) setSkillModalOpen(false); }}
+          >
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-auto p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold">Staff with this skill</h3>
+                <button onClick={() => setSkillModalOpen(false)} className="text-gray-600">Close</button>
+              </div>
+
+              {skillLoading && <p>Loading...</p>}
+              {!skillLoading && (!skillStaff || skillStaff.length === 0) && (
+                <p className="text-sm text-gray-600">No staff found for this skill.</p>
+              )}
+
+              {!skillLoading && skillStaff && skillStaff.length > 0 && (
+                <div className="grid grid-cols-1 gap-3">
+                  {skillStaff.map((s) => (
+                    <div key={s._id ?? s.name} className="p-3 border rounded-lg">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="font-bold text-lg">{s.name}</p>
+                          <p className="text-sm text-gray-600 mt-1">
+                            <span className="font-semibold">Skills:</span>{' '}
+                            {(Array.isArray(s.skills) ? s.skills.map(sk => sk.name).filter(Boolean) : []).join(', ') || '—'}
+                          </p>
+                          <p className="text-sm text-gray-600 mt-1">
+                            <span className="font-semibold">Farms:</span>{' '}
+                            {(Array.isArray(s.assigned_farm) ? s.assigned_farm.map(f => f.name).filter(Boolean) : []).join(', ') || '—'}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-semibold">Contact</p>
+                          <p className="text-sm text-gray-700">{s.contact_number ?? 'No contact'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
