@@ -81,9 +81,7 @@ export default function AboutBarangayEditable() {
       if (result && typeof result === 'object' && !(result as any).message) {
         setPageContent(result as any);
       }
-
-      console.log(result);
-
+      
       // Clear edit flags
       setIsEditingInfo(false);
       setIsEditingHistory(false);
