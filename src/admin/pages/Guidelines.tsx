@@ -66,7 +66,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   if (!isOpen || !guideline) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 flex items-center justify-center p-4 z-[1003]">
       <div className="w-full max-w-2xl bg-white rounded-xl shadow-xl overflow-hidden">
         <div className="p-6">
           <div className="flex items-start gap-3">
@@ -126,7 +126,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
+        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 ">
           <button
             onClick={onClose}
             className="px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-lg sm:rounded-xl text-sm font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all order-2 sm:order-1"
@@ -254,7 +254,7 @@ const Guidelines: React.FC = () => {
       }
     };
 
-    void doDelete();
+    doDelete();
   };
 
   const handleCloseDeleteModal = () => {
