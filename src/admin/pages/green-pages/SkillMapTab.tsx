@@ -3,6 +3,7 @@ import { Card, CardHeader, CardContent, CardTitle } from '../../../components/ui
 import { Leaf } from 'lucide-react';
 
 interface Skill {
+  _id?: string;
   name: string;
   short: string;
   type: string;
@@ -11,9 +12,10 @@ interface Skill {
 
 interface SkillMapTabProps {
   staffSkills: Skill[];
+  onSkillClick?: (skill: Skill) => void;
 }
 
-const SkillMapTab: React.FC<SkillMapTabProps> = ({ staffSkills }) => {
+const SkillMapTab: React.FC<SkillMapTabProps> = ({ staffSkills, onSkillClick }) => {
   return (
     <Card className="rounded-2xl shadow-2xl border-2 border-gray-200">
       <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 border-b-2 border-green-500 pb-4">
@@ -33,7 +35,13 @@ const SkillMapTab: React.FC<SkillMapTabProps> = ({ staffSkills }) => {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
           {staffSkills.map((skill, index) => (
             <div
-              key={index}
+              key={skill._id ?? index}
+              onClick={() => onSkillClick && onSkillClick(skill)}
+              role={onSkillClick ? 'button' : undefined}
+              tabIndex={onSkillClick ? 0 : undefined}
+              onKeyDown={(e) => {
+                if (onSkillClick && (e.key === 'Enter' || e.key === ' ')) onSkillClick(skill);
+              }}
               className="rounded-xl p-3 sm:p-4 md:p-5 text-center font-bold text-white shadow-lg hover:shadow-2xl transition-all hover:scale-105 cursor-pointer relative overflow-hidden group"
               style={{ backgroundColor: skill.color }}
             >
