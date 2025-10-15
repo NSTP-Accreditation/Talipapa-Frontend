@@ -6,7 +6,6 @@ import {
   CardTitle,
 } from '../../components/ui/card';
 import { NewsEventsPageSkeleton } from '../../components/LoadingSkeletons';
-import { useLoadingState } from '../../hooks/useLoadingState';
 import {
   Calendar,
   Clock,

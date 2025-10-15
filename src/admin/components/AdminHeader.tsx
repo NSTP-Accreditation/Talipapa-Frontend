@@ -1,3 +1,4 @@
+import { useAuth } from '@/contexts/AuthContext';
 import React, { useState, useEffect } from 'react';
 
 interface AdminHeaderProps {
@@ -11,6 +12,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
   subtitle = 'Content Management System',
   onToggleSidebar,
 }) => {
+  const { user } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -101,7 +103,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
         <div className="flex items-center gap-3 flex-shrink-0">
           <div className="text-right hidden lg:block">
             <p className="text-sm font-bold leading-tight text-white">
-              Admin User
+              {user.userData.username}
             </p>
             <p className="text-xs font-medium mt-0.5 text-green-100">
               Super Admin
