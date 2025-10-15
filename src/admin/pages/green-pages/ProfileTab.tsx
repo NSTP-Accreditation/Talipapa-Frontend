@@ -1,5 +1,10 @@
 import React from 'react';
-import { Card, CardHeader, CardContent, CardTitle } from '../../../components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+} from '../../../components/ui/card';
 import { Users, Leaf } from 'lucide-react';
 import useFetchData from '../../hooks/useFetchData';
 
@@ -29,14 +34,16 @@ interface Staff {
 }
 
 interface ProfileTabProps {
-  farmId?: string | null;
+  staffDirectory?: Staff[] | null;
   openAddStaffModal: () => void;
 }
 
-const ProfileTab: React.FC<ProfileTabProps> = ({ farmId, openAddStaffModal }) => {
-  const { data: staffDirectory, loading, error } = useFetchData<Staff[]>(
-    farmId ? `http://localhost:5555/staff/farm/${farmId}` : null
-  );
+const ProfileTab: React.FC<ProfileTabProps> = ({
+  staffDirectory,
+  openAddStaffModal,
+}) => {
+  const loading = staffDirectory == null;
+  const error = null;
   return (
     <Card className="rounded-2xl shadow-2xl border-2 border-gray-200">
       <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 border-b-2 border-green-500 pb-4">
@@ -59,15 +66,21 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ farmId, openAddStaffModal }) =>
       <CardContent className="p-3 sm:p-5 md:p-6 bg-gradient-to-br from-gray-50 to-white">
         <div className="space-y-3 sm:space-y-4 overflow-y-auto pr-2 custom-scrollbar max-h-[calc(100vh-20rem)] lg:max-h-[740px]">
           {loading && (
-            <div className="p-6 text-center text-sm text-gray-500">Loading staff...</div>
+            <div className="p-6 text-center text-sm text-gray-500">
+              Loading staff...
+            </div>
           )}
 
           {error && (
-            <div className="p-6 text-center text-sm text-red-600">Error loading staff: {error}</div>
+            <div className="p-6 text-center text-sm text-red-600">
+              Error loading staff: {error}
+            </div>
           )}
 
           {Array.isArray(staffDirectory) && staffDirectory.length === 0 && (
-            <div className="p-6 text-center text-sm text-gray-500">No staff found for this farm.</div>
+            <div className="p-6 text-center text-sm text-gray-500">
+              No staff found for this farm.
+            </div>
           )}
 
           {Array.isArray(staffDirectory) &&
@@ -86,7 +99,8 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ farmId, openAddStaffModal }) =>
                         {staff.name}
                       </p>
                       <p className="text-xs sm:text-sm text-green-600 font-semibold">
-                        {Array.isArray(staff.position) && staff.position.length > 0
+                        {Array.isArray(staff.position) &&
+                        staff.position.length > 0
                           ? staff.position.map((p) => p.label).join(', ')
                           : '—'}
                       </p>
@@ -94,29 +108,54 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ farmId, openAddStaffModal }) =>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="bg-gray-50 p-2 sm:p-2.5 rounded-lg">
-                      <p className="text-xs sm:text-xs text-gray-600 font-semibold">Age</p>
-                      <p className="text-sm sm:text-sm md:text-base font-bold text-gray-900">{staff.age ?? '—'}</p>
+                      <p className="text-xs sm:text-xs text-gray-600 font-semibold">
+                        Age
+                      </p>
+                      <p className="text-sm sm:text-sm md:text-base font-bold text-gray-900">
+                        {staff.age ?? '—'}
+                      </p>
                     </div>
                     <div className="bg-gray-50 p-2 sm:p-2.5 rounded-lg">
-                      <p className="text-xs sm:text-xs text-gray-600 font-semibold">Gender</p>
-                      <p className="text-sm sm:text-sm md:text-base font-bold text-gray-900">{staff.gender ?? '—'}</p>
+                      <p className="text-xs sm:text-xs text-gray-600 font-semibold">
+                        Gender
+                      </p>
+                      <p className="text-sm sm:text-sm md:text-base font-bold text-gray-900">
+                        {staff.gender ?? '—'}
+                      </p>
                     </div>
                   </div>
                   <div className="bg-blue-50 p-2 sm:p-2.5 rounded-lg">
-                    <p className="text-xs sm:text-xs text-gray-600 font-semibold">Email</p>
-                    <p className="text-xs sm:text-sm md:text-base font-bold text-gray-900 break-all">{!staff.email_address ? 'No Email Provided' : staff.email_address}</p>
+                    <p className="text-xs sm:text-xs text-gray-600 font-semibold">
+                      Email
+                    </p>
+                    <p className="text-xs sm:text-sm md:text-base font-bold text-gray-900 break-all">
+                      {!staff.email_address
+                        ? 'No Email Provided'
+                        : staff.email_address}
+                    </p>
                   </div>
                   <div className="bg-green-50 p-2 sm:p-2.5 rounded-lg">
-                    <p className="text-xs sm:text-xs text-gray-600 font-semibold">Contact Number</p>
-                    <p className="text-xs sm:text-sm md:text-base font-bold text-gray-900">{!staff.contact_number ? 'No Contact Provided' : staff.contact_number}</p>
+                    <p className="text-xs sm:text-xs text-gray-600 font-semibold">
+                      Contact Number
+                    </p>
+                    <p className="text-xs sm:text-sm md:text-base font-bold text-gray-900">
+                      {!staff.contact_number
+                        ? 'No Contact Provided'
+                        : staff.contact_number}
+                    </p>
                   </div>
 
                   {staff.skills && staff.skills.length > 0 && (
                     <div className="pt-2">
-                      <p className="text-xs sm:text-xs text-gray-600 font-semibold mb-2">Skills</p>
+                      <p className="text-xs sm:text-xs text-gray-600 font-semibold mb-2">
+                        Skills
+                      </p>
                       <div className="flex flex-wrap gap-2">
                         {staff.skills.map((s) => (
-                          <span key={s._id ?? s.name} className="px-2 py-1 rounded-md bg-green-100 text-green-800 text-xs font-semibold">
+                          <span
+                            key={s._id ?? s.name}
+                            className="px-2 py-1 rounded-md bg-green-100 text-green-800 text-xs font-semibold"
+                          >
                             {s.short ?? s.name}
                           </span>
                         ))}
@@ -125,7 +164,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ farmId, openAddStaffModal }) =>
                   )}
                 </div>
               </Card>
-          ))}
+            ))}
         </div>
       </CardContent>
     </Card>

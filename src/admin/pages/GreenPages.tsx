@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Card,
   CardHeader,
@@ -56,6 +56,31 @@ export interface Farm {
   image?: string; // optional as it is not required in the schema
 }
 
+interface Position {
+  id: string;
+  label: string;
+  isCustom?: boolean;
+}
+
+interface Skill {
+  _id?: string;
+  name: string;
+  short?: string;
+  type?: string;
+}
+
+interface Staff {
+  _id?: string;
+  name: string;
+  age?: string;
+  gender?: string;
+  email_address?: string;
+  position?: Position[];
+  skills?: Skill[];
+  contact_number?: string;
+  time_in_field?: string;
+}
+
 const GreenPages: React.FC = () => {
   const { isLoading } = useLoadingState(1000);
   const [activeTab, setActiveTab] = useState<TabType>('profile');
@@ -82,32 +107,13 @@ const GreenPages: React.FC = () => {
     }
   }, [farmsData]);
 
-  const staffDirectory = [
-    {
-      name: 'Vicente Banguilan',
-      age: 'Above 50 years old',
-      gender: 'Male',
-      position: 'Machine Operator',
-      email: 'No Email Address Provided',
-      contact: '09709360392',
-    },
-    {
-      name: 'Maria Santos',
-      age: '35-40 years old',
-      gender: 'Female',
-      position: 'Farm Supervisor',
-      email: 'maria.santos@example.com',
-      contact: '09171234567',
-    },
-    {
-      name: 'Jose Dela Cruz',
-      age: '40-45 years old',
-      gender: 'Male',
-      position: 'Agriculturist',
-      email: 'jose.delacruz@example.com',
-      contact: '09281234567',
-    },
-  ];
+  // fetch staff for selected farm
+  const { data: staffDirectoryData, loading: staffLoading, error: staffError } = useFetchData<Staff[]>(
+    farmData?._id ? `http://localhost:5555/staff/farm/${farmData._id}` : null
+  );
+
+  console.log(staffDirectoryData);
+  
 
   const staffSkills = [
     {
@@ -159,6 +165,29 @@ const GreenPages: React.FC = () => {
       color: '#22d3ee',
     },
   ];
+
+  // derive flat skills from staffDirectoryData (unique by name)
+  const flatSkills: { name: string; short: string; type: string; color: string }[] = useMemo(() => {
+    const map = new Map<string, { name: string; short: string; type: string; color: string }>();
+    if (Array.isArray(staffDirectoryData)) {
+      for (const staff of staffDirectoryData) {
+        if (!Array.isArray(staff.skills)) continue;
+        for (const s of staff.skills) {
+          const key = (s.name || s.short || '').toLowerCase();
+          if (!key) continue;
+          if (!map.has(key)) {
+            map.set(key, {
+              name: s.name || s.short || key,
+              short: s.short || s.name?.split(' ').slice(0,2).join('') || s.name || key,
+              type: s.type || 'General',
+              color: '#16a34a',
+            });
+          }
+        }
+      }
+    }
+    return Array.from(map.values());
+  }, [staffDirectoryData]);
 
   // Statistics data
   const memberEachFarmData = [
@@ -443,10 +472,10 @@ const GreenPages: React.FC = () => {
           {/* Right Side - Tab Content */}
           <div className="lg:col-span-2">
             {activeTab === 'profile' && (
-              <ProfileTab farmId={farmData?._id ?? null} openAddStaffModal={openAddStaffModal} />
+              <ProfileTab staffDirectory={staffDirectoryData ?? null} openAddStaffModal={openAddStaffModal} />
             )}
 
-            {activeTab === 'skillMap' && <SkillMapTab staffSkills={staffSkills} />}
+            {activeTab === 'skillMap' && <SkillMapTab staffSkills={flatSkills} />}
 
             {activeTab === 'statistics' && (
               <StatisticsTab
