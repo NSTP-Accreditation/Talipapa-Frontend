@@ -1,51 +1,13 @@
 import React from 'react';
-
-const achievements = [
-  {
-    title: 'Barangay Clean-up Drive Award',
-    description:
-      'Recognized for outstanding environmental efforts in maintaining a clean and green community.',
-    link: 'https://example.com/cleanup-award',
-    image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500',
-  },
-  {
-    title: 'Health and Wellness Initiative',
-    description:
-      'Awarded for promoting community health through sustainable wellness programs.',
-    link: 'https://example.com/health-initiative',
-    image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?w=500',
-  },
-  {
-    title: 'Community Safety Recognition',
-    description:
-      'Acknowledged for exemplary disaster preparedness and safety programs.',
-    link: 'https://example.com/safety-recognition',
-    image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=500',
-  },
-  {
-    title: 'Youth Empowerment Project',
-    description:
-      'Honored for empowering youth leaders to contribute actively to barangay programs.',
-    link: 'https://example.com/youth-project',
-    image: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=500',
-  },
-  {
-    title: 'Eco-Friendly Barangay',
-    description:
-      'Achieved for implementing innovative recycling and environmental conservation measures.',
-    link: 'https://example.com/eco-barangay',
-    image: 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=500',
-  },
-  {
-    title: 'Best Barangay Documentation',
-    description:
-      'Awarded for excellence in record keeping, transparency, and governance.',
-    link: 'https://example.com/documentation-award',
-    image: '',
-  },
-];
+import useFetchData from '../../admin/hooks/useFetchData';
 
 export default function Achievements() {
+  const { data, loading, error } = useFetchData(
+    '/achievements'
+  );
+
+  const achievements = Array.isArray(data) ? data : [];
+
   return (
     <section className="bg-gradient-to-br from-yellow-50 to-orange-50 py-20 flex justify-center">
       <div className="max-w-6xl w-full px-6">
@@ -63,11 +25,14 @@ export default function Achievements() {
           </p>
         </header>
 
+        {loading && <p className="text-center">Loading achievements...</p>}
+        {error && <p className="text-center text-red-500">{error}</p>}
+
         {/* Grid Layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center">
-          {achievements.map((item, index) => (
+          {achievements.map((item) => (
             <div
-              key={index}
+              key={item._id}
               className="bg-white p-8 rounded-2xl flex flex-col items-center text-center border-2 border-gray-100 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 w-full max-w-sm relative overflow-hidden group"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-orange-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -75,9 +40,9 @@ export default function Achievements() {
               <div className="relative z-10 flex flex-col items-center w-full">
                 {/* Image Container */}
                 <div className="flex items-center justify-center w-full h-52 mb-6 overflow-hidden rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 shadow-md group-hover:shadow-lg transition-shadow duration-300">
-                  {item.image ? (
+                  {item.image && item.image.url ? (
                     <img
-                      src={item.image}
+                      src={item.image.url}
                       alt={item.title || 'Achievement image'}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
