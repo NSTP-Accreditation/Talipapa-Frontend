@@ -19,6 +19,8 @@ import { useLoadingState } from '../../hooks/useLoadingState';
 import { DashboardSkeleton } from '../../components/LoadingSkeletons';
 import useFetchData from '../hooks/useFetchData';
 import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+dayjs.extend(isBetween);
 
 interface PerformedBy {
   _id: string;
@@ -57,6 +59,18 @@ interface Achievements {
   createdAt: string;
 }
 
+interface User {
+  _id: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  address: string;
+  age: number;
+  points: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const Dashboard: React.FC = () => {
   // Add loading state with 1 second display
   const { isLoading } = useLoadingState(1000);
@@ -70,7 +84,7 @@ const Dashboard: React.FC = () => {
     data: recordsData,
     loading: recordsLoading,
     error: recordsError,
-  } = useFetchData<[]>(`/records`);
+  } = useFetchData<User[]>(`/records`);
 
   const {
     data: visitLogs,
@@ -86,18 +100,6 @@ const Dashboard: React.FC = () => {
     error: achievementsError,
   } = useFetchData<Achievements[]>(`/achievements`);
 
-  const { data: yesterdayVisitLogs, loading: yesterdayLoading } = useFetchData<
-    LogEntry[]
-  >(
-    `/logs/all?category=AUTHENTICATION&action=LOGIN&startDate=${dayjs().subtract(1, 'day').format('YYYY-MM-DD')}&endDate=${dayjs().subtract(1, 'day').format('YYYY-MM-DD')}`
-  );
-
-  const { data: lastMonthVisitLogs, loading: lastMonthLoading } = useFetchData<
-    LogEntry[]
-  >(
-    `/logs/all?category=AUTHENTICATION&action=LOGIN&startDate=${dayjs().subtract(1, 'month').startOf('month').format('YYYY-MM-DD')}&endDate=${dayjs().subtract(1, 'month').endOf('month').format('YYYY-MM-DD')}`
-  );
-
   const calculatePercentageChange = (
     current: number,
     previous: number
@@ -110,34 +112,24 @@ const Dashboard: React.FC = () => {
     return `${change >= 0 ? '+' : ''}${Math.round(change)}%`;
   };
 
-  // Helper function to get yesterday's date range
-  const getYesterdayRange = () => {
-    const yesterday = dayjs().subtract(1, 'day');
-    return {
-      start: yesterday.startOf('day').toISOString(),
-      end: yesterday.endOf('day').toISOString(),
-    };
-  };
-
-  // Helper function to get last month's date range
-  const getLastMonthRange = () => {
-    const lastMonth = dayjs().subtract(1, 'month');
-    return {
-      start: lastMonth.startOf('month').toISOString(),
-      end: lastMonth.endOf('month').toISOString(),
-    };
-  };
-
   const dashboardData = useMemo(() => {
     const totalRecords = recordsData?.length || 0;
+
+    const lastMonthRecordCount = recordsData.filter((record) => dayjs(record.createdAt).isSame(dayjs().subtract(1, 'month'), 'month')).length;
 
     const todaysVisits =
       visitLogs?.filter((log) => dayjs(log.created_at).isSame(dayjs(), 'day'))
         .length || 0;
 
-    const yesterdaysVisits = yesterdayVisitLogs?.length || 0;
+    const yesterdaysVisits =
+      visitLogs?.filter((log) =>
+        dayjs(log.created_at).isSame(dayjs().subtract(1, 'day'), 'day')
+      ).length || 0;
+
     const totalVisits = visitLogs?.length || 0;
-    const lastMonthTotalVisits = lastMonthVisitLogs?.length || 0;
+    const lastMonthTotalVisits = visitLogs?.filter((log) =>
+      dayjs(log.created_at).isSame(dayjs().subtract(1, 'month'), 'month')
+    ).length;
 
     const recentActivity = logsData?.data || [];
     const recentAchievements = achievements?.slice(0, 5) || [];
@@ -150,6 +142,10 @@ const Dashboard: React.FC = () => {
       totalVisits,
       lastMonthTotalVisits
     );
+    const totalRecordsChange = calculatePercentageChange(
+      totalRecords,
+      lastMonthRecordCount
+    );
 
     return {
       totalRecords,
@@ -159,15 +155,9 @@ const Dashboard: React.FC = () => {
       recentAchievements,
       todaysVisitsChange,
       totalVisitsChange,
+      totalRecordsChange,
     };
-  }, [
-    recordsData,
-    visitLogs,
-    logsData,
-    achievements,
-    yesterdayVisitLogs,
-    lastMonthVisitLogs,
-  ]);
+  }, [recordsData, visitLogs, logsData, achievements]);
 
   // Show loading skeleton while loading
   if (isLoading) {
@@ -243,7 +233,7 @@ const Dashboard: React.FC = () => {
             <div className="text-3xl font-bold text-gray-900 mb-1">
               {dashboardData.totalRecords}
             </div>
-            <p className="text-xs text-blue-600">+12% from last month</p>
+            <p className="text-xs text-blue-600">{dashboardData.totalRecordsChange} from last month</p>
           </CardContent>
         </Card>
 
