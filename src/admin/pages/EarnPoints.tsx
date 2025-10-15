@@ -165,7 +165,7 @@ export default function App() {
           </div>
           <button
             type="submit"
-            className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-2 w-full sm:w-[220px] rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
+            className="bg-green-600 text-white px-6 py-2 w-full sm:w-[220px] rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
           >
             Confirm
           </button>
