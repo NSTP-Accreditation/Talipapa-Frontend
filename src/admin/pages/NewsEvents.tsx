@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardHeader,
@@ -18,13 +18,15 @@ import {
   SquarePen,
   Trash2,
 } from 'lucide-react';
+import useFetchData from '../hooks/useFetchData';
+import { useAuthFetch } from '../hooks/useAuthFetch';
+import dayjs from 'dayjs';
 
 interface CalendarEvent {
   id: string;
   title: string;
   description: string;
-  date: string;
-  time: string;
+  dateTime: string;
   location?: string;
   category: 'Announcement' | 'Meeting' | 'Event' | 'Notice';
   priority: 'High' | 'Medium' | 'Low';
@@ -55,8 +57,7 @@ const EventModal: React.FC<EventModalProps> = ({
     id: event?.id || '',
     title: event?.title || '',
     description: event?.description || '',
-    date: event?.date || '',
-    time: event?.time || '',
+    dateTime: event?.dateTime || '',
     location: event?.location || '',
     category: event?.category || 'Announcement',
     priority: event?.priority || 'Medium',
@@ -71,8 +72,7 @@ const EventModal: React.FC<EventModalProps> = ({
         id: '',
         title: '',
         description: '',
-        date: '',
-        time: '',
+        dateTime: '',
         location: '',
         category: 'Announcement' as const,
         priority: 'Medium' as const,
@@ -94,12 +94,8 @@ const EventModal: React.FC<EventModalProps> = ({
       errors.push('Description is required');
     }
 
-    if (!formData.date) {
+    if (!formData.dateTime) {
       errors.push('Date is required');
-    }
-
-    if (!formData.time) {
-      errors.push('Time is required');
     }
 
     if (errors.length > 0) {
@@ -218,36 +214,19 @@ const EventModal: React.FC<EventModalProps> = ({
               </h4>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-              <div className="flex flex-col">
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                  <Calendar className="w-4 h-4 text-green-600" />
-                  Date <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) =>
-                    setFormData({ ...formData, date: e.target.value })
-                  }
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
-                />
-              </div>
-
-              <div className="flex flex-col">
-                <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                  <Clock className="w-4 h-4 text-green-600" />
-                  Time <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="time"
-                  value={formData.time}
-                  onChange={(e) =>
-                    setFormData({ ...formData, time: e.target.value })
-                  }
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
-                />
-              </div>
+            <div className="flex flex-col">
+              <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <Calendar className="w-4 h-4 text-green-600" />
+                Date and Time<span className="text-red-500">*</span>
+              </label>
+              <input
+                type="datetime-local"
+                value={formData.dateTime}
+                onChange={(e) =>
+                  setFormData({ ...formData, dateTime: e.target.value })
+                }
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+              />
             </div>
 
             <div className="flex flex-col">
@@ -431,11 +410,11 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
               </p>
               <p className="text-xs sm:text-sm text-gray-700 flex items-center gap-2">
                 <span className="font-bold min-w-[90px]">Date:</span>
-                <span>{event.date}</span>
+                <span>{event.dateTime}</span>
               </p>
               <p className="text-xs sm:text-sm text-gray-700 flex items-center gap-2">
                 <span className="font-bold min-w-[90px]">Time:</span>
-                <span>{event.time}</span>
+                <span>{event.dateTime}</span>
               </p>
               {event.location && (
                 <p className="text-xs sm:text-sm text-gray-700 flex items-center gap-2">
@@ -481,44 +460,32 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 };
 
 const News: React.FC = () => {
-  const [events, setEvents] = useState<CalendarEvent[]>([
-    {
-      id: '1',
-      title: 'Community Clean-up Drive',
-      description:
-        'Join us this Saturday for our monthly community clean-up drive. Meet at the barangay hall at 7:00 AM.',
-      date: '2025-10-12',
-      time: '07:00',
-      location: 'Barangay Hall',
-      category: 'Event',
-      priority: 'High',
-      createdAt: '2025-10-08T10:00:00.000Z',
-    },
-    {
-      id: '2',
-      title: 'Eco-Cycle Trading Program Launch',
-      description:
-        'Our new recycling rewards program is now live! Trade your recyclables for points and redeem rewards at participating local stores.',
-      date: '2025-10-05',
-      time: '09:00',
-      location: 'Community Center',
-      category: 'Announcement',
-      priority: 'Medium',
-      createdAt: '2025-10-05T09:00:00.000Z',
-    },
-    {
-      id: '3',
-      title: 'Water Service Interruption Notice',
-      description:
-        'Water service will be temporarily interrupted for maintenance work.',
-      date: '2025-10-10',
-      time: '09:00',
-      location: '',
-      category: 'Notice',
-      priority: 'High',
-      createdAt: '2025-10-07T08:00:00.000Z',
-    },
-  ]);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const {
+    data: newsData,
+    loading: newsLoading,
+    error: newsError,
+    refetch: refetchNews,
+  } = useFetchData('/news');
+
+  // map remote news shape -> CalendarEvent
+  useEffect(() => {
+    if (!newsData || newsLoading || newsError) return;
+    if (!Array.isArray(newsData)) return;
+
+    const mapped: CalendarEvent[] = newsData.map((n: any) => ({
+      id: n._id || n.id || Date.now().toString(),
+      title: n.title || '',
+      description: n.description || '',
+      dateTime: n.dateTime || n.createdAt || new Date().toISOString(),
+      location: n.location || '',
+      category: (n.category as CalendarEvent['category']) || 'Announcement',
+      priority: (n.priority as CalendarEvent['priority']) || 'Medium',
+      createdAt: n.createdAt || new Date().toISOString(),
+    }));
+
+    setEvents(mapped);
+  }, [newsData, newsLoading, newsError]);
 
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
   const [deletingEvent, setDeletingEvent] = useState<CalendarEvent | null>(
@@ -526,34 +493,73 @@ const News: React.FC = () => {
   );
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  // Add loading state with 1 second display
-  const { isLoading: pageLoading } = useLoadingState(1000);
+  const authFetch = useAuthFetch();
 
   // Show loading skeleton while loading
-  if (pageLoading) {
+  if (newsLoading) {
     return <NewsEventsPageSkeleton />;
   }
 
-  const handleSaveEvent = (event: CalendarEvent) => {
-    if (event.id && events.find((e) => e.id === event.id)) {
-      // Update existing event
-      setEvents(events.map((e) => (e.id === event.id ? event : e)));
-    } else {
-      // Add new event
-      const newEvent = {
-        ...event,
-        id: Date.now().toString(),
-      };
-      setEvents([newEvent, ...events]);
+  const handleSaveEvent = async (event: CalendarEvent) => {
+    try {
+      // If id exists in events, treat as update
+      if (event.id && events.find((e) => e.id === event.id)) {
+        // Update via API
+        const body = {
+          title: event.title,
+          description: event.description,
+          dateTime: event.dateTime,
+          location: event.location,
+          category: event.category,
+          priority: event.priority,
+        };
+        // local id -> remote _id mapping: attempt to find matching item in newsData
+        const remote = newsData?.find((n: any) => n._id === event.id || n.id === event.id);
+        const id = remote?._id || event.id;
+        await authFetch(`/news/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json' },
+        });
+      } else {
+        // Create via API
+        const body = {
+          title: event.title,
+          description: event.description,
+          dateTime: event.dateTime,
+          location: event.location,
+          category: event.category,
+          priority: event.priority,
+        };
+        await authFetch('/news', {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+
+      // Refresh remote data
+      refetchNews();
+
+      setEditingEvent(null);
+      setIsAddModalOpen(false);
+    } catch (err) {
+      console.error('Save event failed', err);
+      alert('Failed to save event');
     }
-    setEditingEvent(null);
-    setIsAddModalOpen(false);
   };
 
-  const handleDeleteEvent = () => {
-    if (deletingEvent) {
-      setEvents(events.filter((e) => e.id !== deletingEvent.id));
+  const handleDeleteEvent = async () => {
+    if (!deletingEvent) return;
+    try {
+      const remote = newsData?.find((n: any) => n._id === deletingEvent.id || n.id === deletingEvent.id);
+      const id = remote?._id || deletingEvent.id;
+      await authFetch(`/news/${id}`, { method: 'DELETE' });
+      refetchNews();
       setDeletingEvent(null);
+    } catch (err) {
+      console.error('Delete failed', err);
+      alert('Failed to delete event');
     }
   };
 
@@ -583,27 +589,6 @@ const News: React.FC = () => {
       default:
         return '⚪';
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
-  const formatTime = (timeString: string) => {
-    const [hours, minutes] = timeString.split(':');
-    const date = new Date();
-    date.setHours(parseInt(hours), parseInt(minutes));
-    return date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
   };
 
   return (
@@ -677,7 +662,7 @@ const News: React.FC = () => {
                 events
                   .sort(
                     (a, b) =>
-                      new Date(b.date).getTime() - new Date(a.date).getTime()
+                      new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()
                   )
                   .map((event, index) => (
                     <div
@@ -715,7 +700,7 @@ const News: React.FC = () => {
                               {event.category}
                             </span>
                             {event.priority === 'High' && (
-                              <span className="px-2.5 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full border border-red-300">
+                              <span className="px-2.5 py-1 bg-red-100 text-center text-red-700 text-xs font-bold rounded-full border border-red-300">
                                 HIGH PRIORITY
                               </span>
                             )}
@@ -743,7 +728,7 @@ const News: React.FC = () => {
                                 />
                               </svg>
                               <span className="font-bold text-gray-900">
-                                {formatDate(event.date)}
+                                {dayjs(event.dateTime).format('dddd, MMM D, YYYY')}
                               </span>
                             </div>
                             <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
@@ -761,7 +746,7 @@ const News: React.FC = () => {
                                 />
                               </svg>
                               <span className="font-bold text-gray-900">
-                                {formatTime(event.time)}
+                                {dayjs(event.dateTime).format('hh:mm A')}
                               </span>
                             </div>
                             {event.location && (
