@@ -103,8 +103,8 @@ const ResidentRecords: React.FC = () => {
 
     setIsCreating(true);
 
-    if (!newResident.points || !newResident.age) {
-      alert('Points and Age are required!');
+    if (!newResident.age) {
+      alert('Age are required!');
       setIsCreating(false);
       return;
     }
@@ -260,7 +260,7 @@ const ResidentRecords: React.FC = () => {
                           {resident?.firstName?.charAt(0)}
                         </div>
                         <span className="text-sm font-semibold text-gray-900">
-                          {resident?.firstName}
+                          {resident?.firstName} {resident?.lastName}
                         </span>
                       </div>
                     </td>
@@ -502,7 +502,7 @@ const ResidentRecords: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  <label className="block group">
+                  {/* <label className="block group">
                     <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                       <Award className="w-4 h-4 text-amber-500" />
                       <span className="text-red-500">*</span>
@@ -522,7 +522,7 @@ const ResidentRecords: React.FC = () => {
                       className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
                       placeholder="0"
                     />
-                  </label>
+                  </label> */}
 
                   <label className="block group">
                     <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
