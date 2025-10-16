@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useToast } from '@/contexts/ToastContext';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardHeader,
@@ -82,8 +81,6 @@ const EventModal: React.FC<EventModalProps> = ({
     }
   }, [event]);
 
-  const toast = useToast();
-
   const handleSave = () => {
     // Validation
     const errors = [];
@@ -101,9 +98,7 @@ const EventModal: React.FC<EventModalProps> = ({
     }
 
     if (errors.length > 0) {
-      toast.warn(
-        'Please fix the following errors:\n\n• ' + errors.join('\n• ')
-      );
+      alert('Please fix the following errors:\n\n• ' + errors.join('\n• '));
       return;
     }
 

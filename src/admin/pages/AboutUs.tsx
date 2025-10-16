@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import { SquarePen, Save, Home } from 'lucide-react';
-import { useLoadingState } from '../../hooks/useLoadingState';
-import { useToast } from '@/contexts/ToastContext';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import useFetchData from '../hooks/useFetchData';
 import { useAuthFetch } from '../hooks/useAuthFetch';
@@ -70,15 +68,37 @@ export default function AboutBarangayEditable() {
 
   // Editable Handlers
 
-  // Save Handler
-  const handleSave = () => {
-    const toast = useToast();
-    setIsEditingInfo(false);
-    setIsEditingHistory(false);
-    setIsEditingMission(false);
-    setIsEditingVision(false);
-    setIsEditingOfficials(false);
-    toast.success('✅ All changes saved successfully!');
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const url = '/pageContent/68ebc632bdb9c78d031eb89c';
+      const result = await authFetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(pageContent),
+      });
+
+      // If API returns updated object, update local state
+      if (result && typeof result === 'object' && !(result as any).message) {
+        setPageContent(result as any);
+      }
+
+      // Clear edit flags
+      setIsEditingInfo(false);
+      setIsEditingHistory(false);
+      setIsEditingMission(false);
+      setIsEditingVision(false);
+      setIsEditingOfficials(false);
+
+      await refetch();
+
+      alert('✅ All changes saved successfully!');
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Failed to save changes';
+      alert('❌ Save failed: ' + message);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const hasActiveEdits =

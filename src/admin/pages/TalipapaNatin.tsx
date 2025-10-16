@@ -10,7 +10,6 @@ import {
   Leaf,
 } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { useToast } from '@/contexts/ToastContext';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 
 const STORAGE_KEY = 'talipapanatin_programs_v1';
@@ -104,7 +103,6 @@ function useLocalStorage<T>(
 
 export default function TalipapaNatin() {
   const { isLoading: pageLoading } = useLoadingState(1000);
-  const toast = useToast();
   const [programs, setPrograms] = useLocalStorage<ProgramItem[]>(
     STORAGE_KEY,
     initialPrograms
@@ -182,7 +180,7 @@ export default function TalipapaNatin() {
 
   const handleSaveAll = () => {
     setHasUnsavedChanges(false);
-    toast.success('✅ All changes saved successfully!');
+    alert('✅ All changes saved successfully!');
   };
 
   if (pageLoading) {

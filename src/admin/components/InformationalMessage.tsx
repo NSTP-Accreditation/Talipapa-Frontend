@@ -6,14 +6,9 @@ type AlertType = 'success' | 'error' | 'warning' | 'info';
 interface AlertBoxProps {
   type?: AlertType;
   message: string;
-  onClose?: () => void;
 }
 
-export default function AlertBox({
-  type = 'info',
-  message,
-  onClose,
-}: AlertBoxProps) {
+export default function AlertBox({ type = 'info', message }: AlertBoxProps) {
   const [visible, setVisible] = useState(true);
   if (!visible) return null;
 
@@ -42,11 +37,6 @@ export default function AlertBox({
 
   const style = styles[type];
 
-  const handleClose = () => {
-    setVisible(false);
-    if (onClose) onClose();
-  };
-
   return (
     <div
       className={`flex items-center justify-between w-full max-w-md bg-white border ${style.border} rounded-lg px-4 py-3 shadow-sm`}
@@ -56,7 +46,7 @@ export default function AlertBox({
         <span className={`font-medium ${style.text}`}>{message}</span>
       </div>
       <button
-        onClick={handleClose}
+        onClick={() => setVisible(false)}
         className="text-gray-400 hover:text-gray-600 transition"
       >
         <X className="w-4 h-4" />
