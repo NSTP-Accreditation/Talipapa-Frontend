@@ -287,7 +287,8 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
         resetStepForm();
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to save guideline';
+      const msg =
+        err instanceof Error ? err.message : 'Failed to save guideline';
       alert(msg);
     }
   };
@@ -533,7 +534,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
                 <div className="p-3 bg-white rounded-xl border-2 border-dashed border-gray-200">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <input
-                    required
+                      required
                       type="text"
                       placeholder="Step title"
                       value={stepFormData.title}

@@ -152,14 +152,13 @@ export default function AchievementsAdmin() {
 
   const handleDelete = async (id: string) => {
     console.log(id);
-    
+
     try {
-      const response =  await authFetch(`/achievements/${id}`, {
+      const response = await authFetch(`/achievements/${id}`, {
         method: 'DELETE',
       });
 
       console.log(response);
-      
 
       refetchAchievements();
     } catch (error) {

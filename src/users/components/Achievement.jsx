@@ -1,9 +1,7 @@
 import useFetchData from '../../admin/hooks/useFetchData';
 
 export default function Achievements() {
-  const { data, loading, error } = useFetchData(
-    '/achievements'
-  );
+  const { data, loading, error } = useFetchData('/achievements');
 
   const achievements = Array.isArray(data) ? data : [];
 

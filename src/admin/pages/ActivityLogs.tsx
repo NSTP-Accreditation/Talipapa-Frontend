@@ -1,5 +1,11 @@
 import React, { useState, ChangeEvent, useMemo, useEffect } from 'react';
-import { Activity, ChevronLeft, ChevronRight, RefreshCcw, RefreshCw } from 'lucide-react';
+import {
+  Activity,
+  ChevronLeft,
+  ChevronRight,
+  RefreshCcw,
+  RefreshCw,
+} from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 import { ActivityLogsPageSkeleton } from '../../components/LoadingSkeletons';
 
@@ -86,7 +92,9 @@ const ActivityLogs: React.FC = () => {
         log.title.toLowerCase().includes(searchLower) ||
         log.description.toLowerCase().includes(searchLower) ||
         log.action.toLowerCase().includes(searchLower) ||
-        (log.performedBy?.username?.toLowerCase() ?? '').includes(searchLower) ||
+        (log.performedBy?.username?.toLowerCase() ?? '').includes(
+          searchLower
+        ) ||
         (log.category?.toLowerCase() ?? '').includes(searchLower);
 
       return matchesCategory && matchesSearch;

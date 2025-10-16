@@ -520,7 +520,7 @@ const GreenPages: React.FC = () => {
         {/* Enhanced Add Staff Modal */}
         {isAddStaffModalOpen && (
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-1003 -4 animate-fadeIn"
             role="dialog"
             aria-modal="true"
             onClick={(e) => {
@@ -714,20 +714,20 @@ const GreenPages: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Info Box */}
-                  <div className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 rounded-xl p-4">
-                    <p className="text-sm text-gray-700 font-medium flex items-start gap-2">
-                      <span className="text-green-600 text-lg flex-shrink-0">
-                        ℹ️
-                      </span>
-                      <span>
-                        Fields marked with{' '}
-                        <span className="text-red-500 font-bold">*</span> are
-                        required. Make sure all information is accurate before
-                        submitting.
-                      </span>
-                    </p>
-                  </div>
+                  {/* Info Note */}
+              <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 flex items-start gap-3">
+                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-white text-xs font-bold">i</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-green-800 font-medium">
+                    <span className="font-bold">Note:</span> Fields marked with{' '}
+                    <span className="text-red-500 font-bold">*</span> are
+                    required. Please ensure all information is accurate before
+                    submitting.
+                  </p>
+                </div>
+              </div>
                 </div>
 
                 {/* Modal Footer */}

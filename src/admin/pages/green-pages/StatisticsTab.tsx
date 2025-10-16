@@ -7,6 +7,9 @@ import {
   Phone,
   Users as UsersIcon,
   Sprout,
+  HopOff,
+  Contact,
+  SquarePen,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import {
@@ -88,7 +91,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
   agesInAllFarmData,
 }) => {
   // Modal state for Add Farm
-  const [isAddFarmOpen, setIsAddFarmOpen] = useState(false);
+  const [FarisAddmOpen, setIsAddFarmOpen] = useState(false);
   const [isSubmittingFarm, setIsSubmittingFarm] = useState(false);
   const [newFarm, setNewFarm] = useState({
     farmName: '',
@@ -247,9 +250,9 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
       </Card>
 
       {/* Add Farm Modal */}
-      {isAddFarmOpen && (
+      {FarisAddmOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
           onClick={(e) => {
@@ -258,9 +261,11 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
         >
           <form
             onSubmit={handleCreateFarm}
-            className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[95vh] flex flex-col"
+            className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[95vh] flex flex-col animate-slideUp"
           >
-            <div className="relative p-6 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white">
+            <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
               <div className="relative flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
@@ -286,22 +291,24 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
             <div className="p-6 overflow-y-auto">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Farm Name
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-1">
+                    <HopOff className="inline w-4 h-4 mr-1 text-green-600" />
+                    Farm Name <span className="text-red-500">*</span>
                   </label>
                   <Input
                     value={newFarm.farmName}
                     onChange={(e) =>
                       setNewFarm({ ...newFarm, farmName: e.target.value })
                     }
-                    placeholder="e.g., TaliPaPa Farm"
+                    placeholder="Name of the farm"
                     className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-1">
+                    <MapPin className="inline w-4 h-4 mr-1 text-green-600" />
+                    Location <span className="text-red-500">*</span>
                   </label>
                   <Input
                     value={newFarm.location}
@@ -314,7 +321,8 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-1">
+                    <Contact className="inline w-4 h-4 mr-1 text-green-600" />
                     Contact
                   </label>
                   <Input
@@ -328,8 +336,9 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Members Count
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-1">
+                    <UsersIcon className="inline w-4 h-4 mr-1 text-green-600" />
+                    Members Count <span className="text-red-500">*</span>
                   </label>
                   <Input
                     value={newFarm.membersCount}
@@ -342,8 +351,9 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Description
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-1">
+                    <SquarePen className="inline w-4 h-4 mr-1 text-green-600" />
+                    Description <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     value={newFarm.description}
@@ -353,6 +363,20 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                     className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none h-28"
                     placeholder="Short description or notes"
                   />
+                  {/* Info Note */}
+                  <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 flex items-start gap-3">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-xs font-bold">i</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-green-800 font-medium">
+                        <span className="font-bold">Note:</span> Fields marked
+                        with <span className="text-red-500 font-bold">*</span>{' '}
+                        are required. Please ensure all information is accurate
+                        before submitting.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

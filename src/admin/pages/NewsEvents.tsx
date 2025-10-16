@@ -513,7 +513,9 @@ const News: React.FC = () => {
           priority: event.priority,
         };
         // local id -> remote _id mapping: attempt to find matching item in newsData
-        const remote = newsData?.find((n: any) => n._id === event.id || n.id === event.id);
+        const remote = newsData?.find(
+          (n: any) => n._id === event.id || n.id === event.id
+        );
         const id = remote?._id || event.id;
         await authFetch(`/news/${id}`, {
           method: 'PUT',
@@ -551,7 +553,9 @@ const News: React.FC = () => {
   const handleDeleteEvent = async () => {
     if (!deletingEvent) return;
     try {
-      const remote = newsData?.find((n: any) => n._id === deletingEvent.id || n.id === deletingEvent.id);
+      const remote = newsData?.find(
+        (n: any) => n._id === deletingEvent.id || n.id === deletingEvent.id
+      );
       const id = remote?._id || deletingEvent.id;
       await authFetch(`/news/${id}`, { method: 'DELETE' });
       refetchNews();
@@ -661,7 +665,8 @@ const News: React.FC = () => {
                 events
                   .sort(
                     (a, b) =>
-                      new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()
+                      new Date(b.dateTime).getTime() -
+                      new Date(a.dateTime).getTime()
                   )
                   .map((event, index) => (
                     <div
@@ -727,7 +732,9 @@ const News: React.FC = () => {
                                 />
                               </svg>
                               <span className="font-bold text-gray-900">
-                                {dayjs(event.dateTime).format('dddd, MMM D, YYYY')}
+                                {dayjs(event.dateTime).format(
+                                  'dddd, MMM D, YYYY'
+                                )}
                               </span>
                             </div>
                             <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">

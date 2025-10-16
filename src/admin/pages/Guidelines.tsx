@@ -74,7 +74,9 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
               <AlertCircle className="w-5 h-5 text-red-600" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-bold text-gray-900">Delete Guidelines</h3>
+              <h3 className="text-lg font-bold text-gray-900">
+                Delete Guidelines
+              </h3>
               <p className="text-sm text-gray-700 mt-1">
                 Are you sure you want to delete "{guideline.title}"?
               </p>
@@ -84,7 +86,9 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
           <div className="mt-6 grid grid-cols-1 gap-4">
             <div className="space-y-2">
               <p className="text-xs sm:text-sm text-gray-700">
-                <span className="font-semibold text-gray-900">Description:</span>{' '}
+                <span className="font-semibold text-gray-900">
+                  Description:
+                </span>{' '}
                 {guideline.description}
               </p>
               <p className="text-xs sm:text-sm text-gray-700">
@@ -117,7 +121,8 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                 </div>
                 <div className="flex-1">
                   <p className="text-xs sm:text-sm text-red-700 font-semibold leading-relaxed">
-                    Warning: This will permanently remove these guidelines and all its steps from the system.
+                    Warning: This will permanently remove these guidelines and
+                    all its steps from the system.
                   </p>
                 </div>
               </div>
@@ -243,13 +248,18 @@ const Guidelines: React.FC = () => {
       if (!deletingGuideline) return;
       try {
         // call API to delete
-        await authFetch(`/guidelines/${deletingGuideline.id}`, { method: 'DELETE' });
+        await authFetch(`/guidelines/${deletingGuideline.id}`, {
+          method: 'DELETE',
+        });
         await refetchGuidelines();
         setIsDeleteModalOpen(false);
         setDeletingGuideline(null);
-        alert(`Guidelines "${deletingGuideline.title}" has been successfully deleted!`);
+        alert(
+          `Guidelines "${deletingGuideline.title}" has been successfully deleted!`
+        );
       } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Failed to delete guideline';
+        const msg =
+          err instanceof Error ? err.message : 'Failed to delete guideline';
         alert(msg);
       }
     };
@@ -316,7 +326,10 @@ const Guidelines: React.FC = () => {
     };
   };
 
-  const handleSaveGuideline = async (updatedGuideline: Guideline, opts?: { keepOpen?: boolean }) => {
+  const handleSaveGuideline = async (
+    updatedGuideline: Guideline,
+    opts?: { keepOpen?: boolean }
+  ) => {
     // Check for duplicate titles (case insensitive)
     const existingTitles = guidelines
       .filter((g) => g.id !== updatedGuideline.id) // Exclude current guideline if editing
@@ -334,20 +347,27 @@ const Guidelines: React.FC = () => {
     try {
       const payload = buildGuidelinePayload(updatedGuideline);
 
-      if (updatedGuideline.id && guidelines.find((g) => g.id === updatedGuideline.id)) {
+      if (
+        updatedGuideline.id &&
+        guidelines.find((g) => g.id === updatedGuideline.id)
+      ) {
         // Update existing guideline using PUT
         await authFetch(`/guidelines/${updatedGuideline.id}`, {
           method: 'PUT',
           body: JSON.stringify(payload),
         });
-        alert(`Guidelines "${updatedGuideline.title}" has been successfully updated!`);
+        alert(
+          `Guidelines "${updatedGuideline.title}" has been successfully updated!`
+        );
       } else {
         // Create new guideline using POST
         await authFetch('/guidelines', {
           method: 'POST',
           body: JSON.stringify(payload),
         });
-        alert(`New guidelines "${updatedGuideline.title}" has been successfully created!`);
+        alert(
+          `New guidelines "${updatedGuideline.title}" has been successfully created!`
+        );
       }
 
       // refresh list
@@ -366,7 +386,8 @@ const Guidelines: React.FC = () => {
       setSelectedGuidelines(new Set());
       setShowBulkActions(false);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to save guideline';
+      const msg =
+        err instanceof Error ? err.message : 'Failed to save guideline';
       alert(msg);
     }
   };
