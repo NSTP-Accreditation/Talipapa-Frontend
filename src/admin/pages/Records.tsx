@@ -279,7 +279,7 @@ const ResidentRecords: React.FC = () => {
                     </td>
                     <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <span className="text-gray-400">📱</span>
+                        <span className="text-gray-400">📍</span>
                         <span className="text-sm text-gray-700 font-medium">
                           {resident?.address}
                         </span>
