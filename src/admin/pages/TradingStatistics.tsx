@@ -13,10 +13,11 @@ export default function TradingStatisticsPage() {
   // Add loading state with 1 second display
   // const { isLoading } = useLoadingState(1000);
 
-  const { data, loading, error } = useFetchData('/logs?category=RECORD%20MANAGEMENT');
+  const { data, loading, error } = useFetchData(
+    '/logs?category=RECORD%20MANAGEMENT'
+  );
 
   console.log(data);
-
 
   // Show loading skeleton while loading
   if (loading) {

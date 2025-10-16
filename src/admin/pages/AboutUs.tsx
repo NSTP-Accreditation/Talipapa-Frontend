@@ -81,7 +81,7 @@ export default function AboutBarangayEditable() {
       if (result && typeof result === 'object' && !(result as any).message) {
         setPageContent(result as any);
       }
-      
+
       // Clear edit flags
       setIsEditingInfo(false);
       setIsEditingHistory(false);
@@ -155,7 +155,7 @@ export default function AboutBarangayEditable() {
               </h2>
               <button
                 onClick={() => setIsEditingInfo(!isEditingInfo)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
               >
                 <SquarePen size={14} />
                 {isEditingInfo ? 'Cancel' : 'Edit'}
@@ -192,7 +192,7 @@ export default function AboutBarangayEditable() {
               </h2>
               <button
                 onClick={() => setIsEditingHistory(!isEditingHistory)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
               >
                 <SquarePen size={14} />
                 {isEditingHistory ? 'Cancel' : 'Edit'}
@@ -231,7 +231,7 @@ export default function AboutBarangayEditable() {
                 </h2>
                 <button
                   onClick={() => setIsEditingMission(!isEditingMission)}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
                 >
                   <SquarePen size={14} />
                   {isEditingMission ? 'Cancel' : 'Edit'}
@@ -268,7 +268,7 @@ export default function AboutBarangayEditable() {
                 </h2>
                 <button
                   onClick={() => setIsEditingVision(!isEditingVision)}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
                 >
                   <SquarePen size={14} />
                   {isEditingVision ? 'Cancel' : 'Edit'}

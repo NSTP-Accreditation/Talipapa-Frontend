@@ -62,7 +62,8 @@ export default function Guidelines() {
     if (c.includes('cert') || c.includes('certificate')) return ScrollText; // Certificates
     if (c.includes('appl') || c.includes('application')) return File; // Applications
     if (c.includes('service')) return Building2; // Services
-    if (c === 'id' || c.includes('idcard') || c.includes('philsys')) return IdCard; // ID
+    if (c === 'id' || c.includes('idcard') || c.includes('philsys'))
+      return IdCard; // ID
     return BookOpen; // default
   };
 
@@ -114,7 +115,11 @@ export default function Guidelines() {
           {guides.map((guide: any) => {
             const IconComponent = getIconForCategory(guide.category);
             return (
-              <Link key={guide._id} to={`/guidelines/${guide._id}`} className="group">
+              <Link
+                key={guide._id}
+                to={`/guidelines/${guide._id}`}
+                className="group"
+              >
                 <div className="bg-white border-2 border-gray-100 rounded-2xl p-8 text-center hover:shadow-2xl hover:border-green-300 hover:-translate-y-2 transition-all duration-300 h-full flex flex-col items-center justify-center min-h-[200px] relative overflow-hidden">
                   {/* Background Gradient on Hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -134,7 +139,9 @@ export default function Guidelines() {
                       {guide.title}
                     </h3>
                     {guide.description && (
-                      <p className="text-sm text-gray-500 mt-2">{guide.description}</p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        {guide.description}
+                      </p>
                     )}
                   </div>
                 </div>

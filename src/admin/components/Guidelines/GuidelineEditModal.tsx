@@ -287,7 +287,8 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
         resetStepForm();
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to save guideline';
+      const msg =
+        err instanceof Error ? err.message : 'Failed to save guideline';
       alert(msg);
     }
   };
@@ -303,7 +304,9 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
     >
       <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-[900px] w-full max-h-[95vh] overflow-hidden animate-in fade-in zoom-in duration-300">
         {/* Header */}
-        <div className="px-6 sm:px-8 py-5 sm:py-6 bg-gradient-to-r from-green-600 via-green-600 to-green-700">
+        <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30">
               <BookOpen className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
@@ -345,7 +348,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
                 <div className="flex flex-col">
                   <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
                     <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                    Title *
+                    Title <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -362,7 +365,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
                 <div className="flex flex-col">
                   <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
                     <Tag className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                    Category *
+                    Category <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.category}
@@ -384,7 +387,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
               <div className="flex flex-col mb-3 sm:mb-4">
                 <label className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700 mb-2">
                   <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
-                  Description *
+                  Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   required
@@ -448,7 +451,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
             {/* Steps editor */}
             <div className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-white to-gray-50 rounded-xl sm:rounded-2xl border-2 border-gray-100">
               <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-md">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
                   <FileCheck className="w-5 h-5 text-white" />
                 </div>
                 <h3 className="text-base sm:text-lg font-bold text-gray-900">
@@ -465,7 +468,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <div className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-100 to-indigo-200 text-indigo-700 font-bold">
+                          <div className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-green-100 to-green-200 text-green-700 font-bold">
                             {step.stepNumber}
                           </div>
                           <h4 className="font-bold text-gray-900">
@@ -533,7 +536,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
                 <div className="p-3 bg-white rounded-xl border-2 border-dashed border-gray-200">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <input
-                    required
+                      required
                       type="text"
                       placeholder="Step title"
                       value={stepFormData.title}
@@ -634,6 +637,20 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
                         </button>
                       </>
                     )}
+                  </div>
+                </div>
+                {/* Info Note */}
+                <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 flex items-start gap-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-white text-xs font-bold">i</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-green-800 font-medium">
+                      <span className="font-bold">Note:</span> Fields marked
+                      with <span className="text-red-500 font-bold">*</span> are
+                      required. Please ensure all information is accurate before
+                      submitting.
+                    </p>
                   </div>
                 </div>
               </div>

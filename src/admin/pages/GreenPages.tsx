@@ -105,7 +105,11 @@ const GreenPages: React.FC = () => {
   });
 
   // Fetch farms and use the first as the selected farm
-  const { data: farmsData, loading: farmsLoading, error: farmsError } = useFetchData<Farm[]>('/farms');
+  const {
+    data: farmsData,
+    loading: farmsLoading,
+    error: farmsError,
+  } = useFetchData<Farm[]>('/farms');
   const [farmData, setFarmData] = useState<Farm | null>(null);
 
   useEffect(() => {
@@ -115,7 +119,11 @@ const GreenPages: React.FC = () => {
   }, [farmsData]);
 
   // fetch staff for selected farm
-  const { data: staffDirectoryData, loading: staffLoading, error: staffError } = useFetchData<Staff[]>(
+  const {
+    data: staffDirectoryData,
+    loading: staffLoading,
+    error: staffError,
+  } = useFetchData<Staff[]>(
     farmData?._id ? `http://localhost:5555/staff/farm/${farmData._id}` : null
   );
 
@@ -171,8 +179,17 @@ const GreenPages: React.FC = () => {
   ];
 
   // derive flat skills from staffDirectoryData (unique by name)
-  const flatSkills: { _id?: string; name: string; short: string; type: string; color: string }[] = useMemo(() => {
-  const map = new Map<string, { _id?: string; name: string; short: string; type: string; color: string }>();
+  const flatSkills: {
+    _id?: string;
+    name: string;
+    short: string;
+    type: string;
+    color: string;
+  }[] = useMemo(() => {
+    const map = new Map<
+      string,
+      { _id?: string; name: string; short: string; type: string; color: string }
+    >();
     if (Array.isArray(staffDirectoryData)) {
       for (const staff of staffDirectoryData) {
         if (!Array.isArray(staff.skills)) continue;
@@ -182,7 +199,11 @@ const GreenPages: React.FC = () => {
           if (!map.has(key)) {
             map.set(key, {
               name: s.name || s.short || key,
-              short: s.short || s.name?.split(' ').slice(0,2).join('') || s.name || key,
+              short:
+                s.short ||
+                s.name?.split(' ').slice(0, 2).join('') ||
+                s.name ||
+                key,
               type: s.type || 'General',
               color: '#16a34a',
               _id: (s as any)._id || undefined,
@@ -209,11 +230,14 @@ const GreenPages: React.FC = () => {
 
     setSkillLoading(true);
     try {
-      const res = await authFetch<any>(`/staff/farm/${farmData._id}/skill/${skill._id}`);
+      const res = await authFetch<any>(
+        `/staff/farm/${farmData._id}/skill/${skill._id}`
+      );
       setSkillStaff(Array.isArray(res?.staff) ? res.staff : []);
       setSkillModalOpen(true);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to fetch staff by skill';
+      const msg =
+        err instanceof Error ? err.message : 'Failed to fetch staff by skill';
       alert(msg);
     } finally {
       setSkillLoading(false);
@@ -415,9 +439,9 @@ const GreenPages: React.FC = () => {
                     <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
                       Name
                     </p>
-                            <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                              {farmData?.name ?? '—'}
-                            </p>
+                    <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
+                      {farmData?.name ?? '—'}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
@@ -502,10 +526,18 @@ const GreenPages: React.FC = () => {
           {/* Right Side - Tab Content */}
           <div className="lg:col-span-2">
             {activeTab === 'profile' && (
-              <ProfileTab staffDirectory={staffDirectoryData ?? null} openAddStaffModal={openAddStaffModal} />
+              <ProfileTab
+                staffDirectory={staffDirectoryData ?? null}
+                openAddStaffModal={openAddStaffModal}
+              />
             )}
 
-            {activeTab === 'skillMap' && <SkillMapTab staffSkills={flatSkills} onSkillClick={handleSkillClick} />}
+            {activeTab === 'skillMap' && (
+              <SkillMapTab
+                staffSkills={flatSkills}
+                onSkillClick={handleSkillClick}
+              />
+            )}
 
             {activeTab === 'statistics' && (
               <StatisticsTab
@@ -520,7 +552,7 @@ const GreenPages: React.FC = () => {
         {/* Enhanced Add Staff Modal */}
         {isAddStaffModalOpen && (
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-1003 -4 animate-fadeIn"
             role="dialog"
             aria-modal="true"
             onClick={(e) => {
@@ -529,8 +561,11 @@ const GreenPages: React.FC = () => {
           >
             <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden animate-slideUp">
               {/* Modal Header */}
-              <div className="bg-gradient-to-r from-green-600 via-green-600 to-green-700 px-8 py-6 relative overflow-hidden">
+              <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
+
                 <div className="relative flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center ring-2 ring-white/30">
@@ -714,19 +749,19 @@ const GreenPages: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Info Box */}
-                  <div className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 rounded-xl p-4">
-                    <p className="text-sm text-gray-700 font-medium flex items-start gap-2">
-                      <span className="text-green-600 text-lg flex-shrink-0">
-                        ℹ️
-                      </span>
-                      <span>
-                        Fields marked with{' '}
-                        <span className="text-red-500 font-bold">*</span> are
-                        required. Make sure all information is accurate before
-                        submitting.
-                      </span>
-                    </p>
+                  {/* Info Note */}
+                  <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 flex items-start gap-3">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-xs font-bold">i</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-green-800 font-medium">
+                        <span className="font-bold">Note:</span> Fields marked
+                        with <span className="text-red-500 font-bold">*</span>{' '}
+                        are required. Please ensure all information is accurate
+                        before submitting.
+                      </p>
+                    </div>
                   </div>
                 </div>
 
@@ -767,38 +802,60 @@ const GreenPages: React.FC = () => {
         {skillModalOpen && (
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1003] p-4"
-            onClick={(e) => { if (e.target === e.currentTarget) setSkillModalOpen(false); }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setSkillModalOpen(false);
+            }}
           >
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-auto p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold">Staff with this skill</h3>
-                <button onClick={() => setSkillModalOpen(false)} className="text-gray-600">Close</button>
+                <button
+                  onClick={() => setSkillModalOpen(false)}
+                  className="text-gray-600"
+                >
+                  Close
+                </button>
               </div>
 
               {skillLoading && <p>Loading...</p>}
               {!skillLoading && (!skillStaff || skillStaff.length === 0) && (
-                <p className="text-sm text-gray-600">No staff found for this skill.</p>
+                <p className="text-sm text-gray-600">
+                  No staff found for this skill.
+                </p>
               )}
 
               {!skillLoading && skillStaff && skillStaff.length > 0 && (
                 <div className="grid grid-cols-1 gap-3">
                   {skillStaff.map((s) => (
-                    <div key={s._id ?? s.name} className="p-3 border rounded-lg">
+                    <div
+                      key={s._id ?? s.name}
+                      className="p-3 border rounded-lg"
+                    >
                       <div className="flex items-start justify-between">
                         <div>
                           <p className="font-bold text-lg">{s.name}</p>
                           <p className="text-sm text-gray-600 mt-1">
                             <span className="font-semibold">Skills:</span>{' '}
-                            {(Array.isArray(s.skills) ? s.skills.map(sk => sk.name).filter(Boolean) : []).join(', ') || '—'}
+                            {(Array.isArray(s.skills)
+                              ? s.skills.map((sk) => sk.name).filter(Boolean)
+                              : []
+                            ).join(', ') || '—'}
                           </p>
                           <p className="text-sm text-gray-600 mt-1">
                             <span className="font-semibold">Farms:</span>{' '}
-                            {(Array.isArray(s.assigned_farm) ? s.assigned_farm.map(f => f.name).filter(Boolean) : []).join(', ') || '—'}
+                            {(Array.isArray(s.assigned_farm)
+                              ? s.assigned_farm
+                                  .map((f) => f.name)
+                                  .filter(Boolean)
+                              : []
+                            ).join(', ') || '—'}
                           </p>
                         </div>
                         <div className="text-right">
                           <p className="text-sm font-semibold">Contact</p>
-                          <p className="text-sm text-gray-700">{s.contact_number ?? 'No contact'}</p>
+                          <p className="text-sm text-gray-700">
+                            {s.contact_number ?? 'No contact'}
+                          </p>
                         </div>
                       </div>
                     </div>
