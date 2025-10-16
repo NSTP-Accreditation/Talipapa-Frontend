@@ -395,7 +395,19 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                 disabled={isSubmittingFarm}
                 className="px-10 py-3.5 rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmittingFarm ? 'Creating...' : 'Create Farm'}
+                {isSubmittingFarm ? (
+                  <>
+                    <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <span>Adding...</span>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Sprout className="w-5 h-5" />
+                      <span>Add Farm</span>
+                    </div>
+                  </>
+                )}
               </button>
             </div>
           </form>

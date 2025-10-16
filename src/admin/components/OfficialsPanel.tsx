@@ -103,7 +103,7 @@ export default function OfficialsPanel() {
                 }
               }}
               disabled={isSaving}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
             >
               <SquarePen size={14} />
               {isEditing ? 'Cancel' : 'Edit'}
@@ -113,7 +113,7 @@ export default function OfficialsPanel() {
               <button
                 onClick={handleSaveOfficials}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
               >
                 {isSaving ? (
                   'Saving...'

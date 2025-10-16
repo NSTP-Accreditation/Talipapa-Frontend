@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { SquarePen, Plus, Trash2, X, Trophy, Image } from 'lucide-react';
+import {
+  SquarePen,
+  Plus,
+  Trash2,
+  X,
+  Trophy,
+  Image,
+  Link,
+  ImageIcon,
+  Eye,
+} from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { AchievementsPageSkeleton } from '../../components/LoadingSkeletons';
 import { useAuth } from '@/contexts/AuthContext';
@@ -190,7 +200,7 @@ export default function AchievementsAdmin() {
       {/* Content */}
       <div className="p-5 flex flex-col flex-1">
         {/* Icon Badge */}
-        <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 text-white mb-3 shadow-md group-hover:scale-110 transition-transform duration-300">
+        <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-500 text-white mb-3 shadow-md group-hover:scale-110 transition-transform duration-300">
           <Trophy className="w-5 h-5" />
         </div>
 
@@ -274,7 +284,7 @@ export default function AchievementsAdmin() {
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {items.length === 0 ? (
           <div className="col-span-full text-center py-24">
-            <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl shadow-xl mb-6">
+            <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-green-100 to-green-100 rounded-3xl shadow-xl mb-6">
               <Trophy className="w-20 h-20 text-yellow-500" />
             </div>
             <h3 className="text-2xl font-bold text-gray-800 mb-3">
@@ -285,7 +295,7 @@ export default function AchievementsAdmin() {
             </p>
             <button
               onClick={openAdd}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
             >
               <Plus size={20} /> Create First Achievement
             </button>
@@ -307,10 +317,12 @@ export default function AchievementsAdmin() {
         >
           <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col animate-slideUp">
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-green-600 via-green-600 to-green-700 px-6 sm:px-8 py-5 sm:py-6 relative overflow-hidden">
+            <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-green-600 text-white overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
               <div className="relative flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                <div className="flex items-center gap-4 sm:gap-4 flex-1 min-w-0">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30 flex-shrink-0">
                     {editingIndex === null ? (
                       <Plus className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
@@ -386,7 +398,7 @@ export default function AchievementsAdmin() {
 
                 <label className="block">
                   <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                    <span className="text-lg">🔗</span>
+                    <Link className="w-4 h-4 text-green-600" />
                     Link (optional)
                   </div>
                   <input
@@ -412,7 +424,7 @@ export default function AchievementsAdmin() {
 
                 <label className="block">
                   <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                    <span className="text-lg">📸</span>
+                    <ImageIcon className="w-4 h-4 text-green-600" />
                     Upload Image
                   </div>
                   <input
@@ -432,7 +444,8 @@ export default function AchievementsAdmin() {
                 {/* Preview */}
                 <div className="pt-2">
                   <div className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
-                    <span className="text-lg">👁️</span> Image Preview
+                    <Eye className="w-4 h-4 text-green-600" />
+                    Image Preview
                   </div>
                   <div className="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden flex items-center justify-center border-2 border-gray-200 shadow-inner">
                     {form.imagePreview ? (
@@ -453,17 +466,19 @@ export default function AchievementsAdmin() {
                 </div>
               </div>
 
-              {/* Info Box */}
-              <div className="bg-gradient-to-r from-green-50 to-green-50 border-2 border-green-200 rounded-xl p-3 sm:p-4">
-                <p className="text-xs sm:text-sm text-gray-700 font-medium flex items-start gap-2">
-                  <span className="text-green-600 text-base sm:text-lg flex-shrink-0">
-                    ℹ️
-                  </span>
-                  <span>
-                    Title is required. You can provide an image URL or upload a
-                    file. The preview shows how it will appear.
-                  </span>
-                </p>
+              {/* Info Note */}
+              <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 flex items-start gap-3">
+                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-white text-xs font-bold">i</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-green-800 font-medium">
+                    <span className="font-bold">Note:</span> Fields marked with{' '}
+                    <span className="text-red-500 font-bold">*</span> are
+                    required. Please ensure all information is accurate before
+                    submitting.
+                  </p>
+                </div>
               </div>
             </div>
 
