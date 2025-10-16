@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useToast } from '@/contexts/ToastContext';
 import {
   Card,
   CardHeader,
@@ -265,7 +266,10 @@ const EditModal: React.FC<EditModalProps> = ({
     }
 
     if (errors.length > 0) {
-      alert('Please fix the following errors:\n\n• ' + errors.join('\n• '));
+      const toast = useToast();
+      toast.warn(
+        'Please fix the following errors:\n\n• ' + errors.join('\n• ')
+      );
       return;
     }
 
@@ -994,12 +998,14 @@ const Guidelines: React.FC = () => {
     }
   };
 
+  const toast = useToast();
+
   const handleConfirmDelete = () => {
     if (deletingGuideline) {
       setGuidelines(guidelines.filter((g) => g.id !== deletingGuideline.id));
       setIsDeleteModalOpen(false);
       setDeletingGuideline(null);
-      alert(
+      toast.success(
         `Guidelines "${deletingGuideline.title}" has been successfully deleted!`
       );
     }
@@ -1038,7 +1044,9 @@ const Guidelines: React.FC = () => {
       setGuidelines(guidelines.filter((g) => !selectedGuidelines.has(g.id)));
       setSelectedGuidelines(new Set());
       setShowBulkActions(false);
-      alert(`Successfully deleted ${count} guideline${count > 1 ? 's' : ''}.`);
+      toast.success(
+        `Successfully deleted ${count} guideline${count > 1 ? 's' : ''}.`
+      );
     }
   };
 
@@ -1056,7 +1064,7 @@ const Guidelines: React.FC = () => {
     const newTitle = updatedGuideline.title.toLowerCase().trim();
 
     if (existingTitles.includes(newTitle)) {
-      alert(
+      toast.warn(
         'A guideline with this title already exists. Please choose a different title.'
       );
       return;
@@ -1072,7 +1080,7 @@ const Guidelines: React.FC = () => {
           g.id === updatedGuideline.id ? updatedGuideline : g
         )
       );
-      alert(
+      toast.success(
         `Guidelines "${updatedGuideline.title}" has been successfully updated!`
       );
     } else {
@@ -1083,7 +1091,7 @@ const Guidelines: React.FC = () => {
         lastUpdated: new Date().toISOString(),
       };
       setGuidelines([...guidelines, newGuideline]);
-      alert(
+      toast.success(
         `New guidelines "${updatedGuideline.title}" has been successfully created!`
       );
     }
@@ -1507,7 +1515,9 @@ const Guidelines: React.FC = () => {
                   <button
                     onClick={() => {
                       // In a real app, this would open a detailed view
-                      alert(`Opening detailed view for: ${guideline.title}`);
+                      toast.info(
+                        `Opening detailed view for: ${guideline.title}`
+                      );
                     }}
                     className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 px-4 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5"
                   >

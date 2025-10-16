@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { SquarePen, Save, Home } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
+import { useToast } from '@/contexts/ToastContext';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 
 export default function AboutBarangayEditable() {
@@ -51,12 +52,13 @@ export default function AboutBarangayEditable() {
 
   // Save Handler
   const handleSave = () => {
+    const toast = useToast();
     setIsEditingInfo(false);
     setIsEditingHistory(false);
     setIsEditingMission(false);
     setIsEditingVision(false);
     setIsEditingOfficials(false);
-    alert('✅ All changes saved successfully!');
+    toast.success('✅ All changes saved successfully!');
   };
 
   const hasActiveEdits =

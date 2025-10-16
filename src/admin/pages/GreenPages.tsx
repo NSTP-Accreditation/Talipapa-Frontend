@@ -34,6 +34,7 @@ import {
   X,
 } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
+import { useToast } from '@/contexts/ToastContext';
 import { GreenPagesSkeleton } from '../../components/LoadingSkeletons';
 
 type TabType = 'profile' | 'skillMap' | 'statistics';
@@ -193,9 +194,13 @@ const GreenPages: React.FC = () => {
   const handleSubmitStaff = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const toast = useToast();
+
     // Validate required fields
     if (!staffForm.name || !staffForm.position || !staffForm.contact) {
-      alert('Please fill in all required fields (Name, Position, Contact)');
+      toast.warn(
+        'Please fill in all required fields (Name, Position, Contact)'
+      );
       return;
     }
 
@@ -204,7 +209,7 @@ const GreenPages: React.FC = () => {
     // Simulate API call
     setTimeout(() => {
       console.log('New staff:', staffForm);
-      alert('Staff added successfully!');
+      toast.success('Staff added successfully!');
       closeAddStaffModal();
     }, 1500);
   };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SquarePen, Plus, Trash2, X, Trophy, Image } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
+import { useToast } from '@/contexts/ToastContext';
 import { AchievementsPageSkeleton } from '../../components/LoadingSkeletons';
 
 /**
@@ -91,6 +92,8 @@ export default function AchievementsAdmin() {
   const [fileUploading, setFileUploading] = useState(false);
 
   /* ---------- load from localStorage or defaults ---------- */
+  const toast = useToast();
+
   useEffect(() => {
     const raw = localStorage.getItem(LOCAL_KEY);
     if (raw) {
@@ -136,7 +139,7 @@ export default function AchievementsAdmin() {
       // store base64 blob as image
       handleChange('image', dataUrl);
     } catch (e) {
-      alert('Failed to read file.');
+      toast.error('Failed to read file.');
     } finally {
       setFileUploading(false);
     }
@@ -144,7 +147,7 @@ export default function AchievementsAdmin() {
 
   const handleSave = () => {
     if (!form.title.trim()) {
-      alert('Title is required.');
+      toast.warn('Title is required.');
       return;
     }
     if (editingIndex === null) {

@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from '../../components/ui/card';
 import { useLoadingState } from '../../hooks/useLoadingState';
+import { useToast } from '@/contexts/ToastContext';
 import { SettingsPageSkeleton } from '../../components/LoadingSkeletons';
 
 interface AdminUser {
@@ -50,16 +51,18 @@ const Settings: React.FC = () => {
     role: 'Editor' as 'Super Admin' | 'Editor',
   });
 
+  const toast = useToast();
+
   const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
         // 2MB limit
-        alert('File size should be less than 2MB');
+        toast.warn('File size should be less than 2MB');
         return;
       }
       if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
+        toast.warn('Please select an image file');
         return;
       }
 
@@ -88,14 +91,14 @@ const Settings: React.FC = () => {
 
   const handleAddAdmin = () => {
     if (!newAdmin.name || !newAdmin.email || !newAdmin.password) {
-      alert('Please fill in all fields');
+      toast.warn('Please fill in all fields');
       return;
     }
 
     const newId = Math.max(...adminUsers.map((u) => u.id)) + 1;
     setAdminUsers([...adminUsers, { ...newAdmin, id: newId }]);
     setNewAdmin({ name: '', email: '', password: '', role: 'Editor' });
-    alert('Admin added successfully!');
+    toast.success('Admin added successfully!');
   };
 
   // Show loading skeleton while loading

@@ -13,6 +13,7 @@ import {
   UserRoundPen,
 } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
+import { useToast } from '@/contexts/ToastContext';
 import { debounce } from 'lodash';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import { useAuthFetch } from '../hooks/useAuthFetch';
@@ -94,6 +95,8 @@ const ResidentRecords: React.FC = () => {
     setIsAddModalOpen(true);
   };
 
+  const toast = useToast();
+
   const handleCreateResident = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -104,7 +107,7 @@ const ResidentRecords: React.FC = () => {
     setIsCreating(true);
 
     if (!newResident.points || !newResident.age) {
-      alert('Points and Age are required!');
+      toast.warn('Points and Age are required!');
       setIsCreating(false);
       return;
     }
@@ -117,7 +120,7 @@ const ResidentRecords: React.FC = () => {
 
       refetch();
       setIsAddModalOpen(false);
-      alert(`New Record Created! ID: ${data.record_id}`);
+      toast.success(`New Record Created! ID: ${data.record_id}`);
     } catch (error) {
       console.log(error);
     } finally {
