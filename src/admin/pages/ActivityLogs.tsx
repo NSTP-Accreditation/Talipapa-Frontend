@@ -1,5 +1,10 @@
 import React, { useState, ChangeEvent, useMemo, useEffect } from 'react';
-import { Activity, ChevronLeft, ChevronRight, RefreshCcw, RefreshCw } from 'lucide-react';
+import {
+  Activity,
+  ChevronLeft,
+  ChevronRight,
+  RefreshCw,
+} from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 import { ActivityLogsPageSkeleton } from '../../components/LoadingSkeletons';
 
@@ -45,7 +50,6 @@ const ActivityLogs: React.FC = () => {
     `/logs?page=${page}`
   );
 
-  // Refetch whenever the page changes
   useEffect(() => {
     refetch();
   }, [page]);

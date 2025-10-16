@@ -571,8 +571,11 @@ const GreenPages: React.FC = () => {
           >
             <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden animate-slideUp">
               {/* Modal Header */}
-              <div className="bg-gradient-to-r from-green-600 via-green-600 to-green-700 px-8 py-6 relative overflow-hidden">
+              <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
+
                 <div className="relative flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center ring-2 ring-white/30">
@@ -972,19 +975,19 @@ const GreenPages: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Info Box */}
-                  <div className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 rounded-xl p-4">
-                    <p className="text-sm text-gray-700 font-medium flex items-start gap-2">
-                      <span className="text-green-600 text-lg flex-shrink-0">
-                        ℹ️
-                      </span>
-                      <span>
-                        Fields marked with{' '}
-                        <span className="text-red-500 font-bold">*</span> are
-                        required. Make sure all information is accurate before
-                        submitting.
-                      </span>
-                    </p>
+                  {/* Info Note */}
+                  <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 flex items-start gap-3">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-xs font-bold">i</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm text-green-800 font-medium">
+                        <span className="font-bold">Note:</span> Fields marked
+                        with <span className="text-red-500 font-bold">*</span>{' '}
+                        are required. Please ensure all information is accurate
+                        before submitting.
+                      </p>
+                    </div>
                   </div>
                 </div>
 

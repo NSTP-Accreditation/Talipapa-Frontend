@@ -61,23 +61,24 @@ export default function OfficialsPanel() {
   };
 
   const handleSaveOfficials = async () => {
-  setIsSaving(true);
-  try {
-    await authFetch(`${import.meta.env.VITE_API_URL}/officials/bulk-update`, {
-      method: 'PUT',
-      body: JSON.stringify(officials),
-    });
+    setIsSaving(true);
+    try {
+      await authFetch(`${import.meta.env.VITE_API_URL}/officials/bulk-update`, {
+        method: 'PUT',
+        body: JSON.stringify(officials),
+      });
 
-    await refetch();
-    setOriginalOfficials(officials.map((o) => ({ ...o })));
-    setIsEditing(false);
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : 'Failed to save officials';
-    alert('Save failed: ' + msg);
-  } finally {
-    setIsSaving(false);
-  }
-};
+      await refetch();
+      setOriginalOfficials(officials.map((o) => ({ ...o })));
+      setIsEditing(false);
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : 'Failed to save officials';
+      alert('Save failed: ' + msg);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
@@ -90,7 +91,7 @@ export default function OfficialsPanel() {
               {officials.length} Officials
             </span>
           </h2>
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => {
                 if (isEditing) {
@@ -102,7 +103,7 @@ export default function OfficialsPanel() {
                 }
               }}
               disabled={isSaving}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
             >
               <SquarePen size={14} />
               {isEditing ? 'Cancel' : 'Edit'}
@@ -112,9 +113,11 @@ export default function OfficialsPanel() {
               <button
                 onClick={handleSaveOfficials}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
               >
-                {isSaving ? 'Saving...' : (
+                {isSaving ? (
+                  'Saving...'
+                ) : (
                   <>
                     <Save size={14} />
                     Save

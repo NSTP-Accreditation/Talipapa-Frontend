@@ -131,15 +131,7 @@ const ResidentRecords: React.FC = () => {
   useEffect(() => {
     if (data && !loading && !error) {
       const recordsArray = Array.isArray(data) ? data : [];
-
-      // Sort by createdAt in descending order (newest first)
-      const sortedRecords = recordsArray.sort((a, b) => {
-        return (
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      });
-
-      setRecords(sortedRecords);
+      setRecords(recordsArray);
     }
   }, [data, loading, error]);
 
@@ -289,7 +281,7 @@ const ResidentRecords: React.FC = () => {
                     </td>
                     <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <span className="text-gray-400">📱</span>
+                        <span className="text-gray-400">📍</span>
                         <span className="text-sm text-gray-700 font-medium">
                           {resident?.address}
                         </span>
@@ -300,7 +292,7 @@ const ResidentRecords: React.FC = () => {
                         <span className="text-gray-400">📅</span>
                         <span className="text-sm text-gray-700 font-medium">
                           {dayjs(resident?.createdAt).format(
-                            'YYYY-MM-DD | h:mm:s A'
+                            'YYYY-MM-DD | h:mm:ss A'
                           )}
                         </span>
                       </div>
@@ -423,7 +415,7 @@ const ResidentRecords: React.FC = () => {
               {/* Personal Information Section */}
               <div className="space-y-5">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-md">
+                  <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
                     <User className="w-4 h-4 text-white" />
                   </div>
                   <h4 className="text-lg font-bold text-gray-800">
@@ -504,7 +496,7 @@ const ResidentRecords: React.FC = () => {
               {/* Additional Details Section */}
               <div className="space-y-5">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
+                  <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
                     <Award className="w-4 h-4 text-white" />
                   </div>
                   <h4 className="text-lg font-bold text-gray-800">
@@ -516,7 +508,7 @@ const ResidentRecords: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <label className="block group">
                     <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                      <Calendar className="w-4 h-4 text-blue-500" />
+                      <Calendar className="w-4 h-4 text-green-500" />
                       <span className="text-red-500">*</span>
                       <span>Age</span>
                     </div>
@@ -561,7 +553,7 @@ const ResidentRecords: React.FC = () => {
               {/* Address Section */}
               <div className="space-y-5">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center shadow-md">
+                  <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
                     <MapPin className="w-4 h-4 text-white" />
                   </div>
                   <h4 className="text-lg font-bold text-gray-800">Location</h4>
@@ -570,7 +562,7 @@ const ResidentRecords: React.FC = () => {
 
                 <label className="block group">
                   <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                    <MapPin className="w-4 h-4 text-red-500" />
+                    <MapPin className="w-4 h-4 text-green-500" />
                     <span>Address</span>
                   </div>
                   <textarea
@@ -586,12 +578,12 @@ const ResidentRecords: React.FC = () => {
               </div>
 
               {/* Info Note */}
-              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 flex items-start gap-3">
-                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 flex items-start gap-3">
+                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-white text-xs font-bold">i</span>
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm text-blue-800 font-medium">
+                  <p className="text-sm text-green-800 font-medium">
                     <span className="font-bold">Note:</span> Fields marked with{' '}
                     <span className="text-red-500 font-bold">*</span> are
                     required. Please ensure all information is accurate before

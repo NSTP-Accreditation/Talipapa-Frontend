@@ -8,7 +8,7 @@ import {
   FormTablePageSkeleton,
 } from '@/components/LoadingSkeletons';
 import { useLoadingState } from '@/hooks/useLoadingState';
-import { ArrowLeftRight } from 'lucide-react';
+import { ArrowLeftRight, Search } from 'lucide-react';
 
 interface Product {
   _id: string;
@@ -205,7 +205,7 @@ const SwapItem = () => {
             />
 
             <button
-              className="text-lg font-semibold text-white px-10 py-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="text-lg font-semibold text-white px-10 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               style={{ backgroundColor: '#1a4d2e' }}
               type="submit"
               disabled={searchingRecord}
@@ -216,7 +216,9 @@ const SwapItem = () => {
                   <span>Searching...</span>
                 </>
               ) : (
-                <>🔍 Find Record</>
+                <>
+                <Search className="w-5 h-5" />
+                 Find Record</>
               )}
             </button>
           </div>

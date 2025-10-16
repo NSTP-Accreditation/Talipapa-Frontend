@@ -42,7 +42,11 @@ const DefaultIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-const LeafletMap: React.FC<LeafletMapProps> = ({ farmsData, selectedFarm, onSelectFarm }) => {
+const LeafletMap: React.FC<LeafletMapProps> = ({
+  farmsData,
+  selectedFarm,
+  onSelectFarm,
+}) => {
   const defaultCenter: [number, number] = selectedFarm
     ? [selectedFarm.location.lat, selectedFarm.location.lng]
     : [14.687906698469316, 121.02444617082957];
@@ -54,7 +58,9 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ farmsData, selectedFarm, onSele
     if (!map || !Array.isArray(farmsData) || farmsData.length === 0) return;
 
     // compute bounds from farms
-    const latLngs = farmsData.map((f) => [f.location.lat, f.location.lng] as [number, number]);
+    const latLngs = farmsData.map(
+      (f) => [f.location.lat, f.location.lng] as [number, number]
+    );
     try {
       const bounds = L.latLngBounds(latLngs);
       map.fitBounds(bounds, { padding: [60, 60] });
@@ -72,7 +78,10 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ farmsData, selectedFarm, onSele
         style={{ height: '100%', width: '100%' }}
         ref={mapRef as any}
       >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OpenStreetMap contributors' />
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution="&copy; OpenStreetMap contributors"
+        />
 
         {Array.isArray(farmsData) &&
           farmsData.map((f, idx) => (
