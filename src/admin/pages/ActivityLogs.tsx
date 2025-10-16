@@ -184,7 +184,7 @@ const ActivityLogs: React.FC = () => {
           <thead className="bg-gradient-to-r from-green-50 to-green-100 border-b-2 border-green-200">
             <tr>
               {[
-                'Performed By',
+                'Performed_By',
                 'Action',
                 'Title',
                 'Description',
@@ -201,18 +201,18 @@ const ActivityLogs: React.FC = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {sortedLogs.length > 0 ? (
+            {sortedLogs.length > 0 ? (  
               sortedLogs.map((log) => (
                 <tr
                   key={log._id}
                   className="hover:bg-green-50 transition-colors duration-150"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {log.performedBy?.username || log.targetName || '—'}
+                    {log.performedBy?.username || log.targetName || '—'} {log.performedBy?.roles && `(${log.performedBy?.roles[log.performedBy.roles.length - 1]})`}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{log.action}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{log.title}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap max-w-56 truncate">
                     {log.description}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

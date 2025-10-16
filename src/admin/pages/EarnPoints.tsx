@@ -48,6 +48,16 @@ export default function App() {
   const handleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const hasValidWeight = weights.some((weight) => {
+      const numWeight = parseFloat(weight) || 0;
+      return numWeight > 0;
+    });
+
+    if (!hasValidWeight) {
+      alert('Please enter at least one material weight greater than 0');
+      return;
+    }
+
     try {
       const requestBody = {
         points: totalPoints,
