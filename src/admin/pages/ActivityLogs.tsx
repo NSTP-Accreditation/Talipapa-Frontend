@@ -3,6 +3,7 @@ import {
   Activity,
   ChevronLeft,
   ChevronRight,
+  RefreshCcw,
   RefreshCw,
 } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
@@ -50,6 +51,7 @@ const ActivityLogs: React.FC = () => {
     `/logs?page=${page}`
   );
 
+  // Refetch whenever the page changes
   useEffect(() => {
     refetch();
   }, [page]);
@@ -90,7 +92,9 @@ const ActivityLogs: React.FC = () => {
         log.title.toLowerCase().includes(searchLower) ||
         log.description.toLowerCase().includes(searchLower) ||
         log.action.toLowerCase().includes(searchLower) ||
-        (log.performedBy?.username?.toLowerCase() ?? '').includes(searchLower) ||
+        (log.performedBy?.username?.toLowerCase() ?? '').includes(
+          searchLower
+        ) ||
         (log.category?.toLowerCase() ?? '').includes(searchLower);
 
       return matchesCategory && matchesSearch;
@@ -188,7 +192,7 @@ const ActivityLogs: React.FC = () => {
           <thead className="bg-gradient-to-r from-green-50 to-green-100 border-b-2 border-green-200">
             <tr>
               {[
-                'Performed_By',
+                'Performed By',
                 'Action',
                 'Title',
                 'Description',
@@ -205,18 +209,18 @@ const ActivityLogs: React.FC = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {sortedLogs.length > 0 ? (  
+            {sortedLogs.length > 0 ? (
               sortedLogs.map((log) => (
                 <tr
                   key={log._id}
                   className="hover:bg-green-50 transition-colors duration-150"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {log.performedBy?.username || log.targetName || '—'} {log.performedBy?.roles && `(${log.performedBy?.roles[log.performedBy.roles.length - 1]})`}
+                    {log.performedBy?.username || log.targetName || '—'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{log.action}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{log.title}</td>
-                  <td className="px-6 py-4 whitespace-nowrap max-w-56 truncate">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {log.description}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
