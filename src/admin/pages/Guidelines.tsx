@@ -330,20 +330,6 @@ const Guidelines: React.FC = () => {
     updatedGuideline: Guideline,
     opts?: { keepOpen?: boolean }
   ) => {
-    // Check for duplicate titles (case insensitive)
-    const existingTitles = guidelines
-      .filter((g) => g.id !== updatedGuideline.id) // Exclude current guideline if editing
-      .map((g) => g.title.toLowerCase().trim());
-
-    const newTitle = updatedGuideline.title.toLowerCase().trim();
-
-    if (existingTitles.includes(newTitle)) {
-      alert(
-        'A guideline with this title already exists. Please choose a different title.'
-      );
-      return;
-    }
-
     try {
       const payload = buildGuidelinePayload(updatedGuideline);
 

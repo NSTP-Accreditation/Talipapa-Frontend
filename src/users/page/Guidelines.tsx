@@ -2,9 +2,7 @@ import {
   FileText,
   File,
   Building2,
-  House,
   TrafficCone,
-  ThumbsUp,
   ScrollText,
   IdCard,
   Home,
@@ -13,45 +11,22 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { useLoadingState } from '@/hooks/useLoadingState';
 import { GuidelinesPageSkeleton } from '@/components/LoadingSkeletons';
 import useFetchData from '../../admin/hooks/useFetchData';
+import { useEffect, useState } from 'react';
 
 export default function Guidelines() {
-  // Add loading state with 1 second display
-  const { isLoading: pageLoading } = useLoadingState(1000);
-
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    });
-  };
 
   // fetch guides from server
   const { data, loading, error } = useFetchData('/guidelines');
-  const guides = Array.isArray(data) ? data : [];
+  const [guides, setGuides] = useState([]);
+
+  useEffect(() => {
+    if(data && !loading && !error) {
+      const guides = Array.isArray(data) ? data.slice(0, 9) : []
+      setGuides(guides);
+    }
+  }, [data, loading, error])
 
   // normalize category and return appropriate lucide icon component
   const getIconForCategory = (category: string | undefined) => {
@@ -68,7 +43,7 @@ export default function Guidelines() {
   };
 
   // Show loading skeleton while loading
-  if (pageLoading) {
+  if (loading) {
     return <GuidelinesPageSkeleton />;
   }
 
