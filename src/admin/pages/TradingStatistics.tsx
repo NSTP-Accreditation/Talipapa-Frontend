@@ -17,8 +17,6 @@ export default function TradingStatisticsPage() {
     '/logs?category=RECORD%20MANAGEMENT'
   );
 
-  console.log(data);
-
   // Show loading skeleton while loading
   if (loading) {
     return <TradingStatisticsSkeleton />;

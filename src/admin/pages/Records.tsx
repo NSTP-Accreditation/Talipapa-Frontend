@@ -17,6 +17,7 @@ import { debounce } from 'lodash';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useAuth } from '@/contexts/AuthContext';
+import dayjs from 'dayjs';
 
 const ResidentRecords: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -103,8 +104,8 @@ const ResidentRecords: React.FC = () => {
 
     setIsCreating(true);
 
-    if (!newResident.points || !newResident.age) {
-      alert('Points and Age are required!');
+    if (!newResident.age) {
+      alert('Age are required!');
       setIsCreating(false);
       return;
     }
@@ -129,7 +130,8 @@ const ResidentRecords: React.FC = () => {
 
   useEffect(() => {
     if (data && !loading && !error) {
-      setRecords(Array.isArray(data) ? data : []); // Ensure it's always an array
+      const recordsArray = Array.isArray(data) ? data : [];
+      setRecords(recordsArray);
     }
   }, [data, loading, error]);
 
@@ -260,7 +262,7 @@ const ResidentRecords: React.FC = () => {
                           {resident?.firstName?.charAt(0)}
                         </div>
                         <span className="text-sm font-semibold text-gray-900">
-                          {resident?.firstName}
+                          {resident?.firstName} {resident?.lastName}
                         </span>
                       </div>
                     </td>
@@ -289,7 +291,9 @@ const ResidentRecords: React.FC = () => {
                       <div className="flex items-center gap-2">
                         <span className="text-gray-400">📅</span>
                         <span className="text-sm text-gray-700 font-medium">
-                          {resident?.createdAt}
+                          {dayjs(resident?.createdAt).format(
+                            'YYYY-MM-DD | h:mm:ss A'
+                          )}
                         </span>
                       </div>
                     </td>
@@ -501,29 +505,7 @@ const ResidentRecords: React.FC = () => {
                   <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  <label className="block group">
-                    <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                      <Award className="w-4 h-4 text--500" />
-                      <span className="text-red-500">*</span>
-                      <span>Points</span>
-                    </div>
-                    <input
-                      required
-                      type="number"
-                      min="0"
-                      value={newResident.points}
-                      onChange={(e) =>
-                        setNewResident((s) => ({
-                          ...s,
-                          points: Number(e.target.value),
-                        }))
-                      }
-                      className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
-                      placeholder="0"
-                    />
-                  </label>
-
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <label className="block group">
                     <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                       <Calendar className="w-4 h-4 text-green-500" />
