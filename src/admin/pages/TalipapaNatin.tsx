@@ -329,7 +329,7 @@ export default function TalipapaNatin() {
 
       {/* Edit Modal */}
       {isModalOpen && editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-1003 flex items-center justify-center p-4 ">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -337,27 +337,32 @@ export default function TalipapaNatin() {
           />
 
           {/* Modal */}
-          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden z-10 flex flex-col">
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-hidden z-10 flex flex-col">
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b-2 border-gray-100 bg-gradient-to-r from-green-50 to-green-50">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-600 to-green-700 flex items-center justify-center">
-                  <Leaf className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">
-                    {programs.some((p) => p.id === editing.id)
-                      ? 'Edit Program'
-                      : 'Add New Program'}
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    Configure program details and items
-                  </p>
+            <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
+              <div className="relative flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                    <Leaf className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold">
+                      {programs.some((p) => p.id === editing.id)
+                        ? 'Edit Program'
+                        : 'Add New Program'}
+                    </h3>
+                    <p className="text-green-100 text-sm ">
+                      Configure program details and items
+                    </p>
+                  </div>
                 </div>
               </div>
+
               <button
                 onClick={closeModal}
-                className="p-2 rounded-lg hover:bg-white/50 transition-all text-gray-500 hover:text-gray-700"
+                className="w-10 h-10 absolute top-10 right-4 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all hover:rotate-90 duration-300 ring-2 ring-white/30"
                 aria-label="Close"
               >
                 <X size={24} />

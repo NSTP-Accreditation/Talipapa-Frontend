@@ -1,3 +1,4 @@
+import { useAuth } from '@/contexts/AuthContext';
 import React, { useState, useEffect } from 'react';
 
 interface AdminHeaderProps {
@@ -11,6 +12,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
   subtitle = 'Content Management System',
   onToggleSidebar,
 }) => {
+  const { user } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
   };
 
   return (
-    <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-b border-green-700/30 shadow-xl sticky top-0 z-30 backdrop-blur-sm">
+    <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-b border-green-700/30 shadow-xl sticky top-0 backdrop-blur-sm z-[1001]">
       <div className="flex items-center justify-between px-6 sm:px-10 py-5 gap-4">
         {/* Left Side - Mobile hamburger + System Info */}
         <div className="flex items-center gap-4 flex-1">
@@ -101,7 +103,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
         <div className="flex items-center gap-3 flex-shrink-0">
           <div className="text-right hidden lg:block">
             <p className="text-sm font-bold leading-tight text-white">
-              Admin User
+              {user.userData.username}
             </p>
             <p className="text-xs font-medium mt-0.5 text-green-100">
               Super Admin

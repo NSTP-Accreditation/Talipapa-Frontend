@@ -7,6 +7,8 @@ import {
   CardTitle,
 } from '../../components/ui/card';
 import { useLoadingState } from '../../hooks/useLoadingState';
+import useFetchData from '../hooks/useFetchData';
+import { useAuthFetch } from '../hooks/useAuthFetch';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import {
   BookOpen,
@@ -25,6 +27,7 @@ import {
   X,
   AlertCircle,
 } from 'lucide-react';
+import GuidelineEditModal from '../components/Guidelines/GuidelineEditModal';
 
 interface Step {
   id: string;
@@ -46,13 +49,6 @@ interface Guideline {
   totalEstimatedTime: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   lastUpdated: string;
-}
-
-interface EditModalProps {
-  guideline: Guideline | null;
-  isOpen: boolean;
-  onClose: () => void;
-  onSave: (guideline: Guideline) => void;
 }
 
 interface DeleteModalProps {
@@ -733,52 +729,24 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   if (!isOpen || !guideline) return null;
 
   return (
-    <div
-      className="fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-4 sm:p-5"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-[480px] w-full overflow-hidden animate-in fade-in zoom-in duration-300">
-        {/* Header */}
-        <div className="px-6 sm:px-8 py-5 sm:py-6 bg-gradient-to-r from-red-600 via-red-600 to-red-700">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30">
-              <AlertCircle className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+    <div className="fixed inset-0 flex items-center justify-center p-4 z-[1003]">
+      <div className="w-full max-w-2xl bg-white rounded-xl shadow-xl overflow-hidden">
+        <div className="p-6">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
+              <AlertCircle className="w-5 h-5 text-red-600" />
             </div>
             <div className="flex-1">
-              <h2 className="text-xl sm:text-2xl font-bold text-white">
+              <h3 className="text-lg font-bold text-gray-900">
                 Delete Guidelines
-              </h2>
-              <p className="text-xs sm:text-sm text-red-50 mt-0.5 sm:mt-1">
-                This action cannot be undone
+              </h3>
+              <p className="text-sm text-gray-700 mt-1">
+                Are you sure you want to delete "{guideline.title}"?
               </p>
             </div>
-            <button
-              onClick={onClose}
-              className="w-8 h-8 sm:w-9 sm:h-9 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-200 hover:scale-105 ring-1 ring-white/30"
-            >
-              <X className="w-5 h-5 text-white" />
-            </button>
           </div>
-        </div>
 
-        {/* Content */}
-        <div className="p-4 sm:p-6 md:p-8">
-          <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-5 leading-relaxed">
-            Are you sure you want to delete the guidelines{' '}
-            <strong className="text-red-600">"{guideline.title}"</strong>?
-          </p>
-
-          <div className="bg-gradient-to-r from-green-50 to-green-50 border-2 border-green-200 rounded-xl sm:rounded-2xl p-4 sm:p-5 mb-4 sm:mb-5">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-white" />
-              </div>
-              <h4 className="text-sm font-bold text-gray-900">
-                Guidelines Details
-              </h4>
-            </div>
+          <div className="mt-6 grid grid-cols-1 gap-4">
             <div className="space-y-2">
               <p className="text-xs sm:text-sm text-gray-700">
                 <span className="font-semibold text-gray-900">
@@ -808,25 +776,25 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                 </span>
               </p>
             </div>
-          </div>
 
-          <div className="bg-gradient-to-r from-red-50 to-red-50 border-2 border-red-200 rounded-xl sm:rounded-2xl p-3 sm:p-4">
-            <div className="flex items-start gap-2 sm:gap-3">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
-              </div>
-              <div className="flex-1">
-                <p className="text-xs sm:text-sm text-red-700 font-semibold leading-relaxed">
-                  Warning: This will permanently remove these guidelines and all
-                  its steps from the system.
-                </p>
+            <div className="bg-gradient-to-r from-red-50 to-red-50 border-2 border-red-200 rounded-xl p-3">
+              <div className="flex items-start gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs sm:text-sm text-red-700 font-semibold leading-relaxed">
+                    Warning: This will permanently remove these guidelines and
+                    all its steps from the system.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
+        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 ">
           <button
             onClick={onClose}
             className="px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-lg sm:rounded-xl text-sm font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all order-2 sm:order-1"
@@ -850,109 +818,49 @@ const Guidelines: React.FC = () => {
   // Add loading state with 1 second display
   const { isLoading: pageLoading } = useLoadingState(1000);
 
-  const [guidelines, setGuidelines] = useState<Guideline[]>([
-    {
-      id: '1',
-      title: 'How to Get a Barangay Clearance',
-      description:
-        'Step-by-step guide for obtaining a barangay clearance certificate',
-      category: 'Clearances',
-      totalEstimatedTime: '1-2 hours',
-      difficulty: 'Easy',
-      lastUpdated: '2024-10-01T10:00:00.000Z',
-      steps: [
-        {
-          id: '1-1',
-          stepNumber: 1,
-          title: 'Prepare Required Documents',
-          description:
-            'Gather all necessary documents before going to the barangay hall.',
-          requiredDocuments: ['Valid ID', 'Cedula', 'Proof of Residency'],
-          estimatedTime: '15 minutes',
-          tips: [
-            'Make photocopies of all documents',
-            'Bring originals for verification',
-          ],
-        },
-        {
-          id: '1-2',
-          stepNumber: 2,
-          title: 'Go to Barangay Hall',
-          description:
-            'Visit the barangay hall during office hours to submit your application.',
-          location: 'Barangay Hall, Ground Floor',
-          estimatedTime: '30 minutes',
-          tips: [
-            'Come early to avoid long lines',
-            'Bring exact change for fees',
-          ],
-        },
-        {
-          id: '1-3',
-          stepNumber: 3,
-          title: 'Fill Out Application Form',
-          description:
-            'Complete the barangay clearance application form with accurate information.',
-          location: 'Information Desk',
-          estimatedTime: '10 minutes',
-          tips: ['Write clearly and legibly', 'Double-check all information'],
-        },
-        {
-          id: '1-4',
-          stepNumber: 4,
-          title: 'Submit Documents and Pay Fee',
-          description:
-            'Submit your completed form and documents, then pay the required fee.',
-          location: "Secretary's Office",
-          estimatedTime: '15 minutes',
-        },
-        {
-          id: '1-5',
-          stepNumber: 5,
-          title: 'Claim Your Clearance',
-          description: 'Return to claim your barangay clearance certificate.',
-          estimatedTime: '5 minutes',
-          tips: [
-            'Bring your receipt',
-            'Processing usually takes 1-2 working days',
-          ],
-        },
-      ],
-    },
-    {
-      id: '2',
-      title: 'How to Apply for Business Permit',
-      description: 'Complete guide for obtaining a barangay business permit',
-      category: 'Permits',
-      totalEstimatedTime: '3-4 hours',
-      difficulty: 'Medium',
-      lastUpdated: '2024-09-28T14:30:00.000Z',
-      steps: [
-        {
-          id: '2-1',
-          stepNumber: 1,
-          title: 'Prepare Business Documents',
-          description: 'Gather all required business registration documents.',
-          requiredDocuments: [
-            'DTI Registration',
-            'SEC Registration (if corporation)',
-            'Valid ID',
-            'Barangay Clearance',
-          ],
-          estimatedTime: '30 minutes',
-        },
-        {
-          id: '2-2',
-          stepNumber: 2,
-          title: 'Complete Application Form',
-          description:
-            'Fill out the business permit application form completely.',
-          location: 'Business Permits Office',
-          estimatedTime: '20 minutes',
-        },
-      ],
-    },
-  ]);
+  // fetch guidelines from backend
+  const {
+    data: guidelinesData,
+    loading: guidelinesLoading,
+    error: guidelinesError,
+    refetch: refetchGuidelines,
+  } = useFetchData('/guidelines');
+
+  const [guidelines, setGuidelines] = useState<Guideline[]>([]);
+
+  // map server response to local Guideline model
+  useEffect(() => {
+    if (!guidelinesData) return;
+
+    try {
+      const mapped: Guideline[] = guidelinesData.map((g: any) => ({
+        id: g._id,
+        title: g.title,
+        description: g.description,
+        category: g.category,
+        totalEstimatedTime: g.totalEstimatedTime || g.total_time || '',
+        difficulty: g.difficulty || 'Easy',
+        lastUpdated: g.lastUpdated || g.createdAt || new Date().toISOString(),
+        steps: (g.steps || []).map((s: any, idx: number) => ({
+          id: s._id || `${g._id}-step-${idx}`,
+          stepNumber: s.stepNumber || idx + 1,
+          title: s.title || s.name || '',
+          description: s.description || '',
+          location: s.location,
+          requiredDocuments: s.requiredDocuments || s.required_docs,
+          estimatedTime: s.estimatedTime || s.estimated_time,
+          tips: s.tips || undefined,
+        })),
+      }));
+
+      setGuidelines(mapped);
+    } catch (err) {
+      // fallback: set raw data as guidelines when mapping fails
+      setGuidelines(guidelinesData as any[]);
+    }
+  }, [guidelinesData]);
+
+  const authFetch = useAuthFetch();
 
   const [editingGuideline, setEditingGuideline] = useState<Guideline | null>(
     null
@@ -1055,7 +963,27 @@ const Guidelines: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSaveGuideline = (updatedGuideline: Guideline) => {
+  const buildGuidelinePayload = (g: Guideline) => {
+    return {
+      title: g.title,
+      description: g.description,
+      category: g.category,
+      totalEstimatedTime: g.totalEstimatedTime,
+      difficulty: g.difficulty,
+      steps: g.steps.map((s) => ({
+        title: s.title,
+        description: s.description,
+        requiredDocuments: s.requiredDocuments || [],
+        estimatedTime: s.estimatedTime || '',
+        tips: s.tips || [],
+      })),
+    };
+  };
+
+  const handleSaveGuideline = async (
+    updatedGuideline: Guideline,
+    opts?: { keepOpen?: boolean }
+  ) => {
     // Check for duplicate titles (case insensitive)
     const existingTitles = guidelines
       .filter((g) => g.id !== updatedGuideline.id) // Exclude current guideline if editing
@@ -1099,9 +1027,13 @@ const Guidelines: React.FC = () => {
     setIsModalOpen(false);
     setEditingGuideline(null);
 
-    // Clear any selected items when adding/editing
-    setSelectedGuidelines(new Set());
-    setShowBulkActions(false);
+      setSelectedGuidelines(new Set());
+      setShowBulkActions(false);
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : 'Failed to save guideline';
+      alert(msg);
+    }
   };
 
   const handleCloseModal = () => {
@@ -1643,7 +1575,7 @@ const Guidelines: React.FC = () => {
       )}
 
       {/* Edit Modal */}
-      <EditModal
+      <GuidelineEditModal
         guideline={editingGuideline}
         isOpen={isModalOpen}
         onClose={handleCloseModal}

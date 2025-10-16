@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Building, Palette, Users, Cog } from 'lucide-react';
+import {
+  Building,
+  Palette,
+  Users,
+  Cog,
+  File,
+  Pencil,
+  Plus,
+  Trash,
+} from 'lucide-react';
 import {
   Card,
   CardHeader,
@@ -125,8 +134,8 @@ const Settings: React.FC = () => {
         <Card className="shadow-sm border border-gray-200">
           <CardHeader className="pb-6">
             <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-50">
-                <Building className="w-6 h-6 text-blue-600" />
+              <div className="p-2 rounded-lg bg-green-50">
+                <Building className="w-6 h-6 text-green-600" />
               </div>
               Barangay Information
             </CardTitle>
@@ -167,7 +176,7 @@ const Settings: React.FC = () => {
                       onClick={() => setEditingBarangay(true)}
                       className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-medium rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-sm flex items-center gap-2 flex-shrink-0"
                     >
-                      <span>✏️</span>
+                      <Pencil size={14} />
                       Edit
                     </button>
                   </>
@@ -210,7 +219,7 @@ const Settings: React.FC = () => {
                     htmlFor="logo-upload"
                     className="inline-flex items-center justify-center gap-3 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-medium rounded-lg cursor-pointer hover:from-green-700 hover:to-green-800 transition-all shadow-sm w-fit"
                   >
-                    <span className="text-lg">📁</span>
+                    <File className="w-5 h-5" />
                     Upload New Logo
                   </label>
                   <div className="space-y-2">
@@ -224,56 +233,6 @@ const Settings: React.FC = () => {
                     </ul>
                   </div>
                 </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Theme Settings */}
-        <Card className="shadow-sm border border-gray-200">
-          <CardHeader className="pb-6">
-            <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-purple-50">
-                <Palette className="w-6 h-6 text-purple-600" />
-              </div>
-              Theme Settings
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <label className="block text-base font-semibold text-gray-700">
-                Color Scheme
-              </label>
-              <div className="flex flex-wrap gap-6">
-                <button
-                  onClick={() => setColorScheme('Green')}
-                  className={`flex items-center justify-center gap-4 px-8 py-4 rounded-xl border-2 font-semibold transition-all min-w-[140px] shadow-sm ${
-                    colorScheme === 'Green'
-                      ? 'bg-green-600 text-white border-green-600 shadow-green-200'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-green-50 hover:border-green-400 hover:shadow-md'
-                  }`}
-                >
-                  <div className="w-5 h-5 bg-green-600 rounded-full flex-shrink-0 shadow-inner"></div>
-                  <span>Green</span>
-                </button>
-                <button
-                  onClick={() => setColorScheme('White')}
-                  className={`flex items-center justify-center gap-4 px-8 py-4 rounded-xl border-2 font-semibold transition-all min-w-[140px] shadow-sm ${
-                    colorScheme === 'White'
-                      ? 'bg-gray-700 text-white border-gray-700 shadow-gray-200'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-500 hover:shadow-md'
-                  }`}
-                >
-                  <div className="w-5 h-5 bg-white border-2 border-gray-400 rounded-full flex-shrink-0 shadow-inner"></div>
-                  <span>White</span>
-                </button>
-              </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-sm text-blue-800 font-medium">
-                  ✨ Currently using{' '}
-                  <span className="font-bold">{colorScheme}</span> theme with
-                  enhanced styling
-                </p>
               </div>
             </div>
           </CardContent>
@@ -297,7 +256,7 @@ const Settings: React.FC = () => {
                   className="flex items-center justify-between p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all"
                 >
                   <div className="flex items-center gap-6">
-                    <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
                       <span className="text-white font-bold text-xl">
                         {user.name.charAt(0)}
                       </span>
@@ -315,7 +274,7 @@ const Settings: React.FC = () => {
                     <span
                       className={`px-4 py-2 rounded-full text-sm font-semibold shadow-sm ${
                         user.role === 'Super Admin'
-                          ? 'bg-blue-100 text-blue-800 border border-blue-200'
+                          ? 'bg-green-100 text-green-800 border border-green-200'
                           : 'bg-green-100 text-green-800 border border-green-200'
                       }`}
                     >
@@ -326,7 +285,7 @@ const Settings: React.FC = () => {
                       className="w-10 h-10 flex items-center justify-center text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all shadow-sm border border-red-200 hover:border-red-600"
                       title="Delete admin"
                     >
-                      <span className="text-lg">🗑️</span>
+                      <Trash size={18} />
                     </button>
                   </div>
                 </div>
@@ -339,8 +298,8 @@ const Settings: React.FC = () => {
         <Card className="shadow-sm border border-gray-200">
           <CardHeader className="pb-6">
             <CardTitle className="text-2xl font-semibold text-gray-900 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-orange-50">
-                <span className="text-2xl">➕</span>
+              <div className="p-2 rounded-lg bg-green-50">
+                <Plus className="w-6 h-6 text-green-600" />
               </div>
               Add New Admin
             </CardTitle>
@@ -349,7 +308,7 @@ const Settings: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-base font-semibold text-gray-700 mb-3">
-                  👤 Name
+                  Name
                 </label>
                 <input
                   type="text"
@@ -363,7 +322,7 @@ const Settings: React.FC = () => {
               </div>
               <div>
                 <label className="block text-base font-semibold text-gray-700 mb-3">
-                  📧 Email
+                  Email
                 </label>
                 <input
                   type="email"
@@ -377,7 +336,7 @@ const Settings: React.FC = () => {
               </div>
               <div>
                 <label className="block text-base font-semibold text-gray-700 mb-3">
-                  🔐 Password
+                  Password
                 </label>
                 <input
                   type="password"
@@ -391,7 +350,7 @@ const Settings: React.FC = () => {
               </div>
               <div>
                 <label className="block text-base font-semibold text-gray-700 mb-3">
-                  🏅 Role
+                  Role
                 </label>
                 <select
                   value={newAdmin.role}
@@ -413,7 +372,7 @@ const Settings: React.FC = () => {
                 onClick={handleAddAdmin}
                 className="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold text-lg rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-lg hover:shadow-xl flex items-center gap-3"
               >
-                <span className="text-xl">✨</span>
+                <Plus size={20} />
                 Add Admin Account
               </button>
             </div>
