@@ -60,7 +60,7 @@ export default function App() {
         body: JSON.stringify(requestBody),
       });
       alert(
-        `${result.record_id} ${result._lastName} current point is ${result.currentPoints}`
+        `${result.record_id} ${result.lastName} current point is ${result.currentPoints}`
       );
     } catch (error) {
       console.log(error);

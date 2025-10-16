@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   Card,
   CardHeader,
@@ -17,59 +17,147 @@ import {
 } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { DashboardSkeleton } from '../../components/LoadingSkeletons';
+import useFetchData from '../hooks/useFetchData';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+dayjs.extend(isBetween);
+
+interface PerformedBy {
+  _id: string;
+  username: string;
+  roles: Record<string, number>;
+}
+
+interface LogEntry {
+  _id: string;
+  action: string;
+  title: string;
+  description: string;
+  category: string;
+  targetType?: string;
+  targetId?: string;
+  targetName?: string;
+  performedBy?: PerformedBy;
+  created_at: string;
+  __v?: number;
+}
+
+interface LogsApiResponse {
+  success: boolean;
+  count: number;
+  total: number;
+  currentPage: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  data: LogEntry[];
+}
+
+interface Achievements {
+  title: string;
+  description: string;
+  createdAt: string;
+}
+
+interface User {
+  _id: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  address: string;
+  age: number;
+  points: number;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const Dashboard: React.FC = () => {
   // Add loading state with 1 second display
   const { isLoading } = useLoadingState(1000);
+  const {
+    data: logsData,
+    loading,
+    error,
+  } = useFetchData<LogsApiResponse>(`/logs?limit=5`);
 
-  const recentActivity = [
-    {
-      id: 'T001',
-      name: 'Juan Dela Cruz',
-      points: 150,
-      date: '2025-10-01',
-      trend: 'up',
-    },
-    {
-      id: 'T002',
-      name: 'Maria Santos',
-      points: 200,
-      date: '2025-10-01',
-      trend: 'up',
-    },
-    {
-      id: 'T003',
-      name: 'Jose Reyes',
-      points: 100,
-      date: '2025-09-30',
-      trend: 'down',
-    },
-    {
-      id: 'T004',
-      name: 'Anna Garcia',
-      points: 175,
-      date: '2025-09-30',
-      trend: 'up',
-    },
-  ];
+  const {
+    data: recordsData,
+    loading: recordsLoading,
+    error: recordsError,
+  } = useFetchData<User[]>(`/records`);
 
-  const achievements = [
-    {
-      title: 'Community Clean-up Drive',
-      date: '2025-10-05',
-      status: 'Completed',
-    },
-    {
-      title: 'Vaccination Program Schedule',
-      date: '2025-10-03',
-      status: 'Completed',
-    },
-    {
-      title: 'Barangay Assembly Meeting',
-      date: '2025-10-02',
-      status: 'Ongoing',
-    },
-  ];
+  const {
+    data: visitLogs,
+    loading: visitLoading,
+    error: visitErrors,
+  } = useFetchData<LogEntry[]>(
+    `/logs/all?category=AUTHENTICATION&action=LOGIN`
+  );
+
+  const {
+    data: achievements,
+    loading: achievementsLoading,
+    error: achievementsError,
+  } = useFetchData<Achievements[]>(`/achievements`);
+
+  const calculatePercentageChange = (
+    current: number,
+    previous: number
+  ): string => {
+    if (previous === 0) {
+      return current > 0 ? '+100%' : '0%';
+    }
+
+    const change = ((current - previous) / previous) * 100;
+    return `${change >= 0 ? '+' : ''}${Math.round(change)}%`;
+  };
+
+  const dashboardData = useMemo(() => {
+    const totalRecords = recordsData?.length || 0;
+
+    const lastMonthRecordCount = recordsData.filter((record) => dayjs(record.createdAt).isSame(dayjs().subtract(1, 'month'), 'month')).length;
+
+    const todaysVisits =
+      visitLogs?.filter((log) => dayjs(log.created_at).isSame(dayjs(), 'day'))
+        .length || 0;
+
+    const yesterdaysVisits =
+      visitLogs?.filter((log) =>
+        dayjs(log.created_at).isSame(dayjs().subtract(1, 'day'), 'day')
+      ).length || 0;
+
+    const totalVisits = visitLogs?.length || 0;
+    const lastMonthTotalVisits = visitLogs?.filter((log) =>
+      dayjs(log.created_at).isSame(dayjs().subtract(1, 'month'), 'month')
+    ).length;
+
+    const recentActivity = logsData?.data || [];
+    const recentAchievements = achievements?.slice(0, 5) || [];
+
+    const todaysVisitsChange = calculatePercentageChange(
+      todaysVisits,
+      yesterdaysVisits
+    );
+    const totalVisitsChange = calculatePercentageChange(
+      totalVisits,
+      lastMonthTotalVisits
+    );
+    const totalRecordsChange = calculatePercentageChange(
+      totalRecords,
+      lastMonthRecordCount
+    );
+
+    return {
+      totalRecords,
+      todaysVisits,
+      totalVisits,
+      recentActivity,
+      recentAchievements,
+      todaysVisitsChange,
+      totalVisitsChange,
+      totalRecordsChange,
+    };
+  }, [recordsData, visitLogs, logsData, achievements]);
 
   // Show loading skeleton while loading
   if (isLoading) {
@@ -102,8 +190,14 @@ const Dashboard: React.FC = () => {
             <Eye className="h-5 w-5 text-gray-500" />
           </CardHeader>
           <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-900 mb-1">324</div>
-            <p className="text-xs text-blue-600">+8% from yesterday</p>
+            <div className="text-3xl font-bold text-gray-900 mb-1">
+              {dashboardData.todaysVisits}
+            </div>
+            <p
+              className={`text-xs ${dashboardData.todaysVisitsChange.includes('+') ? 'text-blue-600' : 'text-red-600'}`}
+            >
+              {dashboardData.todaysVisitsChange} from yesterday
+            </p>
           </CardContent>
         </Card>
 
@@ -116,8 +210,14 @@ const Dashboard: React.FC = () => {
             <SquareMousePointer className="h-5 w-5 text-gray-500" />
           </CardHeader>
           <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-900 mb-1">12,458</div>
-            <p className="text-xs text-blue-600">+15% from last month</p>
+            <div className="text-3xl font-bold text-gray-900 mb-1">
+              {dashboardData.totalVisits}
+            </div>
+            <p
+              className={`text-xs ${dashboardData.totalVisitsChange.includes('+') ? 'text-blue-600' : 'text-red-600'}`}
+            >
+              {dashboardData.totalVisitsChange} from last month
+            </p>
           </CardContent>
         </Card>
 
@@ -125,13 +225,15 @@ const Dashboard: React.FC = () => {
         <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
             <CardTitle className="text-sm font-bold text-gray-800">
-              Total Users
+              Total Records
             </CardTitle>
             <Users className="h-5 w-5 text-gray-500" />
           </CardHeader>
           <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-900 mb-1">1,245</div>
-            <p className="text-xs text-blue-600">+12% from last month</p>
+            <div className="text-3xl font-bold text-gray-900 mb-1">
+              {dashboardData.totalRecords}
+            </div>
+            <p className="text-xs text-blue-600">{dashboardData.totalRecordsChange} from last month</p>
           </CardContent>
         </Card>
 
@@ -168,13 +270,13 @@ const Dashboard: React.FC = () => {
                 <thead>
                   <tr className="bg-green-50">
                     <th className="py-3 px-3 sm:px-5 font-bold text-left text-gray-700">
-                      Name
+                      Action
                     </th>
                     <th className="py-3 px-3 sm:px-5 font-bold text-left text-gray-700">
-                      ID
+                      Category
                     </th>
                     <th className="py-3 px-3 sm:px-5 font-bold text-right text-gray-700">
-                      Points
+                      Description
                     </th>
                     <th className="py-3 px-3 sm:px-5 font-bold text-right text-gray-700">
                       Date
@@ -182,22 +284,24 @@ const Dashboard: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {recentActivity.map((activity) => (
+                  {dashboardData.recentActivity.map((activity) => (
                     <tr
-                      key={activity.id}
+                      key={activity._id}
                       className="border-b border-gray-200 last:border-0"
                     >
                       <td className="py-3 px-3 sm:px-5 font-semibold text-gray-900">
-                        {activity.name}
+                        {activity.action}
                       </td>
                       <td className="py-3 px-3 sm:px-5 text-blue-600 font-medium">
-                        {activity.id}
+                        {activity.category}
                       </td>
                       <td className="py-3 px-3 sm:px-5 font-bold text-gray-900 text-right">
-                        {activity.points} pts
+                        {activity.description} pts
                       </td>
                       <td className="py-3 px-3 sm:px-5 text-gray-700 font-medium text-right">
-                        {activity.date}
+                        {dayjs(activity.created_at).format(
+                          'MMM D, YYYY h:mm A'
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -224,38 +328,32 @@ const Dashboard: React.FC = () => {
                       Title
                     </th>
                     <th className="py-3 px-3 sm:px-5 font-bold text-left text-gray-700">
-                      Date
+                      Description
                     </th>
                     <th className="py-3 px-3 sm:px-5 font-bold text-center text-gray-700">
-                      Status
+                      Date
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {achievements.map((achievement, index) => (
-                    <tr
-                      key={index}
-                      className="border-b border-gray-200 last:border-0"
-                    >
-                      <td className="py-3 px-3 sm:px-5 font-semibold text-gray-900">
-                        {achievement.title}
-                      </td>
-                      <td className="py-3 px-3 sm:px-5 text-gray-700 font-medium">
-                        {achievement.date}
-                      </td>
-                      <td className="py-3 px-3 sm:px-5 text-center">
-                        <span
-                          className={`inline-flex items-center px-3 py-1 rounded-md text-xs font-semibold ${
-                            achievement.status === 'Ongoing'
-                              ? 'bg-green-600 text-white'
-                              : 'bg-blue-600 text-white'
-                          }`}
-                        >
-                          {achievement.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                  {dashboardData.recentAchievements.map(
+                    (achievement, index) => (
+                      <tr
+                        key={index}
+                        className="border-b border-gray-200 last:border-0"
+                      >
+                        <td className="py-3 px-3 sm:px-5 font-semibold text-gray-900">
+                          {achievement.title}
+                        </td>
+                        <td className="py-3 px-3 sm:px-5 text-gray-700 font-medium">
+                          {achievement.description}
+                        </td>
+                        <td className="py-3 px-3 sm:px-5 text-center">
+                          {achievement.createdAt}
+                        </td>
+                      </tr>
+                    )
+                  )}
                 </tbody>
               </table>
             </div>

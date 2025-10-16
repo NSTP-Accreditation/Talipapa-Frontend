@@ -54,6 +54,7 @@ export interface Farm {
   farmType: string;
   address: string;
   description: string;
+  memberCount: number;
   image?: string; // optional as it is not required in the schema
 }
 
@@ -67,6 +68,7 @@ interface Skill {
   _id?: string;
   name: string;
   short?: string;
+  staffCount?: number;
   type?: string;
 }
 
@@ -100,12 +102,19 @@ const GreenPages: React.FC = () => {
     age: '',
     gender: '',
     position: '',
+    skills: [],
+    assigned_farm: [],
+    time_in_field: '',
     email: '',
     contact: '',
   });
 
   // Fetch farms and use the first as the selected farm
-  const { data: farmsData, loading: farmsLoading, error: farmsError } = useFetchData<Farm[]>('/farms');
+  const {
+    data: farmsData,
+    loading: farmsLoading,
+    error: farmsError,
+  } = useFetchData<Farm[]>('/farms');
   const [farmData, setFarmData] = useState<Farm | null>(null);
 
   useEffect(() => {
@@ -115,64 +124,26 @@ const GreenPages: React.FC = () => {
   }, [farmsData]);
 
   // fetch staff for selected farm
-  const { data: staffDirectoryData, loading: staffLoading, error: staffError } = useFetchData<Staff[]>(
-    farmData?._id ? `http://localhost:5555/staff/farm/${farmData._id}` : null
+  const {
+    data: staffDirectoryData,
+    loading: staffLoading,
+    error: staffError,
+  } = useFetchData<Staff[]>(
+    farmData?._id ? `/staff/farm/${farmData._id}` : null
   );
 
-  const staffSkills = [
-    {
-      name: 'Traditional Composting',
-      short: 'Traditional',
-      type: 'Composting',
-      color: '#15803d',
-    },
-    {
-      name: 'Vermicomposting',
-      short: 'Vermicomposting',
-      type: 'Composting',
-      color: '#16a34a',
-    },
-    {
-      name: 'Bokashi Composting',
-      short: 'Bokashi',
-      type: 'Composting',
-      color: '#a855f7',
-    },
-    {
-      name: 'Mushroom Cultivation',
-      short: 'Mushroom',
-      type: 'Cultivation',
-      color: '#c084fc',
-    },
-    {
-      name: 'Aquaponics',
-      short: 'Aquaponics',
-      type: 'Farming',
-      color: '#cbd5e1',
-    },
-    {
-      name: 'Hydroponic Farming',
-      short: 'Hydroponics',
-      type: 'Farming',
-      color: '#ec4899',
-    },
-    {
-      name: 'Organic Fertilizer Making',
-      short: 'Fertilizer',
-      type: 'Production',
-      color: '#f97316',
-    },
-    {
-      name: 'Vertical Gardening',
-      short: 'Vertical',
-      type: 'Gardening',
-      color: '#22d3ee',
-    },
-  ];
-
   // derive flat skills from staffDirectoryData (unique by name)
-  const flatSkills: { _id?: string; name: string; short: string; type: string; color: string }[] = useMemo(() => {
-  const map = new Map<string, { _id?: string; name: string; short: string; type: string; color: string }>();
+  const flatSkills: {
+    _id?: string;
+    name: string;
+    short: string;
+    type: string;
+    color: string;
+  }[] = useMemo(() => {
+    const map = new Map<
+      string,
+      { _id?: string; name: string; short: string; type: string; color: string }
+    >();
     if (Array.isArray(staffDirectoryData)) {
       for (const staff of staffDirectoryData) {
         if (!Array.isArray(staff.skills)) continue;
@@ -182,7 +153,11 @@ const GreenPages: React.FC = () => {
           if (!map.has(key)) {
             map.set(key, {
               name: s.name || s.short || key,
-              short: s.short || s.name?.split(' ').slice(0,2).join('') || s.name || key,
+              short:
+                s.short ||
+                s.name?.split(' ').slice(0, 2).join('') ||
+                s.name ||
+                key,
               type: s.type || 'General',
               color: '#16a34a',
               _id: (s as any)._id || undefined,
@@ -209,11 +184,14 @@ const GreenPages: React.FC = () => {
 
     setSkillLoading(true);
     try {
-      const res = await authFetch<any>(`/staff/farm/${farmData._id}/skill/${skill._id}`);
+      const res = await authFetch<any>(
+        `/staff/farm/${farmData._id}/skill/${skill._id}`
+      );
       setSkillStaff(Array.isArray(res?.staff) ? res.staff : []);
       setSkillModalOpen(true);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to fetch staff by skill';
+      const msg =
+        err instanceof Error ? err.message : 'Failed to fetch staff by skill';
       alert(msg);
     } finally {
       setSkillLoading(false);
@@ -221,30 +199,68 @@ const GreenPages: React.FC = () => {
   };
 
   // Statistics data
-  const memberEachFarmData = [
-    { name: 'MWSS Talipapa Eco Park', value: 8, color: '#f59e0b' },
-    { name: 'Bayantel Eco Park', value: 6, color: '#ec4899' },
-    { name: 'Manonbol Urban Farm', value: 4, color: '#4a7c28' },
-  ];
+  const memberEachFarmData = useMemo(() => {
+    if (!Array.isArray(farmsData)) return [];
 
-  const skillsCountData = [
-    { name: 'Traditional Composting', value: 5, color: '#4ade80' },
-    { name: 'Vermicomposting', value: 4, color: '#78350f' },
-    { name: 'Bokashi Composting', value: 3, color: '#a855f7' },
-    { name: 'Mushroom Cultivation', value: 2, color: '#c084fc' },
-    { name: 'Aquaponics', value: 2, color: '#cbd5e1' },
-    { name: 'Hydroponic Farming', value: 1, color: '#ec4899' },
-    { name: 'Organic Fertilizer Making', value: 1, color: '#f97316' },
-  ];
+    return farmsData.map((farm) => {
+      // Generate random color
+      const randomColor = `#${Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, '0')}`;
 
-  const agesInAllFarmData = [
-    { name: '18-25', value: 2, color: '#4ade80' },
-    { name: '26-35', value: 4, color: '#78350f' },
-    { name: '36-45', value: 5, color: '#a855f7' },
-    { name: '46-55', value: 3, color: '#c084fc' },
-    { name: '56-65', value: 2, color: '#cbd5e1' },
-    { name: '65+', value: 1, color: '#ec4899' },
-  ];
+      return {
+        name: farm.name,
+        value: farm.memberCount,
+        color: randomColor,
+      };
+    });
+  }, [farmsData]);
+
+  const {
+    data: skillsData,
+    loading: skillsLoading,
+    error: skillsError,
+  } = useFetchData<Skill[]>('/skills');
+
+  const skillsCountData = useMemo(() => {
+    if (!Array.isArray(skillsData)) return [];
+    return skillsData.map((skill) => {
+      const randomColor = `#${Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, '0')}`;
+
+      return {
+        name: skill.name,
+        value: skill.staffCount, // Now staffCount is available
+        color: randomColor,
+      };
+    });
+  }, [skillsData]);
+
+  const {
+    data: ageData,
+    loading: ageLoading,
+    error: ageError,
+  } = useFetchData('/staff/ageDistribution');
+
+  const agesInAllFarmData = useMemo(() => {
+    if (!Array.isArray(ageData)) return [];
+
+    const AGE_COLORS = [
+      '#4ade80',
+      '#78350f',
+      '#a855f7',
+      '#c084fc',
+      '#cbd5e1',
+      '#ec4899',
+    ];
+
+    return ageData.map((item, index) => ({
+      name: item.range,
+      value: item.count,
+      color: AGE_COLORS[index] || AGE_COLORS[0],
+    }));
+  }, [ageData]);
 
   // Modal handlers
   const openAddStaffModal = () => {
@@ -252,6 +268,9 @@ const GreenPages: React.FC = () => {
       name: '',
       age: '',
       gender: '',
+      skills: [],
+      assigned_farm: [],
+      time_in_field: '',
       position: '',
       email: '',
       contact: '',
@@ -264,7 +283,7 @@ const GreenPages: React.FC = () => {
     setIsSubmitting(false);
   };
 
-  const handleStaffFormChange = (field: string, value: string) => {
+  const handleStaffFormChange = (field: string, value: string | string[]) => {
     setStaffForm((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -276,6 +295,8 @@ const GreenPages: React.FC = () => {
       alert('Please fill in all required fields (Name, Position, Contact)');
       return;
     }
+
+    console.log(staffForm);
 
     setIsSubmitting(true);
 
@@ -415,9 +436,9 @@ const GreenPages: React.FC = () => {
                     <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
                       Name
                     </p>
-                            <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                              {farmData?.name ?? '—'}
-                            </p>
+                    <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
+                      {farmData?.name ?? '—'}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
@@ -502,10 +523,18 @@ const GreenPages: React.FC = () => {
           {/* Right Side - Tab Content */}
           <div className="lg:col-span-2">
             {activeTab === 'profile' && (
-              <ProfileTab staffDirectory={staffDirectoryData ?? null} openAddStaffModal={openAddStaffModal} />
+              <ProfileTab
+                staffDirectory={staffDirectoryData ?? null}
+                openAddStaffModal={openAddStaffModal}
+              />
             )}
 
-            {activeTab === 'skillMap' && <SkillMapTab staffSkills={flatSkills} onSkillClick={handleSkillClick} />}
+            {activeTab === 'skillMap' && (
+              <SkillMapTab
+                staffSkills={flatSkills}
+                onSkillClick={handleSkillClick}
+              />
+            )}
 
             {activeTab === 'statistics' && (
               <StatisticsTab
@@ -520,7 +549,7 @@ const GreenPages: React.FC = () => {
         {/* Enhanced Add Staff Modal */}
         {isAddStaffModalOpen && (
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-1003 p-4 animate-fadeIn"
             role="dialog"
             aria-modal="true"
             onClick={(e) => {
@@ -663,6 +692,224 @@ const GreenPages: React.FC = () => {
                         </select>
                       </div>
                     </div>
+
+                    <div className="space-y-4">
+                      <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                        <Calendar className="w-4 h-4 text-green-600" />
+                        Skills
+                      </label>
+
+                      {/* Skills Checkbox Grid */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto p-2 border border-gray-200 rounded-lg bg-gray-50">
+                        {skillsData.map((skill) => (
+                          <div
+                            key={skill._id}
+                            className="flex items-center space-x-2 p-2 hover:bg-white rounded-md transition-colors"
+                          >
+                            <input
+                              type="checkbox"
+                              id={`skill-${skill._id}`}
+                              checked={
+                                staffForm.skills?.includes(skill._id) || false
+                              }
+                              onChange={(e) => {
+                                const isChecked = e.target.checked;
+                                const updatedSkills = isChecked
+                                  ? [...(staffForm.skills || []), skill._id]
+                                  : (staffForm.skills || []).filter(
+                                      (id) => id !== skill._id
+                                    );
+
+                                handleStaffFormChange('skills', updatedSkills);
+                              }}
+                              className="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                            />
+                            <label
+                              htmlFor={`skill-${skill._id}`}
+                              className="flex flex-col text-sm font-medium text-gray-700 cursor-pointer"
+                            >
+                              <span className="font-semibold">
+                                {skill.name}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {skill.type}
+                              </span>
+                            </label>
+                          </div>
+                        ))}
+
+                        {skillsData.length === 0 && (
+                          <div className="col-span-2 text-center py-4 text-gray-500 text-sm">
+                            No skills available
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Selected Skills Display */}
+                      {staffForm.skills && staffForm.skills.length > 0 && (
+                        <div className="mt-3">
+                          <p className="text-xs font-semibold text-gray-600 mb-2">
+                            Selected Skills ({staffForm.skills.length}):
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {staffForm.skills.map((skillId) => {
+                              const skill = skillsData.find(
+                                (s) => s._id === skillId
+                              );
+                              return skill ? (
+                                <span
+                                  key={skillId}
+                                  className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full border border-green-200"
+                                >
+                                  {skill.name}
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const updatedSkills =
+                                        staffForm.skills.filter(
+                                          (id) => id !== skillId
+                                        );
+                                      handleStaffFormChange(
+                                        'skills',
+                                        updatedSkills
+                                      );
+                                    }}
+                                    className="w-4 h-4 rounded-full bg-green-200 hover:bg-green-300 text-green-800 flex items-center justify-center text-xs font-bold"
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              ) : null;
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                        <Calendar className="w-4 h-4 text-green-600" />
+                        Time in Field
+                      </label>
+                      <select
+                        value={staffForm.time_in_field}
+                        onChange={(e) =>
+                          handleStaffFormChange('time_in_field', e.target.value)
+                        }
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium bg-white"
+                      >
+                        <option value="">Select Time in Field Range</option>
+                        <option value="1-2 years">0 - 1 year</option>
+                        <option value="1-2 years">1 - 2 years</option>
+                        <option value="2-3 years">2 - 3 years</option>
+                        <option value="3-4 years">3 - 4 years</option>
+                        <option value="Above 5 years">
+                          Above 5 years
+                        </option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-4">
+                      <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                        <MapPin className="w-4 h-4 text-green-600" />
+                        Assigned Farms
+                      </label>
+
+                      {/* Farms Checkbox Grid */}
+                      <div className="grid grid-cols-1 gap-3 max-h-60 overflow-y-auto p-2 border border-gray-200 rounded-lg bg-gray-50">
+                        {farmsData.map((farm) => (
+                          <div
+                            key={farm._id}
+                            className="flex items-center space-x-2 p-2 hover:bg-white rounded-md transition-colors"
+                          >
+                            <input
+                              type="checkbox"
+                              id={`farm-${farm._id}`}
+                              checked={
+                                staffForm.assigned_farm?.includes(farm._id) ||
+                                false
+                              }
+                              onChange={(e) => {
+                                const isChecked = e.target.checked;
+                                const updatedFarms = isChecked
+                                  ? [
+                                      ...(staffForm.assigned_farm || []),
+                                      farm._id,
+                                    ]
+                                  : (staffForm.assigned_farm || []).filter(
+                                      (id) => id !== farm._id
+                                    );
+
+                                handleStaffFormChange(
+                                  'assigned_farm',
+                                  updatedFarms
+                                );
+                              }}
+                              className="w-4 h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                            />
+                            <label
+                              htmlFor={`farm-${farm._id}`}
+                              className="flex flex-col text-sm font-medium text-gray-700 cursor-pointer flex-1"
+                            >
+                              <span className="font-semibold">{farm.name}</span>
+                              <span className="text-xs text-gray-500">
+                                {farm.farmType} • {farm.size}
+                              </span>
+                              <span className="text-xs text-gray-400">
+                                {farm.address}
+                              </span>
+                            </label>
+                          </div>
+                        ))}
+
+                        {farmsData.length === 0 && (
+                          <div className="text-center py-4 text-gray-500 text-sm">
+                            No farms available
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Selected Farms Display */}
+                      {staffForm.assigned_farm &&
+                        staffForm.assigned_farm.length > 0 && (
+                          <div className="mt-3">
+                            <p className="text-xs font-semibold text-gray-600 mb-2">
+                              Selected Farms ({staffForm.assigned_farm.length}):
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {staffForm.assigned_farm.map((farmId) => {
+                                const farm = farmsData.find(
+                                  (f) => f._id === farmId
+                                );
+                                return farm ? (
+                                  <span
+                                    key={farmId}
+                                    className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full border border-blue-200"
+                                  >
+                                    {farm.name}
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const updatedFarms =
+                                          staffForm.assigned_farm.filter(
+                                            (id) => id !== farmId
+                                          );
+                                        handleStaffFormChange(
+                                          'assigned_farm',
+                                          updatedFarms
+                                        );
+                                      }}
+                                      className="w-4 h-4 rounded-full bg-blue-200 hover:bg-blue-300 text-blue-800 flex items-center justify-center text-xs font-bold"
+                                    >
+                                      ×
+                                    </button>
+                                  </span>
+                                ) : null;
+                              })}
+                            </div>
+                          </div>
+                        )}
+                    </div>
                   </div>
 
                   {/* Contact Information Section */}
@@ -767,38 +1014,60 @@ const GreenPages: React.FC = () => {
         {skillModalOpen && (
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1003] p-4"
-            onClick={(e) => { if (e.target === e.currentTarget) setSkillModalOpen(false); }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setSkillModalOpen(false);
+            }}
           >
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-auto p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold">Staff with this skill</h3>
-                <button onClick={() => setSkillModalOpen(false)} className="text-gray-600">Close</button>
+                <button
+                  onClick={() => setSkillModalOpen(false)}
+                  className="text-gray-600"
+                >
+                  Close
+                </button>
               </div>
 
               {skillLoading && <p>Loading...</p>}
               {!skillLoading && (!skillStaff || skillStaff.length === 0) && (
-                <p className="text-sm text-gray-600">No staff found for this skill.</p>
+                <p className="text-sm text-gray-600">
+                  No staff found for this skill.
+                </p>
               )}
 
               {!skillLoading && skillStaff && skillStaff.length > 0 && (
                 <div className="grid grid-cols-1 gap-3">
                   {skillStaff.map((s) => (
-                    <div key={s._id ?? s.name} className="p-3 border rounded-lg">
+                    <div
+                      key={s._id ?? s.name}
+                      className="p-3 border rounded-lg"
+                    >
                       <div className="flex items-start justify-between">
                         <div>
                           <p className="font-bold text-lg">{s.name}</p>
                           <p className="text-sm text-gray-600 mt-1">
                             <span className="font-semibold">Skills:</span>{' '}
-                            {(Array.isArray(s.skills) ? s.skills.map(sk => sk.name).filter(Boolean) : []).join(', ') || '—'}
+                            {(Array.isArray(s.skills)
+                              ? s.skills.map((sk) => sk.name).filter(Boolean)
+                              : []
+                            ).join(', ') || '—'}
                           </p>
                           <p className="text-sm text-gray-600 mt-1">
                             <span className="font-semibold">Farms:</span>{' '}
-                            {(Array.isArray(s.assigned_farm) ? s.assigned_farm.map(f => f.name).filter(Boolean) : []).join(', ') || '—'}
+                            {(Array.isArray(s.assigned_farm)
+                              ? s.assigned_farm
+                                  .map((f) => f.name)
+                                  .filter(Boolean)
+                              : []
+                            ).join(', ') || '—'}
                           </p>
                         </div>
                         <div className="text-right">
                           <p className="text-sm font-semibold">Contact</p>
-                          <p className="text-sm text-gray-700">{s.contact_number ?? 'No contact'}</p>
+                          <p className="text-sm text-gray-700">
+                            {s.contact_number ?? 'No contact'}
+                          </p>
                         </div>
                       </div>
                     </div>

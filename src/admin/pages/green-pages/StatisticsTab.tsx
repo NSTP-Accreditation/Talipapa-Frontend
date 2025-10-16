@@ -38,6 +38,7 @@ const ResponsiveBar = ({ data, height = 320, angle = -15 }: { data: DataItem[]; 
 );
 
 const StatisticsTab: React.FC<StatisticsTabProps> = ({ memberEachFarmData, skillsCountData, agesInAllFarmData }) => {
+  
   return (
     <div className="space-y-4 sm:space-y-6">
       <Card className="rounded-2xl shadow-2xl border-2 border-gray-200">
