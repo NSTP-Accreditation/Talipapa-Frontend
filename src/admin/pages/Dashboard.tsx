@@ -109,13 +109,17 @@ const Dashboard: React.FC = () => {
     }
 
     const change = ((current - previous) / previous) * 100;
-    return `${change >= 0 ? '+' : ''}${Math.round(change)}%`;
+    const cappedChange = Math.min(Math.max(change, -100), 100);
+
+    return `${cappedChange >= 0 ? '+' : ''}${Math.round(cappedChange)}%`;
   };
 
   const dashboardData = useMemo(() => {
     const totalRecords = recordsData?.length || 0;
 
-    const lastMonthRecordCount = recordsData.filter((record) => dayjs(record.createdAt).isSame(dayjs().subtract(1, 'month'), 'month')).length;
+    const lastMonthRecordCount = recordsData?.filter((record) =>
+      dayjs(record.createdAt).isSame(dayjs().subtract(1, 'month'), 'month')
+    ).length;
 
     const todaysVisits =
       visitLogs?.filter((log) => dayjs(log.created_at).isSame(dayjs(), 'day'))
@@ -233,7 +237,9 @@ const Dashboard: React.FC = () => {
             <div className="text-3xl font-bold text-gray-900 mb-1">
               {dashboardData.totalRecords}
             </div>
-            <p className="text-xs text-blue-600">{dashboardData.totalRecordsChange} from last month</p>
+            <p className="text-xs text-blue-600">
+              {dashboardData.totalRecordsChange} from last month
+            </p>
           </CardContent>
         </Card>
 
