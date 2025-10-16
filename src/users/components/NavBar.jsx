@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Menu,
@@ -10,6 +10,7 @@ import {
   Calendar,
   Clock,
 } from 'lucide-react';
+import useFetchData from '@/admin/hooks/useFetchData';
 
 export default function NavBar() {
   const [currentDate, setCurrentDate] = useState('');
@@ -17,6 +18,17 @@ export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+
+  const { data, loading, error } = useFetchData(
+    `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`
+  );
+
+  const imageMemo = useMemo(() => {
+    if(data && !loading && !error) {
+      return data?.image?.url
+    }
+    return;
+  }, [data, loading, error])
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -147,7 +159,7 @@ export default function NavBar() {
             <Link to="/" className="group">
               <div className="relative">
                 <img
-                  src="/brgy talipapa.png"
+                  src={imageMemo}
                   alt="Barangay Talipapa Logo"
                   className="h-11 w-11 sm:h-12 sm:w-12 object-contain transition-all duration-300 group-hover:scale-110"
                 />

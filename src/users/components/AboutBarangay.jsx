@@ -1,7 +1,19 @@
-import { Link } from 'react-router-dom';
 import { Target, Eye, Scroll } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import useFetchData from '@/admin/hooks/useFetchData';
 
 export default function AboutBarangay() {
+  const [pageContent, setPageContent] = useState();
+  const { data, loading, error } = useFetchData(
+    `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`
+  );
+
+  useEffect(() => {
+    if (data && !loading && !error) {
+      setPageContent(data);
+    }
+  }, [data, loading, error]);
+
   return (
     <>
       {/* Video Section */}
@@ -30,8 +42,7 @@ export default function AboutBarangay() {
               About Barangay Talipapa
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Serving our community with excellence, transparency, and
-              dedication
+              {pageContent?.barangayDescription}
             </p>
           </div>
 
@@ -47,9 +58,7 @@ export default function AboutBarangay() {
                   Our Mission
                 </h3>
                 <p className="text-gray-700 text-base leading-relaxed text-justify">
-                  To provide efficient, transparent, and sustainable governance
-                  that promotes the welfare of all residents while preserving
-                  our environment for future generations.
+                  {pageContent?.mission}
                 </p>
               </div>
             </div>
@@ -64,9 +73,7 @@ export default function AboutBarangay() {
                   Our Vision
                 </h3>
                 <p className="text-gray-700 text-base leading-relaxed text-justify">
-                  To be a model eco-friendly barangay that exemplifies
-                  sustainable living, where every resident enjoys a high quality
-                  of life in harmony with nature.
+                  {pageContent?.vision}
                 </p>
               </div>
             </div>
@@ -84,10 +91,7 @@ export default function AboutBarangay() {
                 </h2>
               </div>
               <p className="text-gray-700 text-lg leading-relaxed text-justify">
-                Barangay Talipapa is a vibrant community dedicated to serving
-                its residents with excellence. Established in 1950, we have
-                grown into a progressive barangay that values unity,
-                development, and sustainable growth.
+                {pageContent?.barangayHistory}
               </p>
             </div>
           </div>

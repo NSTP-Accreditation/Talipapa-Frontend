@@ -3,6 +3,8 @@ import { User, MapPin, ExternalLink, Home, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { AboutUsPageSkeleton } from '../../components/LoadingSkeletons';
+import { useEffect, useState } from 'react';
+import useFetchData from '@/admin/hooks/useFetchData';
 
 const AboutUs = () => {
   // Add loading state with 1 second display
@@ -37,8 +39,8 @@ const AboutUs = () => {
       {/* Consistent container for officials and map */}
       <div className="py-12">
         <div className="max-w-7xl mx-auto px-6">
-          {BarangayOfficials()}
-          {BarangayMap()}
+          <BarangayOfficials />
+          <BarangayMap />
         </div>
       </div>
     </div>
@@ -47,18 +49,18 @@ const AboutUs = () => {
 
 export default AboutUs;
 
-const officials = [
-  { name: 'Rodrigo Santos', role: 'Barangay Captain' },
-  { name: 'Elena Martinez', role: 'Kagawad - Health' },
-  { name: 'Carlos Reyes', role: 'Kagawad - Education' },
-  { name: 'Sofia Dela Cruz', role: 'Kagawad - Infrastructure' },
-  { name: 'Miguel Torres', role: 'SK Chairman' },
-  { name: 'Rosa Villanueva', role: 'Barangay Secretary' },
-  { name: 'Pedro Garcia', role: 'Barangay Treasurer' },
-];
-
 // BARANGAY  OFFICIALS
 const BarangayOfficials = () => {
+  const [officials, setOfficials] = useState([]);
+  const { data, loading, error } = useFetchData(
+    `/officials`
+  );
+  useEffect(() => {
+    if (data && !loading && !error) {
+      setOfficials(data);
+    }
+  }, [data, loading, error]);
+
   return (
     <div className="mb-12 sm:mb-16 md:mb-20 lg:mb-24">
       {/* Header Section */}
@@ -76,7 +78,7 @@ const BarangayOfficials = () => {
       </div>
 
       <div className="flex flex-wrap justify-center gap-8">
-        {officials.map((official, index) => (
+        {officials.length > 0 && officials?.map((official, index) => (
           <div
             key={index}
             className="bg-white rounded-2xl p-8 flex flex-col items-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden group"
@@ -105,7 +107,7 @@ const BarangayOfficials = () => {
 
               {/* Role */}
               <p className="text-gray-600 text-sm leading-tight text-center flex-grow flex items-center font-medium">
-                {official.role}
+                {official.position}
               </p>
             </div>
           </div>
