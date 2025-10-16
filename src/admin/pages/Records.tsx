@@ -17,6 +17,7 @@ import { debounce } from 'lodash';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useAuth } from '@/contexts/AuthContext';
+import dayjs from 'dayjs';
 
 const ResidentRecords: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -129,7 +130,16 @@ const ResidentRecords: React.FC = () => {
 
   useEffect(() => {
     if (data && !loading && !error) {
-      setRecords(Array.isArray(data) ? data : []); // Ensure it's always an array
+      const recordsArray = Array.isArray(data) ? data : [];
+
+      // Sort by createdAt in descending order (newest first)
+      const sortedRecords = recordsArray.sort((a, b) => {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      });
+
+      setRecords(sortedRecords);
     }
   }, [data, loading, error]);
 
@@ -289,7 +299,9 @@ const ResidentRecords: React.FC = () => {
                       <div className="flex items-center gap-2">
                         <span className="text-gray-400">📅</span>
                         <span className="text-sm text-gray-700 font-medium">
-                          {resident?.createdAt}
+                          {dayjs(resident?.createdAt).format(
+                            'YYYY-MM-DD | h:mm:s A'
+                          )}
                         </span>
                       </div>
                     </td>
@@ -365,7 +377,7 @@ const ResidentRecords: React.FC = () => {
       {/* Enhanced Modal with Better UI */}
       {isAddModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn"
+          className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
           onClick={(e) => {
@@ -502,28 +514,6 @@ const ResidentRecords: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {/* <label className="block group">
-                    <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                      <Award className="w-4 h-4 text-amber-500" />
-                      <span className="text-red-500">*</span>
-                      <span>Points</span>
-                    </div>
-                    <input
-                      required
-                      type="number"
-                      min="0"
-                      value={newResident.points}
-                      onChange={(e) =>
-                        setNewResident((s) => ({
-                          ...s,
-                          points: Number(e.target.value),
-                        }))
-                      }
-                      className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
-                      placeholder="0"
-                    />
-                  </label> */}
-
                   <label className="block group">
                     <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                       <Calendar className="w-4 h-4 text-blue-500" />
