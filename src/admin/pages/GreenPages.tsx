@@ -91,8 +91,8 @@ interface Staff {
 }
 
 const GreenPages: React.FC = () => {
-  const { isLoading } = useLoadingState(1000);
   const [activeTab, setActiveTab] = useState<TabType>('profile');
+  const authFetch = useAuthFetch();
 
   // Modal state for adding staff
   const [isAddStaffModalOpen, setIsAddStaffModalOpen] = useState(false);
@@ -106,7 +106,7 @@ const GreenPages: React.FC = () => {
     assigned_farm: [],
     time_in_field: '',
     email: '',
-    contact: '',
+    contact_number: '',
   });
 
   // Fetch farms and use the first as the selected farm
@@ -128,6 +128,7 @@ const GreenPages: React.FC = () => {
     data: staffDirectoryData,
     loading: staffLoading,
     error: staffError,
+    refetch: staffRefetch
   } = useFetchData<Staff[]>(
     farmData?._id ? `/staff/farm/${farmData._id}` : null
   );
@@ -173,8 +174,6 @@ const GreenPages: React.FC = () => {
   const [skillModalOpen, setSkillModalOpen] = useState(false);
   const [skillStaff, setSkillStaff] = useState<Staff[] | null>(null);
   const [skillLoading, setSkillLoading] = useState(false);
-
-  const authFetch = useAuthFetch();
 
   const handleSkillClick = async (skill: { _id?: string; name: string }) => {
     if (!farmData?._id || !skill._id) {
@@ -273,7 +272,7 @@ const GreenPages: React.FC = () => {
       time_in_field: '',
       position: '',
       email: '',
-      contact: '',
+      contact_number: '',
     });
     setIsAddStaffModalOpen(true);
   };
@@ -291,23 +290,37 @@ const GreenPages: React.FC = () => {
     e.preventDefault();
 
     // Validate required fields
-    if (!staffForm.name || !staffForm.position || !staffForm.contact) {
+    if (!staffForm.name || !staffForm.position || !staffForm.contact_number) {
       alert('Please fill in all required fields (Name, Position, Contact)');
       return;
     }
-
-    console.log(staffForm);
-
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      alert('Staff added successfully!');
+    const position = staffForm.position
+      .split(', ')
+      .map((position) => ({
+        id: position.toLowerCase().split(' ').join('_'),
+        label: position.charAt(0).toUpperCase() + position.slice(1),
+      }));    
+
+    const payload = { ...staffForm, position };
+
+    try {
+      const result = await authFetch('/staff', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+
+      staffRefetch();
+      alert('New Staff Added Successfully');
+    } catch (error) {
+      console.log(error);
+    } finally {
       closeAddStaffModal();
-    }, 1500);
+    }
   };
 
-  if (isLoading) {
+  if (farmsLoading) {
     return <GreenPagesSkeleton />;
   }
 
@@ -803,9 +816,7 @@ const GreenPages: React.FC = () => {
                         <option value="1-2 years">1 - 2 years</option>
                         <option value="2-3 years">2 - 3 years</option>
                         <option value="3-4 years">3 - 4 years</option>
-                        <option value="Above 5 years">
-                          Above 5 years
-                        </option>
+                        <option value="Above 5 years">Above 5 years</option>
                       </select>
                     </div>
 
@@ -949,9 +960,9 @@ const GreenPages: React.FC = () => {
                         </label>
                         <input
                           type="tel"
-                          value={staffForm.contact}
+                          value={staffForm.contact_number}
                           onChange={(e) =>
-                            handleStaffFormChange('contact', e.target.value)
+                            handleStaffFormChange('contact_number', e.target.value)
                           }
                           className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium"
                           placeholder="09123456789"

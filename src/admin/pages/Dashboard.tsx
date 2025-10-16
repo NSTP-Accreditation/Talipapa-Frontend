@@ -130,7 +130,7 @@ const Dashboard: React.FC = () => {
         dayjs(log.created_at).isSame(dayjs().subtract(1, 'day'), 'day')
       ).length || 0;
 
-    const totalVisits = visitLogs?.length || 0;
+    const totalVisits = visitLogs?.length || 0; 
     const lastMonthTotalVisits = visitLogs?.filter((log) =>
       dayjs(log.created_at).isSame(dayjs().subtract(1, 'month'), 'month')
     ).length;
