@@ -3,7 +3,6 @@ import { Recycle } from 'lucide-react';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
-import { useToast } from '@/contexts/ToastContext';
 
 const MATERIALS = [
   'PET bottles',
@@ -60,8 +59,7 @@ export default function App() {
         method: 'PATCH',
         body: JSON.stringify(requestBody),
       });
-      const toast = useToast();
-      toast.success(
+      alert(
         `${result.record_id} ${result._lastName} current point is ${result.currentPoints}`
       );
     } catch (error) {

@@ -9,7 +9,6 @@ import {
 } from '@/components/LoadingSkeletons';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { ArrowLeftRight } from 'lucide-react';
-import { useToast } from '@/contexts/ToastContext';
 
 interface Product {
   _id: string;
@@ -43,8 +42,6 @@ const SwapItem = () => {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
 
   const authFetch = useAuthFetch();
-
-  const toast = useToast();
 
   const handleFindRecord = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,7 +107,7 @@ const SwapItem = () => {
     const quantity = quantityInputs[product._id] || 0;
 
     if (quantity <= 0) {
-      toast.warn('Invalid Quantity');
+      alert('Invalid Quantity');
       setRedeemInProgress(false);
       return;
     }
@@ -118,7 +115,7 @@ const SwapItem = () => {
     const totalRequiredPoints = quantity * product.requiredPoints;
 
     if (totalRequiredPoints > recordData.points) {
-      toast.warn('Not Enough Points to Redeem Product');
+      alert('Not Enough Points to Redeem Product');
       setRedeemInProgress(false);
       return;
     }
@@ -136,7 +133,7 @@ const SwapItem = () => {
         body: JSON.stringify(requestBody),
       });
 
-      toast.success(
+      alert(
         `${data.message}: Current Points: ${
           recordData.points - totalRequiredPoints
         }`
@@ -155,7 +152,7 @@ const SwapItem = () => {
         [product._id]: 0,
       }));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'An error occurred');
+      alert(error instanceof Error ? error.message : 'An error occurred');
     } finally {
       setRedeemInProgress(false);
     }

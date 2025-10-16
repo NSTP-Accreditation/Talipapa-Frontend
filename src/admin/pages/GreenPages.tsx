@@ -33,7 +33,6 @@ import LeafletMap from './green-pages/LeafletMap';
 import useFetchData from '../hooks/useFetchData';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { useToast } from '@/contexts/ToastContext';
 import { GreenPagesSkeleton } from '../../components/LoadingSkeletons';
 import ProfileTab from './green-pages/ProfileTab';
 import SkillMapTab from './green-pages/SkillMapTab';
@@ -296,13 +295,9 @@ const GreenPages: React.FC = () => {
   const handleSubmitStaff = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const toast = useToast();
-
     // Validate required fields
     if (!staffForm.name || !staffForm.position || !staffForm.contact) {
-      toast.warn(
-        'Please fill in all required fields (Name, Position, Contact)'
-      );
+      alert('Please fill in all required fields (Name, Position, Contact)');
       return;
     }
 
@@ -310,8 +305,7 @@ const GreenPages: React.FC = () => {
 
     // Simulate API call
     setTimeout(() => {
-      console.log('New staff:', staffForm);
-      toast.success('Staff added successfully!');
+      alert('Staff added successfully!');
       closeAddStaffModal();
     }, 1500);
   };

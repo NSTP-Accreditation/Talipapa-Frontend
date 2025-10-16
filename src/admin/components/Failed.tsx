@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, LogIn, LogOut, XCircle } from 'lucide-react';
 
 type AlertType = 'success' | 'logout' | 'error';
@@ -7,28 +7,13 @@ interface AuthAlertProps {
   type: AlertType;
   title: string;
   message: string;
-  onClose?: () => void;
 }
 
-export default function AuthAlert({
-  type,
-  title,
-  message,
-  onClose,
-}: AuthAlertProps) {
+export default function AuthAlert({ type, title, message }: AuthAlertProps) {
   const [visible, setVisible] = useState(true);
   if (!visible) return null;
 
-  const styles: Record<
-    AlertType,
-    {
-      border: string;
-      bg: string;
-      textTitle: string;
-      textMsg: string;
-      icon: React.ReactNode;
-    }
-  > = {
+  const styles = {
     success: {
       border: 'border-green-300',
       bg: 'bg-green-50',
@@ -54,11 +39,6 @@ export default function AuthAlert({
 
   const style = styles[type];
 
-  const handleClose = () => {
-    setVisible(false);
-    if (onClose) onClose();
-  };
-
   return (
     <div
       className={`flex items-start justify-between w-full max-w-md ${style.bg} border ${style.border} rounded-lg px-4 py-3 shadow-sm`}
@@ -72,7 +52,7 @@ export default function AuthAlert({
       </div>
 
       <button
-        onClick={handleClose}
+        onClick={() => setVisible(false)}
         className="text-gray-400 hover:text-gray-600 transition"
       >
         <X className="w-4 h-4" />

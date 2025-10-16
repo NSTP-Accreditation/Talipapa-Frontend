@@ -11,7 +11,6 @@ import {
   Eye,
 } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { useToast } from '@/contexts/ToastContext';
 import { AchievementsPageSkeleton } from '../../components/LoadingSkeletons';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuthFetch } from '../hooks/useAuthFetch';
@@ -48,9 +47,6 @@ export default function AchievementsAdmin() {
     imagePreview: '',
   });
   const [fileUploading, setFileUploading] = useState(false);
-
-  /* ---------- load from localStorage or defaults ---------- */
-  const toast = useToast();
 
   useEffect(() => {
     if (achievements && !achievementsLoading && !achievementsError) {
@@ -112,7 +108,7 @@ export default function AchievementsAdmin() {
         imagePreview: dataUrl as string, // Use base64 for preview
       }));
     } catch (e) {
-      toast.error('Failed to read file.');
+      alert('Failed to read file.');
     } finally {
       setFileUploading(false);
     }
@@ -120,7 +116,7 @@ export default function AchievementsAdmin() {
 
   const handleSave = async () => {
     if (!form.title.trim()) {
-      toast.warn('Title is required.');
+      alert('Title is required.');
       return;
     }
 
