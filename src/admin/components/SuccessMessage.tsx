@@ -1,10 +1,23 @@
 import { useState } from 'react';
 import { CheckCircle, X } from 'lucide-react';
 
-export default function SuccessMessage({ message = 'Success Message' }) {
+type Props = {
+  message?: string;
+  onClose?: () => void;
+};
+
+export default function SuccessMessage({
+  message = 'Success Message',
+  onClose,
+}: Props) {
   const [visible, setVisible] = useState(true);
 
   if (!visible) return null;
+
+  const handleClose = () => {
+    setVisible(false);
+    if (onClose) onClose();
+  };
 
   return (
     <div
@@ -17,7 +30,7 @@ export default function SuccessMessage({ message = 'Success Message' }) {
       </div>
 
       <button
-        onClick={() => setVisible(false)}
+        onClick={handleClose}
         className="text-green-800 hover:text-green-600 transition-colors"
         aria-label="Close"
       >

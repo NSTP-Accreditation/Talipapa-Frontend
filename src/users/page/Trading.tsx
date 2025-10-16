@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { ImageWithFallback } from '@/components/ImageWithFallback';
 import { useLoadingState } from '@/hooks/useLoadingState';
+import { useToast } from '@/contexts/ToastContext';
 import { TradingPageSkeleton } from '@/components/LoadingSkeletons';
 
 const wasteTypes = [
@@ -121,6 +122,8 @@ export default function Trading() {
   // Add loading state with 1 second display
   const { isLoading } = useLoadingState(1000);
 
+  const toast = useToast();
+
   const [selectedType, setSelectedType] = useState('');
   const [weight, setWeight] = useState('');
   const [result, setResult] = useState<{
@@ -145,9 +148,13 @@ export default function Trading() {
           output: wasteType.output,
           image: wasteType.image,
         });
+        // show success toast
+        toast.success(
+          `Converted ${weight}kg to ${wasteType.output} — ${points} ${points === 1 ? 'pt' : 'pts'}`
+        );
       }
     } else {
-      alert('Please select a recyclable type and enter weight!');
+      toast.warn('Please select a recyclable type and enter weight!');
     }
   };
 
@@ -420,7 +427,7 @@ export default function Trading() {
               </div>
               <Button
                 className="text-white h-12 px-6 rounded-xl shadow-lg w-full transition-all text-base font-bold mt-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 hover:shadow-xl hover:-translate-y-1"
-                onClick={() => alert('Check Record feature coming soon!')}
+                onClick={() => toast.info('Check Record feature coming soon!')}
               >
                 <span className="mr-2">🔍</span>
                 Check My Record

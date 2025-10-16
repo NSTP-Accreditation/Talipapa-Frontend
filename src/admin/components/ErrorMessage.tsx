@@ -4,11 +4,13 @@ import { CheckCircle, XCircle, X } from 'lucide-react';
 interface AlertMessageProps {
   type?: 'success' | 'error';
   message?: string;
+  onClose?: () => void;
 }
 
 export default function AlertMessage({
   type = 'success',
   message = 'Message',
+  onClose,
 }: AlertMessageProps) {
   const [visible, setVisible] = useState(true);
 
@@ -32,6 +34,11 @@ export default function AlertMessage({
 
   const theme = colors[type] || colors.success;
 
+  const handleClose = () => {
+    setVisible(false);
+    if (onClose) onClose();
+  };
+
   return (
     <div
       className={`flex items-center justify-between w-full max-w-md mx-auto ${theme.border} ${theme.bg} ${theme.text} rounded-lg px-4 py-3 shadow-sm animate-fade-in`}
@@ -45,7 +52,7 @@ export default function AlertMessage({
 
       {/* Close Button */}
       <button
-        onClick={() => setVisible(false)}
+        onClick={handleClose}
         className="text-gray-400 hover:text-gray-600 transition-colors"
         aria-label={`Close ${type} message`}
       >
