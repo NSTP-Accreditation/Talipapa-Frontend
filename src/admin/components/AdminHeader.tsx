@@ -68,36 +68,24 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
               </svg>
             </button>
           </div>
+          <div className="flex-1 flex items-center">
+            <div className="hidden xl:flex items-center gap-6 px-4 py-2 rounded-xl shadow-lg bg-white/20 backdrop-blur-sm ring-1 ring-white/30 mr-4">
+              <div className="text-center border-r pr-4 border-white/20">
+                <p className="text-xs font-bold uppercase tracking-wider mb-1.5 text-green-100">Date</p>
+                <p className="text-sm font-bold text-white">{formatDate(currentTime)}</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xs font-bold uppercase tracking-wider mb-1.5 text-green-100">Time</p>
+                <p className="text-sm font-bold tabular-nums text-white">{formatTime(currentTime)}</p>
+              </div>
+            </div>
 
-          <div className="flex-1">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black leading-tight text-white">
-              {title}
-            </h1>
-            <p className="text-sm sm:text-base font-medium mt-1 text-green-100">
-              {subtitle}
-            </p>
+           
           </div>
         </div>
 
         {/* Center - Date & Time Display */}
-        <div className="hidden xl:flex items-center gap-6 px-6 py-3 rounded-xl shadow-lg bg-white/20 backdrop-blur-sm ring-1 ring-white/30">
-          <div className="text-center border-r pr-5 border-white/20">
-            <p className="text-xs font-bold uppercase tracking-wider mb-1.5 text-green-100">
-              Date
-            </p>
-            <p className="text-sm font-bold text-white">
-              {formatDate(currentTime)}
-            </p>
-          </div>
-          <div className="text-center">
-            <p className="text-xs font-bold uppercase tracking-wider mb-1.5 text-green-100">
-              Time
-            </p>
-            <p className="text-sm font-bold tabular-nums text-white">
-              {formatTime(currentTime)}
-            </p>
-          </div>
-        </div>
+        {/* center block removed — moved to left side */}
 
         {/* Right Side - Admin User Info */}
         <div className="flex items-center gap-3 flex-shrink-0">

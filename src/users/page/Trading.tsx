@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -128,6 +128,26 @@ export default function Trading() {
     output: string;
     image: string;
   } | null>(null);
+
+  // Modal state for "Check My Record"
+  const [showRecordModal, setShowRecordModal] = useState(false);
+  // static points to display in the modal (replace with real value later)
+  const staticRecordPoints = 123;
+  // inputs for record lookup
+  const [recordId, setRecordId] = useState('');
+  const [lastName, setLastName] = useState('');
+
+  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    lastName || recordId || 'User'
+  )}&background=2f855a&color=fff&size=256`;
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShowRecordModal(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   const handleConvert = () => {
     console.log(
@@ -399,6 +419,8 @@ export default function Trading() {
                 <Input
                   id="record-id"
                   type="text"
+                  value={recordId}
+                  onChange={(e) => setRecordId(e.target.value)}
                   placeholder="BT-0001"
                   className="bg-white h-12 px-4 rounded-xl border-2 border-gray-300 shadow-sm w-full text-base text-gray-900 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-medium"
                 />
@@ -414,13 +436,15 @@ export default function Trading() {
                 <Input
                   id="last-name"
                   type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                   placeholder="Enter your last name"
                   className="bg-white h-12 px-4 rounded-xl border-2 border-gray-300 shadow-sm w-full text-base text-gray-900 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-medium"
                 />
               </div>
               <Button
                 className="text-white h-12 px-6 rounded-xl shadow-lg w-full transition-all text-base font-bold mt-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 hover:shadow-xl hover:-translate-y-1"
-                onClick={() => alert('Check Record feature coming soon!')}
+                onClick={() => setShowRecordModal(true)}
               >
                 <span className="mr-2">🔍</span>
                 Check My Record
@@ -496,6 +520,38 @@ export default function Trading() {
           </CardContent>
         </Card>
       </main>
+      {/* Static Record Modal */}
+      {showRecordModal && (
+        <div className="fixed inset-0 z-[2000] flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setShowRecordModal(false)}
+          />
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4">
+            <div className="p-6 border-b flex items-center gap-4">
+              <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-gray-900">{lastName || 'No name provided'}</h3>
+                <p className="text-sm text-gray-500">Record ID: <span className="font-medium text-gray-800">{recordId || 'N/A'}</span></p>
+              </div>
+            </div>
+            <div className="p-6 text-center">
+              <p className="text-2xl font-extrabold text-green-700 mb-2">{staticRecordPoints} pts</p>
+              <p className="text-sm text-gray-600 mb-6">This is a static preview of your record points.</p>
+              <div className="flex justify-center">
+                <button
+                  className="px-6 py-2 rounded-lg bg-gradient-to-r from-green-600 to-green-700 text-white font-bold"
+                  onClick={() => setShowRecordModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
