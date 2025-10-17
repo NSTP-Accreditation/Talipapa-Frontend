@@ -1,70 +1,14 @@
+import useFetchData from '@/admin/hooks/useFetchData';
 import { Calendar as CalendarIcon, Clock, MapPin, Users } from 'lucide-react';
-
-// Sample events data for Barangay Talipapa
-const upcomingEvents = [
-  {
-    id: 1,
-    title: 'Community Clean-up Drive',
-    date: '2025-10-15',
-    time: '7:00 AM',
-    location: 'Talipapa Public Market',
-    description:
-      'Join us for our monthly community clean-up drive to keep our barangay clean and beautiful.',
-    category: 'Environment',
-    attendees: 50,
-  },
-  {
-    id: 2,
-    title: 'Health and Wellness Seminar',
-    date: '2025-10-20',
-    time: '2:00 PM',
-    location: 'Barangay Hall Conference Room',
-    description:
-      'Learn about preventive healthcare and wellness tips from our health professionals.',
-    category: 'Health',
-    attendees: 30,
-  },
-  {
-    id: 3,
-    title: 'Skills Training Workshop',
-    date: '2025-10-25',
-    time: '9:00 AM',
-    location: 'Multi-purpose Hall',
-    description:
-      'Free skills training workshop on digital literacy and entrepreneurship for residents.',
-    category: 'Education',
-    attendees: 40,
-  },
-  {
-    id: 4,
-    title: 'Barangay Assembly Meeting',
-    date: '2025-11-02',
-    time: '6:00 PM',
-    location: 'Barangay Hall',
-    description:
-      'Monthly barangay assembly to discuss community issues and upcoming projects.',
-    category: 'Government',
-    attendees: 100,
-  },
-  {
-    id: 5,
-    title: 'Youth Sports Festival',
-    date: '2025-11-10',
-    time: '8:00 AM',
-    location: 'Barangay Basketball Court',
-    description:
-      'Annual sports festival for the youth featuring basketball, volleyball, and other games.',
-    category: 'Sports',
-    attendees: 200,
-  },
-];
+import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 
 const getCategoryColor = (category) => {
   const colors = {
-    Environment: 'bg-green-100 text-green-800 border-green-200',
-    Health: 'bg-blue-100 text-blue-800 border-blue-200',
-    Education: 'bg-purple-100 text-purple-800 border-purple-200',
-    Government: 'bg-red-100 text-red-800 border-red-200',
+    Announcement: 'bg-green-100 text-green-800 border-green-200',
+    Meeting: 'bg-blue-100 text-blue-800 border-blue-200',
+    Event: 'bg-purple-100 text-purple-800 border-purple-200',
+    Notice: 'bg-red-100 text-red-800 border-red-200',
     Sports: 'bg-orange-100 text-orange-800 border-orange-200',
   };
   return colors[category] || 'bg-gray-100 text-gray-800 border-gray-200';
@@ -89,39 +33,34 @@ const EventCard = ({ event }) => {
       <div className="relative z-10">
         <div className="flex justify-between items-start mb-6">
           <h3 className="text-xl font-bold text-gray-800 flex-1 pr-4 group-hover:text-green-700 transition-colors">
-            {event.title}
+            {event?.title}
           </h3>
           <span
-            className={`px-4 py-2 rounded-xl text-xs font-bold border-2 shadow-sm ${getCategoryColor(event.category)}`}
+            className={`px-4 py-2 rounded-xl text-xs font-bold border-2 shadow-sm ${getCategoryColor(event?.category)}`}
           >
-            {event.category}
+            {event?.category}
           </span>
         </div>
 
         <div className="space-y-4 mb-6">
           <div className="flex items-center text-gray-700 text-sm font-medium bg-gray-50 p-3 rounded-lg">
             <CalendarIcon className="mr-3 text-green-600" size={18} />
-            <span>{formatDate(event.date)}</span>
+            <span>{dayjs(event?.dateTime).format("MMM DD, YYYY")}</span>
           </div>
 
           <div className="flex items-center text-gray-700 text-sm font-medium bg-gray-50 p-3 rounded-lg">
             <Clock className="mr-3 text-blue-600" size={18} />
-            <span>{event.time}</span>
+            <span>{dayjs(event?.dateTime).format("ddd h:mm A")}</span>
           </div>
 
           <div className="flex items-center text-gray-700 text-sm font-medium bg-gray-50 p-3 rounded-lg">
             <MapPin className="mr-3 text-red-600" size={18} />
-            <span>{event.location}</span>
-          </div>
-
-          <div className="flex items-center text-gray-700 text-sm font-medium bg-gray-50 p-3 rounded-lg">
-            <Users className="mr-3 text-purple-600" size={18} />
-            <span>Expected: {event.attendees} attendees</span>
+            <span>{event?.location}</span>
           </div>
         </div>
 
         <p className="text-gray-700 text-base leading-relaxed">
-          {event.description}
+          {event?.description}
         </p>
       </div>
     </div>
@@ -129,6 +68,15 @@ const EventCard = ({ event }) => {
 };
 
 export default function CalendarEvents() {
+  const [ dataEvents, setDataEvents ] = useState([]);
+  const { data, loading, error } = useFetchData('/news');
+
+  useEffect(() => {
+    if(data && !loading && !error) {
+      setDataEvents(data);
+    }    
+  }, [data, loading, error])
+
   return (
     <section className="bg-white py-20 px-6">
       <div className="max-w-7xl mx-auto">
@@ -149,8 +97,8 @@ export default function CalendarEvents() {
 
         {/* Events Grid */}
         <div className="grid md:grid-cols-2 gap-8">
-          {upcomingEvents.map((event) => (
-            <EventCard key={event.id} event={event} />
+          {dataEvents.length > 0 && dataEvents.map((event) => (
+            <EventCard key={event._id} event={event} />
           ))}
         </div>
 

@@ -25,6 +25,8 @@ import {
 import { ImageWithFallback } from '@/components/ImageWithFallback';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { TradingPageSkeleton } from '@/components/LoadingSkeletons';
+import useFetchData from '@/admin/hooks/useFetchData';
+import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 
 const wasteTypes = [
   {
@@ -117,9 +119,23 @@ const programCategories = [
   },
 ];
 
+interface Record {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
+  age: string;
+  address: string;
+  points: number;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
 export default function Trading() {
   // Add loading state with 1 second display
   const { isLoading } = useLoadingState(1000);
+  const authFetch = useAuthFetch();
 
   const [selectedType, setSelectedType] = useState('');
   const [weight, setWeight] = useState('');
@@ -136,6 +152,7 @@ export default function Trading() {
   // inputs for record lookup
   const [recordId, setRecordId] = useState('');
   const [lastName, setLastName] = useState('');
+  const [ recordData, setRecordData ] = useState<Record | undefined>();
 
   const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
     lastName || recordId || 'User'
@@ -172,6 +189,17 @@ export default function Trading() {
   };
 
   // Show loading skeleton while loading
+
+  const showRecord = async () => {
+    try {
+      const record = await authFetch(`/records/${recordId}?lastName=${lastName}`);
+      setRecordData(record);
+      setShowRecordModal(true);
+    } catch (error) {
+      alert("Record Not Found")
+    }
+    
+  }
   if (isLoading) {
     return <TradingPageSkeleton />;
   }
@@ -444,7 +472,7 @@ export default function Trading() {
               </div>
               <Button
                 className="text-white h-12 px-6 rounded-xl shadow-lg w-full transition-all text-base font-bold mt-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 hover:shadow-xl hover:-translate-y-1"
-                onClick={() => setShowRecordModal(true)}
+                onClick={showRecord}
               >
                 <span className="mr-2">🔍</span>
                 Check My Record
@@ -533,12 +561,12 @@ export default function Trading() {
                 <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-900">{lastName || 'No name provided'}</h3>
-                <p className="text-sm text-gray-500">Record ID: <span className="font-medium text-gray-800">{recordId || 'N/A'}</span></p>
+                <h3 className="text-lg font-bold text-gray-900">{recordData?._id || 'No name provided'}</h3>
+                <p className="text-sm text-gray-500">Record ID: <span className="font-medium text-gray-800">{recordData?._id || 'N/A'}</span></p>
               </div>
             </div>
             <div className="p-6 text-center">
-              <p className="text-2xl font-extrabold text-green-700 mb-2">{staticRecordPoints} pts</p>
+              <p className="text-2xl font-extrabold text-green-700 mb-2">{recordData?.points} pts</p>
               <p className="text-sm text-gray-600 mb-6">This is a static preview of your record points.</p>
               <div className="flex justify-center">
                 <button

@@ -12,12 +12,23 @@ import {
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { GuideTemplateSkeleton } from '../../components/LoadingSkeletons';
 
+// interface GuideStep {
+//   id: number;
+//   title: string;
+//   description: string;
+//   requirements?: string[];
+//   notes?: string;
+// }
+
 interface GuideStep {
-  id: number;
+  stepNumber: number;
   title: string;
   description: string;
-  requirements?: string[];
-  notes?: string;
+  location: string;
+  requiredDocuments: string[];
+  estimatedTime: string;
+  tips: string[];
+  _id: string;
 }
 
 interface GuideTemplateProps {
@@ -140,7 +151,7 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
                 Requirements
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {requirements.map((requirement, index) => (
+                {requirements?.map((requirement, index) => (
                   <div
                     key={index}
                     className="flex items-start gap-4 p-6 bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-300"
@@ -164,9 +175,9 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
 
             {/* Individual Step Cards */}
             <div className="space-y-8">
-              {steps.map((step, index) => (
+              {steps?.map((step, index) => (
                 <div
-                  key={step.id}
+                  key={step._id}
                   className="bg-white rounded-2xl shadow-xl border-2 border-gray-100 p-10 hover:shadow-2xl transition-shadow duration-300"
                 >
                   {/* Step Content with Inline Number */}
@@ -186,7 +197,7 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
                       </p>
 
                       {/* Step Requirements */}
-                      {step.requirements && step.requirements.length > 0 && (
+                      {step.requiredDocuments && step.requiredDocuments.length > 0 && (
                         <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-600 rounded-r-xl p-6 mb-6 shadow-md">
                           <p className="text-base font-bold text-blue-900 mb-4 flex items-center gap-3">
                             <span className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm flex-shrink-0">
@@ -195,7 +206,7 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
                             Required for this step:
                           </p>
                           <ul className="space-y-3">
-                            {step.requirements.map((req, reqIndex) => (
+                            {step.requiredDocuments?.map((req, reqIndex) => (
                               <li
                                 key={reqIndex}
                                 className="flex items-start gap-3 text-base text-blue-900"
@@ -213,7 +224,7 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
                       )}
 
                       {/* Step Notes */}
-                      {step.notes && (
+                      {/* {step.notes && (
                         <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 border-l-4 border-yellow-600 rounded-r-xl p-6 shadow-md">
                           <p className="text-base font-bold text-yellow-900 mb-3 flex items-center gap-3">
                             <span className="text-2xl flex-shrink-0">💡</span>
@@ -223,7 +234,7 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
                             {step.notes}
                           </p>
                         </div>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 </div>
@@ -238,7 +249,7 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
                   Helpful Tips
                 </h3>
                 <ul className="space-y-5">
-                  {tips.map((tip, index) => (
+                  {tips?.map((tip, index) => (
                     <li
                       key={index}
                       className="text-base text-gray-800 bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-600 py-5 px-6 rounded-r-xl shadow-md hover:shadow-lg transition-shadow duration-300"
