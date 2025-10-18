@@ -21,8 +21,13 @@ import {
   RotateCcw,
   Inbox,
   Package,
+  Leaf,
+  Box,
+  Layers,
+  Shirt,
+  BookOpen,
 } from 'lucide-react';
-import { ImageWithFallback } from '@/components/ImageWithFallback';
+// ImageWithFallback removed - replaced by list outputs
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { TradingPageSkeleton } from '@/components/LoadingSkeletons';
 import useFetchData from '@/admin/hooks/useFetchData';
@@ -34,6 +39,7 @@ const wasteTypes = [
     label: 'Plastic Bottles',
     rate: 1,
     output: 'Good Soil',
+    options: ['Vermicomposting', 'Good Soil', 'Sacks', 'Rags'],
     image:
       'https://images.unsplash.com/photo-1569880153113-76e33fc52d5f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYXJkZW4lMjBzb2lsJTIwY29tcG9zdHxlbnwxfHx8fDE3NTk1NjAyMzB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
   },
@@ -42,6 +48,7 @@ const wasteTypes = [
     label: 'Paper & Cardboard',
     rate: 1,
     output: 'Fertilizer',
+    options: ['Fertilizer', 'Paper Pulp', 'Packaging Material'],
     image:
       'https://images.unsplash.com/photo-1539902879984-7a1fa3844e48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwZmVydGlsaXplciUyMHNvaWwlMjBjb25kaXRpb25lcnxlbnwxfHx8fDE3NTk1NjAyMjJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
   },
@@ -50,6 +57,7 @@ const wasteTypes = [
     label: 'Organic Waste',
     rate: 1,
     output: 'Compost',
+    options: ['Compost', 'Soil Conditioner', 'Garden Mulch'],
     image:
       'https://images.unsplash.com/photo-1708432331128-cfe5a2803781?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb21wb3N0JTIwb3JnYW5pYyUyMHdhc3RlJTIwZmVydGlsaXplcnxlbnwxfHx8fDE3NTk1NjAyMjV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
   },
@@ -58,6 +66,7 @@ const wasteTypes = [
     label: 'Cans & Metal',
     rate: 1,
     output: 'Vermitech/Liquid Conditioner',
+    options: ['Vermitech', 'Liquid Conditioner', 'Recycled Metal Scraps'],
     image:
       'https://images.unsplash.com/photo-1678129456841-47b1aca89e60?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2ZXJtaWNvbXBvc3QlMjBsaXF1aWQlMjBmZXJ0aWxpemVyJTIwdGVhfGVufDF8fHx8MTc1OTU2MDIyOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
   },
@@ -142,7 +151,8 @@ export default function Trading() {
   const [result, setResult] = useState<{
     points: number;
     output: string;
-    image: string;
+    options?: string[];
+    image?: string;
   } | null>(null);
 
   // Modal state for "Check My Record"
@@ -152,7 +162,7 @@ export default function Trading() {
   // inputs for record lookup
   const [recordId, setRecordId] = useState('');
   const [lastName, setLastName] = useState('');
-  const [ recordData, setRecordData ] = useState<Record | undefined>();
+  const [recordData, setRecordData] = useState<Record | undefined>();
 
   const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
     lastName || recordId || 'User'
@@ -180,7 +190,8 @@ export default function Trading() {
         setResult({
           points,
           output: wasteType.output,
-          image: wasteType.image,
+          options: (wasteType as any).options || [],
+          image: (wasteType as any).image,
         });
       }
     } else {
@@ -192,14 +203,15 @@ export default function Trading() {
 
   const showRecord = async () => {
     try {
-      const record = await authFetch(`/records/${recordId}?lastName=${lastName}`);
+      const record = await authFetch(
+        `/records/${recordId}?lastName=${lastName}`
+      );
       setRecordData(record);
       setShowRecordModal(true);
     } catch (error) {
-      alert("Record Not Found")
+      alert('Record Not Found');
     }
-    
-  }
+  };
   if (isLoading) {
     return <TradingPageSkeleton />;
   }
@@ -353,49 +365,74 @@ export default function Trading() {
                         Output Product:
                       </span>
                     </div>
-                    {result ? (
-                      <div
-                        className="mb-4 flex-shrink-0 rounded-xl overflow-hidden shadow-lg border-2 border-white"
-                        style={{
-                          width: '240px',
-                          height: '220px',
-                          minWidth: '240px',
-                          minHeight: '220px',
-                          maxWidth: '240px',
-                          maxHeight: '220px',
-                        }}
-                      >
-                        <ImageWithFallback
-                          src={result.image}
-                          alt={result.output}
-                          className=""
-                          style={{
-                            width: '240px',
-                            height: '220px',
-                            objectFit: 'cover',
-                            display: 'block',
-                          }}
-                        />
+                    <div className="mb-4">
+                      <div className="text-left w-full">
+                        <h4 className="text-sm font-bold text-gray-800 mb-2">
+                          Possible Trades / Outputs
+                        </h4>
+                        {result &&
+                        result.options &&
+                        result.options.length > 0 ? (
+                          <div className="flex flex-wrap gap-3">
+                            {result.options.map((opt, i) => {
+                              // choose an icon based on keywords
+                              const key = opt.toLowerCase();
+                              let Icon = Box;
+                              if (
+                                key.includes('compost') ||
+                                key.includes('soil') ||
+                                key.includes('mulch')
+                              )
+                                Icon = Leaf;
+                              else if (
+                                key.includes('fertilizer') ||
+                                key.includes('fertiliser') ||
+                                key.includes('fertil')
+                              )
+                                Icon = Layers;
+                              else if (
+                                key.includes('sacks') ||
+                                key.includes('package') ||
+                                key.includes('pack')
+                              )
+                                Icon = Box;
+                              else if (
+                                key.includes('rags') ||
+                                key.includes('clothes') ||
+                                key.includes('cotton') ||
+                                key.includes('shirt')
+                              )
+                                Icon = Shirt;
+                              else if (
+                                key.includes('books') ||
+                                key.includes('reading')
+                              )
+                                Icon = BookOpen;
+                              else if (
+                                key.includes('medicine') ||
+                                key.includes('herbal') ||
+                                key.includes('first aid') ||
+                                key.includes('flask')
+                              )
+                                Icon = Package;
+
+                              return (
+                                <div
+                                  key={i}
+                                  className="inline-flex items-center gap-2 bg-white/90 border border-gray-100 rounded-full px-3 py-1 shadow-sm text-sm text-gray-800 font-medium"
+                                >
+                                  <Icon className="w-4 h-4 text-green-600" />
+                                  <span>{opt}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="text-sm text-gray-500">
+                            No outputs available yet
+                          </div>
+                        )}
                       </div>
-                    ) : (
-                      <div
-                        className="mb-4 flex items-center justify-center bg-white rounded-xl border-2 border-dashed border-gray-300"
-                        style={{ width: '240px', height: '220px' }}
-                      >
-                        <div className="text-center">
-                          <Package className="w-16 h-16 mb-2 mx-auto text-gray-400" />
-                          <span className="text-gray-400 text-sm font-medium">
-                            Awaiting conversion
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                    <div className="bg-white px-4 py-2 rounded-lg border-2 border-green-200 shadow-sm">
-                      <span className="text-gray-900 text-sm font-bold text-center">
-                        {result
-                          ? `${(parseFloat(weight) * 0.2).toFixed(1)} kg ${result.output}`
-                          : 'No output yet'}
-                      </span>
                     </div>
                   </div>
                 </div>
@@ -558,16 +595,31 @@ export default function Trading() {
           <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4">
             <div className="p-6 border-b flex items-center gap-4">
               <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
-                <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
+                <img
+                  src={avatarUrl}
+                  alt="avatar"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-900">{recordData?._id || 'No name provided'}</h3>
-                <p className="text-sm text-gray-500">Record ID: <span className="font-medium text-gray-800">{recordData?._id || 'N/A'}</span></p>
+                <h3 className="text-lg font-bold text-gray-900">
+                  {recordData?._id || 'No name provided'}
+                </h3>
+                <p className="text-sm text-gray-500">
+                  Record ID:{' '}
+                  <span className="font-medium text-gray-800">
+                    {recordData?._id || 'N/A'}
+                  </span>
+                </p>
               </div>
             </div>
             <div className="p-6 text-center">
-              <p className="text-2xl font-extrabold text-green-700 mb-2">{recordData?.points} pts</p>
-              <p className="text-sm text-gray-600 mb-6">This is a static preview of your record points.</p>
+              <p className="text-2xl font-extrabold text-green-700 mb-2">
+                {recordData?.points} pts
+              </p>
+              <p className="text-sm text-gray-600 mb-6">
+                This is a static preview of your record points.
+              </p>
               <div className="flex justify-center">
                 <button
                   className="px-6 py-2 rounded-lg bg-gradient-to-r from-green-600 to-green-700 text-white font-bold"
