@@ -522,7 +522,6 @@ const Inventory: React.FC = () => {
         </Card>
       </div>
 
-      {/* Modals */}
       <AddModal open={showAddProduct} onClose={() => setShowAddProduct(false)} type="product" />
       <AddModal open={showAddMaterial} onClose={() => setShowAddMaterial(false)} type="material" />
     </div>
