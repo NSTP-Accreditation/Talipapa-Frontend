@@ -589,7 +589,7 @@ export default function Trading() {
       {showRecordModal && (
         <div className="fixed inset-0 z-[2000] flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/70 backdrop-blur-md"
             onClick={() => setShowRecordModal(false)}
           />
           <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4">

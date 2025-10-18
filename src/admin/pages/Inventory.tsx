@@ -37,18 +37,31 @@ interface Material {
 }
 
 // Simple image component with fallback
-const ImageWithFallback: React.FC<{ src?: string; alt: string; className?: string }> = ({ src, alt, className }) => {
+const ImageWithFallback: React.FC<{
+  src?: string;
+  alt: string;
+  className?: string;
+}> = ({ src, alt, className }) => {
   const [error, setError] = useState(false);
-  
+
   if (!src || error) {
     return (
-      <div className={`${className} flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300`}>
+      <div
+        className={`${className} flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300`}
+      >
         <Package className="w-1/2 h-1/2 text-gray-400" />
       </div>
     );
   }
-  
-  return <img src={src} alt={alt} className={className} onError={() => setError(true)} />;
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      onError={() => setError(true)}
+    />
+  );
 };
 
 // Delete Confirmation Modal
@@ -71,8 +84,8 @@ const DeleteModal: React.FC<{
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 z-10 animate-in zoom-in-95 duration-200">
         <div className="p-6">
           <div className="flex items-center gap-4 mb-4">
@@ -80,18 +93,27 @@ const DeleteModal: React.FC<{
               <AlertTriangle className="w-6 h-6 text-red-600" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900">Delete {type === 'product' ? 'Product' : 'Material'}?</h3>
-              <p className="text-sm text-gray-500 mt-1">This action cannot be undone</p>
+              <h3 className="text-xl font-bold text-gray-900">
+                Delete {type === 'product' ? 'Product' : 'Material'}?
+              </h3>
+              <p className="text-sm text-gray-500 mt-1">
+                This action cannot be undone
+              </p>
             </div>
           </div>
           <p className="text-gray-600 mb-6">
-            Are you sure you want to delete <span className="font-bold text-gray-900">"{itemName}"</span>?
+            Are you sure you want to delete{' '}
+            <span className="font-bold text-gray-900">"{itemName}"</span>?
           </p>
           <div className="flex gap-3 justify-end">
-            <Button variant="outline" onClick={onClose} className="px-6 py-2 rounded-xl">
+            <Button
+              variant="outline"
+              onClick={onClose}
+              className="px-6 py-2 rounded-xl"
+            >
               Cancel
             </Button>
-            <Button 
+            <Button
               onClick={onConfirm}
               className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl"
             >
@@ -124,20 +146,20 @@ const ProductModal: React.FC<{
   const nameRef = useRef<HTMLInputElement | null>(null);
   const fileUrlRef = useRef<string | null>(null);
   const hasOpened = useRef(false);
-  
+
   useEffect(() => {
     if (!open) {
       hasOpened.current = false;
       return;
     }
-    
+
     // Only focus on first open
     if (!hasOpened.current) {
       const focusTimer = setTimeout(() => nameRef.current?.focus(), 100);
       hasOpened.current = true;
       return () => clearTimeout(focusTimer);
     }
-    
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
@@ -166,8 +188,11 @@ const ProductModal: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70" onClick={onClose} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70"
+        onClick={onClose}
+      />
       <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl w-full mx-3 sm:mx-4 z-10 animate-in zoom-in-95 duration-300 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 z-10 bg-gradient-to-br from-green-600 via-green-700 to-emerald-700 px-4 sm:px-6 lg:px-8 pt-5 sm:pt-6 lg:pt-8 pb-4 sm:pb-5 lg:pb-6 border-b border-green-100">
           <div className="flex items-start justify-between gap-3 sm:gap-4">
@@ -180,11 +205,16 @@ const ProductModal: React.FC<{
                   {mode === 'edit' ? 'Edit Product' : 'Add New Product'}
                 </h3>
                 <p className="text-xs sm:text-sm text-green-50/90 mt-0.5 sm:mt-1">
-                  {mode === 'edit' ? 'Update product details' : 'Fill in the product information'}
+                  {mode === 'edit'
+                    ? 'Update product details'
+                    : 'Fill in the product information'}
                 </p>
               </div>
             </div>
-            <button onClick={onClose} className="text-white/80 hover:text-white hover:bg-white/20 p-2 sm:p-2.5 lg:p-3 rounded-xl sm:rounded-2xl transition-all duration-200 flex-shrink-0">
+            <button
+              onClick={onClose}
+              className="text-white/80 hover:text-white hover:bg-white/20 p-2 sm:p-2.5 lg:p-3 rounded-xl sm:rounded-2xl transition-all duration-200 flex-shrink-0"
+            >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
@@ -202,22 +232,36 @@ const ProductModal: React.FC<{
                 <Input
                   ref={nameRef as any}
                   value={formData.name}
-                  onChange={(e) => setFormData((prev: any) => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev: any) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }))
+                  }
                   placeholder="e.g., Eco-Friendly Water Bottle"
                   className="h-10 sm:h-11 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl"
                 />
               </div>
 
               <div>
-                <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">Product Description</label>
+                <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">
+                  Product Description
+                </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData((prev: any) => ({ ...prev, description: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev: any) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
                   placeholder="Brief description of the product..."
                   className="w-full min-h-[80px] sm:min-h-[100px] p-2.5 sm:p-3 resize-none bg-gray-50 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl text-sm sm:text-base outline-none transition-all"
                   maxLength={250}
                 />
-                <p className="text-[10px] sm:text-xs text-gray-400 mt-1">{formData.description.length}/250 characters</p>
+                <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
+                  {formData.description.length}/250 characters
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
@@ -226,9 +270,15 @@ const ProductModal: React.FC<{
                     <Tag className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
                     Category <span className="text-red-500">*</span>
                   </label>
-                  <select 
-                    value={formData.category} 
-                    onChange={(e) => setFormData((prev: any) => ({ ...prev, category: e.target.value, subcategory: '' }))}
+                  <select
+                    value={formData.category}
+                    onChange={(e) =>
+                      setFormData((prev: any) => ({
+                        ...prev,
+                        category: e.target.value,
+                        subcategory: '',
+                      }))
+                    }
                     className="w-full h-10 sm:h-11 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl px-2.5 sm:px-3 bg-white text-sm sm:text-base"
                   >
                     <option value="">Select</option>
@@ -238,10 +288,17 @@ const ProductModal: React.FC<{
                 </div>
 
                 <div>
-                  <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">Subcategory <span className="text-red-500">*</span></label>
-                  <select 
-                    value={formData.subcategory} 
-                    onChange={(e) => setFormData((prev: any) => ({ ...prev, subcategory: e.target.value }))}
+                  <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">
+                    Subcategory <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={formData.subcategory}
+                    onChange={(e) =>
+                      setFormData((prev: any) => ({
+                        ...prev,
+                        subcategory: e.target.value,
+                      }))
+                    }
                     className="w-full h-10 sm:h-11 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl px-2.5 sm:px-3 bg-white text-sm sm:text-base"
                     disabled={!formData.category}
                   >
@@ -268,11 +325,18 @@ const ProductModal: React.FC<{
 
               <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
                 <div>
-                  <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">Stocks <span className="text-red-500">*</span></label>
+                  <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">
+                    Stocks <span className="text-red-500">*</span>
+                  </label>
                   <Input
                     type="number"
                     value={formData.stocks}
-                    onChange={(e) => setFormData((prev: any) => ({ ...prev, stocks: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev: any) => ({
+                        ...prev,
+                        stocks: e.target.value,
+                      }))
+                    }
                     placeholder="0"
                     min="0"
                     className="h-10 sm:h-11 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl"
@@ -280,11 +344,18 @@ const ProductModal: React.FC<{
                 </div>
 
                 <div>
-                  <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">Required Points <span className="text-red-500">*</span></label>
+                  <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">
+                    Required Points <span className="text-red-500">*</span>
+                  </label>
                   <Input
                     type="number"
                     value={formData.requiredPoints}
-                    onChange={(e) => setFormData((prev: any) => ({ ...prev, requiredPoints: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev: any) => ({
+                        ...prev,
+                        requiredPoints: e.target.value,
+                      }))
+                    }
                     placeholder="0"
                     min="0"
                     className="h-10 sm:h-11 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl"
@@ -293,10 +364,12 @@ const ProductModal: React.FC<{
               </div>
 
               <div>
-                <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">Product Image</label>
-                <input 
-                  type="file" 
-                  accept="image/*" 
+                <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">
+                  Product Image
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
                   onChange={onFileChange}
                   className="block w-full text-xs sm:text-sm text-gray-600 file:mr-3 sm:file:mr-4 file:py-2 sm:file:py-2.5 file:px-3 sm:file:px-5 file:rounded-xl file:border-0 file:text-xs sm:file:text-sm file:font-bold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 file:cursor-pointer cursor-pointer border-2 border-dashed border-gray-300 rounded-xl p-2 bg-gray-50/50"
                 />
@@ -305,11 +378,17 @@ const ProductModal: React.FC<{
 
             {/* Right Column - Image Preview */}
             <div>
-              <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">Image Preview</label>
+              <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">
+                Image Preview
+              </label>
               <div className="relative w-full h-[280px] sm:h-[350px] lg:h-[400px] rounded-xl sm:rounded-2xl overflow-hidden border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
                 {formData.image ? (
                   <>
-                    <ImageWithFallback src={formData.image} alt={formData.name || 'preview'} className="w-full h-full object-contain" />
+                    <ImageWithFallback
+                      src={formData.image}
+                      alt={formData.name || 'preview'}
+                      className="w-full h-full object-contain"
+                    />
                     <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-green-600 text-white text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg shadow-lg">
                       ✓ Ready
                     </div>
@@ -319,8 +398,12 @@ const ProductModal: React.FC<{
                     <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-gray-200 flex items-center justify-center">
                       <Package className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
                     </div>
-                    <p className="text-xs sm:text-sm text-gray-500 font-semibold">No image yet</p>
-                    <p className="text-[10px] sm:text-xs text-gray-400 mt-1">Upload to preview</p>
+                    <p className="text-xs sm:text-sm text-gray-500 font-semibold">
+                      No image yet
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
+                      Upload to preview
+                    </p>
                   </div>
                 )}
               </div>
@@ -329,14 +412,31 @@ const ProductModal: React.FC<{
         </div>
 
         <div className="sticky bottom-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-5 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
-          <p className="text-[10px] sm:text-xs text-gray-500 font-medium"><span className="text-red-500">*</span> Required fields</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 font-medium">
+            <span className="text-red-500">*</span> Required fields
+          </p>
           <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
-            <Button variant="outline" onClick={onClose} className="flex-1 sm:flex-none px-4 sm:px-5 py-2 rounded-xl text-sm">Cancel</Button>
-            <Button onClick={onSubmit} className="flex-1 sm:flex-none px-5 sm:px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-xl shadow-lg text-sm">
+            <Button
+              variant="outline"
+              onClick={onClose}
+              className="flex-1 sm:flex-none px-4 sm:px-5 py-2 rounded-xl text-sm"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={onSubmit}
+              className="flex-1 sm:flex-none px-5 sm:px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-xl shadow-lg text-sm"
+            >
               {mode === 'edit' ? (
-                <><CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 inline" /> Update Product</>
+                <>
+                  <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 inline" />{' '}
+                  Update Product
+                </>
               ) : (
-                <><Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 inline" /> Add Product</>
+                <>
+                  <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 inline" />{' '}
+                  Add Product
+                </>
               )}
             </Button>
           </div>
@@ -363,20 +463,20 @@ const MaterialModal: React.FC<{
   const nameRef = useRef<HTMLInputElement | null>(null);
   const fileUrlRef = useRef<string | null>(null);
   const hasOpened = useRef(false);
-  
+
   useEffect(() => {
     if (!open) {
       hasOpened.current = false;
       return;
     }
-    
+
     // Only focus on first open
     if (!hasOpened.current) {
       const focusTimer = setTimeout(() => nameRef.current?.focus(), 100);
       hasOpened.current = true;
       return () => clearTimeout(focusTimer);
     }
-    
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
@@ -405,8 +505,11 @@ const MaterialModal: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70" onClick={onClose} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70"
+        onClick={onClose}
+      />
       <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-3xl w-full mx-3 sm:mx-4 z-10 animate-in zoom-in-95 duration-300 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 z-10 bg-gradient-to-br from-green-600 via-green-700 to-emerald-700 px-4 sm:px-6 lg:px-8 pt-5 sm:pt-6 lg:pt-8 pb-4 sm:pb-5 lg:pb-6 border-b border-green-100">
           <div className="flex items-start justify-between gap-3 sm:gap-4">
@@ -419,11 +522,16 @@ const MaterialModal: React.FC<{
                   {mode === 'edit' ? 'Edit Material' : 'Add New Material'}
                 </h3>
                 <p className="text-xs sm:text-sm text-green-50/90 mt-0.5 sm:mt-1">
-                  {mode === 'edit' ? 'Update material details' : 'Fill in the material information'}
+                  {mode === 'edit'
+                    ? 'Update material details'
+                    : 'Fill in the material information'}
                 </p>
               </div>
             </div>
-            <button onClick={onClose} className="text-white/80 hover:text-white hover:bg-white/20 p-2 sm:p-2.5 lg:p-3 rounded-xl sm:rounded-2xl transition-all duration-200 flex-shrink-0">
+            <button
+              onClick={onClose}
+              className="text-white/80 hover:text-white hover:bg-white/20 p-2 sm:p-2.5 lg:p-3 rounded-xl sm:rounded-2xl transition-all duration-200 flex-shrink-0"
+            >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
@@ -441,48 +549,81 @@ const MaterialModal: React.FC<{
                 <Input
                   ref={nameRef as any}
                   value={formData.name}
-                  onChange={(e) => setFormData((prev: any) => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev: any) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }))
+                  }
                   placeholder="e.g., Recycled Aluminum"
                   className="h-10 sm:h-12 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl"
                 />
               </div>
 
               <div>
-                <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">Material Description</label>
+                <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">
+                  Material Description
+                </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData((prev: any) => ({ ...prev, description: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev: any) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
                   placeholder="Brief description of the material..."
                   className="w-full min-h-[100px] sm:min-h-[140px] p-2.5 sm:p-3 resize-none bg-gray-50 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl text-sm sm:text-base outline-none transition-all"
                   maxLength={250}
                 />
-                <p className="text-[10px] sm:text-xs text-gray-400 mt-1">{formData.description.length}/250 characters</p>
+                <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
+                  {formData.description.length}/250 characters
+                </p>
               </div>
 
               <div>
-                <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">Points per Kilogram <span className="text-red-500">*</span></label>
+                <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">
+                  Points per Kilogram <span className="text-red-500">*</span>
+                </label>
                 <Input
                   type="number"
                   value={formData.pointsPerKg}
-                  onChange={(e) => setFormData((prev: any) => ({ ...prev, pointsPerKg: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev: any) => ({
+                      ...prev,
+                      pointsPerKg: e.target.value,
+                    }))
+                  }
                   placeholder="0"
                   min="0"
                   step="0.01"
                   className="h-10 sm:h-12 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl"
                 />
                 <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 flex items-center gap-1.5">
-                  <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                   Points awarded per kilogram of this material
                 </p>
               </div>
 
               <div>
-                <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">Material Image</label>
-                <input 
-                  type="file" 
-                  accept="image/*" 
+                <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">
+                  Material Image
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
                   onChange={onFileChange}
                   className="block w-full text-xs sm:text-sm text-gray-600 file:mr-3 sm:file:mr-4 file:py-2 sm:file:py-2.5 file:px-3 sm:file:px-5 file:rounded-xl file:border-0 file:text-xs sm:file:text-sm file:font-bold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 file:cursor-pointer cursor-pointer border-2 border-dashed border-gray-300 rounded-xl p-2 bg-gray-50/50"
                 />
@@ -491,11 +632,17 @@ const MaterialModal: React.FC<{
 
             {/* Right Column - Image Preview */}
             <div>
-              <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">Image Preview</label>
+              <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 block">
+                Image Preview
+              </label>
               <div className="relative w-full h-[280px] sm:h-[380px] lg:h-[420px] rounded-xl sm:rounded-2xl overflow-hidden border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
                 {formData.image ? (
                   <>
-                    <ImageWithFallback src={formData.image} alt={formData.name || 'preview'} className="w-full h-full object-contain" />
+                    <ImageWithFallback
+                      src={formData.image}
+                      alt={formData.name || 'preview'}
+                      className="w-full h-full object-contain"
+                    />
                     <div className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-green-600 text-white text-[10px] sm:text-xs font-bold px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg shadow-lg">
                       ✓ Ready
                     </div>
@@ -505,8 +652,12 @@ const MaterialModal: React.FC<{
                     <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-gray-200 flex items-center justify-center">
                       <Box className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
                     </div>
-                    <p className="text-xs sm:text-sm text-gray-500 font-semibold">No image yet</p>
-                    <p className="text-[10px] sm:text-xs text-gray-400 mt-1">Upload to preview</p>
+                    <p className="text-xs sm:text-sm text-gray-500 font-semibold">
+                      No image yet
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
+                      Upload to preview
+                    </p>
                   </div>
                 )}
               </div>
@@ -515,14 +666,31 @@ const MaterialModal: React.FC<{
         </div>
 
         <div className="sticky bottom-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-5 bg-gray-50 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
-          <p className="text-[10px] sm:text-xs text-gray-500 font-medium"><span className="text-red-500">*</span> Required fields</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 font-medium">
+            <span className="text-red-500">*</span> Required fields
+          </p>
           <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
-            <Button variant="outline" onClick={onClose} className="flex-1 sm:flex-none px-4 sm:px-5 py-2 rounded-xl text-sm">Cancel</Button>
-            <Button onClick={onSubmit} className="flex-1 sm:flex-none px-5 sm:px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-xl shadow-lg text-sm">
+            <Button
+              variant="outline"
+              onClick={onClose}
+              className="flex-1 sm:flex-none px-4 sm:px-5 py-2 rounded-xl text-sm"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={onSubmit}
+              className="flex-1 sm:flex-none px-5 sm:px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-xl shadow-lg text-sm"
+            >
               {mode === 'edit' ? (
-                <><CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 inline" /> Update Material</>
+                <>
+                  <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 inline" />{' '}
+                  Update Material
+                </>
               ) : (
-                <><Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 inline" /> Add Material</>
+                <>
+                  <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 inline" />{' '}
+                  Add Material
+                </>
               )}
             </Button>
           </div>
@@ -544,7 +712,8 @@ const Inventory: React.FC = () => {
     {
       id: '680212ebec8f3c32f1aeff0f',
       name: 'Eco Rug',
-      image: 'https://images.unsplash.com/photo-1567016432779-2e1b4b4b0a4b?auto=format&fit=crop&w=800&q=60',
+      image:
+        'https://images.unsplash.com/photo-1567016432779-2e1b4b4b0a4b?auto=format&fit=crop&w=800&q=60',
       category: 'Non Agricultural / Household',
       description: 'Handmade eco-friendly rug from recycled materials',
       stocks: 15,
@@ -553,7 +722,8 @@ const Inventory: React.FC = () => {
     {
       id: '6802139aec8f3c32f1aeff1e',
       name: 'Eco Bag',
-      image: 'https://images.unsplash.com/photo-1520975922242-8f8b0d7f3f6f?auto=format&fit=crop&w=800&q=60',
+      image:
+        'https://images.unsplash.com/photo-1520975922242-8f8b0d7f3f6f?auto=format&fit=crop&w=800&q=60',
       category: 'Non Agricultural / Clothing',
       description: 'Reusable shopping bag made from organic cotton',
       stocks: 42,
@@ -562,7 +732,8 @@ const Inventory: React.FC = () => {
     {
       id: '68021467ec8f3c32f1aeff24',
       name: 'Liquid Fertilizer',
-      image: 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=800&q=60',
+      image:
+        'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=800&q=60',
       category: 'Agricultural / Fertilizers',
       description: 'Organic liquid fertilizer for healthy plant growth',
       stocks: 28,
@@ -574,14 +745,16 @@ const Inventory: React.FC = () => {
     {
       id: '6803639330d494ae93ac5e3f',
       name: 'PET Bottles',
-      image: 'https://images.unsplash.com/photo-1560807707-8cc77767d783?auto=format&fit=crop&w=800&q=60',
+      image:
+        'https://images.unsplash.com/photo-1560807707-8cc77767d783?auto=format&fit=crop&w=800&q=60',
       description: 'Clean PET bottles ready for recycling',
       pointsPerKg: 5.5,
     },
     {
       id: '680363d830d494ae93ac5e45',
       name: 'Mixed Plastics',
-      image: 'https://images.unsplash.com/photo-1581578017426-6d4d7b2b8c9b?auto=format&fit=crop&w=800&q=60',
+      image:
+        'https://images.unsplash.com/photo-1581578017426-6d4d7b2b8c9b?auto=format&fit=crop&w=800&q=60',
       description: 'Soft and hard plastic materials for processing',
       pointsPerKg: 3.2,
     },
@@ -594,12 +767,16 @@ const Inventory: React.FC = () => {
   const [materialMode, setMaterialMode] = useState<'add' | 'edit'>('add');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editingMaterial, setEditingMaterial] = useState<Material | null>(null);
-  const [deleteModal, setDeleteModal] = useState<{ open: boolean; item: any; type: 'product' | 'material' | null }>({
+  const [deleteModal, setDeleteModal] = useState<{
+    open: boolean;
+    item: any;
+    type: 'product' | 'material' | null;
+  }>({
     open: false,
     item: null,
     type: null,
   });
-  
+
   const [productFormData, setProductFormData] = useState({
     name: '',
     description: '',
@@ -659,7 +836,10 @@ const Inventory: React.FC = () => {
     const q = search.trim().toLowerCase();
     if (!q) return products;
     return products.filter(
-      (p) => p.name.toLowerCase().includes(q) || p.id.includes(q) || p.category?.toLowerCase().includes(q)
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.id.includes(q) ||
+        p.category?.toLowerCase().includes(q)
     );
   }, [products, search]);
 
@@ -672,14 +852,25 @@ const Inventory: React.FC = () => {
   }, [materials, search]);
 
   function handleAddProduct() {
-    if (!productFormData.name.trim()) return alert('Please enter a product name');
-    if (!productFormData.category.trim()) return alert('Please select a category');
-    if (!productFormData.subcategory.trim()) return alert('Please select a subcategory');
-    if (!productFormData.stocks.trim() || Number(productFormData.stocks) < 0) return alert('Please enter valid stocks');
-    if (!productFormData.requiredPoints.trim() || Number(productFormData.requiredPoints) < 0) return alert('Please enter valid required points');
+    if (!productFormData.name.trim())
+      return alert('Please enter a product name');
+    if (!productFormData.category.trim())
+      return alert('Please select a category');
+    if (!productFormData.subcategory.trim())
+      return alert('Please select a subcategory');
+    if (!productFormData.stocks.trim() || Number(productFormData.stocks) < 0)
+      return alert('Please enter valid stocks');
+    if (
+      !productFormData.requiredPoints.trim() ||
+      Number(productFormData.requiredPoints) < 0
+    )
+      return alert('Please enter valid required points');
 
     const newProduct: Product = {
-      id: productMode === 'edit' && editingProduct ? editingProduct.id : Date.now().toString(16),
+      id:
+        productMode === 'edit' && editingProduct
+          ? editingProduct.id
+          : Date.now().toString(16),
       name: productFormData.name.trim(),
       image: productFormData.image || '',
       category: `${productFormData.category.trim()} / ${productFormData.subcategory.trim()}`,
@@ -689,7 +880,9 @@ const Inventory: React.FC = () => {
     };
 
     if (productMode === 'edit' && editingProduct) {
-      setProducts((prev) => prev.map((p) => (p.id === editingProduct.id ? newProduct : p)));
+      setProducts((prev) =>
+        prev.map((p) => (p.id === editingProduct.id ? newProduct : p))
+      );
       setSuccessMessage('Product updated successfully!');
     } else {
       setProducts((prev) => [newProduct, ...prev]);
@@ -700,11 +893,19 @@ const Inventory: React.FC = () => {
   }
 
   function handleAddMaterial() {
-    if (!materialFormData.name.trim()) return alert('Please enter a material name');
-    if (!materialFormData.pointsPerKg.trim() || Number(materialFormData.pointsPerKg) < 0) return alert('Please enter valid points per kilogram');
+    if (!materialFormData.name.trim())
+      return alert('Please enter a material name');
+    if (
+      !materialFormData.pointsPerKg.trim() ||
+      Number(materialFormData.pointsPerKg) < 0
+    )
+      return alert('Please enter valid points per kilogram');
 
     const newMaterial: Material = {
-      id: materialMode === 'edit' && editingMaterial ? editingMaterial.id : Date.now().toString(16),
+      id:
+        materialMode === 'edit' && editingMaterial
+          ? editingMaterial.id
+          : Date.now().toString(16),
       name: materialFormData.name.trim(),
       image: materialFormData.image || '',
       description: materialFormData.description.trim() || undefined,
@@ -712,7 +913,9 @@ const Inventory: React.FC = () => {
     };
 
     if (materialMode === 'edit' && editingMaterial) {
-      setMaterials((prev) => prev.map((m) => (m.id === editingMaterial.id ? newMaterial : m)));
+      setMaterials((prev) =>
+        prev.map((m) => (m.id === editingMaterial.id ? newMaterial : m))
+      );
       setSuccessMessage('Material updated successfully!');
     } else {
       setMaterials((prev) => [newMaterial, ...prev]);
@@ -725,7 +928,7 @@ const Inventory: React.FC = () => {
   function handleEditProduct(product: Product) {
     setProductMode('edit');
     setEditingProduct(product);
-    
+
     const [cat, subcat] = product.category?.split(' / ') || ['', ''];
     setProductFormData({
       name: product.name,
@@ -736,21 +939,21 @@ const Inventory: React.FC = () => {
       requiredPoints: product.requiredPoints?.toString() || '',
       image: product.image || '',
     });
-    
+
     setShowProductModal(true);
   }
 
   function handleEditMaterial(material: Material) {
     setMaterialMode('edit');
     setEditingMaterial(material);
-    
+
     setMaterialFormData({
       name: material.name,
       description: material.description || '',
       pointsPerKg: material.pointsPerKg?.toString() || '',
       image: material.image || '',
     });
-    
+
     setShowMaterialModal(true);
   }
 
@@ -760,7 +963,7 @@ const Inventory: React.FC = () => {
 
   function confirmDelete() {
     if (!deleteModal.item || !deleteModal.type) return;
-    
+
     if (deleteModal.type === 'product') {
       setProducts((prev) => prev.filter((p) => p.id !== deleteModal.item.id));
       setSuccessMessage('Product deleted successfully!');
@@ -768,12 +971,12 @@ const Inventory: React.FC = () => {
       setMaterials((prev) => prev.filter((m) => m.id !== deleteModal.item.id));
       setSuccessMessage('Material deleted successfully!');
     }
-    
+
     setDeleteModal({ open: false, item: null, type: null });
   }
 
-  const lowStockCount = products.filter(p => (p.stocks || 0) < 10).length;
-  const outOfStockCount = products.filter(p => (p.stocks || 0) === 0).length;
+  const lowStockCount = products.filter((p) => (p.stocks || 0) < 10).length;
+  const outOfStockCount = products.filter((p) => (p.stocks || 0) === 0).length;
 
   if (isLoading) {
     return (
@@ -891,7 +1094,9 @@ const Inventory: React.FC = () => {
                   <p className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
                     Low Stock
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">{lowStockCount}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
+                    {lowStockCount}
+                  </p>
                 </div>
               </div>
               <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -911,7 +1116,9 @@ const Inventory: React.FC = () => {
                   <p className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
                     Out of Stock
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">{outOfStockCount}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
+                    {outOfStockCount}
+                  </p>
                 </div>
               </div>
               <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -932,7 +1139,10 @@ const Inventory: React.FC = () => {
             </p>
           </div>
           <Button
-            onClick={() => { setProductMode('add'); setShowProductModal(true); }}
+            onClick={() => {
+              setProductMode('add');
+              setShowProductModal(true);
+            }}
             className="bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
           >
             <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add Product
@@ -1039,7 +1249,10 @@ const Inventory: React.FC = () => {
             </p>
           </div>
           <Button
-            onClick={() => { setMaterialMode('add'); setShowMaterialModal(true); }}
+            onClick={() => {
+              setMaterialMode('add');
+              setShowMaterialModal(true);
+            }}
             className="bg-gradient-to-r from-emerald-600 to-green-700 hover:from-emerald-700 hover:to-green-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
           >
             <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add Material

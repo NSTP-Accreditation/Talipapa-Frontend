@@ -66,7 +66,12 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   if (!isOpen || !guideline) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center p-4 z-[1003]">
+    <div
+      className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div className="w-full max-w-2xl bg-white rounded-xl shadow-xl overflow-hidden">
         <div className="p-6">
           <div className="flex items-start gap-3">

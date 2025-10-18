@@ -128,7 +128,7 @@ const GreenPages: React.FC = () => {
     data: staffDirectoryData,
     loading: staffLoading,
     error: staffError,
-    refetch: staffRefetch
+    refetch: staffRefetch,
   } = useFetchData<Staff[]>(
     farmData?._id ? `/staff/farm/${farmData._id}` : null
   );
@@ -296,12 +296,10 @@ const GreenPages: React.FC = () => {
     }
     setIsSubmitting(true);
 
-    const position = staffForm.position
-      .split(', ')
-      .map((position) => ({
-        id: position.toLowerCase().split(' ').join('_'),
-        label: position.charAt(0).toUpperCase() + position.slice(1),
-      }));    
+    const position = staffForm.position.split(', ').map((position) => ({
+      id: position.toLowerCase().split(' ').join('_'),
+      label: position.charAt(0).toUpperCase() + position.slice(1),
+    }));
 
     const payload = { ...staffForm, position };
 
@@ -562,7 +560,7 @@ const GreenPages: React.FC = () => {
         {/* Enhanced Add Staff Modal */}
         {isAddStaffModalOpen && (
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-1003 p-4 animate-fadeIn"
+            className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn"
             role="dialog"
             aria-modal="true"
             onClick={(e) => {
@@ -965,7 +963,10 @@ const GreenPages: React.FC = () => {
                           type="tel"
                           value={staffForm.contact_number}
                           onChange={(e) =>
-                            handleStaffFormChange('contact_number', e.target.value)
+                            handleStaffFormChange(
+                              'contact_number',
+                              e.target.value
+                            )
                           }
                           className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium"
                           placeholder="09123456789"
@@ -1027,7 +1028,7 @@ const GreenPages: React.FC = () => {
         {/* Skill -> Staff Modal */}
         {skillModalOpen && (
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[1003] p-4"
+            className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn"
             onClick={(e) => {
               if (e.target === e.currentTarget) setSkillModalOpen(false);
             }}

@@ -327,13 +327,12 @@ export default function TalipapaNatin() {
 
       {/* Edit Modal */}
       {isModalOpen && editing && (
-        <div className="fixed inset-0 z-1003 flex items-center justify-center p-4 ">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={closeModal}
-          />
-
+        <div
+          className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeModal();
+          }}
+        >
           {/* Modal */}
           <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-hidden z-10 flex flex-col">
             {/* Modal Header */}

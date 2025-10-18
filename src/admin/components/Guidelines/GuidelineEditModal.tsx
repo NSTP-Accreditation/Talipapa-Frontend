@@ -297,7 +297,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 backdrop-blur-md z-[9999] flex items-center justify-center p-4 sm:p-5"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 sm:p-5"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
