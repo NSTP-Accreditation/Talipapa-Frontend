@@ -194,7 +194,10 @@ const ProductModal: React.FC<{
         onClick={onClose}
       />
       <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl w-full mx-3 sm:mx-4 z-10 animate-in zoom-in-95 duration-300 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 z-10 bg-gradient-to-br from-green-600 via-green-700 to-emerald-700 px-4 sm:px-6 lg:px-8 pt-5 sm:pt-6 lg:pt-8 pb-4 sm:pb-5 lg:pb-6 border-b border-green-100">
+        <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
+
           <div className="flex items-start justify-between gap-3 sm:gap-4">
             <div className="flex items-center gap-3 sm:gap-4">
               <div className="p-2.5 sm:p-3 lg:p-4 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg ring-1 ring-white/30">
@@ -213,7 +216,7 @@ const ProductModal: React.FC<{
             </div>
             <button
               onClick={onClose}
-              className="text-white/80 hover:text-white hover:bg-white/20 p-2 sm:p-2.5 lg:p-3 rounded-xl sm:rounded-2xl transition-all duration-200 flex-shrink-0"
+              className="text-white/80 hover:text-white hover:bg-white/20 p-2 sm:p-2.5 lg:p-3 rounded-xl sm:rounded-2xl backdrop-blur-sm flex items-center justify-center transition-all duration-200 flex-shrink-0"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
@@ -511,7 +514,10 @@ const MaterialModal: React.FC<{
         onClick={onClose}
       />
       <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-3xl w-full mx-3 sm:mx-4 z-10 animate-in zoom-in-95 duration-300 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 z-10 bg-gradient-to-br from-green-600 via-green-700 to-emerald-700 px-4 sm:px-6 lg:px-8 pt-5 sm:pt-6 lg:pt-8 pb-4 sm:pb-5 lg:pb-6 border-b border-green-100">
+        <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
+
           <div className="flex items-start justify-between gap-3 sm:gap-4">
             <div className="flex items-center gap-3 sm:gap-4">
               <div className="p-2.5 sm:p-3 lg:p-4 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg ring-1 ring-white/30">
@@ -530,7 +536,7 @@ const MaterialModal: React.FC<{
             </div>
             <button
               onClick={onClose}
-              className="text-white/80 hover:text-white hover:bg-white/20 p-2 sm:p-2.5 lg:p-3 rounded-xl sm:rounded-2xl transition-all duration-200 flex-shrink-0"
+              className="text-white/80 hover:text-white hover:bg-white/20 p-2 sm:p-2.5 lg:p-3 rounded-xl sm:rounded-2xl backdrop-blur-sm flex items-center justify-center transition-all duration-200 flex-shrink-0"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
