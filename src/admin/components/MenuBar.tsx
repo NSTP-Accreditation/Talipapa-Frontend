@@ -18,8 +18,6 @@ import {
   FileBarChart,
   Coins,
   ArrowRightLeft,
-  Box,
-  Wrench,
   Trophy,
   Recycle,
   Sprout,
@@ -124,18 +122,6 @@ const MenuBar: React.FC<MenuBarProps> = ({
       icon: <Package className="w-5 h-5" />,
       label: 'Inventory',
       href: APP_ROUTES.ADMIN.INVENTORY,
-      submenu: [
-        {
-          icon: <Box className="w-4 h-4" />,
-          label: 'Products',
-          href: APP_ROUTES.ADMIN.INVENTORY + '?tab=products',
-        },
-        {
-          icon: <Wrench className="w-4 h-4" />,
-          label: 'Materials',
-          href: APP_ROUTES.ADMIN.INVENTORY + '?tab=materials',
-        },
-      ],
     },
     {
       icon: <FileText className="w-5 h-5" />,
