@@ -87,7 +87,7 @@ const DeleteModal: React.FC<{
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
       <div className="absolute inset-0 bg-black/70" onClick={onClose} />
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 z-10 animate-in zoom-in-95 duration-200">
         <div className="p-6">
@@ -974,11 +974,14 @@ const Inventory: React.FC = () => {
     setDeleteModal({ open: true, item, type });
   }
 
-  function confirmDelete() {
+  async function confirmDelete() {
     if (!deleteModal.item || !deleteModal.type) return;
 
     if (deleteModal.type === 'product') {
-      // setProducts((prev) => prev.filter((p) => p.id !== deleteModal.item.id));
+      await authFetch(`/products/${deleteModal?.item.id}`, {
+        method: "DELETE"
+      })
+      await refetchProduct();
       setSuccessMessage('Product deleted successfully!');
     } else {
       setMaterials((prev) => prev.filter((m) => m.id !== deleteModal.item.id));
