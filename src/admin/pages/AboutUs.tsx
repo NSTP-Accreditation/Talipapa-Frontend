@@ -5,6 +5,73 @@ import useFetchData from '../hooks/useFetchData';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import OfficialsPanel from '../components/OfficialsPanel';
 
+interface ContentModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  content: string;
+  onSave: (content: string) => void;
+}
+
+const ContentModal: React.FC<ContentModalProps> = ({
+  isOpen,
+  onClose,
+  title,
+  content,
+  onSave,
+}) => {
+  const [editedContent, setEditedContent] = useState(content);
+
+  useEffect(() => {
+    setEditedContent(content);
+  }, [content, isOpen]);
+
+  const handleSave = () => {
+    onSave(editedContent);
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+        <div className="bg-[#1b4c2e] text-white px-6 py-4 flex justify-between items-center">
+          <h2 className="text-xl font-bold">Edit {title}</h2>
+          <button
+            onClick={onClose}
+            className="text-white hover:text-gray-200 transition-colors text-2xl"
+          >
+            ×
+          </button>
+        </div>
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+          <textarea
+            value={editedContent}
+            onChange={(e) => setEditedContent(e.target.value)}
+            className="w-full h-64 p-3 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1b4c2e] focus:border-transparent"
+            placeholder={`Enter ${title.toLowerCase()} content...`}
+          />
+        </div>
+        <div className="px-6 py-4 bg-gray-50 flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 bg-[#1b4c2e] text-white rounded-md hover:bg-[#2d6b42] transition-colors"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function AboutBarangayEditable() {
   const {
     data,
@@ -21,12 +88,8 @@ export default function AboutBarangayEditable() {
     barangayDescription?: string;
   }>();
 
-  // Edit Mode States
-  const [isEditingInfo, setIsEditingInfo] = useState(false);
-  const [isEditingHistory, setIsEditingHistory] = useState(false);
-  const [isEditingMission, setIsEditingMission] = useState(false);
-  const [isEditingVision, setIsEditingVision] = useState(false);
-  const [isEditingOfficials, setIsEditingOfficials] = useState(false);
+  // Centralized modal state
+  const [activeModal, setActiveModal] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const authFetch = useAuthFetch();
 
@@ -57,7 +120,7 @@ export default function AboutBarangayEditable() {
         <div className="mt-4">
           <button
             onClick={() => refetch()}
-            className="px-4 py-2 bg-green-600 text-white rounded-md"
+            className="px-4 py-2 bg-[#1b4c2e] text-white rounded-md hover:bg-[#2d6b42] transition-colors"
           >
             Retry
           </button>
@@ -65,8 +128,6 @@ export default function AboutBarangayEditable() {
       </div>
     );
   }
-
-  // Editable Handlers
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -82,13 +143,6 @@ export default function AboutBarangayEditable() {
         setPageContent(result as any);
       }
 
-      // Clear edit flags
-      setIsEditingInfo(false);
-      setIsEditingHistory(false);
-      setIsEditingMission(false);
-      setIsEditingVision(false);
-      setIsEditingOfficials(false);
-
       await refetch();
 
       alert('✅ All changes saved successfully!');
@@ -101,22 +155,60 @@ export default function AboutBarangayEditable() {
     }
   };
 
-  const hasActiveEdits =
-    isEditingInfo ||
-    isEditingHistory ||
-    isEditingMission ||
-    isEditingVision ||
-    isEditingOfficials;
+  const openModal = (type: string) => {
+    setActiveModal(type);
+  };
 
-  // (page loading already handled above)
+  const closeModal = () => {
+    setActiveModal(null);
+  };
+
+  const handleContentSave = (type: string, content: string) => {
+    setPageContent((prev) => ({
+      ...prev,
+      [type]: content,
+    }));
+  };
+
+  const getContent = (type: string) => {
+    switch (type) {
+      case 'barangayDescription':
+        return pageContent?.barangayDescription || '';
+      case 'barangayHistory':
+        return pageContent?.barangayHistory || '';
+      case 'mission':
+        return pageContent?.mission || '';
+      case 'vision':
+        return pageContent?.vision || '';
+      default:
+        return '';
+    }
+  };
+
+  const getDisplayName = (type: string) => {
+    switch (type) {
+      case 'barangayDescription':
+        return 'Barangay Information';
+      case 'barangayHistory':
+        return 'Barangay History';
+      case 'mission':
+        return 'Mission';
+      case 'vision':
+        return 'Vision';
+      default:
+        return '';
+    }
+  };
+
+  const hasUnsavedChanges = activeModal !== null;
 
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
       {/* Enhanced Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <Home className="w-10 h-10 text-green-600" />
+          <h1 className="text-4xl font-bold text-[#1b4c2e] flex items-center gap-3">
+            <Home className="w-10 h-10 text-[#1b4c2e]" />
             About Us
           </h1>
           <p className="text-lg text-gray-700 mt-3 font-medium">
@@ -125,11 +217,11 @@ export default function AboutBarangayEditable() {
         </div>
 
         {/* Save All Button */}
-        {hasActiveEdits && (
+        {hasUnsavedChanges && (
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className={`px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-2 ${isSaving ? 'opacity-60 cursor-not-allowed' : ''}`}
+            className={`px-6 py-3 bg-gradient-to-r from-[#1b4c2e] to-[#2d6b42] hover:from-[#2d6b42] hover:to-[#1b4c2e] text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-2 ${isSaving ? 'opacity-60 cursor-not-allowed' : ''}`}
           >
             {isSaving ? (
               'Saving...'
@@ -149,36 +241,22 @@ export default function AboutBarangayEditable() {
         <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
           <div className="p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <h2 className="text-2xl font-bold text-[#1b4c2e] flex items-center gap-2">
                 <span>📋</span>
                 Barangay Information
               </h2>
               <button
-                onClick={() => setIsEditingInfo(!isEditingInfo)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                onClick={() => openModal('barangayDescription')}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#1b4c2e] to-[#1b4c2e] hover:from-[#2d6b42] hover:to-[#2d6b42] rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
               >
                 <SquarePen size={14} />
-                {isEditingInfo ? 'Cancel' : 'Edit'}
+                Edit
               </button>
             </div>
 
-            {isEditingInfo ? (
-              <textarea
-                value={pageContent?.barangayDescription || ''}
-                onChange={(e) =>
-                  setPageContent((prev) => ({
-                    ...prev,
-                    barangayDescription: e.target.value,
-                  }))
-                }
-                className="w-full border-2 border-gray-300 rounded-lg p-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                rows={4}
-              />
-            ) : (
-              <p className="text-gray-700 leading-relaxed">
-                {pageContent?.barangayDescription}
-              </p>
-            )}
+            <p className="text-gray-700 leading-relaxed">
+              {pageContent?.barangayDescription || 'No information available'}
+            </p>
           </div>
         </div>
 
@@ -186,36 +264,22 @@ export default function AboutBarangayEditable() {
         <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
           <div className="p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <h2 className="text-2xl font-bold text-[#1b4c2e] flex items-center gap-2">
                 <span>📜</span>
                 Barangay History
               </h2>
               <button
-                onClick={() => setIsEditingHistory(!isEditingHistory)}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                onClick={() => openModal('barangayHistory')}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#1b4c2e] to-[#1b4c2e] hover:from-[#2d6b42] hover:to-[#2d6b42] rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
               >
                 <SquarePen size={14} />
-                {isEditingHistory ? 'Cancel' : 'Edit'}
+                Edit
               </button>
             </div>
 
-            {isEditingHistory ? (
-              <textarea
-                value={pageContent?.barangayHistory || ''}
-                onChange={(e) =>
-                  setPageContent((prev) => ({
-                    ...prev,
-                    barangayHistory: e.target.value,
-                  }))
-                }
-                className="w-full border-2 border-gray-300 rounded-lg p-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                rows={4}
-              />
-            ) : (
-              <p className="text-gray-700 leading-relaxed">
-                {pageContent?.barangayHistory}
-              </p>
-            )}
+            <p className="text-gray-700 leading-relaxed">
+              {pageContent?.barangayHistory || 'No history available'}
+            </p>
           </div>
         </div>
 
@@ -225,36 +289,22 @@ export default function AboutBarangayEditable() {
           <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-[#1b4c2e] flex items-center gap-2">
                   <span>🎯</span>
                   Our Mission
                 </h2>
                 <button
-                  onClick={() => setIsEditingMission(!isEditingMission)}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                  onClick={() => openModal('mission')}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#1b4c2e] to-[#1b4c2e] hover:from-[#2d6b42] hover:to-[#2d6b42] rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
                 >
                   <SquarePen size={14} />
-                  {isEditingMission ? 'Cancel' : 'Edit'}
+                  Edit
                 </button>
               </div>
 
-              {isEditingMission ? (
-                <textarea
-                  value={pageContent?.mission || ''}
-                  onChange={(e) =>
-                    setPageContent((prev) => ({
-                      ...prev,
-                      mission: e.target.value,
-                    }))
-                  }
-                  className="w-full border-2 border-gray-300 rounded-lg p-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                  rows={5}
-                />
-              ) : (
-                <p className="text-gray-700 leading-relaxed">
-                  {pageContent?.mission}
-                </p>
-              )}
+              <p className="text-gray-700 leading-relaxed">
+                {pageContent?.mission || 'No mission statement available'}
+              </p>
             </div>
           </div>
 
@@ -262,36 +312,22 @@ export default function AboutBarangayEditable() {
           <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-[#1b4c2e] flex items-center gap-2">
                   <span>🔭</span>
                   Our Vision
                 </h2>
                 <button
-                  onClick={() => setIsEditingVision(!isEditingVision)}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
+                  onClick={() => openModal('vision')}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#1b4c2e] to-[#1b4c2e] hover:from-[#2d6b42] hover:to-[#2d6b42] rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
                 >
                   <SquarePen size={14} />
-                  {isEditingVision ? 'Cancel' : 'Edit'}
+                  Edit
                 </button>
               </div>
 
-              {isEditingVision ? (
-                <textarea
-                  value={pageContent?.vision || ''}
-                  onChange={(e) =>
-                    setPageContent((prev) => ({
-                      ...prev,
-                      vision: e.target.value,
-                    }))
-                  }
-                  className="w-full border-2 border-gray-300 rounded-lg p-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
-                  rows={5}
-                />
-              ) : (
-                <p className="text-gray-700 leading-relaxed">
-                  {pageContent?.vision}
-                </p>
-              )}
+              <p className="text-gray-700 leading-relaxed">
+                {pageContent?.vision || 'No vision statement available'}
+              </p>
             </div>
           </div>
         </div>
@@ -299,8 +335,15 @@ export default function AboutBarangayEditable() {
         {/* Barangay Officials */}
         <OfficialsPanel />
       </div>
+
+      {/* Centralized Modal */}
+      <ContentModal
+        isOpen={activeModal !== null}
+        onClose={closeModal}
+        title={getDisplayName(activeModal || '')}
+        content={getContent(activeModal || '')}
+        onSave={(content) => handleContentSave(activeModal || '', content)}
+      />
     </div>
   );
 }
-
-// (Removed old centered EditButton helper — new implementation uses per-section edit buttons)
