@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { SquarePen, Save, Home } from 'lucide-react';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import useFetchData from '../hooks/useFetchData';
@@ -34,18 +34,37 @@ const ContentModal: React.FC<ContentModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
-        <div className="bg-[#1b4c2e] text-white px-6 py-4 flex justify-between items-center">
-          <h2 className="text-xl font-bold">Edit {title}</h2>
-          <button
-            onClick={onClose}
-            className="text-white hover:text-gray-200 transition-colors text-2xl"
-          >
-            ×
-          </button>
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-hidden">
+        {/* Records-style gradient header */}
+        <div className="relative p-6 bg-gradient-to-br from-[#1b4c2e] via-[#2d6b42] to-emerald-600 text-white overflow-hidden">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -mr-24 -mt-24"></div>
+          <div className="absolute bottom-0 left-0 w-36 h-36 bg-white/10 rounded-full -ml-18 -mb-18"></div>
+
+          <div className="relative flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center ring-4 ring-white/30 shadow-lg">
+                <Home className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-0">Edit {title}</h3>
+                <p className="text-white/80 text-sm mt-1">
+                  Modify the content for {title.toLowerCase()}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-10 h-10 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all hover:rotate-90 duration-300 ring-2 ring-white/30"
+              title="Close"
+            >
+              ×
+            </button>
+          </div>
         </div>
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+
+        <div className="p-6 overflow-y-auto max-h-[calc(95vh-140px)] bg-gradient-to-br from-gray-50 to-white">
           <textarea
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
@@ -53,7 +72,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
             placeholder={`Enter ${title.toLowerCase()} content...`}
           />
         </div>
-        <div className="px-6 py-4 bg-gray-50 flex justify-end gap-3">
+
+        <div className="px-6 py-4 bg-white/50 flex justify-end gap-3">
           <button
             onClick={onClose}
             className="px-4 py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
@@ -91,6 +111,8 @@ export default function AboutBarangayEditable() {
   // Centralized modal state
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [showEditMenu, setShowEditMenu] = useState(false);
+  const editMenuRef = useRef<HTMLDivElement | null>(null);
   const authFetch = useAuthFetch();
 
   // Populate local state when data loads
@@ -105,6 +127,31 @@ export default function AboutBarangayEditable() {
       });
     }
   }, [data, dataLoading, error]);
+
+  // Close edit menu on outside click or Escape key
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      const target = e.target as Node;
+      if (
+        showEditMenu &&
+        editMenuRef.current &&
+        !editMenuRef.current.contains(target)
+      ) {
+        setShowEditMenu(false);
+      }
+    }
+
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setShowEditMenu(false);
+    }
+
+    document.addEventListener('mousedown', handleClick);
+    document.addEventListener('keydown', handleKey);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('keydown', handleKey);
+    };
+  }, [showEditMenu]);
 
   if (dataLoading) {
     return <FormTablePageSkeleton />;
@@ -200,7 +247,7 @@ export default function AboutBarangayEditable() {
     }
   };
 
-  const hasUnsavedChanges = activeModal !== null;
+  // No global save button; each modal has its own Save action
 
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
@@ -216,42 +263,90 @@ export default function AboutBarangayEditable() {
           </p>
         </div>
 
-        {/* Save All Button */}
-        {hasUnsavedChanges && (
-          <button
-            onClick={handleSave}
-            disabled={isSaving}
-            className={`px-6 py-3 bg-gradient-to-r from-[#1b4c2e] to-[#2d6b42] hover:from-[#2d6b42] hover:to-[#1b4c2e] text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-2 ${isSaving ? 'opacity-60 cursor-not-allowed' : ''}`}
-          >
-            {isSaving ? (
-              'Saving...'
-            ) : (
-              <>
-                <Save size={20} />
-                Save All Changes
-              </>
+        <div className="flex items-center gap-3">
+          {/* Edit dropdown/button aligned to the right column */}
+          <div className="relative" ref={editMenuRef}>
+            <button
+              onClick={() => setShowEditMenu((s) => !s)}
+              className="flex items-center gap-2 px-3 py-2 bg-[#1b4c2e] text-white rounded-lg shadow-sm hover:bg-[#2d6b42] transition-colors focus:outline-none focus:ring-4 focus:ring-green-200"
+              aria-expanded={showEditMenu}
+              aria-haspopup="menu"
+            >
+              <SquarePen size={14} />
+              Edit
+            </button>
+
+            {showEditMenu && (
+              <div className="absolute right-0 mt-3 w-64 bg-white border rounded-2xl shadow-2xl z-50 ring-1 ring-black/5 overflow-hidden">
+                <div className="p-2">
+                  <button
+                    onClick={() => {
+                      openModal('barangayDescription');
+                      setShowEditMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-green-100"
+                  >
+                    <Home className="w-4 h-4 text-[#1b4c2e]" />
+                    <span className="flex-1 text-left">
+                      Edit Barangay Information
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      openModal('barangayHistory');
+                      setShowEditMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm mt-1 focus:outline-none focus:ring-2 focus:ring-green-100"
+                  >
+                    <span className="w-4 h-4 text-[#1b4c2e]">📜</span>
+                    <span className="flex-1 text-left">
+                      Edit Barangay History
+                    </span>
+                  </button>
+
+                  <div className="my-2 border-t" />
+
+                  <button
+                    onClick={() => {
+                      openModal('mission');
+                      setShowEditMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-green-100"
+                  >
+                    <span className="w-4 h-4 text-[#1b4c2e]">🎯</span>
+                    <span className="flex-1 text-left">Edit Mission</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      openModal('vision');
+                      setShowEditMenu(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm mt-1 focus:outline-none focus:ring-2 focus:ring-green-100"
+                  >
+                    <span className="w-4 h-4 text-[#1b4c2e]">🔭</span>
+                    <span className="flex-1 text-left">Edit Vision</span>
+                  </button>
+                </div>
+              </div>
             )}
-          </button>
-        )}
+          </div>
+
+          {/* No global save button; each modal contains its own Save */}
+        </div>
       </div>
 
       {/* Enhanced Content Grid */}
       <div className="grid grid-cols-1 gap-6">
         {/* Barangay Information */}
-        <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
+        <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 transform hover:border-green-300">
           <div className="p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-[#1b4c2e] flex items-center gap-2">
                 <span>📋</span>
                 Barangay Information
               </h2>
-              <button
-                onClick={() => openModal('barangayDescription')}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#1b4c2e] to-[#1b4c2e] hover:from-[#2d6b42] hover:to-[#2d6b42] rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
-              >
-                <SquarePen size={14} />
-                Edit
-              </button>
             </div>
 
             <p className="text-gray-700 leading-relaxed">
@@ -261,20 +356,13 @@ export default function AboutBarangayEditable() {
         </div>
 
         {/* Barangay History */}
-        <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
+        <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 transform hover:border-green-300">
           <div className="p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-[#1b4c2e] flex items-center gap-2">
                 <span>📜</span>
                 Barangay History
               </h2>
-              <button
-                onClick={() => openModal('barangayHistory')}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#1b4c2e] to-[#1b4c2e] hover:from-[#2d6b42] hover:to-[#2d6b42] rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
-              >
-                <SquarePen size={14} />
-                Edit
-              </button>
             </div>
 
             <p className="text-gray-700 leading-relaxed">
@@ -286,20 +374,13 @@ export default function AboutBarangayEditable() {
         {/* Mission & Vision - Side by Side */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Mission */}
-          <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
+          <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 transform hover:border-green-300">
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-[#1b4c2e] flex items-center gap-2">
                   <span>🎯</span>
                   Our Mission
                 </h2>
-                <button
-                  onClick={() => openModal('mission')}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#1b4c2e] to-[#1b4c2e] hover:from-[#2d6b42] hover:to-[#2d6b42] rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
-                >
-                  <SquarePen size={14} />
-                  Edit
-                </button>
               </div>
 
               <p className="text-gray-700 leading-relaxed">
@@ -309,20 +390,13 @@ export default function AboutBarangayEditable() {
           </div>
 
           {/* Vision */}
-          <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
+          <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 transform hover:border-green-300">
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-[#1b4c2e] flex items-center gap-2">
                   <span>🔭</span>
                   Our Vision
                 </h2>
-                <button
-                  onClick={() => openModal('vision')}
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-[#1b4c2e] to-[#1b4c2e] hover:from-[#2d6b42] hover:to-[#2d6b42] rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5"
-                >
-                  <SquarePen size={14} />
-                  Edit
-                </button>
               </div>
 
               <p className="text-gray-700 leading-relaxed">
