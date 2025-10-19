@@ -138,7 +138,7 @@ const ProductModal: React.FC<{
     name: string;
     description: string;
     category: string;
-    subcategory: string;
+    subCategory: string;
     stocks: string;
     requiredPoints: string;
     image: string;
@@ -188,7 +188,7 @@ const ProductModal: React.FC<{
     const url = URL.createObjectURL(file);
     fileUrlRef.current = url;
     setFormData((prev: any) => ({ ...prev, image: url, imageFile: file }));
-  };
+  };  
 
   return (
     <div className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
@@ -298,11 +298,11 @@ const ProductModal: React.FC<{
                     Subcategory <span className="text-red-500">*</span>
                   </label>
                   <select
-                    value={formData.subcategory}
+                    value={formData.subCategory}
                     onChange={(e) =>
                       setFormData((prev: any) => ({
                         ...prev,
-                        subcategory: e.target.value,
+                        subCategory: e.target.value,
                       }))
                     }
                     className="w-full h-10 sm:h-11 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl px-3 sm:px-4 bg-white text-sm sm:text-base"
@@ -712,6 +712,8 @@ const MaterialModal: React.FC<{
 const Inventory: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { data: productsData, loading: productsDataLoading, error: productsDataErr, refetch: refetchProduct } = useFetchData("/products");
+  const { data: materialssData, loading: materialsDataLoading, error: materialsDataErr, refetch: refetchMaterials } = useFetchData("/materials");
+  
   const authFetch = useAuthFetch();
 
   useEffect(() => {
@@ -719,7 +721,7 @@ const Inventory: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const products = useMemo(() => {
+  const products: Product[] = useMemo(() => {
     if(productsData && !productsDataLoading && !productsDataErr) {
       return  productsData?.map(product => {
         const { _id, image, ...rest } = product;
@@ -733,25 +735,20 @@ const Inventory: React.FC = () => {
     return [];
   }, [productsData, productsDataLoading, productsDataErr])
 
+  const materials: Material[] = useMemo(() => {
+    if(materialssData && !materialsDataLoading && !materialsDataErr) {
+      return  materialssData?.map(material => {
+        const { _id, image, ...rest } = material;
+        return {
+          ...rest,
+          id: _id,
+          image: image.url
+        }
+      })  
+    }
+    return [];
+  }, [materialssData, materialsDataLoading, materialsDataErr])
 
-  const [materials, setMaterials] = useState<Material[]>([
-    {
-      id: '6803639330d494ae93ac5e3f',
-      name: 'PET Bottles',
-      image:
-        'https://images.unsplash.com/photo-1560807707-8cc77767d783?auto=format&fit=crop&w=800&q=60',
-      description: 'Clean PET bottles ready for recycling',
-      pointsPerKg: 5.5,
-    },
-    {
-      id: '680363d830d494ae93ac5e45',
-      name: 'Mixed Plastics',
-      image:
-        'https://images.unsplash.com/photo-1581578017426-6d4d7b2b8c9b?auto=format&fit=crop&w=800&q=60',
-      description: 'Soft and hard plastic materials for processing',
-      pointsPerKg: 3.2,
-    },
-  ]);
 
   const [search, setSearch] = useState('');
   const [showProductModal, setShowProductModal] = useState(false);
@@ -774,7 +771,7 @@ const Inventory: React.FC = () => {
     name: '',
     description: '',
     category: '',
-    subcategory: '',
+    subCategory: '',
     stocks: '',
     requiredPoints: '',
     image: '',
@@ -796,7 +793,7 @@ const Inventory: React.FC = () => {
         name: '',
         description: '',
         category: '',
-        subcategory: '',
+        subCategory: '',
         stocks: '',
         requiredPoints: '',
         image: '',
@@ -851,7 +848,7 @@ const Inventory: React.FC = () => {
       return alert('Please enter a product name');
     if (!productFormData.category.trim())
       return alert('Please select a category');
-    if (!productFormData.subcategory.trim())
+    if (!productFormData.subCategory.trim())
       return alert('Please select a subcategory');
     if (!productFormData.stocks.trim() || Number(productFormData.stocks) < 0)
       return alert('Please enter valid stocks');
@@ -859,7 +856,7 @@ const Inventory: React.FC = () => {
       !productFormData.requiredPoints.trim() ||
       Number(productFormData.requiredPoints) < 0
     )
-      return alert('Please enter valid required points');
+    return alert('Please enter valid required points');
 
     const newProduct: Product = {
       id:
@@ -893,11 +890,10 @@ const Inventory: React.FC = () => {
         })
         
         await refetchProduct();
-        setSuccessMessage('Product added successfully!');
+        setSuccessMessage(response?.message);
       }
     } catch (error) {
       console.log(error);
-      
     }
     
 
@@ -925,12 +921,12 @@ const Inventory: React.FC = () => {
     };
 
     if (materialMode === 'edit' && editingMaterial) {
-      setMaterials((prev) =>
-        prev.map((m) => (m.id === editingMaterial.id ? newMaterial : m))
-      );
+      // setMaterials((prev) =>
+      //   prev.map((m) => (m.id === editingMaterial.id ? newMaterial : m))
+      // );
       setSuccessMessage('Material updated successfully!');
     } else {
-      setMaterials((prev) => [newMaterial, ...prev]);
+      // setMaterials((prev) => [newMaterial, ...prev]);
       setSuccessMessage('Material added successfully!');
     }
 
@@ -940,17 +936,19 @@ const Inventory: React.FC = () => {
   function handleEditProduct(product: Product) {
     setProductMode('edit');
     setEditingProduct(product);
-
-    const [cat, subcat] = product.category?.split(' / ') || ['', ''];
+    
+    const category = product.category;
+    const subCategory = product.subCategory;
+    
     setProductFormData({
       name: product.name,
       description: product.description || '',
-      category: cat,
-      subcategory: subcat,
+      category: category,
+      subCategory: subCategory,
       stocks: product.stocks?.toString() || '',
       requiredPoints: product.requiredPoints?.toString() || '',
       image: product.image || '',
-      imageFile: null
+      imageFile: product.image || '',
     });
 
     setShowProductModal(true);
@@ -984,7 +982,7 @@ const Inventory: React.FC = () => {
       await refetchProduct();
       setSuccessMessage('Product deleted successfully!');
     } else {
-      setMaterials((prev) => prev.filter((m) => m.id !== deleteModal.item.id));
+      // setMaterials((prev) => prev.filter((m) => m.id !== deleteModal.item.id));
       setSuccessMessage('Material deleted successfully!');
     }
 
