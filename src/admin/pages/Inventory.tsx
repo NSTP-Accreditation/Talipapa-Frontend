@@ -507,11 +507,11 @@ const MaterialModal: React.FC<{
     if (fileUrlRef.current) URL.revokeObjectURL(fileUrlRef.current);
     const url = URL.createObjectURL(file);
     fileUrlRef.current = url;
-    setFormData((prev: any) => ({ ...prev, image: url }));
+    setFormData((prev: any) => ({ ...prev, image: url, imageFile: file }));
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
       <div
         className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70"
         onClick={onClose}
@@ -783,6 +783,7 @@ const Inventory: React.FC = () => {
     description: '',
     pointsPerKg: '',
     image: '',
+    imageFile: null
   });
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -811,6 +812,7 @@ const Inventory: React.FC = () => {
         description: '',
         pointsPerKg: '',
         image: '',
+        imageFile: null
       });
       setMaterialMode('add');
       setEditingMaterial(null);
@@ -900,7 +902,7 @@ const Inventory: React.FC = () => {
     setShowProductModal(false);
   }
 
-  function handleAddMaterial() {
+  async function handleAddMaterial() {
     if (!materialFormData.name.trim())
       return alert('Please enter a material name');
     if (
@@ -915,20 +917,32 @@ const Inventory: React.FC = () => {
           ? editingMaterial.id
           : Date.now().toString(16),
       name: materialFormData.name.trim(),
-      image: materialFormData.image || '',
+      image: materialFormData.imageFile,
       description: materialFormData.description.trim() || undefined,
       pointsPerKg: Number(materialFormData.pointsPerKg),
     };
 
-    if (materialMode === 'edit' && editingMaterial) {
-      // setMaterials((prev) =>
-      //   prev.map((m) => (m.id === editingMaterial.id ? newMaterial : m))
-      // );
-      setSuccessMessage('Material updated successfully!');
-    } else {
-      // setMaterials((prev) => [newMaterial, ...prev]);
-      setSuccessMessage('Material added successfully!');
+    const formData = new FormData();
+    Object.entries(newMaterial).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    try {
+      if (materialMode === 'edit' && editingMaterial) {
+      
+        setSuccessMessage('Material updated successfully!');
+      } else {
+        const response = await authFetch("/materials", {
+          method: "POST",
+          body: formData
+        })
+        
+        await refetchMaterials();
+        setSuccessMessage(response.message);
+      }
+    } catch (error) {
+      console.log(error);
     }
+    
 
     setShowMaterialModal(false);
   }
@@ -963,6 +977,7 @@ const Inventory: React.FC = () => {
       description: material.description || '',
       pointsPerKg: material.pointsPerKg?.toString() || '',
       image: material.image || '',
+      imageFile: null
     });
 
     setShowMaterialModal(true);
