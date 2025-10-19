@@ -1,14 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   FileText,
@@ -39,41 +32,6 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { TradingPageSkeleton } from '@/components/LoadingSkeletons';
 import useFetchData from '@/admin/hooks/useFetchData';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
-
-const wasteTypes = [
-  {
-    value: 'plastic-bottles',
-    label: 'Plastic Bottles',
-    rate: 1,
-    output: 'Good Soil',
-    options: ['Vermicomposting', 'Good Soil', 'Sacks', 'Rags'],
-    description: 'Transform plastic bottles into valuable resources',
-  },
-  {
-    value: 'paper-cardboard',
-    label: 'Paper & Cardboard',
-    rate: 1,
-    output: 'Fertilizer',
-    options: ['Fertilizer', 'Paper Pulp', 'Packaging Material'],
-    description: 'Convert paper waste into useful products',
-  },
-  {
-    value: 'organic-waste',
-    label: 'Organic Waste',
-    rate: 1,
-    output: 'Compost',
-    options: ['Compost', 'Soil Conditioner', 'Garden Mulch'],
-    description: 'Turn organic waste into nutrient-rich compost',
-  },
-  {
-    value: 'cans-metal',
-    label: 'Cans & Metal',
-    rate: 1,
-    output: 'Vermitech/Liquid Conditioner',
-    options: ['Vermitech', 'Liquid Conditioner', 'Recycled Metal Scraps'],
-    description: 'Recycle metal materials for sustainable use',
-  },
-];
 
 const programCategories = [
   {
@@ -131,6 +89,15 @@ const programCategories = [
   },
 ];
 
+type ImageData = {
+  key: string;
+  mimetype: string;
+  originalName: string;
+  size: number;
+  url?: string;
+};
+
+
 interface Record {
   _id: string;
   firstName: string;
@@ -144,17 +111,53 @@ interface Record {
   __v: number;
 }
 
+interface Product {
+  _id: string;
+  name: string;
+  image?: ImageData;
+  category?: string;
+  subCategory?: string,
+  description?: string;
+  stocks?: number;
+  requiredPoints?: number;
+}
+
+interface Material {
+  _id: string;
+  name: string;
+  image?: ImageData;
+  description?: string;
+  pointsPerKg?: number;
+}
+
 export default function Trading() {
   const { isLoading } = useLoadingState(1000);
   const authFetch = useAuthFetch();
+  const { data: productsData, loading: productsDataLoading, error: productsDataErr, refetch: refetchProduct } = useFetchData<Product[]>("/products");
+  
+  const { data: materialsData, loading: materialsDataLoading, error: materialsDataErr, refetch: refetchMaterials } = useFetchData<Material[]>("/materials");
+  
+  const materials: Material[] = useMemo(() => {
+    if(materialsData && !materialsDataLoading && !materialsDataErr) {
+      return materialsData;
+    } else {
+      return [];
+    }
+  }, [materialsData, materialsDataLoading, materialsDataErr])
+
+  const products: Product[] = useMemo(() => {
+    if(productsData && !productsDataLoading && !productsDataErr) {
+      return productsData;
+    } else {
+      return [];
+    }
+  }, [productsData, productsDataLoading, productsDataErr])
 
   const [selectedType, setSelectedType] = useState('');
   const [weight, setWeight] = useState('');
   const [result, setResult] = useState<{
     points: number;
-    output: string;
-    options?: string[];
-    image?: string;
+    options?: Product[];
   } | null>(null);
 
   // Modal state for "Check My Record"
@@ -177,23 +180,22 @@ export default function Trading() {
 
   const handleConvert = () => {
     if (selectedType && weight) {
-      const wasteType = wasteTypes.find((type) => type.value === selectedType);
-      if (wasteType) {
-        const points = parseFloat(weight) * wasteType.rate;
+      const material = materials.find(mat => mat._id === selectedType);
+      if(material) {
+        const points = parseFloat(weight) * material.pointsPerKg;
+        const options = products.filter(prod => prod.requiredPoints <= points);
         setResult({
           points,
-          output: wasteType.output,
-          options: (wasteType as any).options || [],
-          image: (wasteType as any).image,
+          options: options || [],
         });
       }
+
     } else {
       alert('Please select a recyclable type and enter weight!');
     }
   };
 
   const showRecord = async () => {
-    console.log('showRecord called', { recordId, lastName });
     try {
       const record = await authFetch(
         `/records/${recordId}?lastName=${lastName}`
@@ -212,8 +214,8 @@ export default function Trading() {
     return <TradingPageSkeleton />;
   }
 
-  const selectedWasteType = wasteTypes.find(
-    (type) => type.value === selectedType
+  const selectedWasteType = materials.find(
+    (type) => type._id === selectedType
   );
 
   return (
@@ -307,12 +309,12 @@ export default function Trading() {
                 </label>
 
                 <div className="grid grid-cols-1 gap-3">
-                  {wasteTypes.map((type) => (
+                  {materials.map((material) => (
                     <div
-                      key={type.value}
-                      onClick={() => setSelectedType(type.value)}
+                      key={material._id}
+                      onClick={() => setSelectedType(material._id)}
                       className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                        selectedType === type.value
+                        selectedType === material._id
                           ? 'border-green-500 bg-green-50 shadow-md'
                           : 'border-gray-200 bg-white hover:border-green-300 hover:shadow-sm'
                       }`}
@@ -320,13 +322,13 @@ export default function Trading() {
                       <div className="flex items-center justify-between">
                         <div>
                           <div className="font-bold text-gray-900">
-                            {type.label}
+                            {material.name}
                           </div>
                           <div className="text-sm text-gray-600 mt-1">
-                            {type.description}
+                            {material.description}
                           </div>
                         </div>
-                        {selectedType === type.value && (
+                        {selectedType === material._id && (
                           <CheckCircle className="w-5 h-5 text-green-600" />
                         )}
                       </div>
@@ -396,7 +398,7 @@ export default function Trading() {
                   <div className="flex justify-between">
                     <span className="text-gray-600">Type:</span>
                     <span className="font-medium text-gray-900">
-                      {selectedWasteType?.label || 'Not selected'}
+                      {selectedWasteType?.name || 'Not selected'}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -420,7 +422,7 @@ export default function Trading() {
                 {result && result.options && result.options.length > 0 ? (
                   <div className="space-y-2">
                     {result.options.map((opt, i) => {
-                      const key = opt.toLowerCase();
+                      const key = opt.name.toLowerCase();
                       let Icon = Box;
 
                       if (
@@ -447,7 +449,7 @@ export default function Trading() {
                         >
                           <Icon className="w-4 h-4 text-green-600" />
                           <span className="text-sm font-medium text-gray-800">
-                            {opt}
+                            {opt.name}
                           </span>
                         </div>
                       );

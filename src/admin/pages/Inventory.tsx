@@ -997,7 +997,10 @@ const Inventory: React.FC = () => {
       await refetchProduct();
       setSuccessMessage('Product deleted successfully!');
     } else {
-      // setMaterials((prev) => prev.filter((m) => m.id !== deleteModal.item.id));
+      await authFetch(`/materials/${deleteModal?.item.id}`, {
+        method: "DELETE"
+      })
+      await refetchMaterials();
       setSuccessMessage('Material deleted successfully!');
     }
 
