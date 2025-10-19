@@ -8,8 +8,17 @@ interface Official {
   _id: string;
   name: string;
   position: string;
-  image?: string | null;
+  image?: string | null | ImageInt;
+  imageFile: File | null,
   bio?: string;
+}
+
+export interface ImageInt {
+  url: string;
+  key: string;
+  originalName: string; 
+  size: string;
+  mimetype: string;
 }
 
 interface OfficialModalProps {
@@ -32,6 +41,7 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
     name: '',
     position: '',
     image: null,
+    imageFile: null,
     bio: '',
   });
 
@@ -44,6 +54,7 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
         name: '',
         position: '',
         image: null,
+        imageFile: null,
         bio: '',
       });
     }
@@ -57,6 +68,7 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
         setFormData((prev) => ({
           ...prev,
           image: event.target?.result as string,
+          imageFile: file
         }));
       };
       reader.readAsDataURL(file);
@@ -73,7 +85,7 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-1003 p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-hidden">
         {/* Records-style gradient header */}
         <div className="relative p-6 bg-gradient-to-br from-[#1b4c2e] via-[#2d6b42] to-emerald-600 text-white overflow-hidden">
@@ -112,7 +124,7 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
               <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden bg-gray-200 border-4 border-[#1b4c2e]">
                 {formData.image ? (
                   <img
-                    src={formData.image}
+                    src={typeof formData.image === "string" ? formData.image : formData.image.url}
                     alt="Official"
                     className="w-full h-full object-cover"
                   />
@@ -220,7 +232,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
+      className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -338,6 +350,12 @@ export default function OfficialsPanel() {
 
   const handleSaveOfficial = async (officialData: Official) => {
     setIsSaving(true);
+
+    const formData = new FormData();
+    formData.append("name", officialData.name);
+    formData.append("position", officialData.position);
+    formData.append("image", officialData.imageFile);
+
     try {
       if (editingOfficial) {
         // Update existing official
@@ -345,14 +363,14 @@ export default function OfficialsPanel() {
           `${import.meta.env.VITE_API_URL}/officials/${editingOfficial._id}`,
           {
             method: 'PUT',
-            body: JSON.stringify(officialData),
+            body: formData,
           }
         );
       } else {
         // Add new official
         await authFetch(`${import.meta.env.VITE_API_URL}/officials`, {
           method: 'POST',
-          body: JSON.stringify(officialData),
+          body: formData,
         });
       }
 
@@ -445,7 +463,7 @@ export default function OfficialsPanel() {
                 <div className="relative h-48 bg-gradient-to-br from-[#1b4c2e] to-[#2d6b42]">
                   {official.image ? (
                     <img
-                      src={official.image}
+                      src={typeof official.image === 'string' ? official.image : official.image?.url}
                       alt={official.name}
                       className="w-full h-full object-cover"
                     />
@@ -456,7 +474,6 @@ export default function OfficialsPanel() {
                       </div>
                     </div>
                   )}
-
                   {/* Action Buttons */}
                   <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button

@@ -30,7 +30,8 @@ import {
   Legend,
 } from 'recharts';
 import { Input } from '../../../components/ui/input';
-import { Button } from '../../../components/ui/button';
+import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
+import { Farm } from '../GreenPages';
 
 interface DataItem {
   name: string;
@@ -42,6 +43,7 @@ interface StatisticsTabProps {
   memberEachFarmData: DataItem[];
   skillsCountData: DataItem[];
   agesInAllFarmData: DataItem[];
+  refetchFarms: () => Promise<Farm[]>
 }
 
 const ResponsiveBar = ({
@@ -89,52 +91,112 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
   memberEachFarmData,
   skillsCountData,
   agesInAllFarmData,
+  refetchFarms
 }) => {
   // Modal state for Add Farm
-  const [FarisAddmOpen, setIsAddFarmOpen] = useState(false);
+  const [isAddFarmOpen, setIsAddFarmOpen] = useState(false);
   const [isSubmittingFarm, setIsSubmittingFarm] = useState(false);
   const [newFarm, setNewFarm] = useState({
-    farmName: '',
+    name: '',
     location: '',
-    contact: '',
-    membersCount: '',
+    size: '',
+    age: '',
+    farmType: '',
+    address: '',
     description: '',
+    image: null
+    
   });
+  const authFetch = useAuthFetch();
 
   const openAddFarm = () => {
     setNewFarm({
-      farmName: '',
+      name: '',
       location: '',
-      contact: '',
-      membersCount: '',
+      size: '',
+      age: '',
+      farmType: '',
+      address: '',
       description: '',
+      image: null
     });
     setIsAddFarmOpen(true);
   };
 
   const closeAddFarm = () => setIsAddFarmOpen(false);
 
+  function extractLatLong(url) {
+    // Regex to match both sets of coordinates: @latitude,longitude and 3dlatitude!4dlongitude
+    const regex = /[-+]?\d{1,2}\.\d+,\s*[-+]?\d{1,3}\.\d+/g;
+    const match = url.match(regex);
+
+    if (match && match.length > 0) {
+      const [lat, lng] = match[0]
+        .split(",")
+        .map((val) => parseFloat(val.trim()));
+      return { lat, lng };
+    } else {
+      return null;
+    }
+  }
+
+
   const handleCreateFarm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmittingFarm) return;
     // Basic validation
-    if (!newFarm.farmName || !newFarm.location) {
+    if (!newFarm.name || !newFarm.location) {
       alert('Farm name and location are required');
       return;
     }
     setIsSubmittingFarm(true);
+    if(!newFarm.image || !newFarm.description)  {
+      alert('Image and Description are required!');
+      return;
+    }
+
+    const mapLoc = extractLatLong(newFarm.location);
+
     try {
-      // TODO: replace with API call
-      console.log('Create farm', newFarm);
-      // Simulate success
-      setTimeout(() => {
-        setIsSubmittingFarm(false);
-        setIsAddFarmOpen(false);
-        alert('Farm created (stub)');
-      }, 700);
+      const formData = new FormData();
+
+      formData.append("location", JSON.stringify(mapLoc));
+      formData.append("name", newFarm.name);
+      formData.append("size", newFarm.size);
+      formData.append("age", newFarm.age);
+      formData.append("farmType", newFarm.farmType);
+      formData.append("address", newFarm.address);
+      formData.append("description", newFarm.description);
+      formData.append("image", newFarm.image);
+
+      try {
+        const res = authFetch("/farms", {
+          method: "POST",
+          body: formData
+        })
+
+        console.log(res);
+        refetchFarms();
+      } catch (error) {
+        console.log(error);
+      }
     } catch (err) {
       console.error(err);
-      setIsSubmittingFarm(false);
+    }
+    setIsSubmittingFarm(false);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setNewFarm((prev) => ({
+          ...prev,
+          image: file
+        }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -250,7 +312,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
       </Card>
 
       {/* Add Farm Modal */}
-      {FarisAddmOpen && (
+      {isAddFarmOpen && (
         <div
           className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn"
           role="dialog"
@@ -296,9 +358,10 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                     Farm Name <span className="text-red-500">*</span>
                   </label>
                   <Input
-                    value={newFarm.farmName}
+                    required
+                    value={newFarm.name}
                     onChange={(e) =>
-                      setNewFarm({ ...newFarm, farmName: e.target.value })
+                      setNewFarm({ ...newFarm, name: e.target.value })
                     }
                     placeholder="Name of the farm"
                     className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
@@ -311,11 +374,12 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                     Location <span className="text-red-500">*</span>
                   </label>
                   <Input
+                    required
                     value={newFarm.location}
                     onChange={(e) =>
                       setNewFarm({ ...newFarm, location: e.target.value })
                     }
-                    placeholder="Barangay, City"
+                    placeholder="Google Map Location"
                     className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
                   />
                 </div>
@@ -323,14 +387,15 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                 <div>
                   <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-1">
                     <Contact className="inline w-4 h-4 mr-1 text-green-600" />
-                    Contact
+                    Size <span className="text-red-500">*</span>
                   </label>
                   <Input
-                    value={newFarm.contact}
+                    required
+                    value={newFarm.size}
                     onChange={(e) =>
-                      setNewFarm({ ...newFarm, contact: e.target.value })
+                      setNewFarm({ ...newFarm, size: e.target.value })
                     }
-                    placeholder="Phone or Email"
+                    placeholder="Size"
                     className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
                   />
                 </div>
@@ -338,24 +403,73 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                 <div>
                   <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-1">
                     <UsersIcon className="inline w-4 h-4 mr-1 text-green-600" />
-                    Members Count <span className="text-red-500">*</span>
+                    Age <span className="text-red-500">*</span>
                   </label>
                   <Input
-                    value={newFarm.membersCount}
+                    required
+                    value={newFarm.age}
                     onChange={(e) =>
-                      setNewFarm({ ...newFarm, membersCount: e.target.value })
+                      setNewFarm({ ...newFarm, age: e.target.value })
                     }
-                    placeholder="Number of members"
+                    placeholder="Age"
                     className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
                   />
                 </div>
 
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-1">
+                    <Contact className="inline w-4 h-4 mr-1 tex t-green-600" />
+                    Farm Type <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    required
+                    value={newFarm.farmType}
+                    onChange={(e) =>
+                      setNewFarm({ ...newFarm, farmType: e.target.value })
+                    }
+                    placeholder="Farm Type"
+                    className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-1">
+                    <MapPin className="inline w-4 h-4 mr-1 text-green-600" />
+                    Address <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    required
+                    value={newFarm.address}
+                    onChange={(e) =>
+                      setNewFarm({ ...newFarm, address: e.target.value })
+                    }
+                    placeholder="Address"
+                    className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
+                  />
+                </div>
+                
+                <div className="sm:col-span-2 flex items-center gap-5">
+                  <label className="cursor-pointer bg-[#1b4c2e] text-white px-4 py-2 rounded-md hover:bg-[#2d6b42] transition-colors inline-block">
+                    Choose Image
+                    <input
+                      required
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </label>
+
+                  <p>File: {newFarm?.image?.name}</p>
+                </div>
+                
                 <div className="sm:col-span-2">
                   <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-1">
                     <SquarePen className="inline w-4 h-4 mr-1 text-green-600" />
                     Description <span className="text-red-500">*</span>
                   </label>
                   <textarea
+                    required
                     value={newFarm.description}
                     onChange={(e) =>
                       setNewFarm({ ...newFarm, description: e.target.value })
