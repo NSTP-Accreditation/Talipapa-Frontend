@@ -37,6 +37,7 @@ import { GreenPagesSkeleton } from '../../components/LoadingSkeletons';
 import ProfileTab from './green-pages/ProfileTab';
 import SkillMapTab from './green-pages/SkillMapTab';
 import StatisticsTab from './green-pages/StatisticsTab';
+import { ImageInt } from '../components/OfficialsPanel';
 
 type TabType = 'profile' | 'skillMap' | 'statistics';
 
@@ -55,7 +56,7 @@ export interface Farm {
   address: string;
   description: string;
   memberCount: number;
-  image?: string; // optional as it is not required in the schema
+  image?: ImageInt;
 }
 
 interface Position {
@@ -114,6 +115,7 @@ const GreenPages: React.FC = () => {
     data: farmsData,
     loading: farmsLoading,
     error: farmsError,
+    refetch: refetchFarms,
   } = useFetchData<Farm[]>('/farms');
   const [farmData, setFarmData] = useState<Farm | null>(null);
 
@@ -412,18 +414,25 @@ const GreenPages: React.FC = () => {
           <div className="lg:col-span-1 flex flex-col gap-4 sm:gap-6">
             {/* Farm Photo Placeholder */}
             <Card className="rounded-xl sm:rounded-2xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-300 group flex-shrink-0">
-              <div className="w-full h-40 sm:h-48 md:h-56 bg-gradient-to-br from-green-50 via-green-100 to-green-200 flex items-center justify-center text-gray-600 font-bold text-base sm:text-lg relative overflow-hidden">
+              <div className="w-full h-60 sm:h-48 md:h-56 bg-gradient-to-br from-green-50 via-green-100 to-green-200 flex items-center justify-center text-gray-600 font-bold text-base sm:text-lg relative overflow-hidden">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyMTYsMjM5LDIyMCwwLjQpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
-                <div className="text-center z-10 group-hover:scale-110 transition-transform duration-300">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
-                    <Sprout className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-green-600" />
-                  </div>
-                  <p className="text-green-700 font-bold text-sm sm:text-base">
-                    Farm Photo
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-green-600 mt-1">
-                    Upload Image
-                  </p>
+                <div className="text-center z-10 group-hover:scale-110 transition-transform duration-300 h-full w-full">
+                  {farmData?.image ? (
+                    <img
+                      src={farmData?.image?.url}
+                      alt="Farm image"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className='h-full flex flex-col items-center justify-center '>
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
+                        <Sprout className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-green-600" />
+                      </div>
+                      <p className="text-green-700 font-bold text-sm sm:text-base">
+                        Farm Photo
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </Card>
@@ -552,6 +561,7 @@ const GreenPages: React.FC = () => {
                 memberEachFarmData={memberEachFarmData}
                 skillsCountData={skillsCountData}
                 agesInAllFarmData={agesInAllFarmData}
+                refetchFarms={refetchFarms}
               />
             )}
           </div>

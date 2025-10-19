@@ -13,7 +13,7 @@ interface Official {
   bio?: string;
 }
 
-interface ImageInt {
+export interface ImageInt {
   url: string;
   key: string;
   originalName: string; 
