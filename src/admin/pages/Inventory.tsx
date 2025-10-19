@@ -17,12 +17,15 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { PageLoadingSkeleton } from '@/components/LoadingSkeletons';
+import useFetchData from '../hooks/useFetchData';
+import { useAuthFetch } from '../hooks/useAuthFetch';
 
 interface Product {
   id: string;
   name: string;
   image?: string;
   category?: string;
+  subCategory?: string,
   description?: string;
   stocks?: number;
   requiredPoints?: number;
@@ -184,11 +187,11 @@ const ProductModal: React.FC<{
     if (fileUrlRef.current) URL.revokeObjectURL(fileUrlRef.current);
     const url = URL.createObjectURL(file);
     fileUrlRef.current = url;
-    setFormData((prev: any) => ({ ...prev, image: url }));
+    setFormData((prev: any) => ({ ...prev, image: url, imageFile: file }));
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
       <div
         className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70"
         onClick={onClose}
@@ -308,9 +311,9 @@ const ProductModal: React.FC<{
                     <option value="">Select</option>
                     {formData.category === 'Agricultural' && (
                       <>
-                        <option value="Crops">Crops</option>
+                        <option value="Crops">Recyclable</option>
                         <option value="Fertilizers">Fertilizers</option>
-                        <option value="Seeds">Seeds</option>
+                        <option value="Seeds">Soil</option>
                         <option value="Livestock">Livestock</option>
                       </>
                     )}
@@ -708,44 +711,28 @@ const MaterialModal: React.FC<{
 
 const Inventory: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const { data: productsData, loading: productsDataLoading, error: productsDataErr, refetch: refetchProduct } = useFetchData("/products");
+  const authFetch = useAuthFetch();
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: '680212ebec8f3c32f1aeff0f',
-      name: 'Eco Rug',
-      image:
-        'https://images.unsplash.com/photo-1567016432779-2e1b4b4b0a4b?auto=format&fit=crop&w=800&q=60',
-      category: 'Non Agricultural / Household',
-      description: 'Handmade eco-friendly rug from recycled materials',
-      stocks: 15,
-      requiredPoints: 250,
-    },
-    {
-      id: '6802139aec8f3c32f1aeff1e',
-      name: 'Eco Bag',
-      image:
-        'https://images.unsplash.com/photo-1520975922242-8f8b0d7f3f6f?auto=format&fit=crop&w=800&q=60',
-      category: 'Non Agricultural / Clothing',
-      description: 'Reusable shopping bag made from organic cotton',
-      stocks: 42,
-      requiredPoints: 50,
-    },
-    {
-      id: '68021467ec8f3c32f1aeff24',
-      name: 'Liquid Fertilizer',
-      image:
-        'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=800&q=60',
-      category: 'Agricultural / Fertilizers',
-      description: 'Organic liquid fertilizer for healthy plant growth',
-      stocks: 28,
-      requiredPoints: 120,
-    },
-  ]);
+  const products = useMemo(() => {
+    if(productsData && !productsDataLoading && !productsDataErr) {
+      return  productsData?.map(product => {
+        const { _id, image, ...rest } = product;
+        return {
+          ...rest,
+          id: _id,
+          image: image.url
+        }
+      })  
+    }
+    return [];
+  }, [productsData, productsDataLoading, productsDataErr])
+
 
   const [materials, setMaterials] = useState<Material[]>([
     {
@@ -791,6 +778,7 @@ const Inventory: React.FC = () => {
     stocks: '',
     requiredPoints: '',
     image: '',
+    imageFile: null
   });
 
   const [materialFormData, setMaterialFormData] = useState({
@@ -812,6 +800,7 @@ const Inventory: React.FC = () => {
         stocks: '',
         requiredPoints: '',
         image: '',
+        imageFile: null
       });
       setProductMode('add');
       setEditingProduct(null);
@@ -857,7 +846,7 @@ const Inventory: React.FC = () => {
     );
   }, [materials, search]);
 
-  function handleAddProduct() {
+  async function handleAddProduct() {
     if (!productFormData.name.trim())
       return alert('Please enter a product name');
     if (!productFormData.category.trim())
@@ -878,22 +867,39 @@ const Inventory: React.FC = () => {
           ? editingProduct.id
           : Date.now().toString(16),
       name: productFormData.name.trim(),
-      image: productFormData.image || '',
-      category: `${productFormData.category.trim()} / ${productFormData.subcategory.trim()}`,
+      image: productFormData.imageFile,
+      category: `${productFormData.category.trim()}`,
+      subCategory: `${productFormData.category.trim()}`,
       description: productFormData.description.trim() || undefined,
       stocks: Number(productFormData.stocks),
       requiredPoints: Number(productFormData.requiredPoints),
     };
 
-    if (productMode === 'edit' && editingProduct) {
-      setProducts((prev) =>
-        prev.map((p) => (p.id === editingProduct.id ? newProduct : p))
-      );
-      setSuccessMessage('Product updated successfully!');
-    } else {
-      setProducts((prev) => [newProduct, ...prev]);
-      setSuccessMessage('Product added successfully!');
+    const formData = new FormData();
+    Object.entries(newProduct).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    try {
+      if (productMode === 'edit' && editingProduct) {
+        // setProducts((prev) =>
+        //   prev.map((p) => (p.id === editingProduct.id ? newProduct : p))
+        // );
+        setSuccessMessage('Product updated successfully!');
+      } else {
+        const response = await authFetch("/products", {
+          method: "POST",
+          body: formData
+        })
+        
+        await refetchProduct();
+        setSuccessMessage('Product added successfully!');
+      }
+    } catch (error) {
+      console.log(error);
+      
     }
+    
 
     setShowProductModal(false);
   }
@@ -944,6 +950,7 @@ const Inventory: React.FC = () => {
       stocks: product.stocks?.toString() || '',
       requiredPoints: product.requiredPoints?.toString() || '',
       image: product.image || '',
+      imageFile: null
     });
 
     setShowProductModal(true);
@@ -971,7 +978,7 @@ const Inventory: React.FC = () => {
     if (!deleteModal.item || !deleteModal.type) return;
 
     if (deleteModal.type === 'product') {
-      setProducts((prev) => prev.filter((p) => p.id !== deleteModal.item.id));
+      // setProducts((prev) => prev.filter((p) => p.id !== deleteModal.item.id));
       setSuccessMessage('Product deleted successfully!');
     } else {
       setMaterials((prev) => prev.filter((m) => m.id !== deleteModal.item.id));
