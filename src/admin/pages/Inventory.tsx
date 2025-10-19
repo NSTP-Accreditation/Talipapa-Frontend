@@ -242,7 +242,7 @@ const ProductModal: React.FC<{
                     }))
                   }
                   placeholder="e.g., Eco-Friendly Water Bottle"
-                  className="h-10 sm:h-11 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl"
+                  className="h-10 sm:h-11 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl px-3 sm:px-4"
                 />
               </div>
 
@@ -259,7 +259,7 @@ const ProductModal: React.FC<{
                     }))
                   }
                   placeholder="Brief description of the product..."
-                  className="w-full min-h-[80px] sm:min-h-[100px] p-2.5 sm:p-3 resize-none bg-gray-50 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl text-sm sm:text-base outline-none transition-all"
+                  className="w-full min-h-[80px] sm:min-h-[100px] p-3 sm:p-4 resize-none bg-gray-50 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl text-sm sm:text-base outline-none transition-all"
                   maxLength={250}
                 />
                 <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
@@ -282,7 +282,7 @@ const ProductModal: React.FC<{
                         subcategory: '',
                       }))
                     }
-                    className="w-full h-10 sm:h-11 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl px-2.5 sm:px-3 bg-white text-sm sm:text-base"
+                    className="w-full h-10 sm:h-11 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl px-3 sm:px-4 bg-white text-sm sm:text-base"
                   >
                     <option value="">Select</option>
                     <option value="Agricultural">Agricultural</option>
@@ -302,7 +302,7 @@ const ProductModal: React.FC<{
                         subcategory: e.target.value,
                       }))
                     }
-                    className="w-full h-10 sm:h-11 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl px-2.5 sm:px-3 bg-white text-sm sm:text-base"
+                    className="w-full h-10 sm:h-11 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl px-3 sm:px-4 bg-white text-sm sm:text-base"
                     disabled={!formData.category}
                   >
                     <option value="">Select</option>
@@ -342,7 +342,7 @@ const ProductModal: React.FC<{
                     }
                     placeholder="0"
                     min="0"
-                    className="h-10 sm:h-11 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl"
+                    className="h-10 sm:h-11 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl px-3 sm:px-4"
                   />
                 </div>
 
@@ -361,7 +361,7 @@ const ProductModal: React.FC<{
                     }
                     placeholder="0"
                     min="0"
-                    className="h-10 sm:h-11 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl"
+                    className="h-10 sm:h-11 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl px-3 sm:px-4"
                   />
                 </div>
               </div>
@@ -374,7 +374,7 @@ const ProductModal: React.FC<{
                   type="file"
                   accept="image/*"
                   onChange={onFileChange}
-                  className="block w-full text-xs sm:text-sm text-gray-600 file:mr-3 sm:file:mr-4 file:py-2 sm:file:py-2.5 file:px-3 sm:file:px-5 file:rounded-xl file:border-0 file:text-xs sm:file:text-sm file:font-bold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 file:cursor-pointer cursor-pointer border-2 border-dashed border-gray-300 rounded-xl p-2 bg-gray-50/50"
+                  className="block w-full text-xs sm:text-sm text-gray-600 file:mr-3 sm:file:mr-4 file:py-2 sm:file:py-2.5 file:px-3 sm:file:px-4 file:rounded-xl file:border-0 file:text-xs sm:file:text-sm file:font-bold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 file:cursor-pointer cursor-pointer border-2 border-dashed border-gray-300 rounded-xl p-3 bg-gray-50/50"
                 />
               </div>
             </div>
@@ -562,7 +562,7 @@ const MaterialModal: React.FC<{
                     }))
                   }
                   placeholder="e.g., Recycled Aluminum"
-                  className="h-10 sm:h-12 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl"
+                  className="h-10 sm:h-12 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl px-3 sm:px-4"
                 />
               </div>
 
@@ -579,7 +579,7 @@ const MaterialModal: React.FC<{
                     }))
                   }
                   placeholder="Brief description of the material..."
-                  className="w-full min-h-[100px] sm:min-h-[140px] p-2.5 sm:p-3 resize-none bg-gray-50 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl text-sm sm:text-base outline-none transition-all"
+                  className="w-full min-h-[100px] sm:min-h-[140px] p-3 sm:p-4 resize-none bg-gray-50 border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl text-sm sm:text-base outline-none transition-all"
                   maxLength={250}
                 />
                 <p className="text-[10px] sm:text-xs text-gray-400 mt-1">
@@ -603,7 +603,7 @@ const MaterialModal: React.FC<{
                   placeholder="0"
                   min="0"
                   step="0.01"
-                  className="h-10 sm:h-12 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl"
+                  className="h-10 sm:h-12 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl px-3 sm:px-4"
                 />
                 <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 flex items-center gap-1.5">
                   <svg
@@ -631,7 +631,7 @@ const MaterialModal: React.FC<{
                   type="file"
                   accept="image/*"
                   onChange={onFileChange}
-                  className="block w-full text-xs sm:text-sm text-gray-600 file:mr-3 sm:file:mr-4 file:py-2 sm:file:py-2.5 file:px-3 sm:file:px-5 file:rounded-xl file:border-0 file:text-xs sm:file:text-sm file:font-bold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 file:cursor-pointer cursor-pointer border-2 border-dashed border-gray-300 rounded-xl p-2 bg-gray-50/50"
+                  className="block w-full text-xs sm:text-sm text-gray-600 file:mr-3 sm:file:mr-4 file:py-2 sm:file:py-2.5 file:px-3 sm:file:px-4 file:rounded-xl file:border-0 file:text-xs sm:file:text-sm file:font-bold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 file:cursor-pointer cursor-pointer border-2 border-dashed border-gray-300 rounded-xl p-3 bg-gray-50/50"
                 />
               </div>
             </div>
