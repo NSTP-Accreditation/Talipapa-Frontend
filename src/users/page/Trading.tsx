@@ -26,8 +26,15 @@ import {
   Layers,
   Shirt,
   BookOpen,
+  Award,
+  Target,
+  TrendingUp,
+  Star,
+  Gift,
+  Users,
+  Globe,
+  Heart,
 } from 'lucide-react';
-// ImageWithFallback removed - replaced by list outputs
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { TradingPageSkeleton } from '@/components/LoadingSkeletons';
 import useFetchData from '@/admin/hooks/useFetchData';
@@ -40,8 +47,7 @@ const wasteTypes = [
     rate: 1,
     output: 'Good Soil',
     options: ['Vermicomposting', 'Good Soil', 'Sacks', 'Rags'],
-    image:
-      'https://images.unsplash.com/photo-1569880153113-76e33fc52d5f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYXJkZW4lMjBzb2lsJTIwY29tcG9zdHxlbnwxfHx8fDE3NTk1NjAyMzB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    description: 'Transform plastic bottles into valuable resources',
   },
   {
     value: 'paper-cardboard',
@@ -49,8 +55,7 @@ const wasteTypes = [
     rate: 1,
     output: 'Fertilizer',
     options: ['Fertilizer', 'Paper Pulp', 'Packaging Material'],
-    image:
-      'https://images.unsplash.com/photo-1539902879984-7a1fa3844e48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvcmdhbmljJTIwZmVydGlsaXplciUyMHNvaWwlMjBjb25kaXRpb25lcnxlbnwxfHx8fDE3NTk1NjAyMjJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    description: 'Convert paper waste into useful products',
   },
   {
     value: 'organic-waste',
@@ -58,8 +63,7 @@ const wasteTypes = [
     rate: 1,
     output: 'Compost',
     options: ['Compost', 'Soil Conditioner', 'Garden Mulch'],
-    image:
-      'https://images.unsplash.com/photo-1708432331128-cfe5a2803781?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb21wb3N0JTIwb3JnYW5pYyUyMHdhc3RlJTIwZmVydGlsaXplcnxlbnwxfHx8fDE3NTk1NjAyMjV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    description: 'Turn organic waste into nutrient-rich compost',
   },
   {
     value: 'cans-metal',
@@ -67,8 +71,7 @@ const wasteTypes = [
     rate: 1,
     output: 'Vermitech/Liquid Conditioner',
     options: ['Vermitech', 'Liquid Conditioner', 'Recycled Metal Scraps'],
-    image:
-      'https://images.unsplash.com/photo-1678129456841-47b1aca89e60?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2ZXJtaWNvbXBvc3QlMjBsaXF1aWQlMjBmZXJ0aWxpemVyJTIwdGVhfGVufDF8fHx8MTc1OTU2MDIyOHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    description: 'Recycle metal materials for sustainable use',
   },
 ];
 
@@ -142,7 +145,6 @@ interface Record {
 }
 
 export default function Trading() {
-  // Add loading state with 1 second display
   const { isLoading } = useLoadingState(1000);
   const authFetch = useAuthFetch();
 
@@ -157,9 +159,6 @@ export default function Trading() {
 
   // Modal state for "Check My Record"
   const [showRecordModal, setShowRecordModal] = useState(false);
-  // static points to display in the modal (replace with real value later)
-  const staticRecordPoints = 123;
-  // inputs for record lookup
   const [recordId, setRecordId] = useState('');
   const [lastName, setLastName] = useState('');
   const [recordData, setRecordData] = useState<Record | undefined>();
@@ -177,12 +176,6 @@ export default function Trading() {
   }, []);
 
   const handleConvert = () => {
-    console.log(
-      'Button clicked! selectedType:',
-      selectedType,
-      'weight:',
-      weight
-    );
     if (selectedType && weight) {
       const wasteType = wasteTypes.find((type) => type.value === selectedType);
       if (wasteType) {
@@ -199,38 +192,45 @@ export default function Trading() {
     }
   };
 
-  // Show loading skeleton while loading
-
   const showRecord = async () => {
+    console.log('showRecord called', { recordId, lastName });
     try {
       const record = await authFetch(
         `/records/${recordId}?lastName=${lastName}`
       );
+
       setRecordData(record);
       setShowRecordModal(true);
     } catch (error) {
+      // Log the actual error to the console for easier debugging
+      console.error('showRecord error:', error);
       alert('Record Not Found');
     }
   };
+
   if (isLoading) {
     return <TradingPageSkeleton />;
   }
 
+  const selectedWasteType = wasteTypes.find(
+    (type) => type.value === selectedType
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      {/* Breadcrumb - Seamless with Navbar */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50/20">
+      {/* Breadcrumb */}
       <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <nav className="flex items-center gap-2 text-sm">
             <Link
               to="/"
-              className="flex items-center gap-1.5 text-green-100 hover:text-white transition-colors group"
+              className="flex items-center gap-2 text-green-100 hover:text-white transition-all duration-300 group"
             >
               <Home className="w-4 h-4" />
-              <span className="font-medium">Home</span>
+              <span className="font-semibold">Home</span>
             </Link>
             <ChevronRight className="w-4 h-4 text-green-400" />
-            <div className="flex items-center gap-1.5 text-white font-semibold">
+            <div className="flex items-center gap-2 text-white font-bold">
               <Recycle className="w-4 h-4" />
               <span>EcoCycle Trading</span>
             </div>
@@ -238,219 +238,252 @@ export default function Trading() {
         </div>
       </div>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 md:py-16">
-        {/* Enhanced Hero Section */}
-        <div className="text-center mb-10 sm:mb-12 md:mb-16">
-          <div className="inline-block mb-4">
-            <span className="text-6xl sm:text-7xl">♻️</span>
+      {/* Hero Section */}
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
+        <div className="text-center mb-12 sm:mb-16 md:mb-20">
+          <div className="inline-block mb-6">
+            <Recycle
+              className="w-20 h-20 text-green-600 mx-auto animate-spin"
+              style={{ animationDuration: '3s' }}
+            />
           </div>
-          <h1 className="mb-5 text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900">
+
+          <h1 className="mb-6 text-5xl sm:text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-600 to-green-700">
             EcoCycle
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 px-4 font-medium max-w-3xl mx-auto leading-relaxed">
-            Calculate how much valuable product you can get from your recyclable
-            waste
+
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-700 px-4 font-medium max-w-4xl mx-auto leading-relaxed mb-8">
+            Transform your waste into{' '}
+            <span className="text-green-600 font-bold">valuable resources</span>{' '}
+            and earn <span className="text-green-600 font-bold">rewards</span>{' '}
+            while saving our planet
           </p>
-          <div className="mt-6 flex items-center justify-center gap-2 text-sm text-green-700 font-semibold">
-            <span className="px-4 py-2 bg-green-100 rounded-full border border-green-200">
-              🌱 Eco-Friendly
-            </span>
-            <span className="px-4 py-2 bg-green-100 rounded-full border border-green-200">
-              💰 Earn Points
-            </span>
-            <span className="px-4 py-2 bg-green-100 rounded-full border border-green-200">
-              🌍 Save Earth
-            </span>
+
+          {/* Feature Badges */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            {[
+              { icon: Leaf, text: 'Eco-Friendly' },
+              { icon: Star, text: 'Earn Points' },
+              { icon: Globe, text: 'Save Earth' },
+              { icon: TrendingUp, text: 'Track Progress' },
+            ].map((badge, index) => (
+              <div
+                key={index}
+                className="group px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full font-bold text-sm shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <badge.icon className="w-4 h-4" />
+                  <span>{badge.text}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Enhanced Calculator Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-16 md:mb-20">
-          {/* Enhanced Input Panel */}
-          <Card className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 hover:border-green-400 hover:shadow-2xl transition-all duration-300">
-            <CardHeader className="pb-5 bg-gradient-to-br from-green-50 to-white border-b-2 border-green-100">
-              <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 shadow-md">
+        {/* Calculator Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto mb-20">
+          {/* Input Panel */}
+          <Card className="bg-white rounded-3xl shadow-xl border border-gray-200 hover:shadow-2xl transition-all duration-300">
+            <CardHeader className="pb-6 bg-gradient-to-br from-green-600 to-green-600 text-white rounded-t-3xl">
+              <CardTitle className="text-2xl font-bold flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
                   <FileText className="w-6 h-6 text-white" />
                 </div>
-                <span>Input Waste</span>
+                <div>
+                  <span className="block">Input Your Waste</span>
+                  <span className="text-sm font-normal text-green-100 block mt-1">
+                    Select type and enter weight
+                  </span>
+                </div>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6 p-6">
-              <div>
-                <label className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2">
-                  <Trash2 className="w-4 h-4 text-green-600" />
+
+            <CardContent className="space-y-8 p-8">
+              {/* Waste Type Selection */}
+              <div className="space-y-4">
+                <label className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                  <Trash2 className="w-5 h-5 text-green-600" />
                   Select Recyclable Type:
                 </label>
-                <Select value={selectedType} onValueChange={setSelectedType}>
-                  <SelectTrigger className="bg-white h-12 px-4 w-full text-sm border-2 border-gray-300 rounded-xl shadow-sm hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-medium">
-                    <SelectValue placeholder="Choose recyclable type..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {wasteTypes.map((type) => (
-                      <SelectItem
-                        key={type.value}
-                        value={type.value}
-                        className="font-medium"
-                      >
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+
+                <div className="grid grid-cols-1 gap-3">
+                  {wasteTypes.map((type) => (
+                    <div
+                      key={type.value}
+                      onClick={() => setSelectedType(type.value)}
+                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
+                        selectedType === type.value
+                          ? 'border-green-500 bg-green-50 shadow-md'
+                          : 'border-gray-200 bg-white hover:border-green-300 hover:shadow-sm'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-bold text-gray-900">
+                            {type.label}
+                          </div>
+                          <div className="text-sm text-gray-600 mt-1">
+                            {type.description}
+                          </div>
+                        </div>
+                        {selectedType === type.value && (
+                          <CheckCircle className="w-5 h-5 text-green-600" />
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div>
-                <label className=" text-sm mb-3 font-bold text-gray-800 flex items-center gap-2">
-                  <Scale className="w-4 h-4 text-green-600" />
-                  Enter weight (kg):
+              {/* Weight Input */}
+              <div className="space-y-4">
+                <label className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                  <Scale className="w-5 h-5 text-green-600" />
+                  Enter Weight (kg):
                 </label>
-                <Input
-                  type="number"
-                  placeholder="e.g., 2.5"
-                  value={weight}
-                  onChange={(e) => setWeight(e.target.value)}
-                  className="bg-white h-12 px-4 w-full text-base border-2 border-gray-300 rounded-xl shadow-sm hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-medium"
-                />
+                <div className="relative">
+                  <Input
+                    type="number"
+                    placeholder="e.g., 2.5"
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
+                    className="h-12 px-4 text-base border-2 border-gray-300 rounded-xl hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                  />
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 font-medium">
+                    kg
+                  </div>
+                </div>
               </div>
 
+              {/* Convert Button */}
               <Button
                 onClick={handleConvert}
-                className="w-full h-12 text-base font-bold bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 mt-4"
+                disabled={!selectedType || !weight}
+                className="w-full h-12 text-base font-bold bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
-                Convert Now
+                Convert to Value
               </Button>
             </CardContent>
           </Card>
 
-          {/* Enhanced Result Panel */}
-          <Card className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 hover:border-green-400 hover:shadow-2xl transition-all duration-300">
-            <CardHeader className="pb-5 bg-gradient-to-br from-green-50 to-white border-b-2 border-green-100">
-              <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 shadow-md">
-                  <CheckCircle className="w-6 h-6 text-white" />
+          {/* Result Panel */}
+          <Card className="bg-white rounded-3xl shadow-xl border border-gray-200 hover:shadow-2xl transition-all duration-300">
+            <CardHeader className="pb-6 bg-gradient-to-br from-green-600 to-green-600 text-white rounded-t-3xl">
+              <CardTitle className="text-2xl font-bold flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                  <Award className="w-6 h-6 text-white" />
                 </div>
-                <span>Conversion Result</span>
+                <div>
+                  <span className="block">Conversion Results</span>
+                  <span className="text-sm font-normal text-green-100 block mt-1">
+                    Your environmental impact
+                  </span>
+                </div>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-5 p-6">
-              <div>
-                <p className="text-center text-base mb-6 font-bold text-gray-800 flex items-center justify-center gap-2">
-                  <span className="text-xl"></span>
-                  Your Conversion Summary
-                </p>
 
-                <div className="space-y-4">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl gap-2 sm:gap-0 border-2 border-gray-200">
-                    <span className="text-gray-700 text-sm font-bold flex items-center gap-2">
-                      <Inbox className="w-4 h-4 text-green-600" />
-                      Input:
-                    </span>
-                    <span className="text-gray-900 text-sm font-bold break-words">
-                      {weight
-                        ? `${weight} kg ${
-                            wasteTypes.find((t) => t.value === selectedType)
-                              ?.label || ''
-                          }`
-                        : 'Not calculated yet'}
+            <CardContent className="space-y-6 p-8">
+              {/* Input Summary */}
+              <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <Inbox className="w-4 h-4 text-green-600" />
+                  <span className="font-bold text-gray-800 text-sm">
+                    Input Summary
+                  </span>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Type:</span>
+                    <span className="font-medium text-gray-900">
+                      {selectedWasteType?.label || 'Not selected'}
                     </span>
                   </div>
-
-                  <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl flex flex-col items-center border-2 border-green-200">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Package className="w-4 h-4 text-green-600" />
-                      <span className="text-gray-800 text-sm font-bold">
-                        Output Product:
-                      </span>
-                    </div>
-                    <div className="mb-4">
-                      <div className="text-left w-full">
-                        <h4 className="text-sm font-bold text-gray-800 mb-2">
-                          Possible Trades / Outputs
-                        </h4>
-                        {result &&
-                        result.options &&
-                        result.options.length > 0 ? (
-                          <div className="flex flex-wrap gap-3">
-                            {result.options.map((opt, i) => {
-                              // choose an icon based on keywords
-                              const key = opt.toLowerCase();
-                              let Icon = Box;
-                              if (
-                                key.includes('compost') ||
-                                key.includes('soil') ||
-                                key.includes('mulch')
-                              )
-                                Icon = Leaf;
-                              else if (
-                                key.includes('fertilizer') ||
-                                key.includes('fertiliser') ||
-                                key.includes('fertil')
-                              )
-                                Icon = Layers;
-                              else if (
-                                key.includes('sacks') ||
-                                key.includes('package') ||
-                                key.includes('pack')
-                              )
-                                Icon = Box;
-                              else if (
-                                key.includes('rags') ||
-                                key.includes('clothes') ||
-                                key.includes('cotton') ||
-                                key.includes('shirt')
-                              )
-                                Icon = Shirt;
-                              else if (
-                                key.includes('books') ||
-                                key.includes('reading')
-                              )
-                                Icon = BookOpen;
-                              else if (
-                                key.includes('medicine') ||
-                                key.includes('herbal') ||
-                                key.includes('first aid') ||
-                                key.includes('flask')
-                              )
-                                Icon = Package;
-
-                              return (
-                                <div
-                                  key={i}
-                                  className="inline-flex items-center gap-2 bg-white/90 border border-gray-100 rounded-full px-4 py-2 shadow-sm text-base text-gray-800 font-semibold"
-                                >
-                                  <Icon className="w-5 h-5 text-green-600" />
-                                  <span>{opt}</span>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        ) : (
-                          <div className="text-sm text-gray-500">
-                            No outputs available yet
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Weight:</span>
+                    <span className="font-medium text-gray-900">
+                      {weight ? `${weight} kg` : 'Not entered'}
+                    </span>
                   </div>
                 </div>
+              </div>
 
-                <div className="mt-6 text-center pt-6 border-t-2  bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-200">
-                  <p className="text-gray-700 text-sm mb-3 font-bold tracking-wide flex items-center justify-center gap-2">
-                    <span className="text-xl"></span>
-                    TOTAL POINTS:
-                  </p>
-                  <p className="text-4xl font-bold text-green-700">
-                    {result
-                      ? `${result.points} ${result.points === 1 ? 'pt' : 'pts'}`
-                      : '0 pts'}
-                  </p>
+              {/* Output Products */}
+              <div className="p-4 bg-green-50 rounded-xl border border-green-200">
+                <div className="flex items-center gap-2 mb-3">
+                  <Package className="w-4 h-4 text-green-600" />
+                  <span className="font-bold text-gray-800 text-sm">
+                    Possible Outputs
+                  </span>
+                </div>
+
+                {result && result.options && result.options.length > 0 ? (
+                  <div className="space-y-2">
+                    {result.options.map((opt, i) => {
+                      const key = opt.toLowerCase();
+                      let Icon = Box;
+
+                      if (
+                        key.includes('compost') ||
+                        key.includes('soil') ||
+                        key.includes('mulch')
+                      ) {
+                        Icon = Leaf;
+                      } else if (key.includes('fertilizer')) {
+                        Icon = Layers;
+                      } else if (
+                        key.includes('rags') ||
+                        key.includes('clothes')
+                      ) {
+                        Icon = Shirt;
+                      } else if (key.includes('books')) {
+                        Icon = BookOpen;
+                      }
+
+                      return (
+                        <div
+                          key={i}
+                          className="flex items-center gap-2 bg-white border border-green-200 rounded-lg px-3 py-2"
+                        >
+                          <Icon className="w-4 h-4 text-green-600" />
+                          <span className="text-sm font-medium text-gray-800">
+                            {opt}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-6">
+                    <Target className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <div className="text-sm text-gray-500">
+                      Convert your waste to see possible outputs
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Points Display */}
+              <div className="p-6 bg-gradient-to-br from-green-50 to-green-50 rounded-xl border border-green-200">
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <Star className="w-5 h-5 text-green-600" />
+                    <span className="font-bold text-gray-800 text-sm">
+                      TOTAL POINTS EARNED
+                    </span>
+                  </div>
+
+                  <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-green-600">
+                    {result ? result.points : 0}
+                  </div>
+                  <div className="text-sm font-bold text-gray-600 mt-1">
+                    {result && result.points === 1 ? 'POINT' : 'POINTS'}
+                  </div>
+
                   {result && (
-                    <p className="text-xs text-green-600 mt-2 font-semibold">
-                      Great job! Keep recycling! 🌱
-                    </p>
+                    <div className="mt-3 text-xs font-medium text-green-700">
+                      Great work! Keep recycling for a better planet.
+                    </div>
                   )}
                 </div>
               </div>
@@ -458,121 +491,116 @@ export default function Trading() {
           </Card>
         </div>
 
-        {/* Enhanced Check Your Points */}
-        <div className="max-w-lg mx-auto py-12 md:py-16 px-4">
-          <div className="rounded-2xl shadow-xl p-8 w-full bg-white border-2 border-gray-200 hover:border-green-300 transition-all">
-            <div className="text-center mb-6">
-              <div className="inline-block mb-3">
-                <span className="text-5xl">🔍</span>
+        {/* Check Your Points Section */}
+        <div className="max-w-2xl mx-auto py-16 px-4">
+          <Card className="bg-white rounded-3xl shadow-xl border border-gray-200 hover:shadow-2xl transition-all duration-300">
+            <CardContent className="p-8">
+              <div className="text-center mb-8">
+                <Target className="w-12 h-12 mx-auto mb-4 text-green-600" />
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  Check Your Record Points
+                </h3>
+                <p className="text-gray-600 font-medium">
+                  Enter your details to view your recycling achievements
+                </p>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Check Your Record Points
-              </h3>
-              <p className="text-sm text-gray-600 font-medium">
-                Enter your details to view your recycling points
-              </p>
-            </div>
-            <div className="space-y-5">
-              <div>
-                <label
-                  className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2"
-                  htmlFor="record-id"
+
+              <div className="space-y-6">
+                <div>
+                  <label className="text-sm font-bold text-gray-800 flex items-center gap-2 mb-2">
+                    <FileText className="w-4 h-4 text-green-600" />
+                    Record ID
+                  </label>
+                  <Input
+                    type="text"
+                    value={recordId}
+                    onChange={(e) => setRecordId(e.target.value)}
+                    placeholder="Enter your Record ID (e.g., BT-0001)"
+                    className="h-12 px-4 rounded-xl border-2 border-gray-300 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-bold text-gray-800 flex items-center gap-2 mb-2">
+                    <Users className="w-4 h-4 text-green-600" />
+                    Last Name
+                  </label>
+                  <Input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Enter your last name"
+                    className="h-12 px-4 rounded-xl border-2 border-gray-300 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                  />
+                </div>
+
+                <Button
+                  onClick={showRecord}
+                  type="button"
+                  disabled={!recordId || !lastName}
+                  className="w-full h-12 font-bold bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
                 >
-                  <span className="text-lg"></span>
-                  Record ID
-                </label>
-                <Input
-                  id="record-id"
-                  type="text"
-                  value={recordId}
-                  onChange={(e) => setRecordId(e.target.value)}
-                  placeholder="BT-0001"
-                  className="bg-white h-12 px-4 rounded-xl border-2 border-gray-300 shadow-sm w-full text-base text-gray-900 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-medium"
-                />
+                  <Gift className="w-4 h-4 mr-2" />
+                  Check My Record
+                </Button>
               </div>
-              <div>
-                <label
-                  className="text-sm mb-3 font-bold text-gray-800 flex items-center gap-2"
-                  htmlFor="last-name"
-                >
-                  <span className="text-lg"></span>
-                  Last Name
-                </label>
-                <Input
-                  id="last-name"
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  placeholder="Enter your last name"
-                  className="bg-white h-12 px-4 rounded-xl border-2 border-gray-300 shadow-sm w-full text-base text-gray-900 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-medium"
-                />
-              </div>
-              <Button
-                className="text-white h-12 px-6 rounded-xl shadow-lg w-full transition-all text-base font-bold mt-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 hover:shadow-xl hover:-translate-y-1"
-                onClick={showRecord}
-              >
-                <span className="mr-2">🔍</span>
-                Check My Record
-              </Button>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Enhanced TaliPanahATIN Program */}
-        <Card className="shadow-xl mt-12 sm:mt-16 md:mt-20 bg-white border-2 border-gray-200 rounded-2xl overflow-hidden">
-          <CardHeader className="text-center rounded-t-2xl p-8 sm:p-10 bg-gradient-to-br from-green-600 via-green-700 to-green-800">
-            <div className="mb-4">
-              <span className="text-6xl">🌱</span>
-            </div>
-            <CardTitle className="text-2xl sm:text-3xl font-bold text-white mb-2">
+        {/* TaliPanahATIN Program */}
+        <Card className="shadow-xl mt-20 bg-white rounded-3xl border border-gray-200 overflow-hidden">
+          <CardHeader className="text-center p-12 bg-gradient-to-br from-green-700 to-green-800 text-white">
+            <Leaf className="w-16 h-16 mx-auto mb-4 text-green-200" />
+            <CardTitle className="text-3xl font-bold mb-2">
               "May Buhay sa Basura ng Barangay"
             </CardTitle>
-            <div className="text-xl sm:text-2xl font-bold text-green-100 mb-3">
+            <div className="text-xl font-bold text-green-100 mb-3">
               TaliPaPaNatin Program
             </div>
-            <p className="text-sm sm:text-base text-green-100 font-medium max-w-2xl mx-auto">
-              Community Waste Management & Sustainability Programs
+            <p className="text-green-100 font-medium max-w-2xl mx-auto">
+              Transforming communities through innovative waste management and
+              sustainability programs
             </p>
           </CardHeader>
-          <CardContent className="p-8 sm:p-10 md:p-12 bg-gradient-to-br from-gray-50 to-white">
-            <div className="text-center mb-8">
+
+          <CardContent className="p-12 bg-gradient-to-br from-gray-50 to-green-50/30">
+            <div className="text-center mb-12">
               <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Our Programs
+                Our Impact Programs
               </h3>
               <p className="text-gray-600 font-medium">
-                Transforming waste into community value
+                Creating sustainable communities through waste-to-value
+                initiatives
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {programCategories.map((category, index) => (
                 <div
                   key={index}
-                  className="rounded-2xl bg-white border-2 border-gray-200 shadow-lg hover:shadow-2xl hover:border-green-400 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                  className="rounded-2xl bg-white border border-gray-200 shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden"
                 >
-                  {/* Card Header with Gradient */}
-                  <div className="bg-gradient-to-br from-green-600 to-green-700 p-4 border-b-2 border-green-500">
+                  <div className="bg-gradient-to-r from-green-600 to-green-600 p-4 text-white">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0 shadow-md">
-                        <CheckCircle className="w-5 h-5 text-white" />
+                      <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                        <CheckCircle className="w-4 h-4 text-white" />
                       </div>
-                      <h4 className="text-sm font-bold leading-tight text-white">
+                      <h4 className="text-sm font-bold leading-tight">
                         {category.title}
                       </h4>
                     </div>
                   </div>
 
-                  {/* Card Content */}
-                  <div className="p-5">
-                    <ul className="space-y-2.5">
+                  <div className="p-4">
+                    <ul className="space-y-2">
                       {category.items.map((item, itemIndex) => (
                         <li
                           key={itemIndex}
-                          className="text-xs sm:text-sm text-gray-700 flex items-start bg-gradient-to-br from-gray-50 to-green-50/30 p-2.5 rounded-lg hover:from-green-50 hover:to-green-100/50 transition-all duration-200 border border-gray-100"
+                          className="flex items-start bg-green-50 p-2 rounded-lg border border-green-100"
                         >
-                          <span className="mr-2 mt-0.5 text-base flex-shrink-0 text-green-600">
-                            ✓
-                          </span>
-                          <span className="leading-relaxed font-medium">
+                          <CheckCircle className="w-3 h-3 text-green-600 mt-1 mr-2 flex-shrink-0" />
+                          <span className="text-xs font-medium text-gray-700 leading-relaxed">
                             {item}
                           </span>
                         </li>
@@ -585,48 +613,60 @@ export default function Trading() {
           </CardContent>
         </Card>
       </main>
-      {/* Static Record Modal */}
+
+      {/* Record Modal */}
       {showRecordModal && (
-        <div className="fixed inset-0 z-[2000] flex items-center justify-center">
+        <div className="fixed inset-0 z-1000 flex items-center justify-center p-4">
           <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-md"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowRecordModal(false)}
           />
-          <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4">
-            <div className="p-6 border-b flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
-                <img
-                  src={avatarUrl}
-                  alt="avatar"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-gray-900">
-                  {recordData?._id || 'No name provided'}
-                </h3>
-                <p className="text-sm text-gray-500">
-                  Record ID:{' '}
-                  <span className="font-medium text-gray-800">
-                    {recordData?._id || 'N/A'}
-                  </span>
-                </p>
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+            <div className="p-6 bg-gradient-to-r from-green-600 to-green-600 text-white">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-xl overflow-hidden bg-white/20">
+                  <img
+                    src={avatarUrl}
+                    alt="User Avatar"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold">
+                    {recordData?.firstName || 'User'}{' '}
+                    {recordData?.lastName || ''}
+                  </h3>
+                  <p className="text-green-100 text-sm">
+                    ID: {recordData?._id || recordId}
+                  </p>
+                </div>
               </div>
             </div>
+
             <div className="p-6 text-center">
-              <p className="text-2xl font-extrabold text-green-700 mb-2">
-                {recordData?.points} pts
-              </p>
-              <p className="text-sm text-gray-600 mb-6">
-                This is a static preview of your record points.
-              </p>
-              <div className="flex justify-center">
-                <button
-                  className="px-6 py-2 rounded-lg bg-gradient-to-r from-green-600 to-green-700 text-white font-bold"
+              <div className="mb-6">
+                <div className="text-3xl font-bold text-green-600 mb-1">
+                  {recordData?.points || 0}
+                </div>
+                <div className="text-sm font-medium text-gray-600">
+                  TOTAL POINTS
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
                   onClick={() => setShowRecordModal(false)}
+                  variant="outline"
+                  className="flex-1 border-gray-300 hover:bg-gray-50"
                 >
                   Close
-                </button>
+                </Button>
+                <Button
+                  onClick={() => setShowRecordModal(false)}
+                  className="flex-1 bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700"
+                >
+                  View Details
+                </Button>
               </div>
             </div>
           </div>

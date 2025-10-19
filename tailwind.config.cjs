@@ -19,6 +19,25 @@ module.exports = {
           800: '#143722',
         },
       },
+      keyframes: {
+        'gradient-x': {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center',
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center',
+          },
+        },
+      },
+      animation: {
+        'gradient-x': 'gradient-x 3s ease infinite',
+      },
+      boxShadow: {
+        '3xl': '0 35px 60px -12px rgba(0, 0, 0, 0.25)',
+        '4xl': '0 45px 80px -12px rgba(0, 0, 0, 0.35)',
+      },
     },
   },
   plugins: [],
