@@ -1,17 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, LogIn, LogOut, XCircle } from 'lucide-react';
 
-type AlertType = 'success' | 'logout' | 'error';
+type ToastType = 'success' | 'logout' | 'error';
 
-interface AuthAlertProps {
-  type: AlertType;
+interface Toast {
+  id: number;
+  type: ToastType;
   title: string;
   message: string;
 }
 
-export default function AuthAlert({ type, title, message }: AuthAlertProps) {
-  const [visible, setVisible] = useState(true);
-  if (!visible) return null;
+interface ToastProps {
+  toasts: Toast[];
+  removeToast: (id: number) => void;
+}
+
+const ToastMessage: React.FC<ToastProps> = ({ toasts, removeToast }) => {
+  useEffect(() => {
+    const timers = toasts.map((toast) =>
+      setTimeout(() => removeToast(toast.id), 4000)
+    );
+    return () => timers.forEach((timer) => clearTimeout(timer));
+  }, [toasts, removeToast]);
 
   const styles = {
     success: {
@@ -37,26 +47,72 @@ export default function AuthAlert({ type, title, message }: AuthAlertProps) {
     },
   };
 
-  const style = styles[type];
+  return (
+    <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 space-y-2 w-full flex flex-col items-center z-50">
+      {toasts.map((toast) => {
+        const style = styles[toast.type];
+        return (
+          <div
+            key={toast.id}
+            className={`flex items-start justify-between w-full max-w-md ${style.bg} border ${style.border} rounded-lg px-4 py-3 shadow-sm`}
+          >
+            <div className="flex gap-3">
+              {style.icon}
+              <div className="flex flex-col">
+                <span className={`font-semibold ${style.textTitle}`}>{toast.title}</span>
+                <span className={`text-sm ${style.textMsg}`}>{toast.message}</span>
+              </div>
+            </div>
+            <button
+              onClick={() => removeToast(toast.id)}
+              className="text-gray-400 hover:text-gray-600 transition"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+// Example Usage Component
+export default function ExampleAuthForm() {
+  const [toasts, setToasts] = useState<Toast[]>([]);
+
+  const addToast = (type: ToastType, title: string, message: string) => {
+    const newToast = { id: Date.now(), type, title, message };
+    setToasts((prev) => [...prev, newToast]);
+  };
+
+  const removeToast = (id: number) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
+
+  const handleLogin = (isValid: boolean) => {
+    if (isValid) {
+      addToast('success', 'Login Successful', 'Welcome back!');
+    } else {
+      addToast('error', 'Login Failed', 'Wrong credentials!');
+    }
+  };
 
   return (
-    <div
-      className={`flex items-start justify-between w-full max-w-md ${style.bg} border ${style.border} rounded-lg px-4 py-3 shadow-sm`}
-    >
-      <div className="flex gap-3">
-        {style.icon}
-        <div className="flex flex-col">
-          <span className={`font-semibold ${style.textTitle}`}>{title}</span>
-          <span className={`text-sm ${style.textMsg}`}>{message}</span>
-        </div>
-      </div>
-
+    <div className="flex flex-col items-center mt-12 space-y-4">
       <button
-        onClick={() => setVisible(false)}
-        className="text-gray-400 hover:text-gray-600 transition"
+        onClick={() => handleLogin(true)}
+        className="px-4 py-2 bg-green-600 text-white rounded"
       >
-        <X className="w-4 h-4" />
+        Simulate Success Login
       </button>
+      <button
+        onClick={() => handleLogin(false)}
+        className="px-4 py-2 bg-red-600 text-white rounded"
+      >
+        Simulate Failed Login
+      </button>
+
+      <ToastMessage toasts={toasts} removeToast={removeToast} />
     </div>
   );
 }
