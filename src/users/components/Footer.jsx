@@ -38,14 +38,18 @@ export default function Footer() {
               </div>
             </div>
 
-            <p className="text-green-100 text-sm leading-relaxed mb-4">
-              Building a sustainable, united community for a greener future.
-            </p>
+            <p className="text-center text-green-50 text-lg sm:text-xl font-medium italic leading-relaxed mb-6 animate-fadeIn">
+  “Sa <span className="font-extrabold text-lime-300">#TaliPaPaNATIN</span> may 
+  <span className="font-bold text-lime-200"> TALI</span>ino, 
+  <span className="font-bold text-yellow-200"> PA</span>kikisama, at 
+  <span className="font-bold text-rose-200"> PA</span>gmamahal.”
+</p>
+
 
             {/* Social Links - Compact */}
             <div className="flex gap-2">
               <a
-                href="https://www.facebook.com/attyericjuan"
+                href="https://web.facebook.com/TalipapaPeoplesCivicCenterD6"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
@@ -55,7 +59,7 @@ export default function Footer() {
               </a>
 
               <a
-                href="https://www.youtube.com"
+                href="https://www.youtube.com/@barangaytalipapa758"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
