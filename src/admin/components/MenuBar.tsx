@@ -22,6 +22,7 @@ import {
   Recycle,
   Sprout,
 } from 'lucide-react';
+import useFetchData from '../hooks/useFetchData';
 
 interface MenuBarProps {
   className?: string;
@@ -47,6 +48,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
   const location = useLocation();
   const { logout } = useAuth();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const {data, loading, error } = useFetchData(`/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`);
 
   const menuItems: MenuItem[] = [
     {
@@ -181,7 +183,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
           <div className="flex items-center justify-center space-x-3">
             <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-white/30">
               <img
-                src="/brgy talipapa.png"
+                src={data?.image?.url ? data.image.url : '/brgy talipapa.png'}
                 alt="Barangay Talipapa Logo"
                 className="w-11 h-11 object-contain"
               />
