@@ -153,9 +153,16 @@ const MenuBar: React.FC<MenuBarProps> = ({
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/admin/login');
+  const handleLogout = async () => {
+    await logout(); // this calls the context logout()
+
+    // delay the navigation slightly so your toast can show
+    setTimeout(() => {
+      navigate('/admin/login', {
+        state: { logoutSuccess: true },
+        replace: true,
+      });
+    }, 100);
   };
 
   return (

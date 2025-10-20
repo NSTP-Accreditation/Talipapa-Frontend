@@ -4,7 +4,7 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { APP_ROUTES } from '../../utils/constants/routes';
 import { useAuth } from '../../contexts/AuthContext';
-
+import Login from '../components/Login'; // Import your login form
 type ToastType = 'success' | 'error' | 'info' | 'warning';
 
 interface Toast {
@@ -32,27 +32,67 @@ const ToastMessage: React.FC<ToastProps> = ({ toasts, removeToast }) => {
     switch (type) {
       case 'success':
         return (
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M5 13l4 4L19 7"
+            />
           </svg>
         );
       case 'error':
         return (
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         );
       case 'warning':
         return (
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 8v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+            />
           </svg>
         );
       case 'info':
       default:
         return (
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+            />
           </svg>
         );
     }
@@ -83,11 +123,16 @@ const ToastMessage: React.FC<ToastProps> = ({ toasts, removeToast }) => {
 
             <div className="flex-1 min-w-0">
               {toast.title && (
-                <p className="text-sm font-semibold mb-0" style={{ color: '#1a4d2e' }}>
+                <p
+                  className="text-sm font-semibold mb-0"
+                  style={{ color: '#1a4d2e' }}
+                >
                   {toast.title}
                 </p>
               )}
-              <p className="text-sm mt-1 break-words text-gray-700">{toast.message}</p>
+              <p className="text-sm mt-1 break-words text-gray-700">
+                {toast.message}
+              </p>
             </div>
 
             <button
@@ -95,8 +140,18 @@ const ToastMessage: React.FC<ToastProps> = ({ toasts, removeToast }) => {
               className="ml-3 p-1 rounded-md hover:bg-gray-100 transition-colors"
               aria-label="Dismiss"
             >
-              <svg className="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-4 h-4 text-gray-500"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <path
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -125,7 +180,11 @@ const AdminLogin: React.FC = () => {
   const nextIdRef = React.useRef<number>(1);
 
   // Helpers for toasts
-  const addToast = (payload: { type?: ToastType; title?: string; message: string }) => {
+  const addToast = (payload: {
+    type?: ToastType;
+    title?: string;
+    message: string;
+  }) => {
     const id = nextIdRef.current++;
     const toast: Toast = {
       id,
@@ -149,6 +208,14 @@ const AdminLogin: React.FC = () => {
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, navigate, location]);
+  // Show logout success toast if redirected from logout
+  useEffect(() => {
+    if (location.state?.logoutSuccess) {
+      addToast({ type: 'success', message: 'Logout successful!' });
+      // prevent showing again if user refreshes
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -192,7 +259,10 @@ const AdminLogin: React.FC = () => {
       } else if (errors.password) {
         addToast({ type: 'error', message: errors.password });
       } else {
-        addToast({ type: 'error', message: 'Please check the form and try again.' });
+        addToast({
+          type: 'error',
+          message: 'Please check the form and try again.',
+        });
       }
       return;
     }
@@ -202,12 +272,12 @@ const AdminLogin: React.FC = () => {
       const success = await login(formData.username, formData.password);
 
       if (success) {
-        // success toast (short-lived) then redirect
-        addToast({ type: 'success', message: 'Signed in successfully.' });
+        sessionStorage.setItem('loginSuccess', 'true'); // set flag
 
-        const from =
+        const destination =
           (location.state as any)?.from?.pathname || APP_ROUTES.ADMIN.DASHBOARD;
-        navigate(from, { replace: true });
+
+        navigate(destination, { replace: true });
       } else {
         setErrors({
           submit: 'Invalid username or password',
@@ -393,7 +463,7 @@ const AdminLogin: React.FC = () => {
             </div>
           </div>
         </div>
-      </div> 
+      </div>
     </>
   );
 };

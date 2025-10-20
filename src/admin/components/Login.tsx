@@ -6,7 +6,7 @@ type ToastType = 'success' | 'logout' | 'error';
 interface Toast {
   id: number;
   type: ToastType;
-  title: string;
+  title: string;  
   message: string;
 }
 
@@ -59,8 +59,12 @@ const ToastMessage: React.FC<ToastProps> = ({ toasts, removeToast }) => {
             <div className="flex gap-3">
               {style.icon}
               <div className="flex flex-col">
-                <span className={`font-semibold ${style.textTitle}`}>{toast.title}</span>
-                <span className={`text-sm ${style.textMsg}`}>{toast.message}</span>
+                <span className={`font-semibold ${style.textTitle}`}>
+                  {toast.title}
+                </span>
+                <span className={`text-sm ${style.textMsg}`}>
+                  {toast.message}
+                </span>
               </div>
             </div>
             <button
