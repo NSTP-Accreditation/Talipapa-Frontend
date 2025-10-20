@@ -9,12 +9,13 @@ import {
 } from '@/components/LoadingSkeletons';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { ArrowLeftRight, Search } from 'lucide-react';
+import { ImageInt } from '../components/OfficialsPanel';
 
 interface Product {
   _id: string;
   name: string;
   description: string;
-  image: string;
+  image: ImageInt;
   requiredPoints: number;
 }
 
@@ -39,8 +40,6 @@ const SwapItem = () => {
   const [quantityInputs, setQuantityInputs] = useState<Record<string, number>>(
     {}
   );
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
-
   const authFetch = useAuthFetch();
 
   const handleFindRecord = async (e: React.FormEvent) => {
@@ -56,9 +55,9 @@ const SwapItem = () => {
         `/records/${recordId}?lastName=${lastName}`
       );
       setRecordData(updatedRecord);
-      await findProducts(updatedRecord);
     } catch (error) {
       console.error('Error finding record:', error);
+      alert("No Record Found");
       setRecordData(null);
     }
   };
@@ -218,7 +217,7 @@ const SwapItem = () => {
               ) : (
                 <>
                 <Search className="w-5 h-5" />
-                 Find Record</>
+                Find Record</>
               )}
             </button>
           </div>
@@ -364,18 +363,19 @@ const ProductCard = ({
   onRedeem,
   redeemInProgress,
 }: ProductCardProps) => {
+
   return (
     <div
       className="px-6 py-6 rounded-lg text-white shadow-md"
       style={{ backgroundColor: '#1a4d2e' }}
     >
-      <div className="flex gap-5 mb-5">
+      <div className="flex flex-col sm:flex-row gap-5 mb-5">
         <div
-          className="shrink-0 p-3 rounded-lg"
+          className="shrink-0 p-3 rounded-lg grid place-items-center max-h-32"
           style={{ backgroundColor: '#F6F6F6' }}
         >
           <img
-            src={product.image || '/placeholder.png'}
+            src={product.image?.url || '/placeholder.png'}
             alt={product.name}
             className="h-20 w-24 object-contain rounded"
           />
