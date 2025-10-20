@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 
 const slides = [
-  { image: 'https://placebear.com/1600/800' },
-  { image: 'https://placebear.com/1601/800' },
-  { image: 'https://placebear.com/1602/800' },
+  { image: './build/Carousel10.jpg' },
+  { image: './build/Carousel20.jpg' },
+  { image: './build/Carousel11.jpg' },
+  { image: './build/Carousel4.jpg' },
+  { image: './build/Carousel2.jpg' },
 ];
 
 export default function Carousel() {
@@ -19,7 +21,7 @@ export default function Carousel() {
   }, [current]);
 
   return (
-    <div className="relative w-full h-[600px] overflow-hidden shadow-2xl">
+    <div className="relative w-full h-[700px] overflow-hidden shadow-2xl">
       {/* Image */}
       <img
         src={slides[current].image}
