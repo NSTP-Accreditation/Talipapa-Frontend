@@ -94,7 +94,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="/about"
+                  to="/aboutus"
                   className="text-green-100 hover:text-white transition-colors text-sm flex items-center gap-2 group"
                 >
                   <span className="w-1 h-1 bg-green-400 rounded-full group-hover:w-1.5 group-hover:h-1.5 transition-all"></span>
