@@ -179,7 +179,9 @@ export default function Footer() {
 
           <div className="flex items-center gap-1 text-green-300">
             <span>Made with</span>
-            <span className="text-red-400">❤️</span>
+            <Link to="/admin" aria-label="Go to admin" className="text-red-400 ">
+              <span>❤️</span>
+            </Link>
             <span>for the community</span>
           </div>
         </div>

@@ -19,6 +19,49 @@ import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useAuth } from '@/contexts/AuthContext';
 import dayjs from 'dayjs';
 
+// Heuristic address validator: not perfect, but rejects obvious gibberish.
+// Rules applied:
+// - Minimum length (10 chars)
+// - Must contain at least one number (house/building number) OR common address keywords
+// - Must contain at least two words (to avoid single-word gibberish)
+// - Must not be mostly repeated characters or single-letter words
+const validateAddress = (address: string) => {
+  const clean = (address || '').trim();
+  if (!clean) return { valid: false, message: 'Address is required.' };
+
+  if (clean.length < 10) {
+    return { valid: false, message: 'Address is too short.' };
+  }
+
+  // Reject if it looks like random characters, e.g., 'asdasdasd' or 'qweqwe'
+  const repeatedPattern = /(\w)\1{4,}/i; // same character 5+ times
+  if (repeatedPattern.test(clean.replace(/\s+/g, ''))) {
+    return { valid: false, message: 'Address looks invalid.' };
+  }
+
+  const words = clean.split(/\s+/).filter(Boolean);
+  if (words.length < 2) {
+    return { valid: false, message: 'Please provide a more specific address.' };
+  }
+
+  const hasNumber = /\d/.test(clean);
+  const commonKeywords = /street|st\.?|road|rd\.?|avenue|ave\.?|lane|ln\.?|boulevard|blvd\.?|drive|dr\.?|block|brgy|barangay|purok|compound|subdivision|subd\.?|sitio|zone|city|municipal|province|town|street/gi;
+
+  if (!hasNumber && !commonKeywords.test(clean)) {
+    // If no digits and no address keywords, likely not a real address
+    return { valid: false, message: 'Address should include a house number or a common address term (street, barangay, city, etc.).' };
+  }
+
+  // Reject if most tokens are single letters (e.g., 'a b c')
+  const singleLetterTokens = words.filter((w) => w.length === 1).length;
+  if (singleLetterTokens >= Math.ceil(words.length / 2)) {
+    return { valid: false, message: 'Address looks invalid.' };
+  }
+
+  // Basic pass
+  return { valid: true, message: '' };
+};
+
 const ResidentRecords: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -77,10 +120,18 @@ const ResidentRecords: React.FC = () => {
     lastName: '',
     middleName: '',
     points: 0,
-    age: 0,
+    age: '',
     contact: '',
     address: '',
   });
+  // Address validation state
+  const [addressError, setAddressError] = useState('');
+  const [isAddressValid, setIsAddressValid] = useState(false);
+  // Keep only the editable part of the contact (suffix). The fixed prefix will be '09'.
+  // Editable part is up to 9 digits so total length becomes 11 (09 + 9 digits).
+  const [contactRest, setContactRest] = useState('');
+  // Editable part for record ID. Fixed prefix will be 'BT-'. This stores the rest (e.g. '0001').
+  const [recordIdRest, setRecordIdRest] = useState('');
 
   const openAddModal = () => {
     setNewResident({
@@ -88,10 +139,12 @@ const ResidentRecords: React.FC = () => {
       lastName: '',
       middleName: '',
       points: 0,
-      age: 0,
+      age: '',
       address: '',
       contact: '',
     });
+    setContactRest('');
+    setRecordIdRest('');
     setIsAddModalOpen(true);
   };
 
@@ -104,16 +157,38 @@ const ResidentRecords: React.FC = () => {
 
     setIsCreating(true);
 
-    if (!newResident.age) {
+    if (!newResident.age || String(newResident.age).trim() === '') {
       alert('Age are required!');
       setIsCreating(false);
       return;
     }
 
+    // Validate address before submitting
+    const addressValidation = validateAddress(newResident.address || '');
+    if (!addressValidation.valid) {
+      setAddressError(addressValidation.message);
+      setIsCreating(false);
+      alert('Please enter a valid address. ' + addressValidation.message);
+      return;
+    }
+
     try {
+      // Compose full contact with fixed '09' prefix. We assume the desired total length
+      // including the prefix is 11 digits (so contactRest is max 9 digits). If contactRest
+      // is empty, we'll send an empty string for contact.
+      // Convert age to number for backend
+      const ageNumber = Number(newResident.age);
+      const payload = {
+        ...newResident,
+        age: isNaN(ageNumber) ? 0 : ageNumber,
+        contact: contactRest ? `09${contactRest}` : '',
+        // include the full record id with BT- prefix when provided
+        ...(recordIdRest ? { record_id: `BT-${recordIdRest}` } : {}),
+      };
+
       const data = await authFetch('/records', {
         method: 'POST',
-        body: JSON.stringify(newResident),
+        body: JSON.stringify(payload),
       });
 
       refetch();
@@ -134,6 +209,13 @@ const ResidentRecords: React.FC = () => {
       setRecords(recordsArray);
     }
   }, [data, loading, error]);
+
+  // Live-validate address whenever it changes
+  useEffect(() => {
+    const res = validateAddress(newResident.address || '');
+    setAddressError(res.valid ? '' : res.message);
+    setIsAddressValid(res.valid);
+  }, [newResident.address]);
 
   // Fixed Pagination logic with null checks
   const safeRecords = records || []; // This ensures we always have an array
@@ -425,6 +507,28 @@ const ResidentRecords: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  {/* Record ID with fixed BT- prefix */}
+                  <label className="block group">
+                    <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                      <span>Record ID</span>
+                    </div>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">BT-</span>
+                      <input
+                        type="text"
+                        value={recordIdRest}
+                        onChange={(e) => {
+                          // Allow digits only and limit to 4 digits
+                          const digitsOnly = e.target.value.replace(/\D/g, '');
+                          const limited = digitsOnly.slice(0, 4);
+                          setRecordIdRest(limited);
+                        }}
+                        className="w-full pl-16 border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
+                        placeholder="0001"
+                      />
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">Record ID will be stored as <span className="font-medium">BT-0001</span>. Only 4 digits allowed.</div>
+                  </label>
                   <label className="block group">
                     <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                       <span className="text-red-500">*</span>
@@ -471,12 +575,11 @@ const ResidentRecords: React.FC = () => {
 
                   <label className="block group">
                     <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
-                      <span className="text-red-500">*</span>
                       <span>Middle Name</span>
+                      
                     </div>
                     <div className="relative">
                       <input
-                        required
                         type="text"
                         value={newResident.middleName}
                         onChange={(e) =>
@@ -486,7 +589,7 @@ const ResidentRecords: React.FC = () => {
                           }))
                         }
                         className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
-                        placeholder="Enter middle name"
+                        placeholder="If none put N/A"
                       />
                     </div>
                   </label>
@@ -514,14 +617,15 @@ const ResidentRecords: React.FC = () => {
                     </div>
                     <input
                       required
-                      type="number"
-                      min="0"
-                      max="150"
-                      value={newResident.age}
+                      type="text"
+                      inputMode="numeric"
+                      pattern="\d*"
+                      value={newResident.age as string}
                       onChange={(e) =>
                         setNewResident((s) => ({
                           ...s,
-                          age: Number(e.target.value),
+                          // allow only digits and limit to 3 chars
+                          age: e.target.value.replace(/\D/g, '').slice(0, 3),
                         }))
                       }
                       className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
@@ -534,18 +638,23 @@ const ResidentRecords: React.FC = () => {
                       <Phone className="w-4 h-4 text-green-500" />
                       <span>Contact</span>
                     </div>
-                    <input
-                      type="text"
-                      value={newResident.contact}
-                      onChange={(e) =>
-                        setNewResident((s) => ({
-                          ...s,
-                          contact: e.target.value,
-                        }))
-                      }
-                      className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
-                      placeholder="09XXXXXXXXX"
-                    />
+
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">09</span>
+                      <input
+                        type="text"
+                        value={contactRest}
+                        onChange={(e) => {
+                          // Allow digits only, remove non-digits, and limit to 9 digits (since 09 + 9 = 11)
+                          const digitsOnly = e.target.value.replace(/\D/g, '');
+                          const limited = digitsOnly.slice(0, 9);
+                          setContactRest(limited);
+                        }}
+                        className="w-full pl-14 border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
+                        placeholder="9XXXXXXXX"
+                      />
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">Contact will be saved as <span className="font-medium">09XXXXXXXXX</span>. Only numbers allowed. Total digits including prefix will be 11.</div>
                   </label>
                 </div>
               </div>
@@ -574,6 +683,11 @@ const ResidentRecords: React.FC = () => {
                     className="w-full border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none"
                     placeholder="Enter complete address..."
                   />
+                  {addressError ? (
+                    <p className="text-sm text-red-600 mt-2">{addressError}</p>
+                  ) : (
+                    <p className="text-sm text-gray-500 mt-2">Provide full house number, street, barangay/purok, city or municipality.</p>
+                  )}
                 </label>
               </div>
 
@@ -605,7 +719,7 @@ const ResidentRecords: React.FC = () => {
               </button>
               <button
                 type="submit"
-                disabled={isCreating}
+                disabled={isCreating || !isAddressValid}
                 className="px-10 py-3.5 rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {isCreating ? (

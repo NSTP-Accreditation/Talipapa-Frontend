@@ -109,6 +109,33 @@ const GreenPages: React.FC = () => {
     email: '',
     contact_number: '',
   });
+  // Editable suffix of the contact number. Fixed prefix will be '09' and editable part is up to 9 digits.
+  const [contactRest, setContactRest] = useState('');
+
+  // Normalize contact display to 11-digit local format starting with '09'
+  const formatContact = (contact?: string | null) => {
+    if (!contact) return null;
+    const digits = contact.replace(/\D/g, '');
+    if (!digits) return null;
+
+    // If stored as '639XXXXXXXX' -> convert to '09XXXXXXXXX'
+    if (digits.startsWith('639') && digits.length >= 11) {
+      return '0' + digits.slice(2);
+    }
+
+    // If already '09XXXXXXXXX'
+    if (digits.startsWith('09') && digits.length === 11) {
+      return digits;
+    }
+
+    // If stored as '9XXXXXXXXX' (10 digits starting with 9), prefix 0
+    if (digits.length === 10 && digits.startsWith('9')) {
+      return '0' + digits;
+    }
+
+    // Fallback: return digits unchanged
+    return digits;
+  };
 
   // Fetch farms and use the first as the selected farm
   const {
@@ -276,6 +303,7 @@ const GreenPages: React.FC = () => {
       email: '',
       contact_number: '',
     });
+    setContactRest('');
     setIsAddStaffModalOpen(true);
   };
 
@@ -292,7 +320,8 @@ const GreenPages: React.FC = () => {
     e.preventDefault();
 
     // Validate required fields
-    if (!staffForm.name || !staffForm.position || !staffForm.contact_number) {
+    // require name, position and a full 11-digit contact (09 + 9 digits)
+    if (!staffForm.name || !staffForm.position || contactRest.length !== 9) {
       alert('Please fill in all required fields (Name, Position, Contact)');
       return;
     }
@@ -303,7 +332,7 @@ const GreenPages: React.FC = () => {
       label: position.charAt(0).toUpperCase() + position.slice(1),
     }));
 
-    const payload = { ...staffForm, position };
+  const payload = { ...staffForm, position, contact_number: contactRest ? `09${contactRest}` : '' };
 
     try {
       const result = await authFetch('/staff', {
@@ -969,19 +998,24 @@ const GreenPages: React.FC = () => {
                           <Phone className="w-4 h-4 text-green-600" />
                           Contact Number <span className="text-red-500">*</span>
                         </label>
-                        <input
-                          type="tel"
-                          value={staffForm.contact_number}
-                          onChange={(e) =>
-                            handleStaffFormChange(
-                              'contact_number',
-                              e.target.value
-                            )
-                          }
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium"
-                          placeholder="09123456789"
-                          required
-                        />
+
+                        <div className="relative">
+                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">09</span>
+                          <input
+                            type="text"
+                            value={contactRest}
+                            onChange={(e) => {
+                              const digitsOnly = e.target.value.replace(/\D/g, '');
+                              const limited = digitsOnly.slice(0, 9); // 09 + 9 digits = 11
+                              setContactRest(limited);
+                              // keep staffForm.contact_number in sync for any other uses
+                              handleStaffFormChange('contact_number', limited ? `09${limited}` : '');
+                            }}
+                            className="w-full pl-14 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium"
+                            placeholder="9XXXXXXXX"
+                          />
+                        </div>
+                        <div className="text-xs text-gray-500">Contact will be saved as <span className="font-medium">09XXXXXXXXX</span>. Only numbers allowed.</div>
                       </div>
                     </div>
                   </div>
@@ -1091,7 +1125,7 @@ const GreenPages: React.FC = () => {
                         <div className="text-right">
                           <p className="text-sm font-semibold">Contact</p>
                           <p className="text-sm text-gray-700">
-                            {s.contact_number ?? 'No contact'}
+                            {formatContact(s.contact_number) || 'No contact'}
                           </p>
                         </div>
                       </div>

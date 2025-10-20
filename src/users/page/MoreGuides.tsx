@@ -101,7 +101,7 @@ export default function MoreGuides() {
           {guides.map((guide, index) => {
             const IconComponent = getIconForCategory(guide.category);
             return (
-              <Link key={guide._id} to={guide.path} className="group">
+              <div key={guide._id} className="group">
                 <div className="bg-white border-2 border-gray-100 rounded-2xl p-6 hover:shadow-2xl hover:border-green-300 hover:-translate-y-2 transition-all duration-300 h-full flex flex-col relative overflow-hidden">
                   {/* Background Gradient on Hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -127,13 +127,15 @@ export default function MoreGuides() {
                       process, and helpful tips.
                     </p>
                     <div className="pt-4 border-t border-gray-100">
-                      <Button className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg py-2 font-semibold transition-all duration-300 group-hover:shadow-lg">
-                        View Guide →
-                      </Button>
+                      <Link to={`/guidelines/${guide._id}`} className="block">
+                        <Button className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg py-2 font-semibold transition-all duration-300 group-hover:shadow-lg">
+                          View Guide →
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>

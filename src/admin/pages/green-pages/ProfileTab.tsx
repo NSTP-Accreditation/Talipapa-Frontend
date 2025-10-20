@@ -44,6 +44,30 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 }) => {
   const loading = staffDirectory == null;
   const error = null;
+  // Normalize contact display to 11-digit local format starting with '09'
+  const formatContact = (contact?: string | null) => {
+    if (!contact) return null;
+    const digits = contact.replace(/\D/g, '');
+    if (!digits) return null;
+
+    // If stored as '639XXXXXXXX' -> convert to '09XXXXXXXXX'
+    if (digits.startsWith('639') && digits.length >= 11) {
+      return '0' + digits.slice(2);
+    }
+
+    // If already '09XXXXXXXXX'
+    if (digits.startsWith('09') && digits.length === 11) {
+      return digits;
+    }
+
+    // If stored as '9XXXXXXXXX' (10 digits starting with 9), prefix 0
+    if (digits.length === 10 && digits.startsWith('9')) {
+      return '0' + digits;
+    }
+
+    // Fallback: return digits unchanged
+    return digits;
+  };
   return (
     <Card className="rounded-2xl shadow-2xl border-2 border-gray-200">
       <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 border-b-2 border-green-500 pb-4">
@@ -139,9 +163,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
                       Contact Number
                     </p>
                     <p className="text-xs sm:text-sm md:text-base font-bold text-gray-900">
-                      {!staff.contact_number
-                        ? 'No Contact Provided'
-                        : staff.contact_number}
+                      {formatContact(staff.contact_number) || 'No Contact Provided'}
                     </p>
                   </div>
 

@@ -90,12 +90,10 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
         {/* Right Side - Admin User Info */}
         <div className="flex items-center gap-3 flex-shrink-0">
           <div className="text-right hidden lg:block">
-            <p className="text-sm font-bold leading-tight text-white">
-              {user.userData.username}
+            <p className="text-md font-bold leading-tight text-white">
+              Welcome Back, Admin {user.userData.username}
             </p>
-            <p className="text-xs font-medium mt-0.5 text-green-100">
-              Super Admin
-            </p>
+           
           </div>
           <div className="flex items-center justify-center text-green-900 font-black shadow-lg hover:shadow-xl transition-all duration-300 leading-none flex-shrink-0 cursor-pointer bg-white ring-2 ring-white/30 hover:scale-110 w-[42px] h-[42px] min-w-[42px] min-h-[42px] rounded-full text-base">
             A
