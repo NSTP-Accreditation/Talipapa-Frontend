@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 
 const slides = [
-  { image: './build/Carousel10.jpg' },
-  { image: './build/Carousel20.jpg' },
-  { image: './build/Carousel11.jpg' },
-  { image: './build/Carousel4.jpg' },
-  { image: './build/Carousel2.jpg' },
+  { image: './public/Carousel10.jpg' },
+  { image: './public/Carousel20.jpg' },
+  { image: './public/Carousel11.jpg' },
+  { image: './public/Carousel4.jpg' },
+  { image: './public/Carousel2.jpg' },
 ];
 
 export default function Carousel() {
