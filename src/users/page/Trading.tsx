@@ -167,7 +167,7 @@ export default function Trading() {
   const [recordData, setRecordData] = useState<Record | undefined>();
 
   const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    lastName || recordId || 'User'
+    lastName || (recordId ? `BT-${recordId}` : 'User')
   )}&background=2f855a&color=fff&size=256`;
 
   useEffect(() => {
@@ -197,9 +197,8 @@ export default function Trading() {
 
   const showRecord = async () => {
     try {
-      const record = await authFetch(
-        `/records/${recordId}?lastName=${lastName}`
-      );
+      const fullId = `BT-${recordId}`;
+      const record = await authFetch(`/records/${fullId}?lastName=${lastName}`);
 
       setRecordData(record);
       setShowRecordModal(true);
@@ -415,7 +414,7 @@ export default function Trading() {
                 <div className="flex items-center gap-2 mb-3">
                   <Package className="w-4 h-4 text-green-600" />
                   <span className="font-bold text-gray-800 text-sm">
-                    Possible Outputs
+                    Possible Redeemable Items
                   </span>
                 </div>
 
@@ -513,13 +512,24 @@ export default function Trading() {
                     <FileText className="w-4 h-4 text-green-600" />
                     Record ID
                   </label>
-                  <Input
-                    type="text"
-                    value={recordId}
-                    onChange={(e) => setRecordId(e.target.value)}
-                    placeholder="Enter your Record ID (e.g., BT-0001)"
-                    className="h-12 px-4 rounded-xl border-2 border-gray-300 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
-                  />
+
+                  {/* Input group with fixed BT- prefix */}
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">BT-</span>
+                    <Input
+                      type="text"
+                      value={recordId}
+                      onChange={(e) => {
+                        // Allow digits only and limit to 4 digits
+                        const digitsOnly = e.target.value.replace(/\D/g, '');
+                        const limited = digitsOnly.slice(0, 4);
+                        setRecordId(limited);
+                      }}
+                      placeholder="0001"
+                      className="h-12 pl-14 px-4 rounded-xl border-2 border-gray-300 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                    />
+                  </div>
+                 
                 </div>
 
                 <div>
@@ -655,19 +665,12 @@ export default function Trading() {
                 </div>
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex">
                 <Button
                   onClick={() => setShowRecordModal(false)}
-                  variant="outline"
-                  className="flex-1 border-gray-300 hover:bg-gray-50"
+                  className="w-full bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700"
                 >
                   Close
-                </Button>
-                <Button
-                  onClick={() => setShowRecordModal(false)}
-                  className="flex-1 bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700"
-                >
-                  View Details
                 </Button>
               </div>
             </div>
