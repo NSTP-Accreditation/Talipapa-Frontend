@@ -14,15 +14,27 @@ import {
 } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
-
-const STORAGE_KEY = 'talipapanatin_programs_v1';
+import useFetchData from '../hooks/useFetchData';
+import { useAuthFetch } from '../hooks/useAuthFetch';
 
 interface ProgramItem {
-  id: string;
+  _id: string;
   title: string;
-  items: string[];
+  items: ItemInt[];
   category?: string;
   createdAt?: string;
+}
+
+interface ItemInt {
+  name: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+interface ProgramFormData {
+  title: string;
+  category: string;
+  items: ItemInt[];
 }
 
 const categories = [
@@ -35,208 +47,201 @@ const categories = [
   'Other',
 ];
 
-const initialPrograms: ProgramItem[] = [
-  {
-    id: crypto.randomUUID(),
-    title: 'Circular Economy',
-    items: [
-      'Rotting Mix / Soil Conditioner',
-      'Fertilizer',
-      'Vermitea / Liquid Conditioner',
-    ],
-    category: 'Circular Economy',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: crypto.randomUUID(),
-    title: 'Recyclable Trading Activity',
-    items: [
-      'Single-Use Soft and Hard Plastics',
-      'Candy and Chocolate Wrappers',
-      'Plastic Bags, Food Wrapping',
-      'Food Takeaway Containers',
-      'Used Clothes / Rags',
-    ],
-    category: 'Waste Management',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: crypto.randomUUID(),
-    title: 'Trash to Cashback',
-    items: [
-      'General Solid Waste Materials',
-      'Trash to School Supplies',
-      'Office Supplies and Materials',
-    ],
-    category: 'Community Programs',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: crypto.randomUUID(),
-    title: 'Trash to Books',
-    items: ['Educational Materials', 'Reading Materials for Community'],
-    category: 'Education',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: crypto.randomUUID(),
-    title: 'Trash to Medicines',
-    items: ['Herbal Medicine', 'First Aid Supplies', 'Medical Equipment'],
-    category: 'Health & Wellness',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: crypto.randomUUID(),
-    title: 'Eco Brick Making',
-    items: [
-      'Basic Urban Farming Tutorial',
-      'Basic Sewing Tutorial and Livelihood',
-      'Eco Brick Making',
-    ],
-    category: 'Livelihood',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: crypto.randomUUID(),
-    title: 'Community Pantry / Soup Kitchen',
-    items: ['Food Distribution', 'Community Meals', 'Nutrition Programs'],
-    category: 'Community Programs',
-    createdAt: new Date().toISOString(),
-  },
-];
-
-// localStorage hook
-function useLocalStorage<T>(
-  key: string,
-  initial: T
-): [T, React.Dispatch<React.SetStateAction<T>>] {
-  const [state, setState] = useState<T>(() => {
-    try {
-      const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : initial;
-    } catch {
-      return initial;
-    }
-  });
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(key, JSON.stringify(state));
-    } catch {
-      console.warn('Failed to save to localStorage');
-    }
-  }, [key, state]);
-
-  return [state, setState];
-}
-
 export default function TalipapaNatin() {
   const { isLoading: pageLoading } = useLoadingState(1000);
-  const [programs, setPrograms] = useLocalStorage<ProgramItem[]>(
-    STORAGE_KEY,
-    initialPrograms
-  );
+  const { data: programs = [], loading, error, refetch: refetchPrograms } = useFetchData<ProgramItem[]>("/talipapanatin");
+  const authFetch = useAuthFetch();
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editing, setEditing] = useState<ProgramItem | null>(null);
+  const [editingProgram, setEditingProgram] = useState<ProgramItem | null>(null);
+  const [formData, setFormData] = useState<ProgramFormData>({
+    title: '',
+    category: 'Other',
+    items: []
+  });
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Filter programs
-  const filteredPrograms = programs.filter((program) => {
+  const filteredPrograms = programs?.filter((program) => {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       return (
         program.title.toLowerCase().includes(query) ||
-        program.items.some((item) => item.toLowerCase().includes(query))
+        program.items.some((item) => item.name.toLowerCase().includes(query))
       );
     }
     return true;
   });
 
+  // Reset form when modal opens/closes
+  useEffect(() => {
+    if (!isModalOpen) {
+      setFormData({
+        title: '',
+        category: 'Other',
+        items: []
+      });
+      setEditingProgram(null);
+    }
+  }, [isModalOpen]);
+
   // Program Management
   const handleAddProgram = () => {
-    const newProgram: ProgramItem = {
-      id: crypto.randomUUID(),
+    setFormData({
       title: 'New Program',
-      items: ['New Item'],
       category: 'Other',
-      createdAt: new Date().toISOString(),
-    };
-    setEditing(newProgram);
+      items: [{ name: 'New Item' }]
+    });
+    setEditingProgram(null);
     setIsModalOpen(true);
   };
 
-  const handleDeleteProgram = (id: string) => {
-    const program = programs.find((p) => p.id === id);
-    if (
-      program &&
-      confirm(`Are you sure you want to delete "${program.title}"?`)
-    ) {
-      setPrograms((prev) => prev.filter((p) => p.id !== id));
-      setHasUnsavedChanges(true);
-    }
+  const handleDeleteProgram = async (id: string) => {
+    const program = programs.find((p) => p._id === id);
+    if (program && confirm(`Are you sure you want to delete "${program.title}"?`)) {
+      try {
+        const res = await authFetch(`/talipapanatin/${id}`, {
+          method: "DELETE"
+        });
+
+        setHasUnsavedChanges(true);
+        alert(res.message);
+        refetchPrograms();
+      } catch (error) {
+        console.error('Error deleting program:', error);
+        alert('Error deleting program. Please try again.');
+      }
+    } 
   };
 
-  const duplicateProgram = (id: string) => {
-    const program = programs.find((p) => p.id === id);
+  const duplicateProgram = async (id: string) => {
+    const program = programs.find((p) => p._id === id);
     if (program) {
-      const duplicate: ProgramItem = {
-        ...program,
-        id: crypto.randomUUID(),
-        title: `${program.title} (Copy)`,
-        createdAt: new Date().toISOString(),
-      };
-      setPrograms((prev) => [...prev, duplicate]);
-      setHasUnsavedChanges(true);
+      try {
+        const duplicateData = {
+          title: `${program.title} (Copy)`,
+          category: program.category || 'Other',
+          items: program.items.map(item => ({ name: item.name }))
+        };
+
+        const res = await authFetch("/talipapanatin", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(duplicateData)
+        });
+
+        if (res.message) {
+          alert(res.message);
+          setHasUnsavedChanges(true);
+          refetchPrograms();
+        }
+      } catch (error) {
+        console.error('Error duplicating program:', error);
+        alert('Error duplicating program. Please try again.');
+      }
     }
   };
 
   const openEdit = (program: ProgramItem) => {
-    setEditing(JSON.parse(JSON.stringify(program))); // deep clone
+    setEditingProgram(program);
+    setFormData({
+      title: program.title,
+      category: program.category || 'Other',
+      items: program.items.map(item => ({ ...item })) // Deep clone items
+    });
     setIsModalOpen(true);
   };
 
-  const saveEdit = () => {
-    if (!editing) return;
-
-    const exists = programs.some((p) => p.id === editing.id);
-
-    if (exists) {
-      setPrograms((prev) =>
-        prev.map((p) => (p.id === editing.id ? editing : p))
-      );
-    } else {
-      setPrograms((prev) => [...prev, editing]);
+  const saveEdit = async () => {
+    if (!formData.title.trim()) {
+      alert('Please enter a program title');
+      return;
     }
 
-    setHasUnsavedChanges(true);
-    closeModal();
+    try {
+      if (editingProgram) {
+        const res = await authFetch(`/talipapanatin/${editingProgram._id}`, {
+          method: "PUT",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: formData.title,
+            category: formData.category,
+            items: formData.items
+          })
+        });
+        
+        if (res.message) {
+          alert(res.message);
+          setHasUnsavedChanges(true);
+          refetchPrograms();
+          closeModal();
+        }
+      } else {
+        // Create new program
+        const res = await authFetch("/talipapanatin", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: formData.title,
+            category: formData.category,
+            items: formData.items
+          })
+        });
+        
+        if (res.message) {
+          alert(res.message);
+          setHasUnsavedChanges(true);
+          refetchPrograms();
+          closeModal();
+        }
+      }
+    } catch (error) {
+      console.error('Error saving program:', error);
+      alert('Error saving program. Please try again.');
+    }
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setEditing(null);
   };
 
-  // Editing Items
+  // Form handlers
+  const handleTitleChange = (value: string) => {
+    setFormData(prev => ({ ...prev, title: value }));
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setFormData(prev => ({ ...prev, category: value }));
+  };
+
   const addItem = () => {
-    if (!editing) return;
-    setEditing({ ...editing, items: [...editing.items, 'New Item'] });
+    setFormData(prev => ({
+      ...prev,
+      items: [...prev.items, { name: 'New Item' }]
+    }));
   };
 
-  const updateItem = (i: number, value: string) => {
-    if (!editing) return;
-    const items = [...editing.items];
-    items[i] = value;
-    setEditing({ ...editing, items });
+  const updateItem = (index: number, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      items: prev.items.map((item, i) => 
+        i === index ? { ...item, name: value } : item
+      )
+    }));
   };
 
-  const removeItem = (i: number) => {
-    if (!editing) return;
-    setEditing({
-      ...editing,
-      items: editing.items.filter((_, idx) => idx !== i),
-    });
+  const removeItem = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      items: prev.items.filter((_, i) => i !== index)
+    }));
   };
 
   const handleSaveAll = () => {
@@ -263,8 +268,7 @@ export default function TalipapaNatin() {
                   TalipapaNatin Program
                 </h1>
                 <p className="text-sm text-slate-600 font-medium">
-                  "May Buhay sa Basura ng Barangay" - Community Sustainability
-                  Programs
+                  "May Buhay sa Basura ng Barangay" - Community Sustainability Programs
                 </p>
               </div>
             </div>
@@ -308,8 +312,7 @@ export default function TalipapaNatin() {
             </div>
 
             <div className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm font-medium">
-              {filteredPrograms.length} program
-              {filteredPrograms.length !== 1 ? 's' : ''}
+              {filteredPrograms.length} program{filteredPrograms.length !== 1 ? 's' : ''}
             </div>
           </div>
         </div>
@@ -342,7 +345,7 @@ export default function TalipapaNatin() {
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredPrograms.map((program) => (
               <div
-                key={program.id}
+                key={program._id}
                 className="group bg-white rounded-2xl border border-slate-200 hover:border-[#1b4c2e]/30 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
               >
                 {/* Card Header */}
@@ -365,8 +368,7 @@ export default function TalipapaNatin() {
                             </span>
                           )}
                           <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full font-medium border border-slate-200">
-                            {program.items.length} item
-                            {program.items.length !== 1 ? 's' : ''}
+                            {program.items.length} item{program.items.length !== 1 ? 's' : ''}
                           </span>
                         </div>
                       </div>
@@ -386,7 +388,7 @@ export default function TalipapaNatin() {
                           Edit
                         </button>
                         <button
-                          onClick={() => duplicateProgram(program.id)}
+                          onClick={() => duplicateProgram(program._id)}
                           className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
                         >
                           <Copy className="w-4 h-4" />
@@ -394,7 +396,7 @@ export default function TalipapaNatin() {
                         </button>
                         <div className="border-t border-slate-100 my-1"></div>
                         <button
-                          onClick={() => handleDeleteProgram(program.id)}
+                          onClick={() => handleDeleteProgram(program._id)}
                           className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -415,7 +417,7 @@ export default function TalipapaNatin() {
                       >
                         <Check className="w-4 h-4 text-[#1b4c2e] flex-shrink-0 mt-0.5" />
                         <span className="text-sm text-slate-700 leading-relaxed">
-                          {item}
+                          {item?.name}
                         </span>
                       </div>
                     ))}
@@ -425,8 +427,7 @@ export default function TalipapaNatin() {
                 {/* Card Footer */}
                 <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between">
                   <div className="text-xs text-slate-500">
-                    {program.createdAt &&
-                      new Date(program.createdAt).toLocaleDateString()}
+                    {program.createdAt && new Date(program.createdAt).toLocaleDateString()}
                   </div>
                   <button
                     onClick={() => openEdit(program)}
@@ -451,10 +452,10 @@ export default function TalipapaNatin() {
         <Plus className="w-6 h-6" />
       </button>
 
-      {/* Edit Modal */}
-      {isModalOpen && editing && (
+      {/* Edit/Create Modal */}
+      {isModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
+          className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
           onClick={(e) => {
             if (e.target === e.currentTarget) closeModal();
           }}
@@ -471,9 +472,7 @@ export default function TalipapaNatin() {
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold">
-                      {programs.some((p) => p.id === editing.id)
-                        ? 'Edit Program'
-                        : 'Add New Program'}
+                      {editingProgram ? 'Edit Program' : 'Add New Program'}
                     </h3>
                     <p className="text-white/80 text-sm">
                       Configure program details and items
@@ -497,14 +496,12 @@ export default function TalipapaNatin() {
                 {/* Program Title */}
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Program Title
+                    Program Title *
                   </label>
                   <input
                     type="text"
-                    value={editing.title}
-                    onChange={(e) =>
-                      setEditing({ ...editing, title: e.target.value })
-                    }
+                    value={formData.title}
+                    onChange={(e) => handleTitleChange(e.target.value)}
                     className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:border-[#1b4c2e] focus:ring-2 focus:ring-[#1b4c2e]/20 outline-none transition-all"
                     placeholder="Enter program title..."
                   />
@@ -516,10 +513,8 @@ export default function TalipapaNatin() {
                     Category
                   </label>
                   <select
-                    value={editing.category || 'Other'}
-                    onChange={(e) =>
-                      setEditing({ ...editing, category: e.target.value })
-                    }
+                    value={formData.category}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
                     className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:border-[#1b4c2e] focus:ring-2 focus:ring-[#1b4c2e]/20 outline-none bg-white"
                   >
                     {categories.map((category) => (
@@ -535,7 +530,7 @@ export default function TalipapaNatin() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <label className="text-sm font-semibold text-slate-700">
-                    Program Items ({editing.items.length})
+                    Program Items ({formData.items.length})
                   </label>
                   <button
                     onClick={addItem}
@@ -547,7 +542,7 @@ export default function TalipapaNatin() {
                 </div>
 
                 <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
-                  {editing.items.map((item, idx) => (
+                  {formData.items.map((item, idx) => (
                     <div
                       key={idx}
                       className="flex gap-3 items-start bg-slate-50 rounded-xl p-4 border border-slate-200 hover:border-[#1b4c2e]/30 transition-colors"
@@ -555,7 +550,7 @@ export default function TalipapaNatin() {
                       <GripVertical className="w-5 h-5 text-slate-400 flex-shrink-0 mt-2 cursor-grab" />
                       <input
                         type="text"
-                        value={item}
+                        value={item.name}
                         onChange={(e) => updateItem(idx, e.target.value)}
                         className="flex-1 px-4 py-2 border border-slate-200 rounded-lg focus:border-[#1b4c2e] focus:ring-2 focus:ring-[#1b4c2e]/20 outline-none"
                         placeholder={`Item ${idx + 1}...`}
@@ -570,7 +565,7 @@ export default function TalipapaNatin() {
                     </div>
                   ))}
 
-                  {editing.items.length === 0 && (
+                  {formData.items.length === 0 && (
                     <div className="text-center py-8 text-slate-500 border-2 border-dashed border-slate-200 rounded-xl">
                       <p className="text-sm">
                         No items yet. Click "Add Item" to start.
@@ -594,7 +589,7 @@ export default function TalipapaNatin() {
                 className="px-6 py-3 bg-gradient-to-r from-[#1b4c2e] to-[#2d5a3d] hover:from-[#2d5a3d] hover:to-[#1b4c2e] text-white rounded-lg font-semibold shadow-lg transition-all flex items-center gap-2"
               >
                 <Save className="w-4 h-4" />
-                Save Program
+                {editingProgram ? 'Update Program' : 'Create Program'}
               </button>
             </div>
           </div>
