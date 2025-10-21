@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart3 } from 'lucide-react';
+import { BarChart3, Download } from 'lucide-react';
 import {
   Card,
   CardHeader,
@@ -36,7 +36,52 @@ export default function TradingStatisticsPage() {
           </p>
         </div>
         {/* Placeholder for actions (filters/export) */}
-        <div />
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              // download report handler
+              const downloadReport = async () => {
+                if (!data || !Array.isArray(data) || data.length === 0) {
+                  alert('No data available to download');
+                  return;
+                }
+
+                // Build CSV from data (simple flatten)
+                const keys = Object.keys(data[0]);
+                const csvRows = [keys.join(',')];
+                for (const row of data) {
+                  const values = keys.map((k) => {
+                    const v = row[k];
+                    if (v === null || v === undefined) return '';
+                    // escape quotes
+                    const s = String(v).replace(/"/g, '""');
+                    // wrap if contains comma or quote
+                    return s.includes(',') || s.includes('"') ? `"${s}"` : s;
+                  });
+                  csvRows.push(values.join(','));
+                }
+
+                const csvString = csvRows.join('\n');
+                const blob = new Blob([csvString], {
+                  type: 'text/csv;charset=utf-8;',
+                });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'trading_statistics_report.csv';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+              };
+              downloadReport();
+            }}
+            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold shadow-md hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            <Download className="w-4 h-4" />
+            <span className="pl-1">Download Report</span>
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6">
