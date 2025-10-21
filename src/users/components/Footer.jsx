@@ -81,16 +81,16 @@ export default function Footer() {
           </div>
 
           {/* Quick Links - Compact */}
-          <div>
-            <h3 className="text-base font-bold text-white mb-3 flex items-center gap-2">
-              <span className="w-1 h-5 bg-green-400 rounded-full"></span>
-              Quick Links
-            </h3>
-            <ul className="space-y-2">
+          <div className="text-center md:flex md:flex-col md:items-center">
+              <h3 className="text-base font-bold text-white mb-3 flex items-center gap-2">
+                <span className="w-1 h-5 bg-green-400 rounded-full"></span>
+                Quick Links
+              </h3>
+            <ul className="space-y-2 md:text-center">
               <li>
                 <Link
                   to="/"
-                  className="text-green-100 hover:text-white transition-colors text-sm flex items-center gap-2 group"
+                  className="text-green-100 hover:text-white transition-colors text-sm flex items-center gap-2 group hover:translate-x-2 transform transition-transform duration-200"
                 >
                   <span className="w-1 h-1 bg-green-400 rounded-full group-hover:w-1.5 group-hover:h-1.5 transition-all"></span>
                   Home
@@ -99,7 +99,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/aboutus"
-                  className="text-green-100 hover:text-white transition-colors text-sm flex items-center gap-2 group"
+                  className="text-green-100 hover:text-white transition-colors text-sm flex items-center gap-2 group hover:translate-x-2 transform transition-transform duration-200"
                 >
                   <span className="w-1 h-1 bg-green-400 rounded-full group-hover:w-1.5 group-hover:h-1.5 transition-all"></span>
                   About Us
@@ -108,7 +108,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/guidelines"
-                  className="text-green-100 hover:text-white transition-colors text-sm flex items-center gap-2 group"
+                  className="text-green-100 hover:text-white transition-colors text-sm flex items-center gap-2 group hover:translate-x-2 transform transition-transform duration-200"
                 >
                   <span className="w-1 h-1 bg-green-400 rounded-full group-hover:w-1.5 group-hover:h-1.5 transition-all"></span>
                   Guidelines
@@ -117,7 +117,7 @@ export default function Footer() {
               <li>
                 <Link
                   to="/trading"
-                  className="text-green-100 hover:text-white transition-colors text-sm flex items-center gap-2 group"
+                  className="text-green-100 hover:text-white transition-colors text-sm flex items-center gap-2 group hover:translate-x-2 transform transition-transform duration-200"
                 >
                   <span className="w-1 h-1 bg-green-400 rounded-full group-hover:w-1.5 group-hover:h-1.5 transition-all"></span>
                   Trading
