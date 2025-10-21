@@ -1,5 +1,12 @@
-import React from 'react';
-import { BarChart3, Download, TrendingUp, Users, Award } from 'lucide-react';
+import React, { useMemo } from 'react';
+import {
+  BarChart3,
+  Download,
+  TrendingUp,
+  Users,
+  Award,
+  Logs,
+} from 'lucide-react';
 import {
   Card,
   CardHeader,
@@ -8,6 +15,7 @@ import {
 } from '../../components/ui/card';
 import { TradingStatisticsSkeleton } from '../../components/LoadingSkeletons';
 import useFetchData from '../hooks/useFetchData';
+import dayjs from 'dayjs';
 
 declare const jsPDF: any;
 
@@ -19,6 +27,20 @@ export default function TradingStatisticsPage() {
   // Fetch top 5 points holders using the working endpoint
   const { data: recordsData, loading: topLoading } = useFetchData('/records');
 
+  const { data: logsData, loading: logsDataLoading } = useFetchData(
+    '/logs?category=RECORD%20MANAGEMENT&action=UPDATE%20RECORD&limit=5'
+  );
+
+  const recordsToday = useMemo(() => {
+    return recordsData?.filter((rec) =>
+      dayjs(rec?.createdAt).isSame(dayjs(), 'day')
+    );
+  }, [recordsData]);
+
+  const totalPoints = useMemo(() => {
+    return recordsData?.reduce((acc, cur) => cur?.points + acc, 0);
+  }, [recordsData]);
+
   // Process and sort to get top 5 points holders with Record IDs
   const topList = React.useMemo(() => {
     if (!Array.isArray(recordsData)) return [];
@@ -27,7 +49,7 @@ export default function TradingStatisticsPage() {
       .slice(0, 5)
       .map((holder: any, index: number) => ({
         ...holder,
-        recordId: `BT-${String(index + 1).padStart(4, '0')}`,
+        recordId: holder._id,
       }));
   }, [recordsData]);
 
@@ -66,11 +88,11 @@ export default function TradingStatisticsPage() {
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
-      doc.text('Total Records: 24', 20, yPosition);
+      doc.text(`Total Records: ${recordsData?.length}`, 20, yPosition);
       yPosition += 8;
-      doc.text('Records Created Today: 1,240', 20, yPosition);
+      doc.text(`Records Created Today: ${recordsToday?.length}`, 20, yPosition);
       yPosition += 8;
-      doc.text('Total Points: 124', 20, yPosition);
+      doc.text(`Total Points: ${totalPoints}`, 20, yPosition);
       yPosition += 20;
 
       // Top 5 Points Holders Section
@@ -117,14 +139,20 @@ export default function TradingStatisticsPage() {
       doc.text('Recent Transactions', 20, yPosition);
       yPosition += 15;
 
-      const transactionData = [
-        ['09:15 AM', 'Juan Santos', 'Plastic Bottles', '+25 pts'],
-        ['09:30 AM', 'Maria Cruz', 'Cardboard', '+40 pts'],
-        ['09:45 AM', 'Pedro Garcia', 'Glass Containers', '+18 pts'],
-      ];
+      const transactionData = logsData?.data.map((log) => [
+        `${dayjs(log?.created_at).format('MMM/DD/YYYY - h:mm A')}`,
+        `${log?.targetName}`,
+        `${log?.title}`,
+        `${log?.details?.pointsDeducted ? log?.details?.pointsDeducted : log?.details?.pointsAdded ? log?.details?.pointsAdded : ''} `,
+      ]);
+      // const transactionData = [
+      //   ['09:15 AM', 'Juan Santos', 'Plastic Bottles', '+25 pts'],
+      //   ['09:30 AM', 'Maria Cruz', 'Cardboard', '+40 pts'],
+      //   ['09:45 AM', 'Pedro Garcia', 'Glass Containers', '+18 pts'],
+      // ];
 
       autoTable(doc, {
-        head: [['Time', 'User', 'Material', 'Points']],
+        head: [['Time', 'User', 'Descriptionn', 'Points']],
         body: transactionData,
         startY: yPosition,
         theme: 'grid',
@@ -197,7 +225,7 @@ export default function TradingStatisticsPage() {
                         Total Records
                       </span>
                       <span className="font-bold text-4xl text-[#1b4c2e]">
-                        24
+                        {recordsData?.length}
                       </span>
                     </div>
                     <div className="flex justify-between items-center p-4 bg-gradient-to-r from-[#2d6b47]/10 to-[#2d6b47]/5 rounded-xl border-l-4 border-[#2d6b47] hover:shadow-md transition-shadow duration-200">
@@ -205,7 +233,7 @@ export default function TradingStatisticsPage() {
                         Records Created Today
                       </span>
                       <span className="font-bold text-4xl text-[#2d6b47]">
-                        1,240
+                        {recordsToday?.length}
                       </span>
                     </div>
                     <div className="flex justify-between items-center p-4 bg-gradient-to-r from-[#3d7b57]/10 to-[#3d7b57]/5 rounded-xl border-l-4 border-[#3d7b57] hover:shadow-md transition-shadow duration-200">
@@ -213,7 +241,7 @@ export default function TradingStatisticsPage() {
                         Total Points
                       </span>
                       <span className="font-bold text-4xl text-[#3d7b57]">
-                        124
+                        {totalPoints}
                       </span>
                     </div>
                   </div>
@@ -316,7 +344,7 @@ export default function TradingStatisticsPage() {
                             User
                           </th>
                           <th className="text-left p-4 font-bold text-[#1b4c2e] text-base">
-                            Material
+                            Description
                           </th>
                           <th className="text-left p-4 font-bold text-[#1b4c2e] text-base">
                             Points
@@ -324,21 +352,26 @@ export default function TradingStatisticsPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200">
-                          <td className="p-4 text-gray-700 font-medium">
-                            09:15 AM
-                          </td>
-                          <td className="p-4 text-gray-800 font-semibold">
-                            Juan Santos
-                          </td>
-                          <td className="p-4 text-gray-600">Plastic Bottles</td>
-                          <td className="p-4">
-                            <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold bg-gradient-to-r from-[#1b4c2e]/20 to-[#1b4c2e]/10 text-[#1b4c2e] border border-[#1b4c2e]/30">
-                              +25 pts
-                            </span>
-                          </td>
-                        </tr>
-                        <tr className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200">
+                        {logsData?.data.map((log) => (
+                          <tr key={log?._id} className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200">
+                            <td className="p-4 text-gray-700 font-medium">
+                              {dayjs(log?.created_at).format('MMM/DD/YYYY - h:mm A')}
+                            </td>
+                            <td className="p-4 text-gray-800 font-semibold">
+                              {log?.targetName}
+                            </td>
+                            <td className="p-4 text-gray-600">
+                              {log?.title}
+                            </td>
+                            <td className="p-4">
+                              <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold bg-gradient-to-r from-[#1b4c2e]/20 to-[#1b4c2e]/10 text-[#1b4c2e] border border-[#1b4c2e]/30">
+                                {log?.details?.pointsDeducted ? log?.details?.pointsDeducted : log?.details?.pointsAdded ? log?.details?.pointsAdded : ''}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+
+                        {/* <tr className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200">
                           <td className="p-4 text-gray-700 font-medium">
                             09:30 AM
                           </td>
@@ -367,7 +400,7 @@ export default function TradingStatisticsPage() {
                               +18 pts
                             </span>
                           </td>
-                        </tr>
+                        </tr> */}
                       </tbody>
                     </table>
                     <div className="block sm:hidden text-xs text-gray-400 mt-3 text-center">
