@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import SuccessMessage from '../../admin/components/SuccessMessage';
+import ErrorMessage from '../../admin/components/ErrorMessage';
 import {
   FileText,
   CheckCircle,
@@ -222,6 +223,8 @@ export default function Trading() {
     }
   };
 
+  const [showRecordSuccess, setShowRecordSuccess] = useState(false);
+  const [showRecordError, setShowRecordError] = useState(false);
   const showRecord = async () => {
     try {
       const fullId = `BT-${recordId}`;
@@ -229,10 +232,18 @@ export default function Trading() {
 
       setRecordData(record);
       setShowRecordModal(true);
+      setShowRecordSuccess(true);
+      setShowRecordError(false); // clear previous error if any
+
+      // Auto-hide success toast
+      setTimeout(() => setShowRecordSuccess(false), 4000);
     } catch (error) {
-      // Log the actual error to the console for easier debugging
       console.error('showRecord error:', error);
-      alert('Record Not Found');
+      setShowRecordError(true);
+      setShowRecordSuccess(false); // clear previous success if any
+
+      // Auto-hide error toast
+      setTimeout(() => setShowRecordError(false), 3000);
     }
   };
 
@@ -597,6 +608,18 @@ export default function Trading() {
                   />
                 </div>
 
+                {/* Conditionally render success or error message */}
+                {showRecordSuccess && (
+                  <div className="mt-6">
+                    <SuccessMessage message="Record found! Your points have been successfully retrieved." />
+                  </div>
+                )}
+
+                {showRecordError && (
+                  <div className="mt-6">
+                    <ErrorMessage message="Record not found. Please double-check your Record ID and Last Name." />
+                  </div>
+                )}
                 <Button
                   onClick={showRecord}
                   type="button"
@@ -702,7 +725,7 @@ export default function Trading() {
                   <p className="text-green-100 text-sm">
                     ID: {recordData?._id || recordId}
                   </p>
-                </div>
+                </div>{' '}
               </div>
             </div>
 

@@ -7,14 +7,15 @@ interface AlertMessageProps {
 }
 
 export default function AlertMessage({
-  type = 'success',
+  type = 'error',
   message = 'Message',
 }: AlertMessageProps) {
   const [visible, setVisible] = useState(true);
 
+  // Don't show the alert if not visible
   if (!visible) return null;
 
-  // ✅ Define color themes based on type
+  // Define color themes based on the type
   const colors = {
     success: {
       border: 'border-green-500',
@@ -30,7 +31,7 @@ export default function AlertMessage({
     },
   };
 
-  const theme = colors[type] || colors.success;
+  const theme = colors[type] || colors.error;
 
   return (
     <div
