@@ -119,7 +119,7 @@ const BarangayOfficials = () => {
 
 
         <div className="flex flex-wrap sm:flex-row gap-5 sm:gap-20 items-center justify-center">
-          {officials.slice(0, 2).map((official, index) => (
+          {officials.slice(1, 3).map((official, index) => (
             <div
               key={index}
               className="bg-white rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden w-[240px] h-[240px] min-w-[200px] min-h-[240px] group sm:min-w-[250px] sm:min-h-[250px]"
@@ -172,7 +172,7 @@ const BarangayOfficials = () => {
                 minHeight: '240px',
                 maxHeight: '240px',
               }}
-            >
+            > 
               {/* Hover Gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
