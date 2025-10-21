@@ -34,6 +34,8 @@
     "cmdk": "^1.1.1",
     "dayjs": "^1.11.18",
     "embla-carousel-react": "^8.6.0",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
     "input-otp": "^1.4.2",
     "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
@@ -49,7 +51,8 @@
     "recharts": "^2.15.2",
     "sonner": "^2.0.3",
     "tailwind-merge": "*",
-    "vaul": "^1.1.2"
+    "vaul": "^1.1.2",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.14",
