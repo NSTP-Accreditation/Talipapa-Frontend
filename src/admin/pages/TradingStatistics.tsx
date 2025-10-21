@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart3, Download } from 'lucide-react';
+import { BarChart3, Download, TrendingUp, Users, Award } from 'lucide-react';
 import {
   Card,
   CardHeader,
@@ -9,106 +9,210 @@ import {
 import { TradingStatisticsSkeleton } from '../../components/LoadingSkeletons';
 import useFetchData from '../hooks/useFetchData';
 
-export default function TradingStatisticsPage() {
-  // Add loading state with 1 second display
-  // const { isLoading } = useLoadingState(1000);
+declare const jsPDF: any;
 
+export default function TradingStatisticsPage() {
   const { data, loading, error } = useFetchData(
     '/logs?category=RECORD%20MANAGEMENT'
   );
+
+  // Fetch top 5 points holders using the working endpoint
+  const { data: recordsData, loading: topLoading } = useFetchData('/records');
+
+  // Process and sort to get top 5 points holders with Record IDs
+  const topList = React.useMemo(() => {
+    if (!Array.isArray(recordsData)) return [];
+    return [...recordsData]
+      .sort((a, b) => (b.points || 0) - (a.points || 0))
+      .slice(0, 5)
+      .map((holder: any, index: number) => ({
+        ...holder,
+        recordId: `BT-${String(index + 1).padStart(4, '0')}`,
+      }));
+  }, [recordsData]);
 
   // Show loading skeleton while loading
   if (loading) {
     return <TradingStatisticsSkeleton />;
   }
 
+  const downloadPDFReport = async () => {
+    try {
+      // Dynamically import jsPDF
+      const { jsPDF } = await import('jspdf');
+      const autoTable = (await import('jspdf-autotable')).default;
+      const doc = new jsPDF();
+      // Now doc.autoTable should work
+
+      // Set font
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(20);
+
+      // Title
+      doc.text('Trading Statistics Report', 20, 25);
+
+      // Date
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
+      doc.text(`Generated: ${new Date().toLocaleString()}`, 20, 35);
+
+      let yPosition = 50;
+
+      // Summary Section
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.text('Summary', 20, yPosition);
+      yPosition += 10;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
+      doc.text('Total Trades: 24', 20, yPosition);
+      yPosition += 8;
+      doc.text('Points Distributed: 1,240', 20, yPosition);
+      yPosition += 8;
+      doc.text('Total Weight (kg): 124', 20, yPosition);
+      yPosition += 20;
+
+      // Top 5 Points Holders Section
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.text('Top 5 Points Holders', 20, yPosition);
+      yPosition += 15;
+
+      // Create table data
+      const tableData = topList.map((holder: any, idx: number) => [
+        idx + 1,
+        holder.recordId,
+        `${holder.firstName} ${holder.middleName ? holder.middleName + ' ' : ''}${holder.lastName}`,
+        `${holder.points || 0} pts`,
+      ]);
+
+      // Add table
+      autoTable(doc, {
+        head: [['Rank', 'Record ID', 'Name', 'Points']],
+        body: tableData,
+        startY: yPosition,
+        theme: 'grid',
+        headStyles: {
+          fillColor: [27, 76, 46],
+          textColor: [255, 255, 255],
+          fontSize: 12,
+          fontStyle: 'bold',
+        },
+        bodyStyles: {
+          fontSize: 11,
+          textColor: [0, 0, 0],
+        },
+        alternateRowStyles: {
+          fillColor: [248, 250, 252],
+        },
+        margin: { left: 20, right: 20 },
+      });
+
+      yPosition = (doc as any).lastAutoTable.finalY + 20;
+
+      // Recent Transactions Section
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.text('Recent Transactions', 20, yPosition);
+      yPosition += 15;
+
+      const transactionData = [
+        ['09:15 AM', 'Juan Santos', 'Plastic Bottles', '+25 pts'],
+        ['09:30 AM', 'Maria Cruz', 'Cardboard', '+40 pts'],
+        ['09:45 AM', 'Pedro Garcia', 'Glass Containers', '+18 pts'],
+      ];
+
+      autoTable(doc, {
+        head: [['Time', 'User', 'Material', 'Points']],
+        body: transactionData,
+        startY: yPosition,
+        theme: 'grid',
+        headStyles: {
+          fillColor: [27, 76, 46],
+          textColor: [255, 255, 255],
+          fontSize: 12,
+          fontStyle: 'bold',
+        },
+        bodyStyles: {
+          fontSize: 11,
+          textColor: [0, 0, 0],
+        },
+        alternateRowStyles: {
+          fillColor: [248, 250, 252],
+        },
+        margin: { left: 20, right: 20 },
+      });
+
+      // Save the PDF
+      doc.save(
+        `trading_statistics_${new Date().toISOString().split('T')[0]}.pdf`
+      );
+    } catch (error) {
+      console.error('Error generating PDF report:', error);
+      alert('Failed to generate PDF report. Please try again.');
+    }
+  };
+
   return (
-    <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+    <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-[#e8f5e9] via-white to-[#e8f5e9] min-h-screen">
       {/* Enhanced Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <BarChart3 className="w-10 h-10 text-green-600" />
+          <h1 className="text-4xl font-bold text-[#1b4c2e] flex items-center gap-3">
+            <BarChart3 className="w-10 h-10 text-[#1b4c2e]" />
             Trading Statistics
           </h1>
-          <p className="text-lg text-gray-700 mt-2 font-medium">
+          <p className="text-lg text-gray-600 mt-2 font-medium">
             Overview of recent trading activity and metrics
           </p>
         </div>
-        {/* Placeholder for actions (filters/export) */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => {
-              // download report handler
-              const downloadReport = async () => {
-                if (!data || !Array.isArray(data) || data.length === 0) {
-                  alert('No data available to download');
-                  return;
-                }
-
-                // Build CSV from data (simple flatten)
-                const keys = Object.keys(data[0]);
-                const csvRows = [keys.join(',')];
-                for (const row of data) {
-                  const values = keys.map((k) => {
-                    const v = row[k];
-                    if (v === null || v === undefined) return '';
-                    // escape quotes
-                    const s = String(v).replace(/"/g, '""');
-                    // wrap if contains comma or quote
-                    return s.includes(',') || s.includes('"') ? `"${s}"` : s;
-                  });
-                  csvRows.push(values.join(','));
-                }
-
-                const csvString = csvRows.join('\n');
-                const blob = new Blob([csvString], {
-                  type: 'text/csv;charset=utf-8;',
-                });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'trading_statistics_report.csv';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                URL.revokeObjectURL(url);
-              };
-              downloadReport();
-            }}
-            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold shadow-md hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-green-500"
+            onClick={downloadPDFReport}
+            className="bg-gradient-to-r from-[#1b4c2e] to-[#2d6b47] hover:from-[#2d6b47] hover:to-[#1b4c2e] text-white px-6 py-3 rounded-xl flex items-center gap-2 text-sm font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[#1b4c2e] focus:ring-offset-2"
           >
-            <Download className="w-4 h-4" />
-            <span className="pl-1">Download Report</span>
+            <Download className="w-5 h-5" />
+            <span>Download PDF</span>
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6">
-        <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
+        <div className="bg-white rounded-2xl border-2 border-[#1b4c2e]/20 shadow-xl hover:shadow-2xl transition-all duration-300">
           <div className="p-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Today's Trading Summary</CardTitle>
+              {/* Trading Summary Card */}
+              <Card className="border-2 border-[#1b4c2e]/20 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-[#1b4c2e] to-[#2d6b47] text-white pb-6">
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <TrendingUp className="w-6 h-6" />
+                    Trading Summary
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="overflow-y-auto pr-2 custom-scrollbar max-h-[calc(100vh-20rem)] lg:max-h-[740px]">
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Total Trades</span>
-                      <span className="font-bold text-2xl text-green-600">
+                <CardContent className="pt-6 pb-6">
+                  <div className="space-y-5">
+                    <div className="flex justify-between items-center p-4 bg-gradient-to-r from-[#1b4c2e]/10 to-[#1b4c2e]/5 rounded-xl border-l-4 border-[#1b4c2e] hover:shadow-md transition-shadow duration-200">
+                      <span className="text-gray-700 font-semibold text-base">
+                        Total Trades
+                      </span>
+                      <span className="font-bold text-4xl text-[#1b4c2e]">
                         24
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Points Distributed</span>
-                      <span className="font-bold text-2xl text-blue-600">
+                    <div className="flex justify-between items-center p-4 bg-gradient-to-r from-[#2d6b47]/10 to-[#2d6b47]/5 rounded-xl border-l-4 border-[#2d6b47] hover:shadow-md transition-shadow duration-200">
+                      <span className="text-gray-700 font-semibold text-base">
+                        Points Distributed
+                      </span>
+                      <span className="font-bold text-4xl text-[#2d6b47]">
                         1,240
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Total Weight (kg)</span>
-                      <span className="font-bold text-2xl text-purple-600">
+                    <div className="flex justify-between items-center p-4 bg-gradient-to-r from-[#3d7b57]/10 to-[#3d7b57]/5 rounded-xl border-l-4 border-[#3d7b57] hover:shadow-md transition-shadow duration-200">
+                      <span className="text-gray-700 font-semibold text-base">
+                        Total Weight (kg)
+                      </span>
+                      <span className="font-bold text-4xl text-[#3d7b57]">
                         124
                       </span>
                     </div>
@@ -116,73 +220,157 @@ export default function TradingStatisticsPage() {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Material Categories</CardTitle>
+              {/* Top 5 Points Holders with Record IDs */}
+              <Card className="border-2 border-[#1b4c2e]/20 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-[#1b4c2e] to-[#2d6b47] text-white pb-6">
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <Award className="w-6 h-6" />
+                    Top 5 Points Holders
+                  </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center p-2 bg-green-50 rounded">
-                      <span>Plastic Bottles</span>
-                      <span className="font-medium">45 kg</span>
-                    </div>
-                    <div className="flex justify-between items-center p-2 bg-blue-50 rounded">
-                      <span>Cardboard</span>
-                      <span className="font-medium">32 kg</span>
-                    </div>
-                    <div className="flex justify-between items-center p-2 bg-yellow-50 rounded">
-                      <span>Glass Containers</span>
-                      <span className="font-medium">28 kg</span>
-                    </div>
-                    <div className="flex justify-between items-center p-2 bg-purple-50 rounded">
-                      <span>Metal Cans</span>
-                      <span className="font-medium">19 kg</span>
-                    </div>
+                <CardContent className="pt-6 pb-6">
+                  <div className="w-full overflow-x-auto">
+                    {topLoading ? (
+                      <div className="text-sm text-gray-500 text-center py-8">
+                        Loading...
+                      </div>
+                    ) : topList.length > 0 ? (
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b-2 border-[#1b4c2e]/30">
+                            <th className="text-left p-3 font-bold text-[#1b4c2e] text-base">
+                              Rank
+                            </th>
+                            <th className="text-left p-3 font-bold text-[#1b4c2e] text-base">
+                              Record ID
+                            </th>
+                            <th className="text-left p-3 font-bold text-[#1b4c2e] text-base">
+                              Name
+                            </th>
+                            <th className="text-right p-3 font-bold text-[#1b4c2e] text-base">
+                              Points
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {topList.map((holder: any, idx: number) => {
+                            const points = holder.points || 0;
+                            return (
+                              <tr
+                                key={holder._id || idx}
+                                className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200"
+                              >
+                                <td className="p-3">
+                                  <span className="w-8 h-8 rounded-full bg-[#1b4c2e] text-white font-bold flex items-center justify-center text-sm shadow-lg">
+                                    {idx + 1}
+                                  </span>
+                                </td>
+                                <td className="p-3">
+                                  <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold bg-gradient-to-r from-[#1b4c2e] to-[#2d6b47] text-white shadow-md">
+                                    {holder.recordId}
+                                  </span>
+                                </td>
+                                <td className="p-3 text-gray-800 font-semibold">
+                                  {holder.firstName}{' '}
+                                  {holder.middleName
+                                    ? holder.middleName + ' '
+                                    : ''}
+                                  {holder.lastName}
+                                </td>
+                                <td className="p-3 text-right">
+                                  <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-bold bg-gradient-to-r from-[#1b4c2e]/20 to-[#1b4c2e]/10 text-[#1b4c2e] border border-[#1b4c2e]/30">
+                                    {points} pts
+                                  </span>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    ) : (
+                      <div className="text-sm text-gray-500 text-center py-8">
+                        No records found
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="lg:col-span-2">
-                <CardHeader>
-                  <CardTitle>Recent Transactions</CardTitle>
+              {/* Recent Transactions Table */}
+              <Card className="lg:col-span-2 border-2 border-[#1b4c2e]/20 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-[#1b4c2e] to-[#2d6b47] text-white pb-6">
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <Users className="w-6 h-6" />
+                    Recent Transactions
+                  </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="w-full overflow-x-auto sm:overflow-visible">
-                    <table className="w-full text-sm min-w-[600px] sm:min-w-0">
+                <CardContent className="pt-6 pb-6">
+                  <div className="w-full overflow-x-auto">
+                    <table className="w-full text-sm min-w-[500px]">
                       <thead>
-                        <tr className="border-b">
-                          <th className="text-left p-2">Time</th>
-                          <th className="text-left p-2">User</th>
-                          <th className="text-left p-2">Material</th>
-                          <th className="text-left p-2">Weight</th>
-                          <th className="text-left p-2">Points</th>
+                        <tr className="border-b-2 border-[#1b4c2e]/30">
+                          <th className="text-left p-4 font-bold text-[#1b4c2e] text-base">
+                            Time
+                          </th>
+                          <th className="text-left p-4 font-bold text-[#1b4c2e] text-base">
+                            User
+                          </th>
+                          <th className="text-left p-4 font-bold text-[#1b4c2e] text-base">
+                            Material
+                          </th>
+                          <th className="text-left p-4 font-bold text-[#1b4c2e] text-base">
+                            Points
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="border-b">
-                          <td className="p-2">09:15 AM</td>
-                          <td className="p-2">Juan Santos</td>
-                          <td className="p-2">Plastic Bottles</td>
-                          <td className="p-2">2.5 kg</td>
-                          <td className="p-2 text-green-600">+25 pts</td>
+                        <tr className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200">
+                          <td className="p-4 text-gray-700 font-medium">
+                            09:15 AM
+                          </td>
+                          <td className="p-4 text-gray-800 font-semibold">
+                            Juan Santos
+                          </td>
+                          <td className="p-4 text-gray-600">Plastic Bottles</td>
+                          <td className="p-4">
+                            <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold bg-gradient-to-r from-[#1b4c2e]/20 to-[#1b4c2e]/10 text-[#1b4c2e] border border-[#1b4c2e]/30">
+                              +25 pts
+                            </span>
+                          </td>
                         </tr>
-                        <tr className="border-b">
-                          <td className="p-2">09:30 AM</td>
-                          <td className="p-2">Maria Cruz</td>
-                          <td className="p-2">Cardboard</td>
-                          <td className="p-2">4.0 kg</td>
-                          <td className="p-2 text-green-600">+40 pts</td>
+                        <tr className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200">
+                          <td className="p-4 text-gray-700 font-medium">
+                            09:30 AM
+                          </td>
+                          <td className="p-4 text-gray-800 font-semibold">
+                            Maria Cruz
+                          </td>
+                          <td className="p-4 text-gray-600">Cardboard</td>
+                          <td className="p-4">
+                            <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold bg-gradient-to-r from-[#1b4c2e]/20 to-[#1b4c2e]/10 text-[#1b4c2e] border border-[#1b4c2e]/30">
+                              +40 pts
+                            </span>
+                          </td>
                         </tr>
-                        <tr className="border-b">
-                          <td className="p-2">09:45 AM</td>
-                          <td className="p-2">Pedro Garcia</td>
-                          <td className="p-2">Glass Containers</td>
-                          <td className="p-2">1.8 kg</td>
-                          <td className="p-2 text-green-600">+18 pts</td>
+                        <tr className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200">
+                          <td className="p-4 text-gray-700 font-medium">
+                            09:45 AM
+                          </td>
+                          <td className="p-4 text-gray-800 font-semibold">
+                            Pedro Garcia
+                          </td>
+                          <td className="p-4 text-gray-600">
+                            Glass Containers
+                          </td>
+                          <td className="p-4">
+                            <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold bg-gradient-to-r from-[#1b4c2e]/20 to-[#1b4c2e]/10 text-[#1b4c2e] border border-[#1b4c2e]/30">
+                              +18 pts
+                            </span>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
-                    <div className="block sm:hidden text-xs text-gray-400 mt-2 text-center">
+                    <div className="block sm:hidden text-xs text-gray-400 mt-3 text-center">
                       Swipe left/right to see more columns
                     </div>
                   </div>
