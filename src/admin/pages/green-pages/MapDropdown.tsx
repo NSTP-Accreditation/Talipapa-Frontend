@@ -7,6 +7,7 @@ import {
 } from '../../../components/ui/card';
 import { MapPin, Leaf } from 'lucide-react';
 import LeafletMap from './LeafletMap';
+import { ImageInt } from '@/admin/components/OfficialsPanel';
 
 
 interface Location {
@@ -24,7 +25,7 @@ export interface Farm {
   description: string;
   memberCount: number;
   location: Location;
-  image?: { url: string };
+  image?: ImageInt;
 }
 
 interface MapDropdownProps {
