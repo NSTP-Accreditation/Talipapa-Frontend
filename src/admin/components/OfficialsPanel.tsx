@@ -166,15 +166,22 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Position/Title *
               </label>
-              <input
-                type="text"
-                value={formData.position}
+              {/* Controlled select with allowed roles */}
+              <select
+                value={formData.position || ''}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, position: e.target.value }))
                 }
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1b4c2e] focus:border-transparent"
-                placeholder="Enter position or title"
-              />
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1b4c2e] focus:border-transparent bg-white"
+              >
+                <option value="">Select position</option>
+                <option value="Punong Barangay">Punong Barangay</option>
+                <option value="Tagapamahala ng Barangay">Tagapamahala ng Barangay</option>
+                <option value="Barangay Treasurer">Barangay Treasurer</option>
+                <option value="Barangay Secretary">Barangay Secretary</option>
+                <option value="Kagawad">Kagawad</option>
+                <option value="SK Member">SK Member</option>
+              </select>
             </div>
 
             {/* Bio Input */}
@@ -351,10 +358,71 @@ export default function OfficialsPanel() {
   const handleSaveOfficial = async (officialData: Official) => {
     setIsSaving(true);
 
+    // Validation: enforce single-occupancy roles and limits
+    const singleRoles = [
+      'Punong Barangay',
+      'Tagapamahala ng Barangay',
+      'Barangay Treasurer',
+      'Barangay Secretary',
+    ];
+
+    const countRole = (role: string) =>
+      officials.filter((o) => o.position === role).length;
+
+    // If creating a new official (not editing), or changing position, validate
+    const isCreating = !editingOfficial;
+    const newPosition = officialData.position;
+
+    // Check single roles uniqueness
+    if (singleRoles.includes(newPosition)) {
+      const existing = officials.find((o) => o.position === newPosition);
+      if (existing && isCreating) {
+        alert(`${newPosition} already exists. Only one ${newPosition} is allowed.`);
+        setIsSaving(false);
+        return;
+      }
+      // If editing, allow if the existing one is the same being edited
+      if (existing && !isCreating && editingOfficial?._id !== existing._id) {
+        alert(`${newPosition} already exists. Only one ${newPosition} is allowed.`);
+        setIsSaving(false);
+        return;
+      }
+    }
+
+    // Limits for Kagawad and SK Member (max 7 each)
+    if (newPosition === 'Kagawad') {
+      const existingCount = countRole('Kagawad');
+      // If creating, existingCount must be < 7; if editing and not changing position, allow
+      if (isCreating && existingCount >= 7) {
+        alert('You can only have up to 7 Kagawads.');
+        setIsSaving(false);
+        return;
+      }
+      if (!isCreating && editingOfficial && editingOfficial.position !== 'Kagawad' && existingCount >= 7) {
+        alert('You can only have up to 7 Kagawads.');
+        setIsSaving(false);
+        return;
+      }
+    }
+
+    if (newPosition === 'SK Member') {
+      const existingCount = countRole('SK Member');
+      if (isCreating && existingCount >= 7) {
+        alert('You can only have up to 7 SK Members.');
+        setIsSaving(false);
+        return;
+      }
+      if (!isCreating && editingOfficial && editingOfficial.position !== 'SK Member' && existingCount >= 7) {
+        alert('You can only have up to 7 SK Members.');
+        setIsSaving(false);
+        return;
+      }
+    }
+
     const formData = new FormData();
     formData.append("name", officialData.name);
     formData.append("position", officialData.position);
-    formData.append("image", officialData.imageFile);
+    if (officialData.imageFile) formData.append("image", officialData.imageFile);
 
     try {
       if (editingOfficial) {

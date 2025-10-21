@@ -179,6 +179,12 @@ export default function Trading() {
   }, []);
 
   const handleConvert = () => {
+    const numericWeight = parseFloat(weight);
+    if (numericWeight > 599) {
+      alert('Maximum weight allowed is 599 kg');
+      return;
+    }
+
     if (selectedType && weight) {
       const material = materials.find(mat => mat._id === selectedType);
       if(material) {
@@ -347,8 +353,27 @@ export default function Trading() {
                     type="number"
                     placeholder="e.g., 2.5"
                     value={weight}
-                    onChange={(e) => setWeight(e.target.value)}
-                    className="h-12 px-4 text-base border-2 border-gray-300 rounded-xl hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                    min={0}
+                    max={599}
+                    onChange={(e) => {
+                      // clamp to 599
+                      const val = e.target.value;
+                      const num = parseFloat(val);
+                      if (!val) {
+                        setWeight('');
+                        return;
+                      }
+                      if (!isNaN(num)) {
+                        if (num > 599) {
+                          setWeight('599');
+                        } else if (num < 0) {
+                          setWeight('0');
+                        } else {
+                          setWeight(val);
+                        }
+                      }
+                    }}
+                    className="h-12 px-4 text-base border-2 border-gray-300 rounded-xl hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all no-spinner"
                   />
                   <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 font-medium">
                     kg

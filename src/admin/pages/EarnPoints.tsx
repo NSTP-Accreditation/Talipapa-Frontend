@@ -107,13 +107,12 @@ export default function App() {
         {/* Record Info */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 w-full">
           <label className="block group">
-            <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+            <label className="text-xs text-gray-500 mb-1 block">
               <span>Record ID</span>
-            </div>
+            </label>
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">
-                BT-
-              </span>
+              <label className="sr-only">Record ID</label>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-700 select-none font-normal text-base leading-6" style={{ fontWeight: 400 }}>BT-</span>
               <input
                 type="text"
                 value={recordIdRest}
@@ -123,15 +122,13 @@ export default function App() {
                   const limited = digitsOnly.slice(0, 4);
                   setRecordIdRest(limited);
                 }}
-                className="w-full pl-16 border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
+                className="w-full pl-12 px-3 py-2 border-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500 font-normal text-base leading-6"
                 placeholder="0001"
                 required
               />
             </div>
             <div className="text-xs text-gray-500 mt-2">
-              Record ID will be stored as{' '}
-              <span className="font-medium">BT-0001</span>. Only 4 digits
-              allowed.
+              Record ID will be stored as <span className="font-medium">BT-0001</span>. Only 4 digits allowed.
             </div>
           </label>
           <div>

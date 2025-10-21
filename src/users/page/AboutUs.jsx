@@ -96,8 +96,16 @@ const BarangayOfficials = () => {
 
             <div className="relative z-10 flex flex-col items-center w-full h-full justify-center">
               {/* Circle Avatar with Icon */}
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-5 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                <User className="w-10 h-10 text-green-700" />
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-5 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
+                {official.image ? (
+                  <img
+                    src={typeof official.image === 'string' ? official.image : official.image.url}
+                    alt={official.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <User className="w-10 h-10 text-green-700" />
+                )}
               </div>
 
               {/* Name */}
