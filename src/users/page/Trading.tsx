@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import SuccessMessage from '../../admin/components/SuccessMessage';
 import {
   FileText,
   CheckCircle,
@@ -97,7 +98,6 @@ type ImageData = {
   url?: string;
 };
 
-
 interface Record {
   _id: string;
   firstName: string;
@@ -116,7 +116,7 @@ interface Product {
   name: string;
   image?: ImageData;
   category?: string;
-  subCategory?: string,
+  subCategory?: string;
   description?: string;
   stocks?: number;
   requiredPoints?: number;
@@ -133,25 +133,35 @@ interface Material {
 export default function Trading() {
   const { isLoading } = useLoadingState(1000);
   const authFetch = useAuthFetch();
-  const { data: productsData, loading: productsDataLoading, error: productsDataErr, refetch: refetchProduct } = useFetchData<Product[]>("/products");
-  
-  const { data: materialsData, loading: materialsDataLoading, error: materialsDataErr, refetch: refetchMaterials } = useFetchData<Material[]>("/materials");
-  
+  const {
+    data: productsData,
+    loading: productsDataLoading,
+    error: productsDataErr,
+    refetch: refetchProduct,
+  } = useFetchData<Product[]>('/products');
+
+  const {
+    data: materialsData,
+    loading: materialsDataLoading,
+    error: materialsDataErr,
+    refetch: refetchMaterials,
+  } = useFetchData<Material[]>('/materials');
+
   const materials: Material[] = useMemo(() => {
-    if(materialsData && !materialsDataLoading && !materialsDataErr) {
+    if (materialsData && !materialsDataLoading && !materialsDataErr) {
       return materialsData;
     } else {
       return [];
     }
-  }, [materialsData, materialsDataLoading, materialsDataErr])
+  }, [materialsData, materialsDataLoading, materialsDataErr]);
 
   const products: Product[] = useMemo(() => {
-    if(productsData && !productsDataLoading && !productsDataErr) {
+    if (productsData && !productsDataLoading && !productsDataErr) {
       return productsData;
     } else {
       return [];
     }
-  }, [productsData, productsDataLoading, productsDataErr])
+  }, [productsData, productsDataLoading, productsDataErr]);
 
   const [selectedType, setSelectedType] = useState('');
   const [weight, setWeight] = useState('');
@@ -178,18 +188,29 @@ export default function Trading() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
   const handleConvert = () => {
     if (selectedType && weight) {
-      const material = materials.find(mat => mat._id === selectedType);
-      if(material) {
+      const material = materials.find((mat) => mat._id === selectedType);
+      if (material) {
         const points = parseFloat(weight) * material.pointsPerKg;
-        const options = products.filter(prod => prod.requiredPoints <= points);
+        const options = products.filter(
+          (prod) => prod.requiredPoints <= points
+        );
         setResult({
           points,
           options: options || [],
         });
       }
 
+      // Show success message
+      setShowSuccessMessage(true);
+
+      // Auto-hide after 3 seconds
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 3000);
     } else {
       alert('Please select a recyclable type and enter weight!');
     }
@@ -213,9 +234,7 @@ export default function Trading() {
     return <TradingPageSkeleton />;
   }
 
-  const selectedWasteType = materials.find(
-    (type) => type._id === selectedType
-  );
+  const selectedWasteType = materials.find((type) => type._id === selectedType);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50/20">
@@ -486,6 +505,12 @@ export default function Trading() {
                       Great work! Keep recycling for a better planet.
                     </div>
                   )}
+                  {/* ✅ Success Message Moved Here */}
+                  {showSuccessMessage && (
+                    <div className="mt-4">
+                      <SuccessMessage message="Conversion successful! 🎉" />
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -515,7 +540,9 @@ export default function Trading() {
 
                   {/* Input group with fixed BT- prefix */}
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">BT-</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">
+                      BT-
+                    </span>
                     <Input
                       type="text"
                       value={recordId}
@@ -529,7 +556,6 @@ export default function Trading() {
                       className="h-12 pl-14 px-4 rounded-xl border-2 border-gray-300 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
                     />
                   </div>
-                 
                 </div>
 
                 <div>
