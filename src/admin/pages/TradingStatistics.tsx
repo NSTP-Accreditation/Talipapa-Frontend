@@ -66,11 +66,11 @@ export default function TradingStatisticsPage() {
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
-      doc.text('Total Trades: 24', 20, yPosition);
+      doc.text('Total Records: 24', 20, yPosition);
       yPosition += 8;
-      doc.text('Points Distributed: 1,240', 20, yPosition);
+      doc.text('Records Created Today: 1,240', 20, yPosition);
       yPosition += 8;
-      doc.text('Total Weight (kg): 124', 20, yPosition);
+      doc.text('Total Points: 124', 20, yPosition);
       yPosition += 20;
 
       // Top 5 Points Holders Section
@@ -194,7 +194,7 @@ export default function TradingStatisticsPage() {
                   <div className="space-y-5">
                     <div className="flex justify-between items-center p-4 bg-gradient-to-r from-[#1b4c2e]/10 to-[#1b4c2e]/5 rounded-xl border-l-4 border-[#1b4c2e] hover:shadow-md transition-shadow duration-200">
                       <span className="text-gray-700 font-semibold text-base">
-                        Total Trades
+                        Total Records
                       </span>
                       <span className="font-bold text-4xl text-[#1b4c2e]">
                         24
@@ -202,7 +202,7 @@ export default function TradingStatisticsPage() {
                     </div>
                     <div className="flex justify-between items-center p-4 bg-gradient-to-r from-[#2d6b47]/10 to-[#2d6b47]/5 rounded-xl border-l-4 border-[#2d6b47] hover:shadow-md transition-shadow duration-200">
                       <span className="text-gray-700 font-semibold text-base">
-                        Points Distributed
+                        Records Created Today
                       </span>
                       <span className="font-bold text-4xl text-[#2d6b47]">
                         1,240
@@ -210,7 +210,7 @@ export default function TradingStatisticsPage() {
                     </div>
                     <div className="flex justify-between items-center p-4 bg-gradient-to-r from-[#3d7b57]/10 to-[#3d7b57]/5 rounded-xl border-l-4 border-[#3d7b57] hover:shadow-md transition-shadow duration-200">
                       <span className="text-gray-700 font-semibold text-base">
-                        Total Weight (kg)
+                        Total Points
                       </span>
                       <span className="font-bold text-4xl text-[#3d7b57]">
                         124
