@@ -155,9 +155,13 @@ const BarangayMap = () => {
       {/* Map Container */}
       <div className="max-w-5xl mx-auto bg-white border-2 border-gray-100 rounded-2xl shadow-2xl overflow-hidden">
         {/* Full Width Map */}
+
+        {/* 
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7718.965395150199!2d121.02455024656673!3d14.685273559216638!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b12cda88be41%3A0x1d4052dfeeb726ad!2sTalipapa%20Barangay%20Hall!5e0!3m2!1sen!2sph!4v1761063554754!5m2!1sen!2sph" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        */}
         <div className="w-full h-96 overflow-hidden">
           <iframe
-            src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d965.2284682435453!2d121.02444617082957!3d14.687906698469316!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397ba0142bacae1%3A0x1d4df110b3ed21dd!2sTalipapa%20Barangay%20Hall!5e0!3m2!1sen!2sph!4v1697000000000!5m2!1sen!2sph`}
+            src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7718.965395150199!2d121.02455024656673!3d14.685273559216638!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397b12cda88be41%3A0x1d4052dfeeb726ad!2sTalipapa%20Barangay%20Hall!5e0!3m2!1sen!2sph!4v1761063554754!5m2!1sen!2sph`}
             width="100%"
             height="100%"
             style={{ border: 0 }}

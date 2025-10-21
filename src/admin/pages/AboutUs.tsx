@@ -10,7 +10,7 @@ interface ContentModalProps {
   onClose: () => void;
   title: string;
   content: string;
-  onSave: (content: string) => void;
+  onSave: (content: string) => Promise<void>;
 }
 
 const ContentModal: React.FC<ContentModalProps> = ({
@@ -34,7 +34,7 @@ const ContentModal: React.FC<ContentModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-1003 p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-hidden">
         {/* Records-style gradient header */}
         <div className="relative p-6 bg-gradient-to-br from-[#1b4c2e] via-[#2d6b42] to-emerald-600 text-white overflow-hidden">
@@ -176,13 +176,13 @@ export default function AboutBarangayEditable() {
     );
   }
 
-  const handleSave = async () => {
+  const handleSave = async (title: string, content: string) => {
     setIsSaving(true);
     try {
-      const url = '/pageContent/68ebc632bdb9c78d031eb89c';
+      const url = `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`;
       const result = await authFetch(url, {
-        method: 'PUT',
-        body: JSON.stringify(pageContent),
+        method: 'PATCH',
+        body: JSON.stringify({ [title]: content}),
       });
 
       // If API returns updated object, update local state
@@ -277,7 +277,7 @@ export default function AboutBarangayEditable() {
             </button>
 
             {showEditMenu && (
-              <div className="absolute right-0 mt-3 w-64 bg-white border rounded-2xl shadow-2xl z-50 ring-1 ring-black/5 overflow-hidden">
+              <div className="absolute right-0 mt-3 w-64 bg-white border rounded-2xl shadow-2xl z-1003 ring-1 ring-black/5 overflow-hidden">
                 <div className="p-2">
                   <button
                     onClick={() => {
@@ -416,7 +416,7 @@ export default function AboutBarangayEditable() {
         onClose={closeModal}
         title={getDisplayName(activeModal || '')}
         content={getContent(activeModal || '')}
-        onSave={(content) => handleContentSave(activeModal || '', content)}
+        onSave={(content) => handleSave(activeModal || '', content)}
       />
     </div>
   );
