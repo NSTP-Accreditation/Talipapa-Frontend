@@ -38,8 +38,10 @@ import ProfileTab from './green-pages/ProfileTab';
 import SkillMapTab from './green-pages/SkillMapTab';
 import StatisticsTab from './green-pages/StatisticsTab';
 import { ImageInt } from '../components/OfficialsPanel';
+import MapDropdown from './green-pages/MapDropdown';
 
-type TabType = 'profile' | 'skillMap' | 'statistics';
+
+type TabType = 'mapDropdown' | 'profile' | 'skillMap' | 'statistics';
 
 interface Location {
   lat: number;
@@ -144,6 +146,7 @@ const GreenPages: React.FC = () => {
     error: farmsError,
     refetch: refetchFarms,
   } = useFetchData<Farm[]>('/farms');
+
   const [farmData, setFarmData] = useState<Farm | null>(null);
 
   useEffect(() => {
@@ -297,7 +300,7 @@ const GreenPages: React.FC = () => {
       age: '',
       gender: '',
       skills: [],
-      assigned_farm: [],
+      assigned_farm: farmData?._id ? [farmData._id] : [], // 🟢 pre-select the currently selected farm
       time_in_field: '',
       position: '',
       email: '',
@@ -332,7 +335,11 @@ const GreenPages: React.FC = () => {
       label: position.charAt(0).toUpperCase() + position.slice(1),
     }));
 
-  const payload = { ...staffForm, position, contact_number: contactRest ? `09${contactRest}` : '' };
+    const payload = {
+      ...staffForm,
+      position,
+      contact_number: contactRest ? `09${contactRest}` : '',
+    };
 
     try {
       const result = await authFetch('/staff', {
@@ -406,6 +413,16 @@ const GreenPages: React.FC = () => {
         {/* Tab Navigation */}
         <div className="flex gap-2 sm:gap-3 flex-wrap bg-white p-2 rounded-2xl shadow-lg border-2 border-gray-200">
           <button
+            onClick={() => setActiveTab('mapDropdown')}
+            className={`flex-1 min-w-[120px] px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold transition-all text-sm sm:text-base ${
+              activeTab === 'mapDropdown'
+                ? 'bg-gradient-to-r from-green-600 via-green-600 to-green-700 text-white shadow-lg shadow-green-200 scale-105'
+                : 'bg-gray-50 text-gray-700 hover:bg-green-50 hover:text-green-700 hover:shadow-md'
+            }`}
+          >
+            🗺️ Farm Dropdown
+          </button>
+          <button
             onClick={() => setActiveTab('profile')}
             className={`flex-1 min-w-[120px] px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold transition-all text-sm sm:text-base ${
               activeTab === 'profile'
@@ -453,7 +470,7 @@ const GreenPages: React.FC = () => {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <div className='h-full flex flex-col items-center justify-center '>
+                    <div className="h-full flex flex-col items-center justify-center ">
                       <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
                         <Sprout className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-green-600" />
                       </div>
@@ -571,6 +588,14 @@ const GreenPages: React.FC = () => {
 
           {/* Right Side - Tab Content */}
           <div className="lg:col-span-2">
+            {activeTab === 'mapDropdown' && (
+              <MapDropdown
+                farms={farmsData}
+                selectedFarm={farmData}
+                onSelectFarm={(Farm) => setFarmData(Farm)}
+              />
+            )}
+
             {activeTab === 'profile' && (
               <ProfileTab
                 staffDirectory={staffDirectoryData ?? null}
@@ -1000,22 +1025,34 @@ const GreenPages: React.FC = () => {
                         </label>
 
                         <div className="relative">
-                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">09</span>
+                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">
+                            09
+                          </span>
                           <input
                             type="text"
                             value={contactRest}
                             onChange={(e) => {
-                              const digitsOnly = e.target.value.replace(/\D/g, '');
+                              const digitsOnly = e.target.value.replace(
+                                /\D/g,
+                                ''
+                              );
                               const limited = digitsOnly.slice(0, 9); // 09 + 9 digits = 11
                               setContactRest(limited);
                               // keep staffForm.contact_number in sync for any other uses
-                              handleStaffFormChange('contact_number', limited ? `09${limited}` : '');
+                              handleStaffFormChange(
+                                'contact_number',
+                                limited ? `09${limited}` : ''
+                              );
                             }}
                             className="w-full pl-14 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium"
                             placeholder="9XXXXXXXX"
                           />
                         </div>
-                        <div className="text-xs text-gray-500">Contact will be saved as <span className="font-medium">09XXXXXXXXX</span>. Only numbers allowed.</div>
+                        <div className="text-xs text-gray-500">
+                          Contact will be saved as{' '}
+                          <span className="font-medium">09XXXXXXXXX</span>. Only
+                          numbers allowed.
+                        </div>
                       </div>
                     </div>
                   </div>
