@@ -90,6 +90,21 @@ const programCategories = [
   },
 ];
 
+
+interface ProgramItem {
+  _id: string;
+  title: string;
+  items: ItemInt[];
+  category?: string;
+  createdAt?: string;
+}
+
+interface ItemInt {
+  name: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 type ImageData = {
   key: string;
   mimetype: string;
@@ -139,6 +154,21 @@ export default function Trading() {
     error: productsDataErr,
     refetch: refetchProduct,
   } = useFetchData<Product[]>('/products');
+
+  const {
+    data: programsData,
+    loading: programLoading,
+    error: programError,
+    refetch: refetchPrograms,
+  } = useFetchData<ProgramItem[]>('/talipapanatin');
+
+  const programs: ProgramItem[] = useMemo(() => {
+    if (programsData && !programLoading && !programError) {
+      return programsData;
+    } else {
+      return [];
+    }
+  }, [programsData, programLoading, programError]);
 
   const {
     data: materialsData,
@@ -639,7 +669,7 @@ export default function Trading() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {programCategories.map((category, index) => (
+              {programs.length > 0 && programs.map((category, index) => (
                 <div
                   key={index}
                   className="rounded-2xl bg-white border border-gray-200 shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden"
@@ -664,7 +694,7 @@ export default function Trading() {
                         >
                           <CheckCircle className="w-3 h-3 text-green-600 mt-1 mr-2 flex-shrink-0" />
                           <span className="text-xs font-medium text-gray-700 leading-relaxed">
-                            {item}
+                            {item.name}
                           </span>
                         </li>
                       ))}
