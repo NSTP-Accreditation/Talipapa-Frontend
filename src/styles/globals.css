@@ -192,3 +192,14 @@ html {
 .animate-slideDown {
   animation: slideDown 0.2s ease-out;
 }
+
+/* Hide number input spinner for inputs with .no-spinner */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinner {
+  -moz-appearance: textfield;
+}
