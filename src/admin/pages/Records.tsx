@@ -18,6 +18,8 @@ import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useAuth } from '@/contexts/AuthContext';
 import dayjs from 'dayjs';
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 
 // Heuristic address validator: not perfect, but rejects obvious gibberish.
 // Rules applied:
@@ -45,11 +47,16 @@ const validateAddress = (address: string) => {
   }
 
   const hasNumber = /\d/.test(clean);
-  const commonKeywords = /street|st\.?|road|rd\.?|avenue|ave\.?|lane|ln\.?|boulevard|blvd\.?|drive|dr\.?|block|brgy|barangay|purok|compound|subdivision|subd\.?|sitio|zone|city|municipal|province|town|street/gi;
+  const commonKeywords =
+    /street|st\.?|road|rd\.?|avenue|ave\.?|lane|ln\.?|boulevard|blvd\.?|drive|dr\.?|block|brgy|barangay|purok|compound|subdivision|subd\.?|sitio|zone|city|municipal|province|town|street/gi;
 
   if (!hasNumber && !commonKeywords.test(clean)) {
     // If no digits and no address keywords, likely not a real address
-    return { valid: false, message: 'Address should include a house number or a common address term (street, barangay, city, etc.).' };
+    return {
+      valid: false,
+      message:
+        'Address should include a house number or a common address term (street, barangay, city, etc.).',
+    };
   }
 
   // Reject if most tokens are single letters (e.g., 'a b c')
@@ -230,6 +237,181 @@ const ResidentRecords: React.FC = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
+  const handleExportToExcel = async () => {
+    if (!records || records.length === 0) {
+      alert('No records available to export.');
+      return;
+    }
+
+    // --- Create Workbook & Sheets ---
+    const workbook = new ExcelJS.Workbook();
+    const summarySheet = workbook.addWorksheet('Resident Summary');
+    const recordsSheet = workbook.addWorksheet('Resident Records');
+    const rawDataSheet = workbook.addWorksheet('Raw Data'); // ✅ New sheet
+
+    // --- SUMMARY CALCULATIONS ---
+    const totalResidents = records.length;
+    const totalPoints = records.reduce((sum, r) => sum + (r.points || 0), 0);
+    const avgAge = (
+      records.reduce((sum, r) => sum + (Number(r.age) || 0), 0) / totalResidents
+    ).toFixed(1);
+
+    const ageGroups = { '0–17': 0, '18–35': 0, '36–59': 0, '60+': 0 };
+    records.forEach((r) => {
+      const age = Number(r.age);
+      if (age <= 17) ageGroups['0–17']++;
+      else if (age <= 35) ageGroups['18–35']++;
+      else if (age <= 59) ageGroups['36–59']++;
+      else ageGroups['60+']++;
+    });
+
+    // --- HEADER ---
+    summarySheet.mergeCells('A1', 'C1');
+    const titleCell = summarySheet.getCell('A1');
+    titleCell.value = '🏛️ Resident Crystallized Report';
+    titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
+    titleCell.font = { size: 18, bold: true, color: { argb: 'FFFFFFFF' } };
+    titleCell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF2E7D32' },
+    };
+    summarySheet.getRow(1).height = 35;
+
+    // --- KEY METRICS ---
+    const metrics = [
+      ['Total Residents', totalResidents],
+      ['Average Age', avgAge],
+      ['Total Points', totalPoints],
+    ];
+    summarySheet.addRows([[], ...metrics, [], ['Age Group', 'Count']]);
+    Object.entries(ageGroups).forEach(([group, count]) => {
+      summarySheet.addRow([group, count]);
+    });
+
+    // Styling summary
+    summarySheet.columns = [{ width: 20 }, { width: 20 }, { width: 20 }];
+    summarySheet.eachRow((row, rowNumber) => {
+      row.alignment = { vertical: 'middle', horizontal: 'center' };
+      row.font = { name: 'Calibri', size: 12 };
+      if (rowNumber > 2 && rowNumber < 6) {
+        row.eachCell((cell) => {
+          cell.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' },
+          };
+        });
+      }
+    });
+
+    // --- BAR CHART (Age Group Distribution) ---
+    const chartStartRow = 9;
+    const chartData: (string | number)[][] = [['Age Group', 'Count']];
+    Object.entries(ageGroups).forEach(([key, val]) =>
+      chartData.push([key, val])
+    );
+    summarySheet.addRows([[], ...chartData]);
+
+    // Simulated visual bar chart
+    let rowIndex = chartStartRow + 1;
+    for (const [group, count] of Object.entries(ageGroups)) {
+      const row = summarySheet.getRow(rowIndex);
+      const barLength = Math.floor((count / totalResidents) * 30);
+      const bar = '█'.repeat(barLength);
+      row.getCell(3).value = bar;
+      row.getCell(3).font = { color: { argb: 'FF2E7D32' } };
+      rowIndex++;
+    }
+
+    // --- RECORDS SHEET ---
+    recordsSheet.columns = [
+      { header: '#', key: 'num', width: 5 },
+      { header: 'Record ID', key: 'record_id', width: 20 },
+      { header: 'Full Name', key: 'name', width: 25 },
+      { header: 'Age', key: 'age', width: 10 },
+      { header: 'Points', key: 'points', width: 10 },
+      { header: 'Address', key: 'address', width: 40 },
+      { header: 'Created At', key: 'createdAt', width: 25 },
+    ];
+
+    records.forEach((r, i) => {
+      recordsSheet.addRow({
+        num: i + 1,
+        record_id: r._id,
+        name: `${r.firstName} ${r.middleName ? r.middleName + ' ' : ''}${r.lastName}`,
+        age: r.age,
+        points: r.points,
+        address: r.address,
+        createdAt: dayjs(r.createdAt).format('YYYY-MM-DD | h:mm:ss A'),
+      });
+    });
+
+    // Style header row
+    const headerRow = recordsSheet.getRow(1);
+    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    headerRow.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF43A047' },
+    };
+    headerRow.alignment = { horizontal: 'center', vertical: 'middle' };
+    headerRow.height = 25;
+
+    // Border all cells
+    recordsSheet.eachRow({ includeEmpty: false }, (row) => {
+      row.eachCell((cell) => {
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' },
+        };
+      });
+    });
+
+    // --- RAW DATA SHEET ---
+    const rawHeaderStyle = {
+      font: { bold: true, color: { argb: 'FFFFFFFF' } },
+      fill: {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FF00796B' },
+      },
+      alignment: { horizontal: 'center', vertical: 'middle' },
+    };
+
+    const allKeys = Object.keys(records[0] || {});
+    rawDataSheet.columns = allKeys.map((key) => ({
+      header: key,
+      key,
+      width: 25,
+    }));
+    records.forEach((r) => rawDataSheet.addRow(r));
+
+    const rawHeaderRow = rawDataSheet.getRow(1);
+    rawHeaderRow.eachCell((cell: ExcelJS.Cell) => {
+      cell.font = rawHeaderStyle.font as ExcelJS.Font;
+      cell.fill = rawHeaderStyle.fill as ExcelJS.Fill;
+      cell.alignment = rawHeaderStyle.alignment as ExcelJS.Alignment;
+    });
+
+    // Optional: add a small timestamp note
+    const timestampRow = rawDataSheet.addRow([]);
+    rawDataSheet.addRow(['Generated on:', new Date().toLocaleString()]).font = {
+      italic: true,
+      color: { argb: 'FF555555' },
+    };
+
+    // --- EXPORT FILE ---
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    saveAs(blob, 'Resident_Crystallized_Report.xlsx');
+  };
+
   const prevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
@@ -267,9 +449,12 @@ const ResidentRecords: React.FC = () => {
             + Add Residents
           </Button>
 
-          <Button className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm flex items-center gap-2 px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+          <Button
+            onClick={handleExportToExcel}
+            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm flex items-center gap-2 px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+          >
             <Download className="w-5 h-5" />
-            Download Excel
+            Export Crystallized Report
           </Button>
         </div>
       </div>
@@ -513,7 +698,9 @@ const ResidentRecords: React.FC = () => {
                       <span>Record ID</span>
                     </div>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">BT-</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">
+                        BT-
+                      </span>
                       <input
                         type="text"
                         value={recordIdRest}
@@ -527,7 +714,11 @@ const ResidentRecords: React.FC = () => {
                         placeholder="0001"
                       />
                     </div>
-                    <div className="text-xs text-gray-500 mt-2">Record ID will be stored as <span className="font-medium">BT-0001</span>. Only 4 digits allowed.</div>
+                    <div className="text-xs text-gray-500 mt-2">
+                      Record ID will be stored as{' '}
+                      <span className="font-medium">BT-0001</span>. Only 4
+                      digits allowed.
+                    </div>
                   </label>
                 </div>
                 {/* Name fields in a row */}
@@ -643,7 +834,9 @@ const ResidentRecords: React.FC = () => {
                     </div>
 
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">09</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">
+                        09
+                      </span>
                       <input
                         type="text"
                         value={contactRest}
@@ -657,7 +850,11 @@ const ResidentRecords: React.FC = () => {
                         placeholder="9XXXXXXXX"
                       />
                     </div>
-                    <div className="text-xs text-gray-500 mt-2">Contact will be saved as <span className="font-medium">09XXXXXXXXX</span>. Only numbers allowed. Total digits including prefix will be 11.</div>
+                    <div className="text-xs text-gray-500 mt-2">
+                      Contact will be saved as{' '}
+                      <span className="font-medium">09XXXXXXXXX</span>. Only
+                      numbers allowed. Total digits including prefix will be 11.
+                    </div>
                   </label>
                 </div>
               </div>
@@ -689,7 +886,10 @@ const ResidentRecords: React.FC = () => {
                   {addressError ? (
                     <p className="text-sm text-red-600 mt-2">{addressError}</p>
                   ) : (
-                    <p className="text-sm text-gray-500 mt-2">Provide full house number, street, barangay/purok, city or municipality.</p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      Provide full house number, street, barangay/purok, city or
+                      municipality.
+                    </p>
                   )}
                 </label>
               </div>
