@@ -90,19 +90,17 @@ export default function Guidelines() {
           {guides.map((guide: any) => {
             const IconComponent = getIconForCategory(guide.category);
             return (
-              <Link
-                key={guide._id}
-                to={`/guidelines/${guide._id}`}
-                className="group"
-              >
-                <div className="bg-white border-2 border-gray-100 rounded-2xl p-8 text-center hover:shadow-2xl hover:border-green-300 hover:-translate-y-2 transition-all duration-300 h-full flex flex-col items-center justify-center min-h-[200px] relative overflow-hidden">
-                  {/* Background Gradient on Hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div key={guide._id} className="group">
+          <div className="bg-white border-2 border-gray-100 rounded-2xl p-8 text-center transition-all duration-300 transform-gpu hover:-translate-y-3 hover:scale-[1.02] hover:shadow-2xl hover:border-green-300 group h-full flex flex-col items-center justify-center min-h-[200px] relative overflow-hidden">
+            {/* Decorative floating gradient blob */}
+            <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-gradient-to-br from-green-100 to-transparent opacity-20 group-hover:opacity-60 transform rotate-45 transition-all duration-500 pointer-events-none"></div>
+            {/* Background Gradient on Hover */}
+            <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                   {/* Content */}
                   <div className="relative z-10">
                     <div
-                      className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-md"
+                      className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-125 group-hover:-rotate-6 group-hover:translate-y-[-4px] transition-transform duration-500 shadow-md"
                       style={{ backgroundColor: '#e8f5e9' }}
                     >
                       <IconComponent
@@ -118,9 +116,17 @@ export default function Guidelines() {
                         {guide.description}
                       </p>
                     )}
+
+                    {/* View Details CTA */}
+                    <div className="mt-6">
+                      <Link to={`/guidelines/${guide._id}`} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors">
+                        <span>View Details</span>
+                        <ChevronRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-2" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>

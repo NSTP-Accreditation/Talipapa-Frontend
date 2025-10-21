@@ -440,10 +440,8 @@ const AdminLogin: React.FC = () => {
               <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full -ml-48 -mb-48"></div>
 
               <div className="relative z-10 text-center px-4 lg:px-8">
-                <h4 className="text-4xl lg:text-4xl font-black mb-6 lg:mb-8 leading-tight">
-                  Welcome Back,
-                  <br />
-                  Admin
+                <h4 className="text-4xl lg:text-3xl font-black mb-6 lg:mb-8 leading-tight">
+                  Welcome Back, Admin 
                 </h4>
                 <p className="text-white/90 text-base lg:text-lg leading-relaxed font-light">
                   Access the comprehensive Barangay Content Management System.
@@ -453,12 +451,7 @@ const AdminLogin: React.FC = () => {
                   engagement platform.
                 </p>
 
-                {/* Additional decorative element */}
-                <div className="mt-10 lg:mt-12 flex justify-center space-x-3">
-                  <div className="w-3 h-3 bg-white rounded-full opacity-50"></div>
-                  <div className="w-3 h-3 bg-white rounded-full opacity-75"></div>
-                  <div className="w-3 h-3 bg-white rounded-full"></div>
-                </div>
+               
               </div>
             </div>
           </div>
