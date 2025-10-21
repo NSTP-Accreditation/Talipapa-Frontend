@@ -506,8 +506,8 @@ const ResidentRecords: React.FC = () => {
                   <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  {/* Record ID with fixed BT- prefix */}
+                {/* Record ID above name fields */}
+                <div className="mb-5">
                   <label className="block group">
                     <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                       <span>Record ID</span>
@@ -529,6 +529,10 @@ const ResidentRecords: React.FC = () => {
                     </div>
                     <div className="text-xs text-gray-500 mt-2">Record ID will be stored as <span className="font-medium">BT-0001</span>. Only 4 digits allowed.</div>
                   </label>
+                </div>
+                {/* Name fields in a row */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  {/* First Name */}
                   <label className="block group">
                     <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                       <span className="text-red-500">*</span>
@@ -550,7 +554,7 @@ const ResidentRecords: React.FC = () => {
                       />
                     </div>
                   </label>
-
+                  {/* Last Name */}
                   <label className="block group">
                     <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                       <span className="text-red-500">*</span>
@@ -572,11 +576,10 @@ const ResidentRecords: React.FC = () => {
                       />
                     </div>
                   </label>
-
+                  {/* Middle Name */}
                   <label className="block group">
                     <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                       <span>Middle Name</span>
-                      
                     </div>
                     <div className="relative">
                       <input
