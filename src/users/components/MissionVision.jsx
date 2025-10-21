@@ -70,53 +70,61 @@ export default function MissionVision() {
         </div>
       </div>
       {/* Core Values */}
-<div className="max-w-6xl w-full mx-auto px-6">
-  <div className="bg-gradient-to-br from-green-600 via-green-700 to-emerald-800 rounded-3xl py-16 px-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 text-center text-white shadow-2xl relative overflow-hidden">
+      <div className="max-w-6xl w-full mx-auto px-6">
+        <div className="bg-gradient-to-br from-green-600 via-green-700 to-emerald-800 rounded-3xl py-16 px-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 text-center text-white shadow-2xl relative overflow-hidden">
+          {/* Soft floating background effect */}
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_30%_20%,white,transparent_60%)] pointer-events-none"></div>
 
-    {/* Soft floating background effect */}
-    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_30%_20%,white,transparent_60%)] pointer-events-none"></div>
+          {/* TALIpapa */}
+          <div className="relative flex flex-col items-center text-center group hover:-translate-y-3 transition-all duration-500">
+            <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg backdrop-blur-sm border border-white/30">
+              <Leaf
+                size={40}
+                className="text-lime-300 group-hover:text-white transition-colors duration-300"
+              />
+            </div>
+            <h4 className="font-extrabold text-2xl mb-2 tracking-wide bg-gradient-to-r from-lime-200 to-white bg-clip-text text-transparent drop-shadow-md">
+              Talino
+            </h4>
+            <p className="text-sm text-lime-100 max-w-xs">
+              Protecting our environment and promoting sustainability.
+            </p>
+          </div>
 
-    {/* TALIpapa */}
-    <div className="relative flex flex-col items-center text-center group hover:-translate-y-3 transition-all duration-500">
-      <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg backdrop-blur-sm border border-white/30">
-        <Leaf size={40} className="text-lime-300 group-hover:text-white transition-colors duration-300" />
+          {/* PAkikisama */}
+
+          <div className="relative flex flex-col items-center text-center group hover:-translate-y-3 transition-all duration-500">
+            <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg backdrop-blur-sm border border-white/30">
+              <ShieldCheck
+                size={40}
+                className="text-sky-300 group-hover:text-white transition-colors duration-300"
+              />
+            </div>
+            <h4 className="font-extrabold text-2xl mb-2 tracking-wide bg-gradient-to-r from-sky-200 to-white bg-clip-text text-transparent drop-shadow-md">
+              Pakikisama
+            </h4>
+            <p className="text-sm text-sky-100 max-w-xs">
+              Caring for our community through empathy and collaboration.
+            </p>
+          </div>
+
+          {/* PAgmamahal */}
+          <div className="relative flex flex-col items-center text-center group hover:-translate-y-3 transition-all duration-500">
+            <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg backdrop-blur-sm border border-white/30">
+              <Heart
+                size={40}
+                className="text-rose-300 group-hover:text-white transition-colors duration-300"
+              />
+            </div>
+            <h4 className="font-extrabold text-2xl mb-2 tracking-wide bg-gradient-to-r from-rose-200 to-white bg-clip-text text-transparent drop-shadow-md">
+              Pagmamahal
+            </h4>
+            <p className="text-sm text-rose-100 max-w-xs">
+              Open, accountable, and guided by love for our people.
+            </p>
+          </div>
+        </div>
       </div>
-      <h4 className="font-extrabold text-2xl mb-2 tracking-wide bg-gradient-to-r from-lime-200 to-white bg-clip-text text-transparent drop-shadow-md">
-        TALIpapa
-      </h4>
-      <p className="text-sm text-lime-100 max-w-xs">
-        Protecting our environment and promoting sustainability.
-      </p>
-    </div>
-
-    {/* PAkikisama */}
-    <div className="relative flex flex-col items-center text-center group hover:-translate-y-3 transition-all duration-500">
-      <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg backdrop-blur-sm border border-white/30">
-        <Heart size={40} className="text-rose-300 group-hover:text-white transition-colors duration-300" />
-      </div>
-      <h4 className="font-extrabold text-2xl mb-2 tracking-wide bg-gradient-to-r from-rose-200 to-white bg-clip-text text-transparent drop-shadow-md">
-        PAkikisama
-      </h4>
-      <p className="text-sm text-rose-100 max-w-xs">
-        Caring for our community through empathy and collaboration.
-      </p>
-    </div>
-
-    {/* PAgmamahal */}
-    <div className="relative flex flex-col items-center text-center group hover:-translate-y-3 transition-all duration-500">
-      <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg backdrop-blur-sm border border-white/30">
-        <ShieldCheck size={40} className="text-sky-300 group-hover:text-white transition-colors duration-300" />
-      </div>
-      <h4 className="font-extrabold text-2xl mb-2 tracking-wide bg-gradient-to-r from-sky-200 to-white bg-clip-text text-transparent drop-shadow-md">
-        PAgmamahal
-      </h4>
-      <p className="text-sm text-sky-100 max-w-xs">
-        Open, accountable, and guided by love for our people.
-      </p>
-    </div>
-  </div>
-</div>
-
     </section>
   );
 }
