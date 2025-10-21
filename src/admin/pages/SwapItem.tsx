@@ -33,7 +33,8 @@ const SwapItem = () => {
 
   const [redeemInProgress, setRedeemInProgress] = useState(false);
   const [searchingRecord, setSearchingRecord] = useState(false);
-  const [recordId, setRecordId] = useState('');
+  // Store only the editable part (suffix) of the Record ID, fixed prefix is 'BT-'
+  const [recordIdRest, setRecordIdRest] = useState('');
   const [lastName, setLastName] = useState('');
   const [recordData, setRecordData] = useState<RecordData | null>(null);
   const [availableProducts, setAvailableProducts] = useState<Product[]>([]);
@@ -52,12 +53,12 @@ const SwapItem = () => {
   const findRecord = async () => {
     try {
       const updatedRecord = await authFetch(
-        `/records/${recordId}?lastName=${lastName}`
+        `/records/BT-${recordIdRest}?lastName=${lastName}`
       );
       setRecordData(updatedRecord);
     } catch (error) {
       console.error('Error finding record:', error);
-      alert("No Record Found");
+      alert('No Record Found');
       setRecordData(null);
     }
   };
@@ -127,7 +128,7 @@ const SwapItem = () => {
     };
 
     try {
-      const data = await authFetch(`/records/${recordId}`, {
+      const data = await authFetch(`/records/BT-${recordIdRest}`, {
         method: 'PATCH',
         body: JSON.stringify(requestBody),
       });
@@ -140,7 +141,7 @@ const SwapItem = () => {
 
       // Refresh data after successful redemption
       const updatedRecord = await authFetch(
-        `/records/${recordId}?lastName=${lastName}`
+        `/records/BT-${recordIdRest}?lastName=${lastName}`
       );
       setRecordData(updatedRecord);
       await findProducts(updatedRecord);
@@ -189,12 +190,35 @@ const SwapItem = () => {
             Find Resident Record
           </h5>
           <div className="flex flex-col sm:flex-row items-stretch gap-5 w-full">
-            <FloatingLabelInput
-              label="Record ID"
-              value={recordId}
-              onChange={(e) => setRecordId(e.target.value)}
-              required
-            />
+            {/* Record ID with fixed BT- prefix, Records.tsx style */}
+            <label className="block group w-full">
+              <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
+                <span>Record ID</span>
+              </div>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold">
+                  BT-
+                </span>
+                <input
+                  type="text"
+                  value={recordIdRest}
+                  onChange={(e) => {
+                    // Allow digits only and limit to 4 digits
+                    const digitsOnly = e.target.value.replace(/\D/g, '');
+                    const limited = digitsOnly.slice(0, 4);
+                    setRecordIdRest(limited);
+                  }}
+                  className="w-full pl-16 border-2 border-gray-300 rounded-xl px-4 py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400"
+                  placeholder="0001"
+                  required
+                />
+              </div>
+              <div className="text-xs text-gray-500 mt-2">
+                Record ID will be stored as{' '}
+                <span className="font-medium">BT-0001</span>. Only 4 digits
+                allowed.
+              </div>
+            </label>
 
             <FloatingLabelInput
               label="Last Name"
@@ -216,8 +240,9 @@ const SwapItem = () => {
                 </>
               ) : (
                 <>
-                <Search className="w-5 h-5" />
-                Find Record</>
+                  <Search className="w-5 h-5" />
+                  Find Record
+                </>
               )}
             </button>
           </div>
@@ -363,7 +388,6 @@ const ProductCard = ({
   onRedeem,
   redeemInProgress,
 }: ProductCardProps) => {
-
   return (
     <div
       className="px-6 py-6 rounded-lg text-white shadow-md"
