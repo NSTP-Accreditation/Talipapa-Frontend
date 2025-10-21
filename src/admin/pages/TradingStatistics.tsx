@@ -145,11 +145,6 @@ export default function TradingStatisticsPage() {
         `${log?.title}`,
         `${log?.details?.pointsDeducted ? log?.details?.pointsDeducted : log?.details?.pointsAdded ? log?.details?.pointsAdded : ''} `,
       ]);
-      // const transactionData = [
-      //   ['09:15 AM', 'Juan Santos', 'Plastic Bottles', '+25 pts'],
-      //   ['09:30 AM', 'Maria Cruz', 'Cardboard', '+40 pts'],
-      //   ['09:45 AM', 'Pedro Garcia', 'Glass Containers', '+18 pts'],
-      // ];
 
       autoTable(doc, {
         head: [['Time', 'User', 'Descriptionn', 'Points']],

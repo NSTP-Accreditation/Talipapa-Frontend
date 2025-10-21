@@ -694,7 +694,7 @@ const ResidentRecords: React.FC = () => {
                 </div>
 
                 {/* Record ID above name fields */}
-                <div className="mb-5">
+                {/* <div className="mb-5">
                   <label className="block group">
                     <div className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
                       <span>Record ID</span>
@@ -722,7 +722,7 @@ const ResidentRecords: React.FC = () => {
                       digits allowed.
                     </div>
                   </label>
-                </div>
+                </div> */}
                 {/* Name fields in a row */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   {/* First Name */}

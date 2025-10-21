@@ -477,7 +477,7 @@ const Settings: React.FC = () => {
                     Roles
                   </label>
                   <div className="space-y-2">
-                    {['Editor', 'Admin'].map((roleOption) => (
+                    {['Admin'].map((roleOption) => (
                       <label
                         key={roleOption}
                         className="flex items-center space-x-3 cursor-pointer"
