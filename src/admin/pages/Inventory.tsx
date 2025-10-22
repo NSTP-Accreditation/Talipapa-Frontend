@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
+import { useToast } from '@/hooks/useToast';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,7 +26,7 @@ interface Product {
   name: string;
   image?: string;
   category?: string;
-  subCategory?: string,
+  subCategory?: string;
   description?: string;
   stocks?: number;
   requiredPoints?: number;
@@ -188,7 +189,7 @@ const ProductModal: React.FC<{
     const url = URL.createObjectURL(file);
     fileUrlRef.current = url;
     setFormData((prev: any) => ({ ...prev, image: url, imageFile: file }));
-  };  
+  };
 
   return (
     <div className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
@@ -711,9 +712,19 @@ const MaterialModal: React.FC<{
 
 const Inventory: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { data: productsData, loading: productsDataLoading, error: productsDataErr, refetch: refetchProduct } = useFetchData("/products");
-  const { data: materialssData, loading: materialsDataLoading, error: materialsDataErr, refetch: refetchMaterials } = useFetchData("/materials");
-  
+  const {
+    data: productsData,
+    loading: productsDataLoading,
+    error: productsDataErr,
+    refetch: refetchProduct,
+  } = useFetchData('/products');
+  const {
+    data: materialssData,
+    loading: materialsDataLoading,
+    error: materialsDataErr,
+    refetch: refetchMaterials,
+  } = useFetchData('/materials');
+
   const authFetch = useAuthFetch();
 
   useEffect(() => {
@@ -722,33 +733,32 @@ const Inventory: React.FC = () => {
   }, []);
 
   const products: Product[] = useMemo(() => {
-    if(productsData && !productsDataLoading && !productsDataErr) {
-      return  productsData?.map(product => {
+    if (productsData && !productsDataLoading && !productsDataErr) {
+      return productsData?.map((product) => {
         const { _id, image, ...rest } = product;
         return {
           ...rest,
           id: _id,
-          image: image.url
-        }
-      })  
+          image: image.url,
+        };
+      });
     }
     return [];
-  }, [productsData, productsDataLoading, productsDataErr])
+  }, [productsData, productsDataLoading, productsDataErr]);
 
   const materials: Material[] = useMemo(() => {
-    if(materialssData && !materialsDataLoading && !materialsDataErr) {
-      return  materialssData?.map(material => {
+    if (materialssData && !materialsDataLoading && !materialsDataErr) {
+      return materialssData?.map((material) => {
         const { _id, image, ...rest } = material;
         return {
           ...rest,
           id: _id,
-          image: image.url
-        }
-      })  
+          image: image.url,
+        };
+      });
     }
     return [];
-  }, [materialssData, materialsDataLoading, materialsDataErr])
-
+  }, [materialssData, materialsDataLoading, materialsDataErr]);
 
   const [search, setSearch] = useState('');
   const [showProductModal, setShowProductModal] = useState(false);
@@ -775,7 +785,7 @@ const Inventory: React.FC = () => {
     stocks: '',
     requiredPoints: '',
     image: '',
-    imageFile: null
+    imageFile: null,
   });
 
   const [materialFormData, setMaterialFormData] = useState({
@@ -783,10 +793,10 @@ const Inventory: React.FC = () => {
     description: '',
     pointsPerKg: '',
     image: '',
-    imageFile: null
+    imageFile: null,
   });
 
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const { success } = useToast();
 
   useEffect(() => {
     if (!showProductModal) {
@@ -798,7 +808,7 @@ const Inventory: React.FC = () => {
         stocks: '',
         requiredPoints: '',
         image: '',
-        imageFile: null
+        imageFile: null,
       });
       setProductMode('add');
       setEditingProduct(null);
@@ -812,19 +822,14 @@ const Inventory: React.FC = () => {
         description: '',
         pointsPerKg: '',
         image: '',
-        imageFile: null
+        imageFile: null,
       });
       setMaterialMode('add');
       setEditingMaterial(null);
     }
   }, [showMaterialModal]);
 
-  useEffect(() => {
-    if (successMessage) {
-      const timer = setTimeout(() => setSuccessMessage(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [successMessage]);
+  // toasts handled via useToast
 
   const filteredProducts = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -858,7 +863,7 @@ const Inventory: React.FC = () => {
       !productFormData.requiredPoints.trim() ||
       Number(productFormData.requiredPoints) < 0
     )
-    return alert('Please enter valid required points');
+      return alert('Please enter valid required points');
 
     const newProduct: Product = {
       id:
@@ -881,23 +886,19 @@ const Inventory: React.FC = () => {
 
     try {
       if (productMode === 'edit' && editingProduct) {
-        // setProducts((prev) =>
-        //   prev.map((p) => (p.id === editingProduct.id ? newProduct : p))
-        // );
-        setSuccessMessage('Product updated successfully!');
+        success('Product updated successfully!', { title: 'Updated' });
       } else {
-        const response = await authFetch("/products", {
-          method: "POST",
-          body: formData
-        })
-        
+        const response = await authFetch('/products', {
+          method: 'POST',
+          body: formData,
+        });
+
         await refetchProduct();
-        setSuccessMessage(response?.message);
+        success(response?.message || 'Product created', { title: 'Success' });
       }
     } catch (error) {
       console.log(error);
     }
-    
 
     setShowProductModal(false);
   }
@@ -928,21 +929,19 @@ const Inventory: React.FC = () => {
     });
     try {
       if (materialMode === 'edit' && editingMaterial) {
-      
-        setSuccessMessage('Material updated successfully!');
+        success('Material updated successfully!', { title: 'Updated' });
       } else {
-        const response = await authFetch("/materials", {
-          method: "POST",
-          body: formData
-        })
-        
+        const response = await authFetch('/materials', {
+          method: 'POST',
+          body: formData,
+        });
+
         await refetchMaterials();
-        setSuccessMessage(response.message);
+        success(response.message || 'Material created', { title: 'Success' });
       }
     } catch (error) {
       console.log(error);
     }
-    
 
     setShowMaterialModal(false);
   }
@@ -950,10 +949,10 @@ const Inventory: React.FC = () => {
   function handleEditProduct(product: Product) {
     setProductMode('edit');
     setEditingProduct(product);
-    
+
     const category = product.category;
     const subCategory = product.subCategory;
-    
+
     setProductFormData({
       name: product.name,
       description: product.description || '',
@@ -977,7 +976,7 @@ const Inventory: React.FC = () => {
       description: material.description || '',
       pointsPerKg: material.pointsPerKg?.toString() || '',
       image: material.image || '',
-      imageFile: null
+      imageFile: null,
     });
 
     setShowMaterialModal(true);
@@ -992,16 +991,16 @@ const Inventory: React.FC = () => {
 
     if (deleteModal.type === 'product') {
       await authFetch(`/products/${deleteModal?.item.id}`, {
-        method: "DELETE"
-      })
+        method: 'DELETE',
+      });
       await refetchProduct();
-      setSuccessMessage('Product deleted successfully!');
+      success('Product deleted successfully!', { title: 'Deleted' });
     } else {
       await authFetch(`/materials/${deleteModal?.item.id}`, {
-        method: "DELETE"
-      })
+        method: 'DELETE',
+      });
       await refetchMaterials();
-      setSuccessMessage('Material deleted successfully!');
+      success('Material deleted successfully!', { title: 'Deleted' });
     }
 
     setDeleteModal({ open: false, item: null, type: null });
@@ -1016,14 +1015,7 @@ const Inventory: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 p-3 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
-      {successMessage && (
-        <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-5 duration-300">
-          <div className="bg-green-600 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 backdrop-blur-sm">
-            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
-            <span className="font-medium text-sm">{successMessage}</span>
-          </div>
-        </div>
-      )}
+      {/* Success toasts are rendered by the global ToastProvider */}
 
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-6">
         <div className="flex-shrink-0">
