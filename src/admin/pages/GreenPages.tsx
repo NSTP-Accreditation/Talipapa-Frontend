@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { useToast } from '@/hooks/useToast';
 import {
   Card,
   CardHeader,
@@ -208,8 +209,9 @@ const GreenPages: React.FC = () => {
   const [skillLoading, setSkillLoading] = useState(false);
 
   const handleSkillClick = async (skill: { _id?: string; name: string }) => {
+    const { error: showError } = useToast();
     if (!farmData?._id || !skill._id) {
-      alert('Missing farm or skill id');
+      showError('Missing farm or skill id', { title: 'Validation' });
       return;
     }
 
@@ -221,9 +223,9 @@ const GreenPages: React.FC = () => {
       setSkillStaff(Array.isArray(res?.staff) ? res.staff : []);
       setSkillModalOpen(true);
     } catch (err) {
-      const msg =
-        err instanceof Error ? err.message : 'Failed to fetch staff by skill';
-      alert(msg);
+      const msg = err instanceof Error ? err.message : 'Failed to fetch staff by skill';
+      const { error: showError } = useToast();
+      showError(msg, { title: 'Error' });
     } finally {
       setSkillLoading(false);
     }

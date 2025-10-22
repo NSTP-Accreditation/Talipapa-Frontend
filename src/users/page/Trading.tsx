@@ -222,7 +222,8 @@ export default function Trading() {
   const handleConvert = () => {
     const numericWeight = parseFloat(weight);
     if (numericWeight > 599) {
-      alert('Maximum weight allowed is 599 kg');
+      const { error } = useToast();
+      error('Maximum weight allowed is 599 kg', { title: 'Validation' });
       return;
     }
 
@@ -244,7 +245,8 @@ export default function Trading() {
         title: 'Conversion successful!',
       });
     } else {
-      alert('Please select a recyclable type and enter weight!');
+      const { error } = useToast();
+      error('Please select a recyclable type and enter weight!', { title: 'Validation' });
     }
   };
 

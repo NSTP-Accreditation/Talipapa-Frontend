@@ -796,7 +796,7 @@ const Inventory: React.FC = () => {
     imageFile: null,
   });
 
-  const { success } = useToast();
+  const { success, error: showError } = useToast();
 
   useEffect(() => {
     if (!showProductModal) {
@@ -852,18 +852,18 @@ const Inventory: React.FC = () => {
 
   async function handleAddProduct() {
     if (!productFormData.name.trim())
-      return alert('Please enter a product name');
+      return showError('Please enter a product name', { title: 'Validation' });
     if (!productFormData.category.trim())
-      return alert('Please select a category');
+      return showError('Please select a category', { title: 'Validation' });
     if (!productFormData.subCategory.trim())
-      return alert('Please select a subcategory');
+      return showError('Please select a subcategory', { title: 'Validation' });
     if (!productFormData.stocks.trim() || Number(productFormData.stocks) < 0)
-      return alert('Please enter valid stocks');
+      return showError('Please enter valid stocks', { title: 'Validation' });
     if (
       !productFormData.requiredPoints.trim() ||
       Number(productFormData.requiredPoints) < 0
     )
-      return alert('Please enter valid required points');
+      return showError('Please enter valid required points', { title: 'Validation' });
 
     const newProduct: Product = {
       id:
@@ -905,12 +905,12 @@ const Inventory: React.FC = () => {
 
   async function handleAddMaterial() {
     if (!materialFormData.name.trim())
-      return alert('Please enter a material name');
+      return showError('Please enter a material name', { title: 'Validation' });
     if (
       !materialFormData.pointsPerKg.trim() ||
       Number(materialFormData.pointsPerKg) < 0
     )
-      return alert('Please enter valid points per kilogram');
+      return showError('Please enter valid points per kilogram', { title: 'Validation' });
 
     const newMaterial: Material = {
       id:

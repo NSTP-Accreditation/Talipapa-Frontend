@@ -26,6 +26,7 @@ import {
   X,
   AlertCircle,
 } from 'lucide-react';
+import { useToast } from '@/hooks/useToast';
 import GuidelineEditModal from '../components/Guidelines/GuidelineEditModal';
 
 interface Step {
@@ -160,6 +161,8 @@ const Guidelines: React.FC = () => {
   // Add loading state with 1 second display
   const { isLoading: pageLoading } = useLoadingState(1000);
 
+  const { success, error: showError, info } = useToast();
+
   // fetch guidelines from backend
   const {
     data: guidelinesData,
@@ -259,13 +262,14 @@ const Guidelines: React.FC = () => {
         await refetchGuidelines();
         setIsDeleteModalOpen(false);
         setDeletingGuideline(null);
-        alert(
-          `Guidelines "${deletingGuideline.title}" has been successfully deleted!`
+        success(
+          `Guidelines "${deletingGuideline.title}" has been successfully deleted!`,
+          { title: 'Deleted' }
         );
       } catch (err) {
         const msg =
           err instanceof Error ? err.message : 'Failed to delete guideline';
-        alert(msg);
+            showError(msg, { title: 'Delete failed' });
       }
     };
 
@@ -305,7 +309,9 @@ const Guidelines: React.FC = () => {
       setGuidelines(guidelines.filter((g) => !selectedGuidelines.has(g.id)));
       setSelectedGuidelines(new Set());
       setShowBulkActions(false);
-      alert(`Successfully deleted ${count} guideline${count > 1 ? 's' : ''}.`);
+      success(`Successfully deleted ${count} guideline${count > 1 ? 's' : ''}.`, {
+        title: 'Deleted',
+      });
     }
   };
 
@@ -347,8 +353,9 @@ const Guidelines: React.FC = () => {
           method: 'PUT',
           body: JSON.stringify(payload),
         });
-        alert(
-          `Guidelines "${updatedGuideline.title}" has been successfully updated!`
+        success(
+          `Guidelines "${updatedGuideline.title}" has been successfully updated!`,
+          { title: 'Updated' }
         );
       } else {
         // Create new guideline using POST
@@ -356,8 +363,9 @@ const Guidelines: React.FC = () => {
           method: 'POST',
           body: JSON.stringify(payload),
         });
-        alert(
-          `New guidelines "${updatedGuideline.title}" has been successfully created!`
+        success(
+          `New guidelines "${updatedGuideline.title}" has been successfully created!`,
+          { title: 'Created' }
         );
       }
 
@@ -379,7 +387,7 @@ const Guidelines: React.FC = () => {
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : 'Failed to save guideline';
-      alert(msg);
+      showError(msg, { title: 'Save failed' });
     }
   };
 
@@ -794,7 +802,9 @@ const Guidelines: React.FC = () => {
                   <button
                     onClick={() => {
                       // In a real app, this would open a detailed view
-                      alert(`Opening detailed view for: ${guideline.title}`);
+                      info(`Opening detailed view for: ${guideline.title}`, {
+                        title: 'Open'
+                      });
                     }}
                     className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 px-4 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5"
                   >

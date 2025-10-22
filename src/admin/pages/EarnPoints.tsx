@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Recycle } from 'lucide-react';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useLoadingState } from '../../hooks/useLoadingState';
+import { useToast } from '@/hooks/useToast';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 
 const MATERIALS = [
@@ -55,7 +56,8 @@ export default function App() {
     });
 
     if (!hasValidWeight) {
-      alert('Please enter at least one material weight greater than 0');
+      const { error } = useToast();
+      error('Please enter at least one material weight greater than 0', { title: 'Validation' });
       return;
     }
 
@@ -73,6 +75,8 @@ export default function App() {
       alert(
         `${result.record_id} ${result.lastName} current point is ${result.currentPoints}`
       );
+        const { success } = useToast();
+        success(`${result.record_id} ${result.lastName} current point is ${result.currentPoints}`, { title: 'Success' });
     } catch (error) {
       console.log(error);
     }

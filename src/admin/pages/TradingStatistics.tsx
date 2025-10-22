@@ -15,6 +15,7 @@ import {
 } from '../../components/ui/card';
 import { TradingStatisticsSkeleton } from '../../components/LoadingSkeletons';
 import useFetchData from '../hooks/useFetchData';
+import { useToast } from '@/hooks/useToast';
 import dayjs from 'dayjs';
 
 declare const jsPDF: any;
@@ -171,9 +172,10 @@ export default function TradingStatisticsPage() {
       doc.save(
         `trading_statistics_${new Date().toISOString().split('T')[0]}.pdf`
       );
-    } catch (error) {
-      console.error('Error generating PDF report:', error);
-      alert('Failed to generate PDF report. Please try again.');
+    } catch (err) {
+      console.error('Error generating PDF report:', err);
+      const { error: showError } = useToast();
+      showError('Failed to generate PDF report. Please try again.', { title: 'Export' });
     }
   };
 

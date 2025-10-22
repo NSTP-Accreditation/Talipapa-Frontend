@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useToast } from '@/hooks/useToast';
 import { SquarePen, Save, Home } from 'lucide-react';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import useFetchData from '../hooks/useFetchData';
@@ -93,6 +94,7 @@ const ContentModal: React.FC<ContentModalProps> = ({
 };
 
 export default function AboutBarangayEditable() {
+  const { success, error: showError } = useToast();
   const {
     data,
     loading: dataLoading,
@@ -192,11 +194,11 @@ export default function AboutBarangayEditable() {
 
       await refetch();
 
-      alert('✅ All changes saved successfully!');
+  success('All changes saved successfully!', { title: 'Saved' });
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to save changes';
-      alert('❌ Save failed: ' + message);
+  showError('Save failed: ' + message, { title: 'Save failed' });
     } finally {
       setIsSaving(false);
     }

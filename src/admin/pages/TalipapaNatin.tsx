@@ -13,6 +13,7 @@ import {
   Copy,
 } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
+import { useToast } from '@/hooks/useToast';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import useFetchData from '../hooks/useFetchData';
 import { useAuthFetch } from '../hooks/useAuthFetch';
@@ -51,6 +52,7 @@ export default function TalipapaNatin() {
   const { isLoading: pageLoading } = useLoadingState(1000);
   const { data: programs = [], loading, error, refetch: refetchPrograms } = useFetchData<ProgramItem[]>("/talipapanatin");
   const authFetch = useAuthFetch();
+  const { success, error: showError, info } = useToast();
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProgram, setEditingProgram] = useState<ProgramItem | null>(null);
@@ -106,11 +108,11 @@ export default function TalipapaNatin() {
         });
 
         setHasUnsavedChanges(true);
-        alert(res.message);
+        success(res.message, { title: 'Deleted' });
         refetchPrograms();
       } catch (error) {
         console.error('Error deleting program:', error);
-        alert('Error deleting program. Please try again.');
+        showError('Error deleting program. Please try again.', { title: 'Delete failed' });
       }
     } 
   };
@@ -134,13 +136,13 @@ export default function TalipapaNatin() {
         });
 
         if (res.message) {
-          alert(res.message);
+          success(res.message, { title: 'Created' });
           setHasUnsavedChanges(true);
           refetchPrograms();
         }
       } catch (error) {
         console.error('Error duplicating program:', error);
-        alert('Error duplicating program. Please try again.');
+        showError('Error duplicating program. Please try again.', { title: 'Duplicate failed' });
       }
     }
   };
@@ -157,7 +159,7 @@ export default function TalipapaNatin() {
 
   const saveEdit = async () => {
     if (!formData.title.trim()) {
-      alert('Please enter a program title');
+      showError('Please enter a program title', { title: 'Validation' });
       return;
     }
 
@@ -176,7 +178,7 @@ export default function TalipapaNatin() {
         });
         
         if (res.message) {
-          alert(res.message);
+          success(res.message, { title: 'Updated' });
           setHasUnsavedChanges(true);
           refetchPrograms();
           closeModal();
@@ -196,7 +198,7 @@ export default function TalipapaNatin() {
         });
         
         if (res.message) {
-          alert(res.message);
+          success(res.message, { title: 'Created' });
           setHasUnsavedChanges(true);
           refetchPrograms();
           closeModal();
@@ -204,7 +206,7 @@ export default function TalipapaNatin() {
       }
     } catch (error) {
       console.error('Error saving program:', error);
-      alert('Error saving program. Please try again.');
+      showError('Error saving program. Please try again.', { title: 'Save failed' });
     }
   };
 
@@ -246,7 +248,7 @@ export default function TalipapaNatin() {
 
   const handleSaveAll = () => {
     setHasUnsavedChanges(false);
-    alert('✅ All changes saved successfully!');
+    success('✅ All changes saved successfully!', { title: 'Saved' });
   };
 
   if (pageLoading) {

@@ -11,6 +11,7 @@ import {
   Eye,
 } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
+import { useToast } from '@/hooks/useToast';
 import { AchievementsPageSkeleton } from '../../components/LoadingSkeletons';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuthFetch } from '../hooks/useAuthFetch';
@@ -108,7 +109,8 @@ export default function AchievementsAdmin() {
         imagePreview: dataUrl as string, // Use base64 for preview
       }));
     } catch (e) {
-      alert('Failed to read file.');
+      const { error } = useToast();
+      error('Failed to read file.', { title: 'File Error' });
     } finally {
       setFileUploading(false);
     }
@@ -116,7 +118,8 @@ export default function AchievementsAdmin() {
 
   const handleSave = async () => {
     if (!form.title.trim()) {
-      alert('Title is required.');
+      const { error } = useToast();
+      error('Title is required.', { title: 'Validation' });
       return;
     }
 
@@ -124,7 +127,8 @@ export default function AchievementsAdmin() {
 
     // For creation require an image file. For update, image is optional.
     if (isCreating && !form.imageFile) {
-      alert('Image is required.');
+      const { error } = useToast();
+      error('Image is required.', { title: 'Validation' });
       return;
     }
 
@@ -156,7 +160,8 @@ export default function AchievementsAdmin() {
       closeModal();
     } catch (error) {
       console.error('Save failed:', error);
-      alert(error?.message || String(error));
+      const { error: showError } = useToast();
+      showError(error?.message || String(error), { title: 'Save failed' });
     }
   };
 
@@ -171,8 +176,9 @@ export default function AchievementsAdmin() {
       console.log(response);
 
       refetchAchievements();
-    } catch (error) {
-      alert(error || String(error));
+    } catch (err) {
+      const { error: showError } = useToast();
+      showError(err?.message || String(err), { title: 'Delete failed' });
     }
   };
 

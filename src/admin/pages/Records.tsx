@@ -13,6 +13,7 @@ import {
   UserRoundPen,
 } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
+import { useToast } from '@/hooks/useToast';
 import { debounce } from 'lodash';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import { useAuthFetch } from '../hooks/useAuthFetch';
@@ -77,6 +78,7 @@ const ResidentRecords: React.FC = () => {
   const authFetch = useAuthFetch();
   const { user } = useAuth();
   const { data, loading, error, refetch } = useFetchData('/records');
+  const { success, error: showError } = useToast();
 
   const debouncedSearch = useCallback(
     debounce((query: string) => {
@@ -165,7 +167,7 @@ const ResidentRecords: React.FC = () => {
     setIsCreating(true);
 
     if (!newResident.age || String(newResident.age).trim() === '') {
-      alert('Age are required!');
+      showError('Age is required!', { title: 'Validation' });
       setIsCreating(false);
       return;
     }
@@ -175,7 +177,9 @@ const ResidentRecords: React.FC = () => {
     if (!addressValidation.valid) {
       setAddressError(addressValidation.message);
       setIsCreating(false);
-      alert('Please enter a valid address. ' + addressValidation.message);
+      showError('Please enter a valid address. ' + addressValidation.message, {
+        title: 'Validation',
+      });
       return;
     }
 
@@ -200,7 +204,9 @@ const ResidentRecords: React.FC = () => {
 
       refetch();
       setIsAddModalOpen(false);
-      alert(`New Record Created! ID: ${data.record_id}`);
+      success(`New Record Created! ID: ${data.record_id}`, {
+        title: 'Record Created',
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -240,7 +246,7 @@ const ResidentRecords: React.FC = () => {
   // --- EXPORT TO EXCEL FUNCTIONALITY ---
   const handleExportToExcel = async () => {
     if (!records || records.length === 0) {
-      alert('No records available to export.');
+      showError('No records available to export.', { title: 'Export' });
       return;
     }
 
