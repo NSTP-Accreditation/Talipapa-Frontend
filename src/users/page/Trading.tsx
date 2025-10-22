@@ -91,7 +91,6 @@ const programCategories = [
   },
 ];
 
-
 interface ProgramItem {
   _id: string;
   title: string;
@@ -378,23 +377,28 @@ export default function Trading() {
                     <div
                       key={material._id}
                       onClick={() => setSelectedType(material._id)}
-                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                        selectedType === material._id
-                          ? 'border-green-500 bg-green-50 shadow-md'
-                          : 'border-gray-200 bg-white hover:border-green-300 hover:shadow-sm'
-                      }`}
+                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 flex items-center justify-between min-h-[64px]
+        ${
+          selectedType === material._id
+            ? 'border-green-500 bg-green-50 shadow-md'
+            : 'border-gray-200 bg-white hover:border-green-300 hover:shadow-sm'
+        }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-bold text-gray-900">
-                            {material.name}
-                          </div>
-                          <div className="text-sm text-gray-600 mt-1">
-                            {material.description}
-                          </div>
+                      <div className="flex-1 pr-4">
+                        <div className="font-bold text-gray-900">
+                          {material.name}
                         </div>
-                        {selectedType === material._id && (
-                          <CheckCircle className="w-5 h-5 text-green-600" />
+                        <div className="text-sm text-gray-600 mt-1">
+                          {material.description}
+                        </div>
+                      </div>
+                      {/* fixed-width icon container so layout doesn't shift */}
+                      <div className="w-8 flex items-center justify-center">
+                        {selectedType === material._id ? (
+                          <CheckCircle className="w-6 h-6 text-green-600" />
+                        ) : (
+                          // reserve space when not selected
+                          <span className="w-6 h-6 block" />
                         )}
                       </div>
                     </div>
@@ -692,39 +696,42 @@ export default function Trading() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {programs.length > 0 && programs.map((category, index) => (
-                <div
-                  key={index}
-                  className="rounded-2xl bg-white border border-gray-200 shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden"
-                >
-                  <div className="bg-gradient-to-r from-green-600 to-green-600 p-4 text-white">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
-                        <CheckCircle className="w-4 h-4 text-white" />
+              {programs.length > 0 &&
+                programs.map((category, index) => (
+                  <div
+                    key={index}
+                    className="rounded-2xl bg-white border border-gray-200 shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                  >
+                    <div className="bg-gradient-to-r from-green-600 to-green-600 p-4 text-white">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                          <CheckCircle className="w-5 h-5 text-white" />
+                        </div>
+                        <h4 className="text-sm font-bold leading-tight">
+                          {category.title}
+                        </h4>
                       </div>
-                      <h4 className="text-sm font-bold leading-tight">
-                        {category.title}
-                      </h4>
+                    </div>
+
+                    <div className="p-4">
+                      <ul className="space-y-2">
+                        {category.items.map((item, itemIndex) => (
+                          <li
+                            key={itemIndex}
+                            className="flex items-start bg-green-50 p-2 rounded-lg border border-green-100"
+                          >
+                            <span className="w-6 flex items-start justify-center mt-1 mr-2">
+                              <CheckCircle className="w-5 h-5 text-green-600" />
+                            </span>
+                            <span className="text-xs font-medium text-gray-700 leading-relaxed">
+                              {item.name}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
-
-                  <div className="p-4">
-                    <ul className="space-y-2">
-                      {category.items.map((item, itemIndex) => (
-                        <li
-                          key={itemIndex}
-                          className="flex items-start bg-green-50 p-2 rounded-lg border border-green-100"
-                        >
-                          <CheckCircle className="w-3 h-3 text-green-600 mt-1 mr-2 flex-shrink-0" />
-                          <span className="text-xs font-medium text-gray-700 leading-relaxed">
-                            {item.name}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </CardContent>
         </Card>
