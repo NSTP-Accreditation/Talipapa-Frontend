@@ -18,6 +18,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
+import { useToast } from '@/hooks/useToast';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import dayjs from 'dayjs';
 
@@ -98,7 +99,11 @@ const EventModal: React.FC<EventModalProps> = ({
     }
 
     if (errors.length > 0) {
-      alert('Please fix the following errors:\n\n• ' + errors.join('\n• '));
+      const { error: showError } = useToast();
+      showError(
+        'Please fix the following errors:\n\n• ' + errors.join('\n• '),
+        { title: 'Validation' }
+      );
       return;
     }
 
@@ -548,7 +553,8 @@ const News: React.FC = () => {
       setIsAddModalOpen(false);
     } catch (err) {
       console.error('Save event failed', err);
-      alert('Failed to save event');
+      const { error } = useToast();
+      error('Failed to save event', { title: 'Save failed' });
     }
   };
 
@@ -564,7 +570,8 @@ const News: React.FC = () => {
       setDeletingEvent(null);
     } catch (err) {
       console.error('Delete failed', err);
-      alert('Failed to delete event');
+      const { error } = useToast();
+      error('Failed to delete event', { title: 'Delete failed' });
     }
   };
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useToast } from '../../hooks/useToast';
 import {
   Card,
   CardHeader,
@@ -23,154 +24,6 @@ import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import { useNavigate, useLocation } from 'react-router-dom';
 dayjs.extend(isBetween);
-// -------------------- Toast Types & Component --------------------
-type ToastType = 'success' | 'error' | 'info' | 'warning';
-
-interface Toast {
-  id: number;
-  type: ToastType;
-  title?: string;
-  message: string;
-}
-
-interface ToastProps {
-  toasts: Toast[];
-  removeToast: (id: number) => void;
-}
-
-const ToastMessage: React.FC<ToastProps> = ({ toasts, removeToast }) => {
-  useEffect(() => {
-    const timers = toasts.map((toast) =>
-      window.setTimeout(() => removeToast(toast.id), 4000)
-    );
-    return () => timers.forEach((timer) => clearTimeout(timer));
-  }, [toasts, removeToast]);
-
-  const Icon = ({ type }: { type: ToastType }) => {
-    switch (type) {
-      case 'success':
-        return (
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-        );
-      case 'error':
-        return (
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        );
-      case 'warning':
-        return (
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 8v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-            />
-          </svg>
-        );
-      case 'info':
-      default:
-        return (
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
-            />
-          </svg>
-        );
-    }
-  };
-
-  return (
-    <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-3 items-center">
-      {toasts.map((toast) => (
-        <div
-          key={toast.id}
-          className={`w-80 max-w-full transform transition-all duration-300 shadow-xl rounded-xl overflow-hidden ring-1 ring-black/5
-            ${toast.type === 'success' ? 'bg-white' : 'bg-white'}`}
-          role="status"
-        >
-          <div className="flex items-start p-3">
-            <div
-              className={`flex-shrink-0 rounded-full p-2 mr-3
-                ${toast.type === 'success' ? 'bg-green-100 text-green-700' : ''}
-                ${toast.type === 'error' ? 'bg-red-100 text-red-700' : ''}
-                ${toast.type === 'warning' ? 'bg-yellow-100 text-yellow-700' : ''}
-                ${toast.type === 'info' ? 'bg-blue-100 text-blue-700' : ''}`}
-            >
-              <Icon type={toast.type} />
-            </div>
-            <div className="flex-1 min-w-0">
-              {toast.title && (
-                <p className="text-sm font-semibold mb-0">{toast.title}</p>
-              )}
-              <p className="text-sm mt-1 break-words text-gray-700">
-                {toast.message}
-              </p>
-            </div>
-            <button
-              onClick={() => removeToast(toast.id)}
-              className="ml-3 p-1 rounded-md hover:bg-gray-100 transition-colors"
-              aria-label="Dismiss"
-            >
-              <svg
-                className="w-4 h-4 text-gray-500"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-          <div
-            className={`h-1 ${toast.type === 'success' ? 'bg-green-500' : ''} ${toast.type === 'error' ? 'bg-red-500' : ''} ${toast.type === 'warning' ? 'bg-yellow-500' : ''} ${toast.type === 'info' ? 'bg-blue-500' : ''}`}
-          />
-        </div>
-      ))}
-    </div>
-  );
-};
 
 interface PerformedBy {
   _id: string;
@@ -226,37 +79,15 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   //const location = useLocation();
 
-  // Toast state
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [toasts, setToasts] = useState<Toast[]>([]);
-  const nextIdRef = React.useRef<number>(1);
-
-  const addToast = (payload: {
-    type?: ToastType;
-    title?: string;
-    message: string;
-  }) => {
-    const id = nextIdRef.current++;
-    const toast: Toast = {
-      id,
-      type: payload.type ?? 'info',
-      title: payload.title,
-      message: payload.message,
-    };
-    setToasts((prev) => [...prev, toast]);
-    return id;
-  };
-
-  const removeToast = (id: number) =>
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+  const { success, info } = useToast();
 
   // Show login toast on first load if redirected
   useEffect(() => {
     if (sessionStorage.getItem('loginSuccess') === 'true') {
-      addToast({ type: 'success', message: 'Login successful!' });
+      success('Login successful!', { title: 'Welcome' });
       sessionStorage.removeItem('loginSuccess');
     }
-  }, []);
+  }, [success]);
 
   // Simple logout function
   const logout = () => {
@@ -265,13 +96,9 @@ const Dashboard: React.FC = () => {
   };
 
   // Handle logout
-  const showToast = (message: string) => {
-    setToastMessage(message);
-    setTimeout(() => setToastMessage(null), 3000); // hide after 3s
-  };
   const handleLogout = () => {
     logout();
-    showToast('Logged out successfully!');
+    info('Logged out successfully!', { title: 'Logged out' });
 
     setTimeout(() => {
       navigate('/admin/login', { replace: true });
@@ -343,7 +170,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="p-4 sm:p-6 md:p-8 space-y-8">
-      <ToastMessage toasts={toasts} removeToast={removeToast} />
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-8">
         <div>

@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { formatName, formatPoints } from '@/utils/formatter';
 import { useAuthFetch } from '../hooks/useAuthFetch';
+import { useToast } from '@/hooks/useToast';
 import FloatingLabelInput from '../components/FloatingLabelInput';
 import {
   Spinner,
@@ -42,6 +43,7 @@ const SwapItem = () => {
     {}
   );
   const authFetch = useAuthFetch();
+  const { success, error: showError } = useToast();
 
   const handleFindRecord = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,9 +58,9 @@ const SwapItem = () => {
         `/records/BT-${recordIdRest}?lastName=${lastName}`
       );
       setRecordData(updatedRecord);
-    } catch (error) {
-      console.error('Error finding record:', error);
-      alert('No Record Found');
+    } catch (err) {
+      console.error('Error finding record:', err);
+      showError('No Record Found', { title: 'Not Found' });
       setRecordData(null);
     }
   };
@@ -107,7 +109,7 @@ const SwapItem = () => {
     const quantity = quantityInputs[product._id] || 0;
 
     if (quantity <= 0) {
-      alert('Invalid Quantity');
+      showError('Invalid Quantity', { title: 'Invalid' });
       setRedeemInProgress(false);
       return;
     }
@@ -115,7 +117,9 @@ const SwapItem = () => {
     const totalRequiredPoints = quantity * product.requiredPoints;
 
     if (totalRequiredPoints > recordData.points) {
-      alert('Not Enough Points to Redeem Product');
+      showError('Not Enough Points to Redeem Product', {
+        title: 'Insufficient Points',
+      });
       setRedeemInProgress(false);
       return;
     }
@@ -133,10 +137,9 @@ const SwapItem = () => {
         body: JSON.stringify(requestBody),
       });
 
-      alert(
-        `${data.message}: Current Points: ${
-          recordData.points - totalRequiredPoints
-        }`
+      success(
+        `${data.message}: Current Points: ${recordData.points - totalRequiredPoints}`,
+        { title: 'Redemption Successful' }
       );
 
       // Refresh data after successful redemption
@@ -152,7 +155,10 @@ const SwapItem = () => {
         [product._id]: 0,
       }));
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'An error occurred');
+      const { error: showError } = useToast();
+      showError(error instanceof Error ? error.message : 'An error occurred', {
+        title: 'Error',
+      });
     } finally {
       setRedeemInProgress(false);
     }

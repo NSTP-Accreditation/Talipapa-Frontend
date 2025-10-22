@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { useToast } from '@/hooks/useToast';
 import {
   Card,
   CardHeader,
@@ -39,7 +40,6 @@ import SkillMapTab from './green-pages/SkillMapTab';
 import StatisticsTab from './green-pages/StatisticsTab';
 import { ImageInt } from '../components/OfficialsPanel';
 import MapDropdown from './green-pages/MapDropdown';
-
 
 type TabType = 'mapDropdown' | 'profile' | 'skillMap' | 'statistics';
 
@@ -208,8 +208,9 @@ const GreenPages: React.FC = () => {
   const [skillLoading, setSkillLoading] = useState(false);
 
   const handleSkillClick = async (skill: { _id?: string; name: string }) => {
+    const { error: showError } = useToast();
     if (!farmData?._id || !skill._id) {
-      alert('Missing farm or skill id');
+      showError('Missing farm or skill id', { title: 'Validation' });
       return;
     }
 
@@ -223,7 +224,8 @@ const GreenPages: React.FC = () => {
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : 'Failed to fetch staff by skill';
-      alert(msg);
+      const { error: showError } = useToast();
+      showError(msg, { title: 'Error' });
     } finally {
       setSkillLoading(false);
     }
