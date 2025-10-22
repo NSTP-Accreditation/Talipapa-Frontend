@@ -430,7 +430,7 @@ export default function OfficialsPanel() {
         await authFetch(
           `${import.meta.env.VITE_API_URL}/officials/${editingOfficial._id}`,
           {
-            method: 'PUT',
+            method: 'PATCH',
             body: formData,
           }
         );
