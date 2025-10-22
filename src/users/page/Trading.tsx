@@ -246,7 +246,9 @@ export default function Trading() {
       });
     } else {
       const { error } = useToast();
-      error('Please select a recyclable type and enter weight!', { title: 'Validation' });
+      error('Please select a recyclable type and enter weight!', {
+        title: 'Validation',
+      });
     }
   };
 

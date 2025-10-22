@@ -863,7 +863,9 @@ const Inventory: React.FC = () => {
       !productFormData.requiredPoints.trim() ||
       Number(productFormData.requiredPoints) < 0
     )
-      return showError('Please enter valid required points', { title: 'Validation' });
+      return showError('Please enter valid required points', {
+        title: 'Validation',
+      });
 
     const newProduct: Product = {
       id:
@@ -910,7 +912,9 @@ const Inventory: React.FC = () => {
       !materialFormData.pointsPerKg.trim() ||
       Number(materialFormData.pointsPerKg) < 0
     )
-      return showError('Please enter valid points per kilogram', { title: 'Validation' });
+      return showError('Please enter valid points per kilogram', {
+        title: 'Validation',
+      });
 
     const newMaterial: Material = {
       id:

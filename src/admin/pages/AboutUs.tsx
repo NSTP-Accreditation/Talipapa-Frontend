@@ -184,7 +184,7 @@ export default function AboutBarangayEditable() {
       const url = `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`;
       const result = await authFetch(url, {
         method: 'PATCH',
-        body: JSON.stringify({ [title]: content}),
+        body: JSON.stringify({ [title]: content }),
       });
 
       // If API returns updated object, update local state
@@ -194,11 +194,11 @@ export default function AboutBarangayEditable() {
 
       await refetch();
 
-  success('All changes saved successfully!', { title: 'Saved' });
+      success('All changes saved successfully!', { title: 'Saved' });
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to save changes';
-  showError('Save failed: ' + message, { title: 'Save failed' });
+      showError('Save failed: ' + message, { title: 'Save failed' });
     } finally {
       setIsSaving(false);
     }

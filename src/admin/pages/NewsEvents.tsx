@@ -100,7 +100,10 @@ const EventModal: React.FC<EventModalProps> = ({
 
     if (errors.length > 0) {
       const { error: showError } = useToast();
-      showError('Please fix the following errors:\n\n• ' + errors.join('\n• '), { title: 'Validation' });
+      showError(
+        'Please fix the following errors:\n\n• ' + errors.join('\n• '),
+        { title: 'Validation' }
+      );
       return;
     }
 
@@ -550,8 +553,8 @@ const News: React.FC = () => {
       setIsAddModalOpen(false);
     } catch (err) {
       console.error('Save event failed', err);
-  const { error } = useToast();
-  error('Failed to save event', { title: 'Save failed' });
+      const { error } = useToast();
+      error('Failed to save event', { title: 'Save failed' });
     }
   };
 
@@ -567,8 +570,8 @@ const News: React.FC = () => {
       setDeletingEvent(null);
     } catch (err) {
       console.error('Delete failed', err);
-  const { error } = useToast();
-  error('Failed to delete event', { title: 'Delete failed' });
+      const { error } = useToast();
+      error('Failed to delete event', { title: 'Delete failed' });
     }
   };
 

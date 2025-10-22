@@ -57,7 +57,9 @@ export default function App() {
 
     if (!hasValidWeight) {
       const { error } = useToast();
-      error('Please enter at least one material weight greater than 0', { title: 'Validation' });
+      error('Please enter at least one material weight greater than 0', {
+        title: 'Validation',
+      });
       return;
     }
 
@@ -75,8 +77,11 @@ export default function App() {
       alert(
         `${result.record_id} ${result.lastName} current point is ${result.currentPoints}`
       );
-        const { success } = useToast();
-        success(`${result.record_id} ${result.lastName} current point is ${result.currentPoints}`, { title: 'Success' });
+      const { success } = useToast();
+      success(
+        `${result.record_id} ${result.lastName} current point is ${result.currentPoints}`,
+        { title: 'Success' }
+      );
     } catch (error) {
       console.log(error);
     }
@@ -116,7 +121,12 @@ export default function App() {
             </label>
             <div className="relative">
               <label className="sr-only">Record ID</label>
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-700 select-none font-normal text-base leading-6" style={{ fontWeight: 400 }}>BT-</span>
+              <span
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-700 select-none font-normal text-base leading-6"
+                style={{ fontWeight: 400 }}
+              >
+                BT-
+              </span>
               <input
                 type="text"
                 value={recordIdRest}
@@ -132,7 +142,9 @@ export default function App() {
               />
             </div>
             <div className="text-xs text-gray-500 mt-2">
-              Record ID will be stored as <span className="font-medium">BT-0001</span>. Only 4 digits allowed.
+              Record ID will be stored as{' '}
+              <span className="font-medium">BT-0001</span>. Only 4 digits
+              allowed.
             </div>
           </label>
           <div>

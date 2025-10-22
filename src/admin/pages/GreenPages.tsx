@@ -41,7 +41,6 @@ import StatisticsTab from './green-pages/StatisticsTab';
 import { ImageInt } from '../components/OfficialsPanel';
 import MapDropdown from './green-pages/MapDropdown';
 
-
 type TabType = 'mapDropdown' | 'profile' | 'skillMap' | 'statistics';
 
 interface Location {
@@ -223,7 +222,8 @@ const GreenPages: React.FC = () => {
       setSkillStaff(Array.isArray(res?.staff) ? res.staff : []);
       setSkillModalOpen(true);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to fetch staff by skill';
+      const msg =
+        err instanceof Error ? err.message : 'Failed to fetch staff by skill';
       const { error: showError } = useToast();
       showError(msg, { title: 'Error' });
     } finally {

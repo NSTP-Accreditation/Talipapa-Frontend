@@ -117,7 +117,9 @@ const SwapItem = () => {
     const totalRequiredPoints = quantity * product.requiredPoints;
 
     if (totalRequiredPoints > recordData.points) {
-      showError('Not Enough Points to Redeem Product', { title: 'Insufficient Points' });
+      showError('Not Enough Points to Redeem Product', {
+        title: 'Insufficient Points',
+      });
       setRedeemInProgress(false);
       return;
     }
@@ -135,7 +137,10 @@ const SwapItem = () => {
         body: JSON.stringify(requestBody),
       });
 
-  success(`${data.message}: Current Points: ${recordData.points - totalRequiredPoints}`, { title: 'Redemption Successful' });
+      success(
+        `${data.message}: Current Points: ${recordData.points - totalRequiredPoints}`,
+        { title: 'Redemption Successful' }
+      );
 
       // Refresh data after successful redemption
       const updatedRecord = await authFetch(
@@ -151,7 +156,9 @@ const SwapItem = () => {
       }));
     } catch (error) {
       const { error: showError } = useToast();
-      showError(error instanceof Error ? error.message : 'An error occurred', { title: 'Error' });
+      showError(error instanceof Error ? error.message : 'An error occurred', {
+        title: 'Error',
+      });
     } finally {
       setRedeemInProgress(false);
     }

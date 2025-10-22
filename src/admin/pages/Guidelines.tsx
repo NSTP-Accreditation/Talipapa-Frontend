@@ -269,7 +269,7 @@ const Guidelines: React.FC = () => {
       } catch (err) {
         const msg =
           err instanceof Error ? err.message : 'Failed to delete guideline';
-            showError(msg, { title: 'Delete failed' });
+        showError(msg, { title: 'Delete failed' });
       }
     };
 
@@ -309,9 +309,12 @@ const Guidelines: React.FC = () => {
       setGuidelines(guidelines.filter((g) => !selectedGuidelines.has(g.id)));
       setSelectedGuidelines(new Set());
       setShowBulkActions(false);
-      success(`Successfully deleted ${count} guideline${count > 1 ? 's' : ''}.`, {
-        title: 'Deleted',
-      });
+      success(
+        `Successfully deleted ${count} guideline${count > 1 ? 's' : ''}.`,
+        {
+          title: 'Deleted',
+        }
+      );
     }
   };
 
@@ -803,7 +806,7 @@ const Guidelines: React.FC = () => {
                     onClick={() => {
                       // In a real app, this would open a detailed view
                       info(`Opening detailed view for: ${guideline.title}`, {
-                        title: 'Open'
+                        title: 'Open',
                       });
                     }}
                     className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 px-4 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5"

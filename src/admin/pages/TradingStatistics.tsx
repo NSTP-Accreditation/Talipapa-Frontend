@@ -175,7 +175,9 @@ export default function TradingStatisticsPage() {
     } catch (err) {
       console.error('Error generating PDF report:', err);
       const { error: showError } = useToast();
-      showError('Failed to generate PDF report. Please try again.', { title: 'Export' });
+      showError('Failed to generate PDF report. Please try again.', {
+        title: 'Export',
+      });
     }
   };
 
@@ -350,19 +352,26 @@ export default function TradingStatisticsPage() {
                       </thead>
                       <tbody>
                         {logsData?.data.map((log) => (
-                          <tr key={log?._id} className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200">
+                          <tr
+                            key={log?._id}
+                            className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200"
+                          >
                             <td className="p-4 text-gray-700 font-medium">
-                              {dayjs(log?.created_at).format('MMM/DD/YYYY - h:mm A')}
+                              {dayjs(log?.created_at).format(
+                                'MMM/DD/YYYY - h:mm A'
+                              )}
                             </td>
                             <td className="p-4 text-gray-800 font-semibold">
                               {log?.targetName}
                             </td>
-                            <td className="p-4 text-gray-600">
-                              {log?.title}
-                            </td>
+                            <td className="p-4 text-gray-600">{log?.title}</td>
                             <td className="p-4">
                               <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold bg-gradient-to-r from-[#1b4c2e]/20 to-[#1b4c2e]/10 text-[#1b4c2e] border border-[#1b4c2e]/30">
-                                {log?.details?.pointsDeducted ? log?.details?.pointsDeducted : log?.details?.pointsAdded ? log?.details?.pointsAdded : ''}
+                                {log?.details?.pointsDeducted
+                                  ? log?.details?.pointsDeducted
+                                  : log?.details?.pointsAdded
+                                    ? log?.details?.pointsAdded
+                                    : ''}
                               </span>
                             </td>
                           </tr>
