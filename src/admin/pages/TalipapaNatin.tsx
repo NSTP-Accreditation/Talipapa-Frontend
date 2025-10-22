@@ -312,13 +312,13 @@ export default function TalipapaNatin() {
             </div>
 
             <div className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm font-medium">
-              {filteredPrograms.length} program{filteredPrograms.length !== 1 ? 's' : ''}
+              {filteredPrograms?.length} program{filteredPrograms?.length !== 1 ? 's' : ''}
             </div>
           </div>
         </div>
 
         {/* Programs Display */}
-        {filteredPrograms.length === 0 ? (
+        {filteredPrograms?.length === 0 ? (
           <div className="py-20">
             <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mb-4">
               <Leaf className="w-10 h-10 text-slate-400" />
@@ -343,7 +343,7 @@ export default function TalipapaNatin() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredPrograms.map((program) => (
+            {filteredPrograms?.map((program) => (
               <div
                 key={program._id}
                 className="group bg-white rounded-2xl border border-slate-200 hover:border-[#1b4c2e]/30 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
