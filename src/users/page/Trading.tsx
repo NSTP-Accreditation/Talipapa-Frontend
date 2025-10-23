@@ -471,13 +471,7 @@ export default function Trading() {
                               <div className="text-sm font-bold text-gray-900">{selectedWasteType.name}</div>
                               <div className="mt-1 text-sm text-gray-600 leading-relaxed">{getExpandedDescription(selectedWasteType)}</div>
                             </div>
-                            {selectedWasteType.pointsPerKg != null && (
-                              <div className="ml-4 flex-shrink-0">
-                                <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-600 text-white text-xs font-semibold">
-                                  {selectedWasteType.pointsPerKg} pts/kg
-                                </div>
-                              </div>
-                            )}
+                            {/* points-per-kg chip removed per request */}
                           </div>
                         </div>
                       </div>
