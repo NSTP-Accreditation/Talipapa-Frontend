@@ -226,7 +226,10 @@ export default function Trading() {
   // close dropdown when clicking outside
   useEffect(() => {
     const onDocClick = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     };
@@ -390,11 +393,11 @@ export default function Trading() {
               </CardTitle>
             </CardHeader>
 
-            <CardContent className="space-y-8 p-8">
+            <CardContent className="space-y-6 sm:space-y-8 p-4 sm:p-6 lg:p-8">
               {/* Waste Type Selection - converted to dropdown */}
-              <div className="space-y-4">
-                <label className="text-sm font-bold text-gray-800 flex items-center gap-2">
-                  <Trash2 className="w-5 h-5 text-green-600" />
+              <div className="space-y-3 sm:space-y-4">
+                <label className="text-xs sm:text-sm font-bold text-gray-800 flex items-center gap-2">
+                  <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
                   Select Recyclable Type:
                 </label>
 
@@ -414,26 +417,30 @@ export default function Trading() {
                           setDropdownOpen((s) => !s);
                         }
                       }}
-                      className="w-full h-12 pl-4 pr-10 flex items-center justify-between text-base border-2 border-gray-300 rounded-xl hover:border-green-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all bg-white cursor-pointer"
+                      className="w-full h-12 pl-4 pr-10 relative flex items-center justify-between text-base border-2 border-gray-300 rounded-xl hover:border-green-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all bg-white cursor-pointer"
                     >
-                      <div className="truncate">
+                      <div className="truncate pr-10">
                         {selectedWasteType ? (
                           <div className="font-medium text-gray-900">
                             {selectedWasteType.name}
                           </div>
                         ) : (
-                          <div className="text-gray-400">-- Select recyclable type --</div>
+                          <div className="text-gray-400">
+                            -- Select recyclable type --
+                          </div>
                         )}
                       </div>
-                      <div className="ml-3 text-gray-400">
-                        <ChevronDown className={`w-4 h-4 transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                      <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <ChevronDown
+                          className={`w-4 h-4 transform ${dropdownOpen ? 'rotate-180' : ''}`}
+                        />
                       </div>
                     </div>
 
                     {/* Dropdown list (designable) - shows only when open */}
                     {dropdownOpen && (
                       <div className="absolute z-20 left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-lg p-3 max-h-72 overflow-auto">
-                        <div className="grid grid-cols-1 gap-2">
+                        <div className="grid grid-cols-1 gap-2 sm:gap-3">
                           {materials.map((material) => (
                             <button
                               type="button"
@@ -442,19 +449,20 @@ export default function Trading() {
                                 setSelectedType(material._id);
                                 setDropdownOpen(false);
                               }}
-                              className={`w-full text-left p-3 rounded-lg border transition-all duration-150 ${
-                                selectedType === material._id
-                                  ? 'bg-green-50 border-green-200 shadow-sm'
-                                  : 'bg-white border-gray-100 hover:border-green-300'
-                              }`}
+                              className={`w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl border-2 cursor-pointer transition-all duration-200 flex items-center justify-between h-12 sm:h-12 active:scale-95
+        ${
+          selectedType === material._id
+            ? 'border-green-500 bg-green-50 shadow-md'
+            : 'border-gray-200 bg-white hover:border-green-300 hover:shadow-sm'
+        }`}
                             >
-                              <div className="flex items-center justify-between">
-                                <div className="pr-3">
+                              <div className="flex items-center justify-between w-full">
+                                <div className="pr-3 truncate text-left">
                                   <div className="font-medium text-gray-900">
                                     {material.name}
                                   </div>
                                 </div>
-                                <div className="w-6 flex items-center justify-center">
+                                <div className="w-6 flex items-center justify-center flex-shrink-0">
                                   {selectedType === material._id ? (
                                     <CheckCircle className="w-5 h-5 text-green-600" />
                                   ) : (
@@ -487,16 +495,15 @@ export default function Trading() {
                               </div>
                             </div>
                             {selectedWasteType.pointsPerKg != null && (
-                              <div className="ml-4 flex-shrink-0">
-                               
-
-                              </div>
+                              <div className="ml-4 flex-shrink-0"></div>
                             )}
                           </div>
                         </div>
                       </div>
                     ) : (
-                      <div className="text-sm text-gray-400">Select a recyclable type to see its description.</div>
+                      <div className="text-sm text-gray-400">
+                        Select a recyclable type to see its description.
+                      </div>
                     )}
                   </div>
                 </div>
