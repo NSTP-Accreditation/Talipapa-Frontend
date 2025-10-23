@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const slides = [
   { image: './Carousel10.jpg' },
@@ -21,23 +22,23 @@ export default function Carousel() {
   }, [current]);
 
   return (
-    <div className="relative w-full h-[800px] overflow-hidden shadow-2xl">
+    <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden">
       {/* Image */}
       <img
         src={slides[current].image}
-        alt="carousel slide"
-        className="absolute inset-0 w-full h-full object-cover"
+        alt={`Slide ${current + 1}`}
+        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
       />
 
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/50"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
       {/* Overlay Text */}
-      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white px-12 py-8 rounded-2xl text-center max-w-[90%] ">
-        <h2 className="text-3xl font-bold mb-1 drop-shadow-lg">
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4 sm:px-6 md:px-8">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-center mb-3 sm:mb-4 md:mb-6 drop-shadow-lg">
           Welcome to Barangay Talipapa!
-        </h2>
-        <p className="text-2xl fosnt-light drop-shadow-md">
+        </h1>
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-center drop-shadow-md">
           Your community, our pride.
         </p>
       </div>
@@ -45,47 +46,31 @@ export default function Carousel() {
       {/* Previous Button */}
       <button
         onClick={prevSlide}
-        className="absolute left-6 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-4 rounded-full z-20 transition-all duration-300 hover:scale-110 border border-white/30 shadow-xl"
-        aria-label="Previous"
+        className="absolute left-2 sm:left-4 md:left-6 lg:left-8 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-full transition-all duration-300 group"
+        aria-label="Previous slide"
       >
-        <svg
-          width="28"
-          height="28"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="3"
-        >
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
+        <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 text-white group-hover:scale-110 transition-transform" />
       </button>
 
       {/* Next Button */}
       <button
         onClick={nextSlide}
-        className="absolute right-6 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white p-4 rounded-full z-20 transition-all duration-300 hover:scale-110 border border-white/30 shadow-xl"
-        aria-label="Next"
+        className="absolute right-2 sm:right-4 md:right-6 lg:right-8 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-full transition-all duration-300 group"
+        aria-label="Next slide"
       >
-        <svg
-          width="28"
-          height="28"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="3"
-        >
-          <path d="M9 6l6 6-6 6" />
-        </svg>
+        <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 text-white group-hover:scale-110 transition-transform" />
       </button>
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3 z-20">
+      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 lg:bottom-10 left-1/2 -translate-x-1/2 flex gap-2 sm:gap-3">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrent(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+            className={`h-2 sm:h-2.5 md:h-3 rounded-full transition-all duration-300 ${
               index === current
-                ? 'bg-white w-8 shadow-lg'
-                : 'bg-white/50 hover:bg-white/70'
+                ? 'bg-white w-6 sm:w-7 md:w-8 shadow-lg'
+                : 'bg-white/50 hover:bg-white/70 w-2 sm:w-2.5 md:w-3'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />
