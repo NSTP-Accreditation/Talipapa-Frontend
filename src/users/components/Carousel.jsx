@@ -21,7 +21,7 @@ export default function Carousel() {
   }, [current]);
 
   return (
-    <div className="relative w-full h-[700px] overflow-hidden shadow-2xl">
+    <div className="relative w-full h-[800px] overflow-hidden shadow-2xl">
       {/* Image */}
       <img
         src={slides[current].image}
