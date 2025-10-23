@@ -309,9 +309,10 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onRemove }) => {
         'relative w-full max-w-sm mx-auto mb-4 rounded-xl border-2 overflow-hidden transition-all duration-300 ease-in-out transform',
         styles.container,
         isVisible && !isExiting
-          ? 'translate-x-0 opacity-100 scale-100'
-          : 'translate-x-full opacity-0 scale-95',
-        isExiting && '-translate-x-full opacity-0 scale-95'
+          ? 'translate-x-0 translate-y-0 opacity-100 scale-100'
+          : 'sm:translate-x-full translate-y-[-20px] opacity-0 scale-95',
+        isExiting &&
+          'sm:-translate-x-full translate-y-[-20px] opacity-0 scale-95'
       )}
       role="alert"
       aria-live="polite"
@@ -384,19 +385,19 @@ const ToastContainer: React.FC<ToastContainerProps> = ({
   const getPositionStyles = () => {
     switch (position) {
       case 'top-right':
-        return 'top-6 right-6';
+        return 'top-4 sm:top-6 left-1/2 transform -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0';
       case 'top-left':
-        return 'top-6 left-6';
+        return 'top-4 sm:top-6 left-1/2 transform -translate-x-1/2 sm:right-auto sm:left-6 sm:translate-x-0';
       case 'bottom-right':
-        return 'bottom-6 right-6';
+        return 'bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0';
       case 'bottom-left':
-        return 'bottom-6 left-6';
+        return 'bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 sm:right-auto sm:left-6 sm:translate-x-0';
       case 'top-center':
-        return 'top-6 left-1/2 transform -translate-x-1/2';
+        return 'top-4 sm:top-6 left-1/2 transform -translate-x-1/2';
       case 'bottom-center':
-        return 'bottom-6 left-1/2 transform -translate-x-1/2';
+        return 'bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2';
       default:
-        return 'top-6 right-6';
+        return 'top-4 sm:top-6 left-1/2 transform -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0';
     }
   };
 
@@ -405,10 +406,13 @@ const ToastContainer: React.FC<ToastContainerProps> = ({
   return (
     <div
       className={cn(
-        'fixed z-[9999] flex flex-col gap-2 pointer-events-none',
+        'fixed z-[9999] flex flex-col gap-2 pointer-events-none px-4 sm:px-0',
         getPositionStyles()
       )}
-      style={{ maxWidth: '420px', width: '100%' }}
+      style={{
+        maxWidth: '420px',
+        width: '100%',
+      }}
     >
       <div className="pointer-events-auto">
         {toasts.map((toast) => (
