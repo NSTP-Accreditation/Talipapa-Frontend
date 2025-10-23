@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,7 @@ import {
   CheckCircle,
   Home,
   ChevronRight,
+  ChevronDown,
   Recycle,
   Trash2,
   Scale,
@@ -194,6 +195,8 @@ export default function Trading() {
 
   const [selectedType, setSelectedType] = useState('');
   const [weight, setWeight] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [result, setResult] = useState<{
     points: number;
     options?: Product[];
@@ -211,11 +214,36 @@ export default function Trading() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShowRecordModal(false);
+      if (e.key === 'Escape') {
+        setShowRecordModal(false);
+        setDropdownOpen(false);
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
+
+  useEffect(() => {
+    const onDocClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('click', onDocClick);
+    return () => document.removeEventListener('click', onDocClick);
+  }, []);
+
+  const getExpandedDescription = (material?: Material) => {
+    if (!material) return '';
+    const name = material.name.toLowerCase();
+    if (name.includes('paper') || name.includes('papere')) {
+      return (
+        (material.description || '') +
+        ' This includes clean paper, cardboard, newspapers, magazines, and mixed paper products. Ensure paper is dry and free from food contamination. Flatten boxes to save space. Paper collected contributes to recycling programs and can be converted into new paper products.'
+      );
+    }
+    return material.description || '';
+  };
 
   const { success, error: showError } = useToast();
 
@@ -367,37 +395,96 @@ export default function Trading() {
                   Select Recyclable Type:
                 </label>
 
-                <div className="grid grid-cols-1 gap-3">
-                  {materials.map((material) => (
+                <div>
+                  <div className="relative" ref={dropdownRef}>
                     <div
-                      key={material._id}
-                      onClick={() => setSelectedType(material._id)}
-                      className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 flex items-center justify-between min-h-[64px]
-        ${
-          selectedType === material._id
-            ? 'border-green-500 bg-green-50 shadow-md'
-            : 'border-gray-200 bg-white hover:border-green-300 hover:shadow-sm'
-        }`}
+                      tabIndex={0}
+                      role="button"
+                      aria-haspopup="listbox"
+                      aria-expanded={dropdownOpen}
+                      onClick={() => setDropdownOpen((s) => !s)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setDropdownOpen((s) => !s);
+                        }
+                      }}
+                      className="w-full h-12 pl-4 pr-10 flex items-center justify-between text-base border-2 border-gray-300 rounded-xl hover:border-green-500 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all bg-white cursor-pointer"
                     >
-                      <div className="flex-1 pr-4">
-                        <div className="font-bold text-gray-900">
-                          {material.name}
-                        </div>
-                        <div className="text-sm text-gray-600 mt-1">
-                          {material.description}
-                        </div>
-                      </div>
-                      {/* fixed-width icon container so layout doesn't shift */}
-                      <div className="w-8 flex items-center justify-center">
-                        {selectedType === material._id ? (
-                          <CheckCircle className="w-6 h-6 text-green-600" />
+                      <div className="truncate">
+                        {selectedWasteType ? (
+                          <div className="font-medium text-gray-900">{selectedWasteType.name}</div>
                         ) : (
-                          // reserve space when not selected
-                          <span className="w-6 h-6 block" />
+                          <div className="text-gray-400">-- Select recyclable type --</div>
                         )}
                       </div>
+                      <div className="ml-3 text-gray-400">
+                        <ChevronDown className={`w-4 h-4 transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                      </div>
                     </div>
-                  ))}
+
+                    {dropdownOpen && (
+                      <div className="absolute z-20 left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-lg p-3 max-h-72 overflow-auto">
+                        <div className="grid grid-cols-1 gap-2">
+                          {materials.map((material) => (
+                            <button
+                              type="button"
+                              key={material._id}
+                              onClick={() => {
+                                setSelectedType(material._id);
+                                setDropdownOpen(false);
+                              }}
+                              className={`w-full text-left p-3 rounded-lg border transition-all duration-150 ${
+                                selectedType === material._id
+                                  ? 'bg-green-50 border-green-200 shadow-sm'
+                                  : 'bg-white border-gray-100 hover:border-green-300'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="pr-3">
+                                  <div className="font-medium text-gray-900">{material.name}</div>
+                                </div>
+                                <div className="w-6 flex items-center justify-center">
+                                  {selectedType === material._id ? (
+                                    <CheckCircle className="w-5 h-5 text-green-600" />
+                                  ) : (
+                                    <span className="w-5 h-5 block" />
+                                  )}
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-4">
+                    {selectedWasteType ? (
+                      <div className="flex items-start gap-4 bg-gradient-to-r from-white to-green-50 border border-gray-200 rounded-xl p-4 shadow-sm">
+                        <div className="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
+                          <Recycle className="w-6 h-6 text-green-600" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <div className="text-sm font-bold text-gray-900">{selectedWasteType.name}</div>
+                              <div className="mt-1 text-sm text-gray-600 leading-relaxed">{getExpandedDescription(selectedWasteType)}</div>
+                            </div>
+                            {selectedWasteType.pointsPerKg != null && (
+                              <div className="ml-4 flex-shrink-0">
+                                <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-600 text-white text-xs font-semibold">
+                                  {selectedWasteType.pointsPerKg} pts/kg
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-gray-400">Select a recyclable type to see its description.</div>
+                    )}
+                  </div>
                 </div>
               </div>
 
