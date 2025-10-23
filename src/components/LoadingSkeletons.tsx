@@ -346,8 +346,8 @@ export const AboutUsPageSkeleton: React.FC = () => {
             </div>
 
             {/* Vision Card */}
-            <div className="bg-white border-2 border-blue-100 rounded-2xl shadow-xl p-10 text-center">
-              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mb-6 shadow-md">
+            <div className="bg-white border-2 border-green-100 rounded-2xl shadow-xl p-10 text-center">
+              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mb-6 shadow-md">
                 <Skeleton className="h-10 w-10" />
               </div>
               <Skeleton className="h-8 w-40 mx-auto mb-6" />
@@ -362,7 +362,7 @@ export const AboutUsPageSkeleton: React.FC = () => {
           <div className="max-w-4xl mx-auto">
             <div className="bg-white border-2 border-gray-100 rounded-2xl shadow-xl p-10">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl flex items-center justify-center shadow-md">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-md">
                   <Skeleton className="h-8 w-8" />
                 </div>
                 <Skeleton className="h-9 w-56" />
