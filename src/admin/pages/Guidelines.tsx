@@ -68,29 +68,29 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
+      className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full max-w-2xl bg-white rounded-xl shadow-xl overflow-hidden">
-        <div className="p-6">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
-              <AlertCircle className="w-5 h-5 text-red-600" />
+      <div className="w-full max-w-sm sm:max-w-2xl bg-white rounded-lg sm:rounded-xl shadow-xl overflow-hidden mx-2">
+        <div className="p-4 sm:p-6">
+          <div className="flex items-start gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
+              <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-bold text-gray-900">
+              <h3 className="text-base sm:text-lg font-bold text-gray-900">
                 Delete Guidelines
               </h3>
-              <p className="text-sm text-gray-700 mt-1">
+              <p className="text-xs sm:text-sm text-gray-700 mt-1">
                 Are you sure you want to delete "{guideline.title}"?
               </p>
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-1 gap-4">
-            <div className="space-y-2">
+          <div className="mt-4 sm:mt-6 grid grid-cols-1 gap-3 sm:gap-4">
+            <div className="space-y-1.5 sm:space-y-2">
               <p className="text-xs sm:text-sm text-gray-700">
                 <span className="font-semibold text-gray-900">
                   Description:
@@ -99,31 +99,31 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
               </p>
               <p className="text-xs sm:text-sm text-gray-700">
                 <span className="font-semibold text-gray-900">Category:</span>{' '}
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 border border-green-300 rounded-md text-green-700 font-medium">
-                  <Tag className="w-3 h-3" />
+                <span className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 bg-green-100 border border-green-300 rounded-md text-green-700 font-medium text-xs">
+                  <Tag className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                   {guideline.category}
                 </span>
               </p>
               <p className="text-xs sm:text-sm text-gray-700">
                 <span className="font-semibold text-gray-900">Steps:</span>{' '}
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 border border-green-300 rounded-md text-green-700 font-medium">
-                  <FileCheck className="w-3 h-3" />
+                <span className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 bg-green-100 border border-green-300 rounded-md text-green-700 font-medium text-xs">
+                  <FileCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                   {guideline.steps.length} steps
                 </span>
               </p>
               <p className="text-xs sm:text-sm text-gray-700">
                 <span className="font-semibold text-gray-900">Total Time:</span>{' '}
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 border border-green-300 rounded-md text-green-700 font-medium">
-                  <Clock className="w-3 h-3" />
+                <span className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 bg-green-100 border border-green-300 rounded-md text-green-700 font-medium text-xs">
+                  <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                   {guideline.totalEstimatedTime}
                 </span>
               </p>
             </div>
 
-            <div className="bg-gradient-to-r from-red-50 to-red-50 border-2 border-red-200 rounded-xl p-3">
+            <div className="bg-gradient-to-r from-red-50 to-red-50 border-2 border-red-200 rounded-lg sm:rounded-xl p-2.5 sm:p-3">
               <div className="flex items-start gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
+                <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-red-600" />
                 </div>
                 <div className="flex-1">
                   <p className="text-xs sm:text-sm text-red-700 font-semibold leading-relaxed">
@@ -137,18 +137,18 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-4 sm:px-6 md:px-8 py-4 sm:py-5 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 ">
+        <div className="px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-5 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
           <button
             onClick={onClose}
-            className="px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-lg sm:rounded-xl text-sm font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all order-2 sm:order-1"
+            className="px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all order-2 sm:order-1"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="flex items-center justify-center gap-2 px-5 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg sm:rounded-xl text-sm font-bold hover:from-red-700 hover:to-red-800 transition-all hover:-translate-y-0.5 shadow-lg hover:shadow-xl order-1 sm:order-2"
+            className="flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 md:px-8 py-2 sm:py-2.5 md:py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold hover:from-red-700 hover:to-red-800 transition-all hover:-translate-y-0.5 shadow-lg hover:shadow-xl order-1 sm:order-2"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
             Delete Guidelines
           </button>
         </div>
@@ -427,82 +427,84 @@ const Guidelines: React.FC = () => {
   }
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
-      {/* Header with enhanced styling */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
-        <div className="flex items-center gap-4">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-              <BookOpen className="w-10 h-10 text-green-600" />
-              Guidelines
-            </h1>
-            <p className="text-lg text-gray-700 mt-2 font-medium">
-              Step-by-step instructions for barangay services
-              <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-                {guidelines.length}{' '}
-                {guidelines.length === 1 ? 'Guide' : 'Guides'}
-              </span>
-            </p>
+    <div className="p-3 sm:p-4 md:p-6 lg:p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+      {/* Header with enhanced styling - Mobile Responsive */}
+      <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
+          <div className="flex items-start gap-2 sm:gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+                <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-green-600" />
+                Guidelines
+              </h1>
+              <p className="text-sm sm:text-base lg:text-lg text-gray-700 mt-1 sm:mt-2 font-medium">
+                Step-by-step instructions for barangay services
+                <span className="ml-2 sm:ml-3 px-2 sm:px-3 py-0.5 sm:py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
+                  {guidelines.length}{' '}
+                  {guidelines.length === 1 ? 'Guide' : 'Guides'}
+                </span>
+              </p>
+            </div>
           </div>
 
-          {/* Bulk Actions */}
-          {showBulkActions && (
-            <div className="flex items-center gap-3 ml-8 px-4 py-2 bg-blue-50 border-2 border-blue-300 rounded-xl shadow-sm animate-in slide-in-from-left duration-300">
-              <span className="text-sm font-semibold text-blue-900">
-                {selectedGuidelines.size} selected
-              </span>
-              <button
-                onClick={handleBulkDelete}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all hover:shadow-md hover:-translate-y-0.5"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-                Delete Selected
-              </button>
-            </div>
-          )}
+          <button
+            onClick={handleAddGuideline}
+            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 w-full sm:w-auto justify-center sm:justify-start"
+          >
+            <svg
+              className="w-4 h-4 sm:w-5 sm:h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Add Guidelines
+          </button>
         </div>
 
-        <button
-          onClick={handleAddGuideline}
-          className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-xl flex items-center gap-2 text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          Add Guidelines
-        </button>
+        {/* Bulk Actions - Mobile Responsive */}
+        {showBulkActions && (
+          <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 bg-blue-50 border-2 border-blue-300 rounded-lg sm:rounded-xl shadow-sm animate-in slide-in-from-left duration-300">
+            <span className="text-xs sm:text-sm font-semibold text-blue-900">
+              {selectedGuidelines.size} selected
+            </span>
+            <button
+              onClick={handleBulkDelete}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-1.5 sm:gap-2 transition-all hover:shadow-md hover:-translate-y-0.5"
+            >
+              <svg
+                className="w-3 h-3 sm:w-4 sm:h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+              Delete Selected
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Enhanced Search and Filter Section */}
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 mb-8">
-        <div className="flex flex-col lg:flex-row gap-4">
-          {/* Search Input */}
-          <div className="flex-1 relative">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+      {/* Enhanced Search and Filter Section - Mobile Responsive */}
+      <div className="bg-white rounded-lg sm:rounded-2xl shadow-lg border border-gray-200 p-3 sm:p-4 lg:p-6 mb-6 sm:mb-8">
+        <div className="flex flex-col gap-3 sm:gap-4">
+          {/* Search Input - Mobile Responsive */}
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
               <svg
-                className="h-5 w-5 text-gray-400"
+                className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -517,110 +519,113 @@ const Guidelines: React.FC = () => {
             </div>
             <input
               type="text"
-              placeholder="Search guidelines by title or description..."
+              placeholder="Search guidelines..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-gray-700 placeholder-gray-400"
+              className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 border-2 border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base text-gray-700 placeholder-gray-400"
             />
           </div>
 
-          {/* Category Filter */}
-          <div className="relative">
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="appearance-none pl-4 pr-10 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white text-gray-700 font-medium min-w-[200px] cursor-pointer hover:border-green-400 transition-all"
-            >
-              <option value="">📂 All Categories</option>
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <svg
-                className="h-5 w-5 text-gray-400"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+          {/* Filters Row - Mobile Responsive */}
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+            {/* Category Filter */}
+            <div className="relative flex-1">
+              <select
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+                className="appearance-none w-full pl-3 sm:pl-4 pr-8 sm:pr-10 py-2.5 sm:py-3 border-2 border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white text-sm sm:text-base text-gray-700 font-medium cursor-pointer hover:border-green-400 transition-all"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
+                <option value="">📂 All Categories</option>
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 pr-2 sm:pr-3 flex items-center pointer-events-none">
+                <svg
+                  className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
             </div>
-          </div>
 
-          {/* Difficulty Filter */}
-          <div className="relative">
-            <select
-              value={filterDifficulty}
-              onChange={(e) => setFilterDifficulty(e.target.value)}
-              className="appearance-none pl-4 pr-10 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white text-gray-700 font-medium min-w-[180px] cursor-pointer hover:border-green-400 transition-all"
-            >
-              <option value="">⚡ All Difficulties</option>
-              {difficulties.map((difficulty) => (
-                <option key={difficulty} value={difficulty}>
-                  {difficulty}
-                </option>
-              ))}
-            </select>
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <svg
-                className="h-5 w-5 text-gray-400"
-                fill="currentColor"
-                viewBox="0 0 20 20"
+            {/* Difficulty Filter */}
+            <div className="relative flex-1">
+              <select
+                value={filterDifficulty}
+                onChange={(e) => setFilterDifficulty(e.target.value)}
+                className="appearance-none w-full pl-3 sm:pl-4 pr-8 sm:pr-10 py-2.5 sm:py-3 border-2 border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white text-sm sm:text-base text-gray-700 font-medium cursor-pointer hover:border-green-400 transition-all"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
+                <option value="">⚡ All Difficulties</option>
+                {difficulties.map((difficulty) => (
+                  <option key={difficulty} value={difficulty}>
+                    {difficulty}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 pr-2 sm:pr-3 flex items-center pointer-events-none">
+                <svg
+                  className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
             </div>
-          </div>
 
-          {/* Active Filters Display */}
-          {(searchTerm || filterCategory || filterDifficulty) && (
-            <button
-              onClick={() => {
-                setSearchTerm('');
-                setFilterCategory('');
-                setFilterDifficulty('');
-              }}
-              className="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            {/* Clear Filters Button */}
+            {(searchTerm || filterCategory || filterDifficulty) && (
+              <button
+                onClick={() => {
+                  setSearchTerm('');
+                  setFilterCategory('');
+                  setFilterDifficulty('');
+                }}
+                className="px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center justify-center gap-1.5 sm:gap-2 w-full sm:w-auto"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-              Clear
-            </button>
-          )}
+                <svg
+                  className="w-3 h-3 sm:w-4 sm:h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+                Clear
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Results Count */}
+        {/* Results Count - Mobile Responsive */}
         {(searchTerm || filterCategory || filterDifficulty) && (
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <p className="text-sm text-gray-600">
+          <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200">
+            <p className="text-xs sm:text-sm text-gray-600">
               Showing{' '}
               <span className="font-semibold text-green-600">
                 {filteredGuidelines.length}
               </span>{' '}
               of {guidelines.length} guidelines
               {searchTerm && (
-                <span className="ml-2">
+                <span className="ml-1 sm:ml-2">
                   matching "<span className="font-semibold">{searchTerm}</span>"
                 </span>
               )}
@@ -629,26 +634,26 @@ const Guidelines: React.FC = () => {
         )}
       </div>
 
-      {/* Enhanced Guidelines Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      {/* Enhanced Guidelines Grid - Mobile Responsive */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         {filteredGuidelines.map((guideline) => (
           <Card
             key={guideline.id}
             className="bg-white border-2 border-gray-200 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover:border-green-300 group cursor-pointer overflow-hidden flex flex-col"
           >
-            <CardHeader className="pb-4 bg-gradient-to-br from-white to-gray-50 group-hover:from-green-50 group-hover:to-white transition-all duration-300">
-              {/* Flex container with checkbox on right */}
-              <div className="flex items-start justify-between gap-3">
+            <CardHeader className="pb-3 sm:pb-4 bg-gradient-to-br from-white to-gray-50 group-hover:from-green-50 group-hover:to-white transition-all duration-300">
+              {/* Flex container with checkbox on right - Mobile Responsive */}
+              <div className="flex items-start justify-between gap-2 sm:gap-3">
                 {/* Left side: Icon + title */}
-                <div className="flex items-start gap-3 pl-1">
-                  {/* Enhanced Icon Container with gradient */}
+                <div className="flex items-start gap-2 sm:gap-3 pl-0.5 sm:pl-1 flex-1 min-w-0">
+                  {/* Enhanced Icon Container with gradient - Mobile Responsive */}
                   <div
-                    className="bg-gradient-to-br from-green-100 to-green-200 p-1.5 rounded-xl flex items-center justify-center flex-shrink-0 mr-2 group-hover:from-green-200 group-hover:to-green-300 transition-all duration-300 shadow-sm"
-                    style={{ width: '40px', height: '40px' }}
+                    className="bg-gradient-to-br from-green-100 to-green-200 p-1 sm:p-1.5 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:from-green-200 group-hover:to-green-300 transition-all duration-300 shadow-sm"
+                    style={{ width: '32px', height: '32px' }}
                   >
                     <svg
                       className="text-green-700 group-hover:scale-110 transition-transform duration-300"
-                      style={{ width: '24px', height: '24px' }}
+                      style={{ width: '18px', height: '18px' }}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -662,17 +667,17 @@ const Guidelines: React.FC = () => {
                     </svg>
                   </div>
 
-                  {/* Title and Enhanced Tags */}
-                  <div className="flex-1 min-w-0 pl-2">
-                    <h3 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-green-600 transition-colors duration-300">
+                  {/* Title and Enhanced Tags - Mobile Responsive */}
+                  <div className="flex-1 min-w-0 pl-1 sm:pl-2">
+                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 leading-tight group-hover:text-green-600 transition-colors duration-300 line-clamp-2">
                       {guideline.title}
                     </h3>
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className="px-2.5 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-lg border border-gray-200">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1.5 sm:mt-2">
+                      <span className="px-1.5 sm:px-2.5 py-0.5 sm:py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded-md sm:rounded-lg border border-gray-200">
                         📂 {guideline.category}
                       </span>
                       <span
-                        className={`text-xs font-semibold px-2.5 py-1 rounded-lg ${
+                        className={`text-xs font-semibold px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-md sm:rounded-lg ${
                           guideline.difficulty === 'Easy'
                             ? 'bg-green-100 text-green-700 border border-green-200'
                             : guideline.difficulty === 'Medium'
@@ -689,28 +694,28 @@ const Guidelines: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Checkbox on right side */}
+                {/* Checkbox on right side - Mobile Responsive */}
                 <input
                   type="checkbox"
                   checked={selectedGuidelines.has(guideline.id)}
                   onChange={() => handleSelectGuideline(guideline.id)}
-                  className="w-5 h-5 rounded-md border-2 border-gray-300 text-green-600 focus:ring-2 focus:ring-green-500 cursor-pointer transition-all hover:border-green-500"
+                  className="w-4 h-4 sm:w-5 sm:h-5 rounded-md border-2 border-gray-300 text-green-600 focus:ring-2 focus:ring-green-500 cursor-pointer transition-all hover:border-green-500 flex-shrink-0"
                 />
               </div>
             </CardHeader>
 
-            <CardContent className="pt-2 flex-1 flex flex-col">
+            <CardContent className="pt-1.5 sm:pt-2 flex-1 flex flex-col">
               <div className="flex flex-col h-full">
-                <p className="text-sm text-gray-700 leading-relaxed line-clamp-2 mb-4">
+                <p className="text-xs sm:text-sm text-gray-700 leading-relaxed line-clamp-2 mb-3 sm:mb-4">
                   {guideline.description}
                 </p>
 
-                {/* Enhanced Stats Grid */}
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-3 border border-blue-200">
-                    <div className="flex items-center gap-2 mb-1">
+                {/* Enhanced Stats Grid - Mobile Responsive */}
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4">
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg sm:rounded-xl p-2 sm:p-3 border border-blue-200">
+                    <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
                       <svg
-                        className="w-4 h-4 text-blue-600"
+                        className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -726,14 +731,14 @@ const Guidelines: React.FC = () => {
                         Steps
                       </p>
                     </div>
-                    <p className="text-lg font-bold text-blue-900">
+                    <p className="text-base sm:text-lg font-bold text-blue-900">
                       {guideline.steps.length}
                     </p>
                   </div>
-                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-3 border border-purple-200">
-                    <div className="flex items-center gap-2 mb-1">
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg sm:rounded-xl p-2 sm:p-3 border border-purple-200">
+                    <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
                       <svg
-                        className="w-4 h-4 text-purple-600"
+                        className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -749,15 +754,15 @@ const Guidelines: React.FC = () => {
                         Time
                       </p>
                     </div>
-                    <p className="text-lg font-bold text-purple-900">
+                    <p className="text-base sm:text-lg font-bold text-purple-900">
                       {guideline.totalEstimatedTime}
                     </p>
                   </div>
                 </div>
 
-                {/* Enhanced Steps Preview */}
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200 mb-4 flex-1">
-                  <div className="flex items-center justify-between mb-3">
+                {/* Enhanced Steps Preview - Mobile Responsive */}
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-gray-200 mb-3 sm:mb-4 flex-1">
+                  <div className="flex items-center justify-between mb-2 sm:mb-3">
                     <p className="text-xs font-bold text-gray-700 uppercase tracking-wide">
                       📋 Steps Preview
                     </p>
@@ -767,22 +772,22 @@ const Guidelines: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1.5 sm:space-y-2">
                     {guideline.steps.slice(0, 3).map((step, index) => (
                       <div
                         key={step.id}
-                        className="flex items-start gap-2.5 bg-white rounded-lg p-2 border border-gray-200 hover:border-green-300 transition-all"
+                        className="flex items-start gap-2 sm:gap-2.5 bg-white rounded-md sm:rounded-lg p-1.5 sm:p-2 border border-gray-200 hover:border-green-300 transition-all"
                       >
-                        <span className="bg-gradient-to-br from-green-500 to-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">
+                        <span className="bg-gradient-to-br from-green-500 to-green-600 text-white w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm">
                           {step.stepNumber}
                         </span>
-                        <span className="text-xs text-gray-700 font-medium leading-snug flex-1">
+                        <span className="text-xs font-medium leading-snug flex-1 text-gray-700 line-clamp-2">
                           {step.title}
                         </span>
                       </div>
                     ))}
                     {guideline.steps.length > 3 && (
-                      <div className="text-xs text-gray-500 font-medium ml-8 flex items-center gap-1">
+                      <div className="text-xs text-gray-500 font-medium ml-6 sm:ml-8 flex items-center gap-1">
                         <svg
                           className="w-3 h-3"
                           fill="currentColor"
@@ -800,8 +805,8 @@ const Guidelines: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Enhanced Action Buttons - Fixed at Bottom */}
-                <div className="space-y-2.5 pt-4 mt-auto border-t-2 border-gray-200">
+                {/* Enhanced Action Buttons - Fixed at Bottom - Mobile Responsive */}
+                <div className="space-y-2 sm:space-y-2.5 pt-3 sm:pt-4 mt-auto border-t-2 border-gray-200">
                   <button
                     onClick={() => {
                       // In a real app, this would open a detailed view
@@ -809,10 +814,10 @@ const Guidelines: React.FC = () => {
                         title: 'Open',
                       });
                     }}
-                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-3 px-4 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 sm:gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="w-4 h-4 sm:w-5 sm:h-5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -830,16 +835,19 @@ const Guidelines: React.FC = () => {
                         d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                       />
                     </svg>
-                    View Step-by-Step Guide
+                    <span className="hidden sm:inline">
+                      View Step-by-Step Guide
+                    </span>
+                    <span className="sm:hidden">View Guide</span>
                   </button>
 
-                  <div className="flex gap-2.5">
+                  <div className="flex gap-2 sm:gap-2.5">
                     <button
                       onClick={() => handleEdit(guideline.id)}
-                      className="flex-1 bg-white hover:bg-gray-50 text-gray-700 py-2.5 px-3 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2 border-2 border-gray-300 hover:border-blue-400 hover:text-blue-600 hover:shadow-md"
+                      className="flex-1 bg-white hover:bg-gray-50 text-gray-700 py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 sm:gap-2 border-2 border-gray-300 hover:border-blue-400 hover:text-blue-600 hover:shadow-md"
                     >
                       <svg
-                        className="w-4 h-4"
+                        className="w-3.5 h-3.5 sm:w-4 sm:h-4"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -856,10 +864,10 @@ const Guidelines: React.FC = () => {
 
                     <button
                       onClick={() => handleDelete(guideline.id)}
-                      className="px-4 py-2.5 text-red-600 hover:text-white hover:bg-red-600 rounded-xl transition-all border-2 border-red-300 hover:border-red-600 font-semibold hover:shadow-md"
+                      className="px-3 sm:px-4 py-2 sm:py-2.5 text-red-600 hover:text-white hover:bg-red-600 rounded-lg sm:rounded-xl transition-all border-2 border-red-300 hover:border-red-600 font-semibold hover:shadow-md"
                     >
                       <svg
-                        className="w-5 h-5"
+                        className="w-4 h-4 sm:w-5 sm:h-5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -880,12 +888,12 @@ const Guidelines: React.FC = () => {
         ))}
       </div>
 
-      {/* Enhanced Empty State */}
+      {/* Enhanced Empty State - Mobile Responsive */}
       {filteredGuidelines.length === 0 && (
-        <div className="text-center py-16 bg-white rounded-2xl shadow-lg border-2 border-dashed border-gray-300">
-          <div className="bg-gradient-to-br from-gray-100 to-gray-200 w-24 h-24 rounded-full mx-auto flex items-center justify-center mb-6">
+        <div className="text-center py-12 sm:py-16 bg-white rounded-lg sm:rounded-2xl shadow-lg border-2 border-dashed border-gray-300">
+          <div className="bg-gradient-to-br from-gray-100 to-gray-200 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full mx-auto flex items-center justify-center mb-4 sm:mb-6">
             <svg
-              className="h-12 w-12 text-gray-500"
+              className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-gray-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -898,22 +906,22 @@ const Guidelines: React.FC = () => {
               />
             </svg>
           </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
             No guidelines found
           </h3>
-          <p className="text-base text-gray-600 mb-6 max-w-md mx-auto">
+          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 max-w-md mx-auto px-4">
             {searchTerm || filterCategory || filterDifficulty
               ? "Try adjusting your search or filter criteria to find what you're looking for."
               : 'Get started by creating your first step-by-step guideline for barangay services.'}
           </p>
           {!searchTerm && !filterCategory && !filterDifficulty && (
-            <div className="mt-8">
+            <div className="mt-6 sm:mt-8">
               <button
                 onClick={handleAddGuideline}
-                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-4 rounded-xl flex items-center gap-3 text-base font-bold mx-auto shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl flex items-center gap-2 sm:gap-3 text-sm sm:text-base font-bold mx-auto shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
               >
                 <svg
-                  className="w-6 h-6"
+                  className="w-5 h-5 sm:w-6 sm:h-6"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
