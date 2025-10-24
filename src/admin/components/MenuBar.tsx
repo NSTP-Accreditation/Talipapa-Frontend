@@ -48,90 +48,92 @@ const MenuBar: React.FC<MenuBarProps> = ({
   const location = useLocation();
   const { logout } = useAuth();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
-  const {data, loading, error } = useFetchData(`/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`);
+  const { data, loading, error } = useFetchData(
+    `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`
+  );
 
   const menuItems: MenuItem[] = [
     {
-      icon: <LayoutDashboard className="w-5 h-5" />,
+      icon: <LayoutDashboard className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Dashboard',
       href: APP_ROUTES.ADMIN.DASHBOARD,
     },
     {
-      icon: <Users className="w-5 h-5" />,
+      icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Resident Records',
       href: APP_ROUTES.ADMIN.RESOURCES,
     },
     {
-      icon: <TrendingUp className="w-5 h-5" />,
+      icon: <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Trading',
       href: APP_ROUTES.ADMIN.TRADING,
       submenu: [
         {
-          icon: <Coins className="w-4 h-4" />,
+          icon: <Coins className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Earn Points',
           href: APP_ROUTES.ADMIN.TRADING + '/earn-points',
         },
         {
-          icon: <FileBarChart className="w-4 h-4" />,
+          icon: <FileBarChart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Statistics',
           href: APP_ROUTES.ADMIN.TRADING + '/statistics',
         },
         {
-          icon: <ArrowRightLeft className="w-4 h-4" />,
+          icon: <ArrowRightLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Swap item',
           href: APP_ROUTES.ADMIN.TRADING + '/swap-item',
         },
       ],
     },
     {
-      icon: <Sprout className="w-5 h-5" />,
+      icon: <Sprout className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Green Pages',
       href: APP_ROUTES.ADMIN.BASE + '/green-pages',
     },
     {
-      icon: <Home className="w-5 h-5" />,
+      icon: <Home className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Home Editables',
       href: APP_ROUTES.ADMIN.ABOUT,
       submenu: [
         {
-          icon: <BookOpen className="w-4 h-4" />,
+          icon: <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Guidelines',
           href: APP_ROUTES.ADMIN.BASE + '/guidelines',
         },
         {
-          icon: <Newspaper className="w-4 h-4" />,
+          icon: <Newspaper className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'News',
           href: APP_ROUTES.ADMIN.NEWS,
         },
         {
-          icon: <Users className="w-4 h-4" />,
+          icon: <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'About Us',
           href: APP_ROUTES.ADMIN.ABOUT,
         },
         {
-          icon: <Trophy className="w-4 h-4" />,
+          icon: <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Achievements',
           href: APP_ROUTES.ADMIN.ABOUT + '/achievements',
         },
         {
-          icon: <Recycle className="w-4 h-4" />,
+          icon: <Recycle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Talipapa Natin',
           href: APP_ROUTES.ADMIN.TALIPAPANATIN,
         },
       ],
     },
     {
-      icon: <Package className="w-5 h-5" />,
+      icon: <Package className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Inventory',
       href: APP_ROUTES.ADMIN.INVENTORY,
     },
     {
-      icon: <FileText className="w-5 h-5" />,
+      icon: <FileText className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Activity Logs',
       href: APP_ROUTES.ADMIN.ACTIVITYLOGS,
     },
     {
-      icon: <Settings className="w-5 h-5" />,
+      icon: <Settings className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Settings',
       href: APP_ROUTES.ADMIN.SETTINGS,
     },
@@ -179,27 +181,27 @@ const MenuBar: React.FC<MenuBarProps> = ({
 
       <div
         className={cn(
-          'w-[280px] sm:w-[320px] h-screen text-white flex flex-col fixed left-0 top-0 overflow-hidden transform transition-transform duration-300 z-[1002] shadow-2xl bg-gradient-to-b from-green-900 via-green-800 to-green-900',
+          'w-[270px] sm:w-[320px] h-screen text-white flex flex-col fixed left-0 top-0 overflow-hidden transform transition-transform duration-300 z-[1002] shadow-2xl bg-gradient-to-b from-green-900 via-green-800 to-green-900',
           // hide on small screens unless isOpen
           isOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0',
           className
         )}
       >
         {/* Header */}
-        <div className="px-6 py-6 bg-gradient-to-r from-green-950 to-green-900">
-          <div className="flex items-center justify-center space-x-3">
-            <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-white/30">
+        <div className="px-4 py-4 sm:px-6 sm:py-6 bg-gradient-to-r from-green-950 to-green-900">
+          <div className="flex items-center justify-center space-x-2 sm:space-x-3">
+            <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-white/30">
               <img
                 src={data?.image?.url ? data.image.url : '/brgy talipapa.png'}
                 alt="Barangay Talipapa Logo"
-                className="w-11 h-11 object-contain"
+                className="w-8 h-8 sm:w-11 sm:h-11 object-contain"
               />
             </div>
             <div className="flex-shrink-0">
-              <h1 className="text-white font-black text-[18px] sm:text-1xl whitespace-nowrap leading-tight">
+              <h1 className="text-white font-black text-base sm:text-[18px] sm:text-1xl whitespace-nowrap leading-tight">
                 Barangay Talipapa Admin
               </h1>
-              <p className="text-green-200 text-xs font-medium">
+              <p className="text-green-200 text-xs sm:text-xs font-medium">
                 Content Management System
               </p>
             </div>
@@ -207,16 +209,16 @@ const MenuBar: React.FC<MenuBarProps> = ({
         </div>
 
         {/* Separator Line */}
-        <div className="border-t border-green-700/30 mx-6 mb-2"></div>
+        <div className="border-t border-green-700/30 mx-4 sm:mx-6 mb-2"></div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 px-4 py-5 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-green-600 scrollbar-track-transparent">
+        <nav className="flex-1 px-3 sm:px-4 py-3 sm:py-5 space-y-1.5 sm:space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-green-600 scrollbar-track-transparent">
           {menuItems.map((item, index) => (
             <div key={index}>
               <button
                 onClick={() => handleItemClick(item)}
                 className={cn(
-                  'w-full flex items-center justify-between px-4 py-3.5 text-left transition-all duration-200 text-base sm:text-lg font-medium rounded-xl',
+                  'w-full flex items-center justify-between px-3 py-3 sm:px-4 sm:py-3.5 text-left transition-all duration-200 text-sm sm:text-base sm:text-lg font-medium rounded-xl',
                   location.pathname === item.href ||
                     (item.submenu &&
                       item.submenu.some(
@@ -226,14 +228,16 @@ const MenuBar: React.FC<MenuBarProps> = ({
                     : 'text-green-100 hover:bg-white/10 hover:text-white hover:shadow-md'
                 )}
               >
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2.5 sm:space-x-3">
                   <span className="flex-shrink-0">{item.icon}</span>
-                  <span className="font-semibold">{item.label}</span>
+                  <span className="font-semibold text-sm sm:text-base">
+                    {item.label}
+                  </span>
                 </div>
                 {item.submenu && (
                   <ChevronDown
                     className={cn(
-                      'w-4 h-4 transition-transform duration-200',
+                      'w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200',
                       expandedItems.includes(item.label) ? 'rotate-180' : ''
                     )}
                   />
@@ -242,29 +246,34 @@ const MenuBar: React.FC<MenuBarProps> = ({
 
               {/* Submenu */}
               {item.submenu && expandedItems.includes(item.label) && (
-                <div className="mt-2 mb-2 space-y-1 bg-green-950/30 rounded-xl p-2">
+                <div className="mt-1.5 mb-1.5 sm:mt-2 sm:mb-2 space-y-1 bg-green-950/30 rounded-xl p-1.5 sm:p-2">
                   {item.submenu.map((subItem, subIndex) => (
                     <div key={subIndex}>
                       {subIndex > 0 && (
                         <div
-                          className="border-t border-green-700/20 my-2"
-                          style={{ marginLeft: '3rem', marginRight: '3rem' }}
+                          className="border-t border-green-700/20 my-1.5 sm:my-2"
+                          style={{
+                            marginLeft: '2.5rem',
+                            marginRight: '2.5rem',
+                          }}
                         />
                       )}
                       <button
                         onClick={() => navigate(subItem.href!)}
                         className={cn(
-                          'w-full flex items-center space-x-3 pr-4 py-3 text-left transition-all duration-300 ease-in-out text-base sm:text-lg rounded-xl transform',
+                          'w-full flex items-center space-x-2.5 sm:space-x-3 pr-3 py-2.5 sm:pr-4 sm:py-3 text-left transition-all duration-300 ease-in-out text-sm sm:text-base sm:text-lg rounded-xl transform',
                           'hover:scale-[1.02] hover:shadow-md hover:bg-white/15 hover:text-white hover:font-semibold',
                           'active:scale-95',
                           location.pathname === subItem.href
                             ? 'bg-white/20 text-white font-semibold scale-[1.02] shadow-md ring-1 ring-white/20'
                             : 'text-green-100'
                         )}
-                        style={{ paddingLeft: '3rem' }}
+                        style={{ paddingLeft: '2.5rem' }}
                       >
                         <span className="flex-shrink-0">{subItem.icon}</span>
-                        <span>{subItem.label}</span>
+                        <span className="text-sm sm:text-base">
+                          {subItem.label}
+                        </span>
                       </button>
                     </div>
                   ))}
@@ -275,13 +284,13 @@ const MenuBar: React.FC<MenuBarProps> = ({
         </nav>
 
         {/* Logout Button */}
-        <div className="px-4 pb-5 border-t border-green-700/30 pt-5 bg-gradient-to-t from-green-950/50 to-transparent">
+        <div className="px-3 pb-4 sm:px-4 sm:pb-5 border-t border-green-700/30 pt-4 sm:pt-5 bg-gradient-to-t from-green-950/50 to-transparent">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center space-x-3 px-4 py-3.5 text-left transition-all duration-200 text-green-100 hover:bg-red-500/20 hover:text-white text-base sm:text-lg font-medium rounded-xl group hover:shadow-lg"
+            className="w-full flex items-center space-x-2.5 sm:space-x-3 px-3 py-3 sm:px-4 sm:py-3.5 text-left transition-all duration-200 text-green-100 hover:bg-red-500/20 hover:text-white text-sm sm:text-base sm:text-lg font-medium rounded-xl group hover:shadow-lg"
           >
-            <LogOut className="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors" />
-            <span className="font-semibold">Logout</span>
+            <LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-red-400 group-hover:text-red-300 transition-colors" />
+            <span className="font-semibold text-sm sm:text-base">Logout</span>
           </button>
         </div>
       </div>
