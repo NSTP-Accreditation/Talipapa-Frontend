@@ -191,7 +191,6 @@ const Guidelines: React.FC = () => {
           stepNumber: s.stepNumber || idx + 1,
           title: s.title || s.name || '',
           description: s.description || '',
-          location: s.location,
           requiredDocuments: s.requiredDocuments || s.required_docs,
           estimatedTime: s.estimatedTime || s.estimated_time,
           tips: s.tips || undefined,
@@ -807,40 +806,6 @@ const Guidelines: React.FC = () => {
 
                 {/* Enhanced Action Buttons - Fixed at Bottom - Mobile Responsive */}
                 <div className="space-y-2 sm:space-y-2.5 pt-3 sm:pt-4 mt-auto border-t-2 border-gray-200">
-                  <button
-                    onClick={() => {
-                      // In a real app, this would open a detailed view
-                      info(`Opening detailed view for: ${guideline.title}`, {
-                        title: 'Open',
-                      });
-                    }}
-                    className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 sm:gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5"
-                  >
-                    <svg
-                      className="w-4 h-4 sm:w-5 sm:h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                    <span className="hidden sm:inline">
-                      View Step-by-Step Guide
-                    </span>
-                    <span className="sm:hidden">View Guide</span>
-                  </button>
-
                   <div className="flex gap-2 sm:gap-2.5">
                     <button
                       onClick={() => handleEdit(guideline.id)}

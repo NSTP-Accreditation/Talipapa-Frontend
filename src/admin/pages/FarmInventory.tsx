@@ -573,12 +573,17 @@ const FarmInventory: React.FC = () => {
           }
           formData.append('image', itemFormData.imageFile);
 
-          const response = await authFetch(`/farm-inventory/${editingItem.id}`, {
-            method: 'PUT',
-            body: formData,
-          });
+          const response = await authFetch(
+            `/farm-inventory/${editingItem.id}`,
+            {
+              method: 'PUT',
+              body: formData,
+            }
+          );
           await refetchFarmItems();
-          success(response.message || 'Farm item updated', { title: 'Success' });
+          success(response.message || 'Farm item updated', {
+            title: 'Success',
+          });
         } else {
           // Use JSON when no new image
           const updateData: any = {
@@ -592,12 +597,17 @@ const FarmInventory: React.FC = () => {
             updateData.farmOrigin = itemFormData.farmOrigin.trim();
           }
 
-          const response = await authFetch(`/farm-inventory/${editingItem.id}`, {
-            method: 'PUT',
-            body: JSON.stringify(updateData),
-          });
+          const response = await authFetch(
+            `/farm-inventory/${editingItem.id}`,
+            {
+              method: 'PUT',
+              body: JSON.stringify(updateData),
+            }
+          );
           await refetchFarmItems();
-          success(response.message || 'Farm item updated', { title: 'Success' });
+          success(response.message || 'Farm item updated', {
+            title: 'Success',
+          });
         }
       } else {
         // For create mode, always use FormData
@@ -662,8 +672,12 @@ const FarmInventory: React.FC = () => {
     setDeleteModal({ open: false, item: null });
   }
 
-  const lowStockCount = farmItems.filter((item) => (item.stocks || 0) < 10).length;
-  const outOfStockCount = farmItems.filter((item) => (item.stocks || 0) === 0).length;
+  const lowStockCount = farmItems.filter(
+    (item) => (item.stocks || 0) < 10
+  ).length;
+  const outOfStockCount = farmItems.filter(
+    (item) => (item.stocks || 0) === 0
+  ).length;
 
   // Get counts by category
   const categoryCounts = useMemo(() => {
@@ -794,27 +808,37 @@ const FarmInventory: React.FC = () => {
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="flex items-center gap-1">
                       <Leaf className="w-3 h-3 text-green-600" />
-                      <span className="font-medium">{categoryCounts.Vegetables}</span>
+                      <span className="font-medium">
+                        {categoryCounts.Vegetables}
+                      </span>
                       <span className="text-gray-500">Vegetables</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Sprout className="w-3 h-3 text-green-600" />
-                      <span className="font-medium">{categoryCounts['Herbal Plants']}</span>
+                      <span className="font-medium">
+                        {categoryCounts['Herbal Plants']}
+                      </span>
                       <span className="text-gray-500">Herbs</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Apple className="w-3 h-3 text-red-600" />
-                      <span className="font-medium">{categoryCounts.Fruits}</span>
+                      <span className="font-medium">
+                        {categoryCounts.Fruits}
+                      </span>
                       <span className="text-gray-500">Fruits</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Sprout className="w-3 h-3 text-emerald-600" />
-                      <span className="font-medium">{categoryCounts.Seedlings}</span>
+                      <span className="font-medium">
+                        {categoryCounts.Seedlings}
+                      </span>
                       <span className="text-gray-500">Seedlings</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Trees className="w-3 h-3 text-green-700" />
-                      <span className="font-medium">{categoryCounts.Trees}</span>
+                      <span className="font-medium">
+                        {categoryCounts.Trees}
+                      </span>
                       <span className="text-gray-500">Trees</span>
                     </div>
                   </div>
@@ -854,7 +878,9 @@ const FarmInventory: React.FC = () => {
                   <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gray-100 flex items-center justify-center">
                     <Sprout className="w-10 h-10 text-gray-400" />
                   </div>
-                  <p className="text-gray-500 font-medium">No farm items found</p>
+                  <p className="text-gray-500 font-medium">
+                    No farm items found
+                  </p>
                   <p className="text-sm text-gray-400 mt-1">
                     Try adjusting your search or add a new farm item
                   </p>
@@ -895,8 +921,8 @@ const FarmInventory: React.FC = () => {
                               (item.stocks || 0) === 0
                                 ? 'bg-red-100 text-red-700'
                                 : (item.stocks || 0) < 10
-                                ? 'bg-yellow-100 text-yellow-700'
-                                : 'bg-blue-100 text-blue-700'
+                                  ? 'bg-yellow-100 text-yellow-700'
+                                  : 'bg-blue-100 text-blue-700'
                             }`}
                           >
                             Stock: {item.stocks || 0}

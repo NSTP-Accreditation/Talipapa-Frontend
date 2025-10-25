@@ -283,18 +283,36 @@ export default function AboutBarangayEditable() {
               </button>
 
               {showEditMenu && (
-                <div className="absolute right-0 mt-2 sm:mt-3 w-56 sm:w-64 bg-white border rounded-xl sm:rounded-2xl shadow-2xl z-1003 ring-1 ring-black/5 overflow-hidden">
-                  <div className="p-1.5 sm:p-2">
+                <div
+                  className="
+      absolute
+      left-0 sm:right-0 sm:left-auto
+      mt-2
+      w-[calc(100vw-2rem)] sm:w-56
+      origin-top-left sm:origin-top-right
+      rounded-lg
+      bg-white
+      border
+      shadow-xl
+      ring-1 ring-black/5
+      overflow-hidden
+      z-[1003]
+    "
+                >
+                  <div className="p-2 sm:p-2 divide-y divide-gray-100">
                     <button
                       onClick={() => {
                         openModal('barangayDescription');
                         setShowEditMenu(false);
                       }}
-                      className="w-full flex items-center gap-2 sm:gap-3 px-2.5 py-2 sm:px-3 sm:py-2 rounded-lg hover:bg-gray-50 transition-colors text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-100"
+                      className="w-full flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-100"
                     >
-                      <Home className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1b4c2e]" />
-                      <span className="flex-1 text-left">
+                      <Home className="w-4 h-4 sm:w-4 sm:h-4 text-[#1b4c2e]" />
+                      <span className="flex-1 text-left font-medium">
                         Edit Barangay Information
+                      </span>
+                      <span className="text-gray-400 text-sm hidden sm:inline">
+                        ›
                       </span>
                     </button>
 
@@ -303,29 +321,33 @@ export default function AboutBarangayEditable() {
                         openModal('barangayHistory');
                         setShowEditMenu(false);
                       }}
-                      className="w-full flex items-center gap-2 sm:gap-3 px-2.5 py-2 sm:px-3 sm:py-2 rounded-lg hover:bg-gray-50 transition-colors text-xs sm:text-sm mt-1 focus:outline-none focus:ring-2 focus:ring-green-100"
+                      className="w-full flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-100"
                     >
-                      <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1b4c2e] text-xs sm:text-sm">
-                        📜
-                      </span>
-                      <span className="flex-1 text-left">
+                      <span className="w-4 h-4 text-[#1b4c2e]">📜</span>
+                      <span className="flex-1 text-left font-medium">
                         Edit Barangay History
+                      </span>
+                      <span className="text-gray-400 text-sm hidden sm:inline">
+                        ›
                       </span>
                     </button>
 
-                    <div className="my-1.5 sm:my-2 border-t" />
+                    <div className="py-1" />
 
                     <button
                       onClick={() => {
                         openModal('mission');
                         setShowEditMenu(false);
                       }}
-                      className="w-full flex items-center gap-2 sm:gap-3 px-2.5 py-2 sm:px-3 sm:py-2 rounded-lg hover:bg-gray-50 transition-colors text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-100"
+                      className="w-full flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-100"
                     >
-                      <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1b4c2e] text-xs sm:text-sm">
-                        🎯
+                      <span className="w-4 h-4 text-[#1b4c2e]">🎯</span>
+                      <span className="flex-1 text-left font-medium">
+                        Edit Mission
                       </span>
-                      <span className="flex-1 text-left">Edit Mission</span>
+                      <span className="text-gray-400 text-sm hidden sm:inline">
+                        ›
+                      </span>
                     </button>
 
                     <button
@@ -333,12 +355,15 @@ export default function AboutBarangayEditable() {
                         openModal('vision');
                         setShowEditMenu(false);
                       }}
-                      className="w-full flex items-center gap-2 sm:gap-3 px-2.5 py-2 sm:px-3 sm:py-2 rounded-lg hover:bg-gray-50 transition-colors text-xs sm:text-sm mt-1 focus:outline-none focus:ring-2 focus:ring-green-100"
+                      className="w-full flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-100"
                     >
-                      <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1b4c2e] text-xs sm:text-sm">
-                        🔭
+                      <span className="w-4 h-4 text-[#1b4c2e]">🔭</span>
+                      <span className="flex-1 text-left font-medium">
+                        Edit Vision
                       </span>
-                      <span className="flex-1 text-left">Edit Vision</span>
+                      <span className="text-gray-400 text-sm hidden sm:inline">
+                        ›
+                      </span>
                     </button>
                   </div>
                 </div>
