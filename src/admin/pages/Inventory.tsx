@@ -870,7 +870,10 @@ const Inventory: React.FC = () => {
     try {
       if (productMode === 'edit' && editingProduct) {
         // For edit mode, only use FormData if there's a new image
-        if (productFormData.imageFile && productFormData.imageFile instanceof File) {
+        if (
+          productFormData.imageFile &&
+          productFormData.imageFile instanceof File
+        ) {
           // Use FormData when uploading a new image
           const formData = new FormData();
           formData.append('name', productFormData.name.trim());
@@ -944,7 +947,10 @@ const Inventory: React.FC = () => {
     try {
       if (materialMode === 'edit' && editingMaterial) {
         // For edit mode, only use FormData if there's a new image
-        if (materialFormData.imageFile && materialFormData.imageFile instanceof File) {
+        if (
+          materialFormData.imageFile &&
+          materialFormData.imageFile instanceof File
+        ) {
           // Use FormData when uploading a new image
           const formData = new FormData();
           formData.append('name', materialFormData.name.trim());

@@ -246,27 +246,27 @@ npm run dev
 <details>
 <summary>View all admin routes</summary>
 
-| Route                            | Description                    |
-| -------------------------------- | ------------------------------ |
-| `/admin/login`                   | 🔐 Admin authentication        |
-| `/admin/dashboard`               | 📊 Analytics & overview        |
-| `/admin/residents`               | 👥 Resident records management |
-| **Trading System**               |                                |
-| `/admin/trading/earn-points`     | 💰 Waste submission records    |
-| `/admin/trading/statistics`      | 📈 Trading statistics          |
-| `/admin/trading/swap-item`       | 🔄 Point redemption            |
-| **Inventory Management**         |                                |
-| `/admin/inventory?tab=overview`  | 📦 Inventory overview          |
-| `/admin/inventory?tab=products`  | 📦 Product management          |
-| `/admin/inventory?tab=materials` | ♻️ Material tracking           |
+| Route                            | Description                      |
+| -------------------------------- | -------------------------------- |
+| `/admin/login`                   | 🔐 Admin authentication          |
+| `/admin/dashboard`               | 📊 Analytics & overview          |
+| `/admin/residents`               | 👥 Resident records management   |
+| **Trading System**               |                                  |
+| `/admin/trading/earn-points`     | 💰 Waste submission records      |
+| `/admin/trading/statistics`      | 📈 Trading statistics            |
+| `/admin/trading/swap-item`       | 🔄 Point redemption              |
+| **Inventory Management**         |                                  |
+| `/admin/inventory?tab=overview`  | 📦 Inventory overview            |
+| `/admin/inventory?tab=products`  | 📦 Product management            |
+| `/admin/inventory?tab=materials` | ♻️ Material tracking             |
 | `/admin/farm-inventory`          | 🌱 Farm inventory (Agricultural) |
-| **Content Management**           |                                |
-| `/admin/guidelines`              | 📝 Manage service guidelines   |
-| `/admin/news`                    | 📰 News & announcements        |
-| `/admin/about`                   | ℹ️ Edit about page content     |
-| `/admin/about/achievements`      | 🏆 Manage achievements         |
-| `/admin/talipapa-natin`          | 🌿 Talipapa community section  |
-| `/admin/settings`                | ⚙️ System settings             |
+| **Content Management**           |                                  |
+| `/admin/guidelines`              | 📝 Manage service guidelines     |
+| `/admin/news`                    | 📰 News & announcements          |
+| `/admin/about`                   | ℹ️ Edit about page content       |
+| `/admin/about/achievements`      | 🏆 Manage achievements           |
+| `/admin/talipapa-natin`          | 🌿 Talipapa community section    |
+| `/admin/settings`                | ⚙️ System settings               |
 
 </details>
 

@@ -8,8 +8,8 @@ import useFetchData from '../hooks/useFetchData';
 
 export default function App() {
   const { isLoading: pageLoading } = useLoadingState(1000);
-  const { data: materialsData, loading, error } = useFetchData("/materials");
-  
+  const { data: materialsData, loading, error } = useFetchData('/materials');
+
   const [recordIdRest, setRecordIdRest] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [weights, setWeights] = useState<{ [key: string]: string }>({});
@@ -29,31 +29,31 @@ export default function App() {
 
   function handleWeightChange(materialId: string, value: string) {
     if (value === '' || /^\d*\.?\d*$/.test(value)) {
-      setWeights(prev => ({
+      setWeights((prev) => ({
         ...prev,
-        [materialId]: value
+        [materialId]: value,
       }));
     }
   }
 
   const totalPoints = useMemo(() => {
     if (!materialsData) return 0;
-    
+
     return materialsData.reduce((total, material) => {
       const weight = parseFloat(weights[material._id]) || 0;
-      return total + (weight * material.pointsPerKg);
+      return total + weight * material.pointsPerKg;
     }, 0);
   }, [weights, materialsData]);
 
   const materialsWithValue = useMemo((): string[] => {
     if (!materialsData) return [];
-    
+
     return materialsData
       .filter((material) => {
         const weight = parseFloat(weights[material._id]) || 0;
         return weight > 0;
       })
-      .map(material => material.name);
+      .map((material) => material.name);
   }, [weights, materialsData]);
 
   const handleConfirm = async (e: React.FormEvent) => {
@@ -83,7 +83,7 @@ export default function App() {
         method: 'PATCH',
         body: JSON.stringify(requestBody),
       });
-      
+
       success(
         `${result.record_id} ${result.lastName} current point is ${result.currentPoints}`,
         { title: 'Success' }
@@ -201,7 +201,9 @@ export default function App() {
                 type="text"
                 inputMode="decimal"
                 value={weights[material._id] || '0'}
-                onChange={(e) => handleWeightChange(material._id, e.target.value)}
+                onChange={(e) =>
+                  handleWeightChange(material._id, e.target.value)
+                }
                 className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border rounded bg-gray-50 text-xs sm:text-base"
                 placeholder="0"
               />

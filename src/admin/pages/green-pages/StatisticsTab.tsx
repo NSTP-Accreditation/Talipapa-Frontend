@@ -182,7 +182,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
           method: 'POST',
           body: formData,
         });
-        
+
         refetchFarms();
       } catch (error) {
         console.log(error);
