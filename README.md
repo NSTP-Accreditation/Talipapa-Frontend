@@ -5,8 +5,8 @@
 ### Barangay Information System with EcoCycle Trading Platform
 
 [![React](https://img.shields.io/badge/React-18.3.1-61dafb?style=flat&logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-3178c6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-5.4.1-646cff?style=flat&logo=vite)](https://vitejs.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178c6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6.4.1-646cff?style=flat&logo=vite)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.14-38bdf8?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 
 **An integrated platform for Barangay Talipapa featuring waste management, community services, and administrative tools.**
@@ -176,7 +176,7 @@ src/
 | Category               | Technologies                    |
 | ---------------------- | ------------------------------- |
 | **Frontend Framework** | React 18.3.1 + TypeScript 5.9.3 |
-| **Build Tool**         | Vite 6.3.5                      |
+| **Build Tool**         | Vite 6.4.1                      |
 | **Styling**            | Tailwind CSS 4.1.14 + PostCSS   |
 | **UI Components**      | shadcn/ui + Radix UI            |
 | **Routing**            | React Router DOM v6             |
@@ -211,21 +211,64 @@ npm install
 # Start development server
 npm run dev
 # 🌐 Server runs at http://localhost:3000
+# 🌐 Frontend dev server typically runs at http://localhost:5173 (Vite default)
 ```
 
 ### Available Scripts
 
-| Command                | Description               |
-| ---------------------- | ------------------------- |
-| `npm run dev`          | Start development server  |
-| `npm run build`        | Build for production      |
-| `npm run preview`      | Preview production build  |
-| `npm run format`       | Format code with Prettier |
-| `npm run format:check` | Check code formatting     |
-| `npm run lint:css`     | Lint CSS with Stylelint   |
-| `npx tsc --noEmit`     | TypeScript type checking  |
+| Command                | Description                      |
+| ---------------------- | -------------------------------- |
+| `npm run dev`          | Start development server (vite)  |
+| `npm run build`        | Build for production             |
+| `npm run format`       | Format code with Prettier        |
+| `npm run format:check` | Check code formatting (Prettier) |
+| `npm run lint:css`     | Lint CSS with Stylelint          |
 
----
+Notes:
+
+- To preview a production build locally: `npx vite preview` or add a `preview` script that runs `vite preview`.
+- Run TypeScript checks with: `npx tsc --noEmit` (not included as an npm script by default).
+
+## Development tips
+
+- Run the backend locally (if required) before using features that call the API. From your backend folder:
+
+```bash
+# install and run backend
+npm install
+npm run dev
+# backend commonly runs at http://localhost:3000
+```
+
+- Use the `.env` file to configure the frontend's API base URL and any environment variables. Example `.env` values:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000
+VITE_PAGE_CONTENT_ID=your_page_content_id_here
+# Add other VITE_ variables required by your environment
+```
+
+- Formatting & linting quick commands:
+
+```bash
+npm run format        # format code with Prettier
+npm run format:check  # check formatting
+npm run lint:css      # lint Tailwind/CSS
+npx tsc --noEmit      # typecheck (fast check)
+```
+
+- If you see CORS or network errors, confirm `VITE_API_BASE_URL` points to the running backend and check the browser console for failing requests.
+
+## Contributing & Pull Requests
+
+We welcome contributions. Quick guidelines:
+
+1. Create a topic branch off `main` named `feat/<short-desc>` or `fix/<short-desc>`.
+2. Run `npm run format` and `npx tsc --noEmit` before opening a PR.
+3. Provide a concise PR description, link related issues, and include screenshots for visual changes.
+4. For larger changes, open an issue first to discuss the approach.
+
+## Maintainers will review and request changes when necessary. Thanks for contributing!
 
 ---
 
@@ -446,7 +489,7 @@ The application uses a **Context-based authentication system**:
 
 ---
 
-**Last Updated:** October 12, 2025
+**Last Updated:** October 25, 2025
 
 Made with 💚 for Barangay Talipapa
 
