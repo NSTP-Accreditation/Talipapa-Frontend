@@ -1,58 +1,67 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Recycle } from 'lucide-react';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { useToast } from '@/hooks/useToast';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
-
-const MATERIALS = [
-  'PET bottles',
-  'Soft and hard plastics',
-  'Candy and chichirya wrapper',
-  'Plastic bags and food wrapping',
-  'Food takeaway containers',
-  'Water cooler bottles, baby cups, fiberglass',
-  'Used cotton clothes',
-];
+import useFetchData from '../hooks/useFetchData';
 
 export default function App() {
-  // Add loading state with 1 second display
   const { isLoading: pageLoading } = useLoadingState(1000);
-
-  // Store only the editable part (suffix) of the Record ID, fixed prefix is 'BT-'
+  const { data: materialsData, loading, error } = useFetchData("/materials");
+  
   const [recordIdRest, setRecordIdRest] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
-  const [weights, setWeights] = useState<string[]>(MATERIALS.map(() => '0'));
+  const [weights, setWeights] = useState<{ [key: string]: string }>({});
   const authFetch = useAuthFetch();
+  const { success } = useToast();
 
-  function handleWeightChange(index: number, value: string) {
-    const newWeights = [...weights];
+  // Initialize weights when materialsData is loaded
+  useEffect(() => {
+    if (materialsData && materialsData.length > 0) {
+      const initialWeights: { [key: string]: string } = {};
+      materialsData.forEach((material) => {
+        initialWeights[material._id] = '0';
+      });
+      setWeights(initialWeights);
+    }
+  }, [materialsData]);
+
+  function handleWeightChange(materialId: string, value: string) {
     if (value === '' || /^\d*\.?\d*$/.test(value)) {
-      newWeights[index] = value;
-      setWeights(newWeights);
+      setWeights(prev => ({
+        ...prev,
+        [materialId]: value
+      }));
     }
   }
 
   const totalPoints = useMemo(() => {
-    return weights.reduce((total, weight) => {
-      const numWeight = parseFloat(weight) || 0;
-      return total + numWeight;
+    if (!materialsData) return 0;
+    
+    return materialsData.reduce((total, material) => {
+      const weight = parseFloat(weights[material._id]) || 0;
+      return total + (weight * material.pointsPerKg);
     }, 0);
-  }, [weights]);
+  }, [weights, materialsData]);
 
   const materialsWithValue = useMemo((): string[] => {
-    return MATERIALS.filter((_, index) => {
-      const weight = parseFloat(weights[index]) || 0;
-      return weight > 0;
-    });
-  }, [weights]);
+    if (!materialsData) return [];
+    
+    return materialsData
+      .filter((material) => {
+        const weight = parseFloat(weights[material._id]) || 0;
+        return weight > 0;
+      })
+      .map(material => material.name);
+  }, [weights, materialsData]);
 
   const handleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const hasValidWeight = weights.some((weight) => {
-      const numWeight = parseFloat(weight) || 0;
-      return numWeight > 0;
+    const hasValidWeight = materialsData?.some((material) => {
+      const weight = parseFloat(weights[material._id]) || 0;
+      return weight > 0;
     });
 
     if (!hasValidWeight) {
@@ -74,22 +83,29 @@ export default function App() {
         method: 'PATCH',
         body: JSON.stringify(requestBody),
       });
-      alert(
-        `${result.record_id} ${result.lastName} current point is ${result.currentPoints}`
-      );
-      const { success } = useToast();
+      
       success(
         `${result.record_id} ${result.lastName} current point is ${result.currentPoints}`,
         { title: 'Success' }
       );
     } catch (error) {
       console.log(error);
+      const { error: toastError } = useToast();
+      toastError('Failed to update record', { title: 'Error' });
     }
   };
 
   // Show loading skeleton while loading
-  if (pageLoading) {
+  if (pageLoading || loading) {
     return <FormTablePageSkeleton />;
+  }
+
+  if (error) {
+    return <div>Error loading materials: {error}</div>;
+  }
+
+  if (!materialsData || materialsData.length === 0) {
+    return <div>No materials found</div>;
   }
 
   return (
@@ -131,7 +147,6 @@ export default function App() {
                 type="text"
                 value={recordIdRest}
                 onChange={(e) => {
-                  // Allow digits only and limit to 4 digits
                   const digitsOnly = e.target.value.replace(/\D/g, '');
                   const limited = digitsOnly.slice(0, 4);
                   setRecordIdRest(limited);
@@ -171,22 +186,22 @@ export default function App() {
         </div>
 
         {/* Input Rows */}
-        {MATERIALS.map((mat, idx) => (
+        {materialsData.map((material) => (
           <div
-            key={idx}
+            key={material._id}
             className="grid grid-cols-12 gap-2 sm:gap-[23px] items-center mb-2 sm:mb-3"
           >
             <div className="col-span-6">
               <div className="bg-gradient-to-r from-green-50 to-white px-2 sm:px-3 py-1.5 sm:py-2 rounded font-semibold text-gray-800 text-xs sm:text-base">
-                {mat}
+                {material.name}
               </div>
             </div>
             <div className="col-span-3">
               <input
                 type="text"
                 inputMode="decimal"
-                value={weights[idx]}
-                onChange={(e) => handleWeightChange(idx, e.target.value)}
+                value={weights[material._id] || '0'}
+                onChange={(e) => handleWeightChange(material._id, e.target.value)}
                 className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border rounded bg-gray-50 text-xs sm:text-base"
                 placeholder="0"
               />
