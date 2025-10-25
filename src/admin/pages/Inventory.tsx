@@ -867,39 +867,64 @@ const Inventory: React.FC = () => {
         title: 'Validation',
       });
 
-    const newProduct: Product = {
-      id:
-        productMode === 'edit' && editingProduct
-          ? editingProduct.id
-          : Date.now().toString(16),
-      name: productFormData.name.trim(),
-      image: productFormData.imageFile,
-      category: `${productFormData.category.trim()}`,
-      subCategory: `${productFormData.category.trim()}`,
-      description: productFormData.description.trim() || undefined,
-      stocks: Number(productFormData.stocks),
-      requiredPoints: Number(productFormData.requiredPoints),
-    };
-
-    const formData = new FormData();
-    Object.entries(newProduct).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-
     try {
       if (productMode === 'edit' && editingProduct) {
-        success('Product updated successfully!', { title: 'Updated' });
+        // For edit mode, only use FormData if there's a new image
+        if (productFormData.imageFile && productFormData.imageFile instanceof File) {
+          // Use FormData when uploading a new image
+          const formData = new FormData();
+          formData.append('name', productFormData.name.trim());
+          formData.append('description', productFormData.description.trim());
+          formData.append('category', productFormData.category.trim());
+          formData.append('subCategory', productFormData.subCategory.trim());
+          formData.append('stocks', productFormData.stocks);
+          formData.append('requiredPoints', productFormData.requiredPoints);
+          formData.append('image', productFormData.imageFile);
+
+          const response = await authFetch(`/products/${editingProduct.id}`, {
+            method: 'PUT',
+            body: formData,
+          });
+          await refetchProduct();
+          success(response.message || 'Product updated', { title: 'Success' });
+        } else {
+          // Use JSON when no new image
+          const response = await authFetch(`/products/${editingProduct.id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+              name: productFormData.name.trim(),
+              description: productFormData.description.trim(),
+              category: productFormData.category.trim(),
+              subCategory: productFormData.subCategory.trim(),
+              stocks: Number(productFormData.stocks),
+              requiredPoints: Number(productFormData.requiredPoints),
+            }),
+          });
+          await refetchProduct();
+          success(response.message || 'Product updated', { title: 'Success' });
+        }
       } else {
+        // For create mode, always use FormData
+        const formData = new FormData();
+        formData.append('name', productFormData.name.trim());
+        formData.append('description', productFormData.description.trim());
+        formData.append('category', productFormData.category.trim());
+        formData.append('subCategory', productFormData.subCategory.trim());
+        formData.append('stocks', productFormData.stocks);
+        formData.append('requiredPoints', productFormData.requiredPoints);
+        if (productFormData.imageFile) {
+          formData.append('image', productFormData.imageFile);
+        }
+
         const response = await authFetch('/products', {
           method: 'POST',
           body: formData,
         });
-
         await refetchProduct();
         success(response?.message || 'Product created', { title: 'Success' });
       }
     } catch (error) {
-      console.log(error);
+      // Error is already handled by useAuthFetch
     }
 
     setShowProductModal(false);
@@ -916,35 +941,55 @@ const Inventory: React.FC = () => {
         title: 'Validation',
       });
 
-    const newMaterial: Material = {
-      id:
-        materialMode === 'edit' && editingMaterial
-          ? editingMaterial.id
-          : Date.now().toString(16),
-      name: materialFormData.name.trim(),
-      image: materialFormData.imageFile,
-      description: materialFormData.description.trim() || undefined,
-      pointsPerKg: Number(materialFormData.pointsPerKg),
-    };
-
-    const formData = new FormData();
-    Object.entries(newMaterial).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
     try {
       if (materialMode === 'edit' && editingMaterial) {
-        success('Material updated successfully!', { title: 'Updated' });
+        // For edit mode, only use FormData if there's a new image
+        if (materialFormData.imageFile && materialFormData.imageFile instanceof File) {
+          // Use FormData when uploading a new image
+          const formData = new FormData();
+          formData.append('name', materialFormData.name.trim());
+          formData.append('description', materialFormData.description.trim());
+          formData.append('pointsPerKg', materialFormData.pointsPerKg);
+          formData.append('image', materialFormData.imageFile);
+
+          const response = await authFetch(`/materials/${editingMaterial.id}`, {
+            method: 'PUT',
+            body: formData,
+          });
+          await refetchMaterials();
+          success(response.message || 'Material updated', { title: 'Success' });
+        } else {
+          // Use JSON when no new image
+          const response = await authFetch(`/materials/${editingMaterial.id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+              name: materialFormData.name.trim(),
+              description: materialFormData.description.trim(),
+              pointsPerKg: Number(materialFormData.pointsPerKg),
+            }),
+          });
+          await refetchMaterials();
+          success(response.message || 'Material updated', { title: 'Success' });
+        }
       } else {
+        // For create mode, always use FormData
+        const formData = new FormData();
+        formData.append('name', materialFormData.name.trim());
+        formData.append('description', materialFormData.description.trim());
+        formData.append('pointsPerKg', materialFormData.pointsPerKg);
+        if (materialFormData.imageFile) {
+          formData.append('image', materialFormData.imageFile);
+        }
+
         const response = await authFetch('/materials', {
           method: 'POST',
           body: formData,
         });
-
         await refetchMaterials();
         success(response.message || 'Material created', { title: 'Success' });
       }
     } catch (error) {
-      console.log(error);
+      // Error is already handled by useAuthFetch
     }
 
     setShowMaterialModal(false);
