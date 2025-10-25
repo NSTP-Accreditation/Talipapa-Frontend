@@ -3,6 +3,8 @@ import { Save, SquarePen, Plus, Trash2, AlertCircle } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import { useAuthFetch } from '../hooks/useAuthFetch';
+import { useToast } from '@/hooks/useToast';
+import { sanitizeName, validateName } from '@/utils/validation';
 
 interface Official {
   _id: string;
@@ -75,11 +77,24 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
     }
   };
 
+  const { error: showError } = useToast();
+
   const handleSave = () => {
-    if (formData.name.trim() && formData.position.trim()) {
-      onSave(formData);
-      onClose();
+    // Validate name (required) and position (required)
+    const nameToCheck = formData.name || '';
+    const { valid, message } = validateName(nameToCheck, true);
+    if (!valid) {
+      showError(message || 'Invalid name');
+      return;
     }
+
+    if (!formData.position || !formData.position.trim()) {
+      showError('Position/Title is required');
+      return;
+    }
+
+    onSave(formData);
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -158,8 +173,17 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
                 type="text"
                 value={formData.name}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, name: e.target.value }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    name: sanitizeName(e.target.value),
+                  }))
                 }
+                onBlur={() => {
+                  const { valid, message } = validateName(formData.name, true);
+                  if (!valid) {
+                    showError(message || 'Invalid name');
+                  }
+                }}
                 className="w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1b4c2e] focus:border-transparent text-sm sm:text-base"
                 placeholder="Enter full name"
               />

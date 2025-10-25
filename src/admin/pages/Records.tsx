@@ -133,6 +133,14 @@ const ResidentRecords: React.FC = () => {
     contact: '',
     address: '',
   });
+  // Name validation state
+  const [firstNameError, setFirstNameError] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [middleNameError, setMiddleNameError] = useState('');
+  const [areNamesValid, setAreNamesValid] = useState(false);
+  // Age validation state
+  const [ageError, setAgeError] = useState('');
+  const [isAgeValid, setIsAgeValid] = useState(false);
   // Address validation state
   const [addressError, setAddressError] = useState('');
   const [isAddressValid, setIsAddressValid] = useState(false);
@@ -154,7 +162,36 @@ const ResidentRecords: React.FC = () => {
     });
     setContactRest('');
     setRecordIdRest('');
+    setFirstNameError('');
+    setLastNameError('');
+    setMiddleNameError('');
+    setAgeError('');
+    setIsAgeValid(false);
+    setAreNamesValid(false);
     setIsAddModalOpen(true);
+  };
+
+  // Validate name using Unicode letter class, allowing spaces, apostrophes and hyphens
+  const validateName = (value: string, required = false) => {
+    const v = (value || '').trim();
+    if (required && v === '') {
+      return { valid: false, message: 'This field is required.' };
+    }
+    if (v === '') return { valid: true, message: '' };
+    // allow letters (unicode), spaces, apostrophes and hyphens
+    const nameRegex = /^[\p{L}\s'\-]+$/u;
+    if (!nameRegex.test(v)) {
+      return {
+        valid: false,
+        message:
+          'Only alphabetic characters, spaces, hyphens or apostrophes are allowed.',
+      };
+    }
+    // simple length guard
+    if (v.length > 80) {
+      return { valid: false, message: 'Name is too long.' };
+    }
+    return { valid: true, message: '' };
   };
 
   const handleCreateResident = async (e: FormEvent<HTMLFormElement>) => {
@@ -166,8 +203,17 @@ const ResidentRecords: React.FC = () => {
 
     setIsCreating(true);
 
-    if (!newResident.age || String(newResident.age).trim() === '') {
-      showError('Age is required!', { title: 'Validation' });
+    if (!isAgeValid) {
+      showError('Please enter a valid age (0-120).', { title: 'Validation' });
+      setIsCreating(false);
+      return;
+    }
+
+    // Validate names before submitting
+    if (!areNamesValid) {
+      showError('Please correct the name fields before submitting.', {
+        title: 'Validation',
+      });
       setIsCreating(false);
       return;
     }
@@ -229,6 +275,33 @@ const ResidentRecords: React.FC = () => {
     setAddressError(res.valid ? '' : res.message);
     setIsAddressValid(res.valid);
   }, [newResident.address]);
+
+  // Validate name fields whenever they change
+  useEffect(() => {
+    const f = validateName(newResident.firstName, true);
+    const l = validateName(newResident.lastName, true);
+    const m = validateName(newResident.middleName, false);
+    setFirstNameError(f.valid ? '' : f.message);
+    setLastNameError(l.valid ? '' : l.message);
+    setMiddleNameError(m.valid ? '' : m.message);
+    setAreNamesValid(f.valid && l.valid && m.valid);
+  }, [newResident.firstName, newResident.lastName, newResident.middleName]);
+
+  // Validate age whenever it changes
+  useEffect(() => {
+    const v = String(newResident.age || '').trim();
+    const n = v === '' ? NaN : Number(v);
+    if (v === '') {
+      setIsAgeValid(false);
+      setAgeError('Age is required.');
+    } else if (isNaN(n) || n < 0 || n > 120) {
+      setIsAgeValid(false);
+      setAgeError('Enter a valid age between 0 and 120.');
+    } else {
+      setIsAgeValid(true);
+      setAgeError('');
+    }
+  }, [newResident.age]);
 
   // Fixed Pagination logic with null checks
   const safeRecords = records || []; // This ensures we always have an array
@@ -723,15 +796,31 @@ const ResidentRecords: React.FC = () => {
                         required
                         type="text"
                         value={newResident.firstName}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          // strip disallowed characters (allow letters, spaces, apostrophes, hyphens)
+                          const filtered = e.target.value.replace(
+                            /[^\p{L}\s'\-]/gu,
+                            ''
+                          );
                           setNewResident((s) => ({
                             ...s,
-                            firstName: e.target.value,
-                          }))
-                        }
+                            firstName: filtered,
+                          }));
+                          const res = validateName(filtered, true);
+                          setFirstNameError(res.valid ? '' : res.message);
+                        }}
+                        onBlur={() => {
+                          const res = validateName(newResident.firstName, true);
+                          setFirstNameError(res.valid ? '' : res.message);
+                        }}
                         className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                         placeholder="Enter first name"
                       />
+                      {firstNameError ? (
+                        <p className="text-xs sm:text-sm text-red-600 mt-1">
+                          {firstNameError}
+                        </p>
+                      ) : null}
                     </div>
                   </label>
                   {/* Last Name */}
@@ -745,35 +834,67 @@ const ResidentRecords: React.FC = () => {
                         required
                         type="text"
                         value={newResident.lastName}
-                        onChange={(e) =>
-                          setNewResident((s) => ({
-                            ...s,
-                            lastName: e.target.value,
-                          }))
-                        }
+                        onChange={(e) => {
+                          const filtered = e.target.value.replace(
+                            /[^\p{L}\s'\-]/gu,
+                            ''
+                          );
+                          setNewResident((s) => ({ ...s, lastName: filtered }));
+                          const res = validateName(filtered, true);
+                          setLastNameError(res.valid ? '' : res.message);
+                        }}
+                        onBlur={() => {
+                          const res = validateName(newResident.lastName, true);
+                          setLastNameError(res.valid ? '' : res.message);
+                        }}
                         className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                         placeholder="Enter last name"
                       />
+                      {lastNameError ? (
+                        <p className="text-xs sm:text-sm text-red-600 mt-1">
+                          {lastNameError}
+                        </p>
+                      ) : null}
                     </div>
                   </label>
-                  {/* Middle Name */}
+                  {/* Middle Name (now required) */}
                   <label className="block group">
                     <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                      <span className="text-red-500">*</span>
                       <span>Middle Name</span>
                     </div>
                     <div className="relative">
                       <input
+                        required
                         type="text"
                         value={newResident.middleName}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          const filtered = e.target.value.replace(
+                            /[^\p{L}\s'\-]/gu,
+                            ''
+                          );
                           setNewResident((s) => ({
                             ...s,
-                            middleName: e.target.value,
-                          }))
-                        }
+                            middleName: filtered,
+                          }));
+                          const res = validateName(filtered, true);
+                          setMiddleNameError(res.valid ? '' : res.message);
+                        }}
+                        onBlur={() => {
+                          const res = validateName(
+                            newResident.middleName,
+                            true
+                          );
+                          setMiddleNameError(res.valid ? '' : res.message);
+                        }}
                         className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                        placeholder="If none put N/A"
+                        placeholder="If none put None"
                       />
+                      {middleNameError ? (
+                        <p className="text-xs sm:text-sm text-red-600 mt-1">
+                          {middleNameError}
+                        </p>
+                      ) : null}
                     </div>
                   </label>
                 </div>
@@ -804,16 +925,45 @@ const ResidentRecords: React.FC = () => {
                       inputMode="numeric"
                       pattern="\d*"
                       value={newResident.age as string}
-                      onChange={(e) =>
-                        setNewResident((s) => ({
-                          ...s,
-                          // allow only digits and limit to 3 chars
-                          age: e.target.value.replace(/\D/g, '').slice(0, 3),
-                        }))
-                      }
+                      onChange={(e) => {
+                        const digitsOnly = e.target.value.replace(/\D/g, '');
+                        const limited = digitsOnly.slice(0, 3);
+                        setNewResident((s) => ({ ...s, age: limited }));
+                        // validate age (0-120)
+                        const n = limited === '' ? NaN : Number(limited);
+                        if (limited === '') {
+                          setIsAgeValid(false);
+                          setAgeError('Age is required.');
+                        } else if (isNaN(n) || n < 0 || n > 120) {
+                          setIsAgeValid(false);
+                          setAgeError('Enter a valid age between 0 and 120.');
+                        } else {
+                          setIsAgeValid(true);
+                          setAgeError('');
+                        }
+                      }}
+                      onBlur={() => {
+                        const v = String(newResident.age || '').trim();
+                        const n = v === '' ? NaN : Number(v);
+                        if (v === '') {
+                          setIsAgeValid(false);
+                          setAgeError('Age is required.');
+                        } else if (isNaN(n) || n < 0 || n > 120) {
+                          setIsAgeValid(false);
+                          setAgeError('Enter a valid age between 0 and 120.');
+                        } else {
+                          setIsAgeValid(true);
+                          setAgeError('');
+                        }
+                      }}
                       className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                       placeholder="0"
                     />
+                    {ageError ? (
+                      <p className="text-xs sm:text-sm text-red-600 mt-1">
+                        {ageError}
+                      </p>
+                    ) : null}
                   </label>
 
                   <label className="block group">
@@ -915,7 +1065,9 @@ const ResidentRecords: React.FC = () => {
               </button>
               <button
                 type="submit"
-                disabled={isCreating || !isAddressValid}
+                disabled={
+                  isCreating || !isAddressValid || !areNamesValid || !isAgeValid
+                }
                 className="px-6 sm:px-10 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm sm:text-base"
               >
                 {isCreating ? (

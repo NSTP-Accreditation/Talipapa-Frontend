@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { formatName, formatPoints } from '@/utils/formatter';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
+import { sanitizeName, validateName } from '@/utils/validation';
 import FloatingLabelInput from '../components/FloatingLabelInput';
 import {
   Spinner,
@@ -37,6 +38,8 @@ const SwapItem = () => {
   // Store only the editable part (suffix) of the Record ID, fixed prefix is 'BT-'
   const [recordIdRest, setRecordIdRest] = useState('');
   const [lastName, setLastName] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [isLastNameValid, setIsLastNameValid] = useState(false);
   const [recordData, setRecordData] = useState<RecordData | null>(null);
   const [availableProducts, setAvailableProducts] = useState<Product[]>([]);
   const [quantityInputs, setQuantityInputs] = useState<Record<string, number>>(
@@ -47,6 +50,14 @@ const SwapItem = () => {
 
   const handleFindRecord = async (e: React.FormEvent) => {
     e.preventDefault();
+    // validate last name before searching
+    const { valid, message } = validateName(lastName, true);
+    if (!valid) {
+      setLastNameError(message);
+      showError(message || 'Invalid Last Name', { title: 'Invalid' });
+      return;
+    }
+
     setSearchingRecord(true);
     await findRecord();
     setSearchingRecord(false);
@@ -213,9 +224,21 @@ const SwapItem = () => {
             <FloatingLabelInput
               label="Last Name"
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={(e) => {
+                const filtered = sanitizeName(e.target.value);
+                setLastName(filtered);
+                // live-validate
+                const { valid, message } = validateName(filtered, true);
+                setIsLastNameValid(valid);
+                setLastNameError(valid ? '' : message || 'Invalid Last Name');
+              }}
               required
             />
+            {lastNameError ? (
+              <p className="text-xs sm:text-sm text-red-600 mt-1">
+                {lastNameError}
+              </p>
+            ) : null}
 
             <button
               className="text-sm sm:text-lg font-semibold text-white px-6 sm:px-10 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"

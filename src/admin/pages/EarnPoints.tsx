@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
+import { sanitizeName, validateName } from '@/utils/validation';
 import { Recycle, CheckCircle2 } from 'lucide-react';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useLoadingState } from '../../hooks/useLoadingState';
@@ -12,6 +13,8 @@ export default function App() {
 
   const [recordIdRest, setRecordIdRest] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [isLastNameValid, setIsLastNameValid] = useState(false);
   const [weights, setWeights] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const authFetch = useAuthFetch();
@@ -67,6 +70,15 @@ export default function App() {
 
     if (!hasValidWeight) {
       toastError('Please enter at least one material weight greater than 0', {
+        title: 'Validation Error',
+      });
+      return;
+    }
+
+    // validate last name
+    const lastNameRes = validateName(lastName, true);
+    if (!lastNameRes.valid) {
+      toastError(lastNameRes.message || 'Please enter a valid last name', {
         title: 'Validation Error',
       });
       return;
@@ -204,10 +216,26 @@ export default function App() {
               <input
                 required
                 value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={(e) => {
+                  const filtered = sanitizeName(e.target.value);
+                  setLastName(filtered);
+                  const res = validateName(filtered, true);
+                  setLastNameError(res.valid ? '' : res.message);
+                  setIsLastNameValid(res.valid);
+                }}
+                onBlur={() => {
+                  const res = validateName(lastName, true);
+                  setLastNameError(res.valid ? '' : res.message);
+                  setIsLastNameValid(res.valid);
+                }}
                 className="w-full px-3 py-2.5 border-2 border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
                 placeholder="Enter last name"
               />
+              {lastNameError ? (
+                <p className="text-xs sm:text-sm text-red-600 mt-1">
+                  {lastNameError}
+                </p>
+              ) : null}
             </div>
           </div>
         </div>

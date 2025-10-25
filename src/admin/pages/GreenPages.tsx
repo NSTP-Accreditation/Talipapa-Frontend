@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useToast } from '@/hooks/useToast';
+import { sanitizeName, validateName } from '@/utils/validation';
 import {
   Card,
   CardHeader,
@@ -99,6 +100,7 @@ const GreenPages: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('profile');
   const [isFarmDetailsOpen, setIsFarmDetailsOpen] = useState(false); // Default closed on mobile
   const authFetch = useAuthFetch();
+  const { error: showError, success } = useToast();
 
   // Modal state for adding staff
   const [isAddStaffModalOpen, setIsAddStaffModalOpen] = useState(false);
@@ -327,12 +329,32 @@ const GreenPages: React.FC = () => {
   const handleSubmitStaff = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate required fields
-    // require name, position and a full 11-digit contact (09 + 9 digits)
-    if (!staffForm.name || !staffForm.position || contactRest.length !== 9) {
-      alert('Please fill in all required fields (Name, Position, Contact)');
+    // Validate name using shared validator
+    const nameValidation = validateName(staffForm.name as string, true);
+    if (!nameValidation.valid) {
+      showError(nameValidation.message || 'Invalid name', {
+        title: 'Validation',
+      });
       return;
     }
+
+    // Age is required for staff
+    if (!staffForm.age || String(staffForm.age).trim() === '') {
+      showError('Please select an age range for the staff member.', {
+        title: 'Validation',
+      });
+      return;
+    }
+
+    // require position and a full 11-digit contact (09 + 9 digits)
+    if (!staffForm.position || contactRest.length !== 9) {
+      showError(
+        'Please fill in all required fields (Name, Position, Contact)',
+        { title: 'Validation' }
+      );
+      return;
+    }
+
     setIsSubmitting(true);
 
     const position = staffForm.position.split(', ').map((position) => ({
@@ -353,9 +375,13 @@ const GreenPages: React.FC = () => {
       });
 
       staffRefetch();
-      alert('New Staff Added Successfully');
+      success('New Staff Added Successfully', { title: 'Success' });
     } catch (error) {
       console.log(error);
+      showError(
+        error instanceof Error ? error.message : 'Failed to add staff',
+        { title: 'Error' }
+      );
     } finally {
       closeAddStaffModal();
     }
@@ -888,9 +914,22 @@ const GreenPages: React.FC = () => {
                         <input
                           type="text"
                           value={staffForm.name}
-                          onChange={(e) =>
-                            handleStaffFormChange('name', e.target.value)
-                          }
+                          onChange={(e) => {
+                            const filtered = sanitizeName(e.target.value);
+                            handleStaffFormChange('name', filtered);
+                          }}
+                          onBlur={() => {
+                            // show toast once when leaving field if invalid and not empty
+                            if (!staffForm.name) return;
+                            const { valid, message } = validateName(
+                              staffForm.name as string,
+                              true
+                            );
+                            if (!valid)
+                              showError(message || 'Invalid name', {
+                                title: 'Validation',
+                              });
+                          }}
                           className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
                           placeholder="Enter full name"
                           required
