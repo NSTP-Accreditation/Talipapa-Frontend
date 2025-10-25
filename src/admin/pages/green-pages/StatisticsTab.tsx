@@ -178,12 +178,11 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
       formData.append('image', newFarm.image);
 
       try {
-        const res = authFetch('/farms', {
+        const res = await authFetch('/farms', {
           method: 'POST',
           body: formData,
         });
-
-        console.log(res);
+        
         refetchFarms();
       } catch (error) {
         console.log(error);
