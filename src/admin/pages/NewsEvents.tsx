@@ -64,6 +64,8 @@ const EventModal: React.FC<EventModalProps> = ({
     createdAt: event?.createdAt || new Date().toISOString(),
   });
 
+  const { error: showError } = useToast();
+
   React.useEffect(() => {
     if (event) {
       setFormData(event);
@@ -84,7 +86,7 @@ const EventModal: React.FC<EventModalProps> = ({
 
   const handleSave = () => {
     // Validation
-    const errors = [];
+    const errors: string[] = [];
 
     if (!formData.title.trim()) {
       errors.push('Title is required');
@@ -99,7 +101,6 @@ const EventModal: React.FC<EventModalProps> = ({
     }
 
     if (errors.length > 0) {
-      const { error: showError } = useToast();
       showError(
         'Please fix the following errors:\n\n• ' + errors.join('\n• '),
         { title: 'Validation' }
@@ -127,21 +128,21 @@ const EventModal: React.FC<EventModalProps> = ({
     >
       <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-[95vw] sm:max-w-[650px] w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden animate-slideUp">
         {/* Header */}
-        <div className="relative p-4 sm:p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 sm:w-64 sm:h-64 bg-white/10 rounded-full -mr-16 sm:-mr-32 -mt-16 sm:-mt-32"></div>
-          <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-48 sm:h-48 bg-white/10 rounded-full -ml-12 sm:-ml-24 -mb-12 sm:-mb-24"></div>
+        <div className="relative p-3 sm:p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+          <div className="absolute top-0 right-0 w-28 h-28 sm:w-64 sm:h-64 bg-white/10 rounded-full -mr-12 sm:-mr-32 -mt-12 sm:-mt-32"></div>
+          <div className="absolute bottom-0 left-0 w-20 h-20 sm:w-48 sm:h-48 bg-white/10 rounded-full -ml-10 sm:-ml-24 -mb-10 sm:-mb-24"></div>
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
           <div className="relative flex items-center justify-between gap-2 sm:gap-3">
             <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
-              <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30 flex-shrink-0">
+              <div className="w-9 h-9 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30 flex-shrink-0">
                 {event?.id ? (
-                  <SquarePen className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+                  <SquarePen className="w-4.5 h-4.5 sm:w-7 sm:h-7 text-white" />
                 ) : (
-                  <Plus className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+                  <Plus className="w-4.5 h-4.5 sm:w-7 sm:h-7 text-white" />
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-lg sm:text-2xl md:text-3xl font-bold text-white mb-0.5 sm:mb-1 truncate">
+                <h3 className="text-base sm:text-2xl md:text-3xl font-bold text-white mb-0.5 sm:mb-1 truncate">
                   {event?.id ? 'Edit Calendar Event' : 'Add New Calendar Event'}
                 </h3>
                 <p className="text-green-100 text-xs sm:text-sm font-medium truncate">
@@ -153,7 +154,7 @@ const EventModal: React.FC<EventModalProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center transition-all hover:scale-110 ring-1 ring-white/30 flex-shrink-0"
+              className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center transition-all hover:scale-110 ring-1 ring-white/30 flex-shrink-0"
               aria-label="Close modal"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
@@ -162,19 +163,19 @@ const EventModal: React.FC<EventModalProps> = ({
         </div>
 
         {/* Form Content */}
-        <div className="px-3 sm:px-6 md:px-8 py-3 sm:py-5 md:py-6 max-h-[calc(95vh-160px)] sm:max-h-[calc(90vh-200px)] overflow-y-auto space-y-3 sm:space-y-5 md:space-y-6">
+        <div className="px-2.5 sm:px-6 md:px-8 py-2.5 sm:py-5 md:py-6 max-h-[calc(95vh-160px)] sm:max-h-[calc(90vh-200px)] overflow-y-auto space-y-2.5 sm:space-y-5 md:space-y-6">
           {/* Event Information Section */}
           <div className="space-y-2 sm:space-y-4">
             <div className="flex items-center gap-2 sm:gap-3 pb-1.5 sm:pb-3 border-b-2 border-green-100">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+              <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
                 <Calendar className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-white" />
               </div>
-              <h4 className="text-base sm:text-xl font-bold text-gray-900">
+              <h4 className="text-sm sm:text-xl font-bold text-gray-900">
                 Event Information
               </h4>
             </div>
 
-            <div className="space-y-2.5 sm:space-y-4">
+            <div className="space-y-2 sm:space-y-4">
               <div className="flex flex-col">
                 <label className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2">
                   <SquarePen className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
@@ -186,7 +187,7 @@ const EventModal: React.FC<EventModalProps> = ({
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
                   }
-                  className="w-full px-2.5 sm:px-4 py-2 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                  className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
                   placeholder="e.g., Community Clean-up Drive"
                 />
               </div>
@@ -202,7 +203,7 @@ const EventModal: React.FC<EventModalProps> = ({
                     setFormData({ ...formData, description: e.target.value })
                   }
                   rows={3}
-                  className="w-full px-2.5 sm:px-4 py-2 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none resize-none text-gray-900 font-medium text-sm sm:text-base"
+                  className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none resize-none text-gray-900 font-medium text-sm sm:text-base"
                   placeholder="Provide details about the event..."
                 />
               </div>
@@ -212,10 +213,10 @@ const EventModal: React.FC<EventModalProps> = ({
           {/* Date & Time Section */}
           <div className="space-y-2 sm:space-y-4">
             <div className="flex items-center gap-2 sm:gap-3 pb-1.5 sm:pb-3 border-b-2 border-green-100">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+              <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
                 <Clock className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-white" />
               </div>
-              <h4 className="text-base sm:text-xl font-bold text-gray-900">
+              <h4 className="text-sm sm:text-xl font-bold text-gray-900">
                 Schedule
               </h4>
             </div>
@@ -231,7 +232,7 @@ const EventModal: React.FC<EventModalProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, dateTime: e.target.value })
                 }
-                className="w-full px-2.5 sm:px-4 py-2 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
               />
             </div>
 
@@ -246,7 +247,7 @@ const EventModal: React.FC<EventModalProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, location: e.target.value })
                 }
-                className="w-full px-2.5 sm:px-4 py-2 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
                 placeholder="e.g., Barangay Hall"
               />
             </div>
@@ -255,15 +256,15 @@ const EventModal: React.FC<EventModalProps> = ({
           {/* Category & Priority Section */}
           <div className="space-y-2 sm:space-y-4">
             <div className="flex items-center gap-2 sm:gap-3 pb-1.5 sm:pb-3 border-b-2 border-green-100">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+              <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
                 <Tag className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-white" />
               </div>
-              <h4 className="text-base sm:text-xl font-bold text-gray-900">
+              <h4 className="text-sm sm:text-xl font-bold text-gray-900">
                 Classification
               </h4>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
               <div className="flex flex-col">
                 <label className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2">
                   <Tag className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
@@ -277,7 +278,7 @@ const EventModal: React.FC<EventModalProps> = ({
                       category: e.target.value as CalendarEvent['category'],
                     })
                   }
-                  className="w-full px-2.5 sm:px-4 py-2 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none bg-white cursor-pointer text-gray-900 font-medium text-sm sm:text-base"
+                  className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none bg-white cursor-pointer text-gray-900 font-medium text-sm sm:text-base"
                 >
                   <option value="Announcement">Announcement</option>
                   <option value="Meeting">Meeting</option>
@@ -299,7 +300,7 @@ const EventModal: React.FC<EventModalProps> = ({
                       priority: e.target.value as CalendarEvent['priority'],
                     })
                   }
-                  className="w-full px-2.5 sm:px-4 py-2 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none bg-white cursor-pointer text-gray-900 font-medium text-sm sm:text-base"
+                  className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none bg-white cursor-pointer text-gray-900 font-medium text-sm sm:text-base"
                 >
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
@@ -310,7 +311,7 @@ const EventModal: React.FC<EventModalProps> = ({
           </div>
 
           {/* Info Note */}
-          <div className="bg-green-50 border-2 border-green-200 rounded-lg sm:rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
+          <div className="bg-green-50 border-2 border-green-200 rounded-lg sm:rounded-xl p-2.5 sm:p-4 flex items-start gap-2 sm:gap-3">
             <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
               <span className="text-white text-xs font-bold">i</span>
             </div>
@@ -325,16 +326,16 @@ const EventModal: React.FC<EventModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-3 sm:px-6 md:px-8 py-3 sm:py-5 bg-gradient-to-r from-gray-50 to-white border-t-2 border-gray-100 flex gap-2 sm:gap-3 justify-end">
+        <div className="px-2.5 sm:px-6 md:px-8 py-2.5 sm:py-5 bg-gradient-to-r from-gray-50 to-white border-t-2 border-gray-100 flex gap-2 sm:gap-3 justify-end">
           <button
             onClick={onClose}
-            className="px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold text-gray-700 bg-white border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm hover:shadow-md text-sm sm:text-base"
+            className="px-3 sm:px-6 py-1.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-gray-700 bg-white border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm hover:shadow-md text-sm sm:text-base"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="px-4 sm:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all shadow-lg hover:shadow-xl flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base"
+            className="px-3.5 sm:px-8 py-1.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all shadow-lg hover:shadow-xl flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base"
           >
             {event?.id ? (
               <>
@@ -371,15 +372,15 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
     >
       <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-[95vw] sm:max-w-[520px] w-full overflow-hidden animate-slideUp">
         {/* Header */}
-        <div className="bg-gradient-to-r from-red-600 via-red-600 to-red-700 px-4 sm:px-8 py-4 sm:py-6 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-red-600 via-red-600 to-red-700 px-3 sm:px-8 py-3 sm:py-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
           <div className="relative flex items-center justify-between gap-2 sm:gap-3">
             <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
-              <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30 flex-shrink-0">
-                <AlertCircle className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+              <div className="w-9 h-9 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30 flex-shrink-0">
+                <AlertCircle className="w-4.5 h-4.5 sm:w-7 sm:h-7 text-white" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-lg sm:text-2xl md:text-3xl font-bold text-white mb-0.5 sm:mb-1">
+                <h3 className="text-base sm:text-2xl md:text-3xl font-bold text-white mb-0.5 sm:mb-1">
                   Delete Event
                 </h3>
                 <p className="text-red-100 text-xs sm:text-sm font-medium">
@@ -389,7 +390,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
             </div>
             <button
               onClick={onClose}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center transition-all hover:scale-110 ring-1 ring-white/30 flex-shrink-0"
+              className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center transition-all hover:scale-110 ring-1 ring-white/30 flex-shrink-0"
               aria-label="Close modal"
             >
               <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
@@ -398,7 +399,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="px-3 sm:px-6 md:px-8 py-3 sm:py-5 md:py-6 space-y-2.5 sm:space-y-4">
+        <div className="px-2.5 sm:px-6 md:px-8 py-2.5 sm:py-5 md:py-6 space-y-2 sm:space-y-4">
           <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
             Are you sure you want to delete the event{' '}
             <strong className="text-gray-900">"{event.title}"</strong>?
@@ -433,7 +434,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                   <span className="font-bold min-w-[70px] sm:min-w-[90px]">
                     Location:
                   </span>
-                  <span>{event.location}</span>
+                  <span className="break-words">{event.location}</span>
                 </p>
               )}
               <p className="text-xs sm:text-sm text-gray-700 flex items-center gap-1.5 sm:gap-2">
@@ -445,7 +446,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-300 rounded-lg sm:rounded-xl p-2.5 sm:p-4 flex items-start gap-1.5 sm:gap-3">
+          <div className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-300 rounded-lg sm:rounded-xl p-2 sm:p-4 flex items-start gap-1.5 sm:gap-3">
             <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0 mt-0.5" />
             <p className="text-xs sm:text-sm text-red-700 font-medium leading-relaxed">
               Warning: This will permanently remove this event from the
@@ -455,16 +456,16 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-3 sm:px-6 md:px-8 py-3 sm:py-5 bg-gradient-to-r from-gray-50 to-white border-t-2 border-gray-100 flex gap-2 sm:gap-3 justify-end">
+        <div className="px-2.5 sm:px-6 md:px-8 py-2.5 sm:py-5 bg-gradient-to-r from-gray-50 to-white border-t-2 border-gray-100 flex gap-2 sm:gap-3 justify-end">
           <button
             onClick={onClose}
-            className="px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold text-gray-700 bg-white border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm hover:shadow-md text-sm sm:text-base"
+            className="px-3 sm:px-6 py-1.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-gray-700 bg-white border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm hover:shadow-md text-sm sm:text-base"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 sm:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base"
+            className="px-3.5 sm:px-8 py-1.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base"
           >
             <Trash2 className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
             <span>Delete Event</span>
@@ -484,21 +485,32 @@ const News: React.FC = () => {
     refetch: refetchNews,
   } = useFetchData('/news');
 
+  const { error } = useToast();
+  const authFetch = useAuthFetch();
+
   // map remote news shape -> CalendarEvent
   useEffect(() => {
     if (!newsData || newsLoading || newsError) return;
     if (!Array.isArray(newsData)) return;
 
-    const mapped: CalendarEvent[] = newsData.map((n: any) => ({
-      id: n._id || n.id || Date.now().toString(),
-      title: n.title || '',
-      description: n.description || '',
-      dateTime: n.dateTime || n.createdAt || new Date().toISOString(),
-      location: n.location || '',
-      category: (n.category as CalendarEvent['category']) || 'Announcement',
-      priority: (n.priority as CalendarEvent['priority']) || 'Medium',
-      createdAt: n.createdAt || new Date().toISOString(),
-    }));
+    const mapped: CalendarEvent[] = newsData.map((n: unknown) => {
+      const news = n as Record<string, unknown>;
+      return {
+        id:
+          (news._id as string) || (news.id as string) || Date.now().toString(),
+        title: (news.title as string) || '',
+        description: (news.description as string) || '',
+        dateTime:
+          (news.dateTime as string) ||
+          (news.createdAt as string) ||
+          new Date().toISOString(),
+        location: (news.location as string) || '',
+        category:
+          (news.category as CalendarEvent['category']) || 'Announcement',
+        priority: (news.priority as CalendarEvent['priority']) || 'Medium',
+        createdAt: (news.createdAt as string) || new Date().toISOString(),
+      };
+    });
 
     setEvents(mapped);
   }, [newsData, newsLoading, newsError]);
@@ -508,8 +520,6 @@ const News: React.FC = () => {
     null
   );
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
-  const authFetch = useAuthFetch();
 
   // Show loading skeleton while loading
   if (newsLoading) {
@@ -530,10 +540,14 @@ const News: React.FC = () => {
           priority: event.priority,
         };
         // local id -> remote _id mapping: attempt to find matching item in newsData
-        const remote = newsData?.find(
-          (n: any) => n._id === event.id || n.id === event.id
-        );
-        const id = remote?._id || event.id;
+        const remote = Array.isArray(newsData)
+          ? newsData.find((n: unknown) => {
+              const news = n as Record<string, unknown>;
+              return news._id === event.id || news.id === event.id;
+            })
+          : null;
+        const remoteItem = remote as Record<string, unknown> | null;
+        const id = remoteItem?._id || event.id;
         await authFetch(`/news/${id}`, {
           method: 'PUT',
           body: JSON.stringify(body),
@@ -563,7 +577,6 @@ const News: React.FC = () => {
       setIsAddModalOpen(false);
     } catch (err) {
       console.error('Save event failed', err);
-      const { error } = useToast();
       error('Failed to save event', { title: 'Save failed' });
     }
   };
@@ -571,32 +584,38 @@ const News: React.FC = () => {
   const handleDeleteEvent = async () => {
     if (!deletingEvent) return;
     try {
-      const remote = newsData?.find(
-        (n: any) => n._id === deletingEvent.id || n.id === deletingEvent.id
-      );
-      const id = remote?._id || deletingEvent.id;
+      const remote = Array.isArray(newsData)
+        ? newsData.find((n: unknown) => {
+            const news = n as Record<string, unknown>;
+            return (
+              news._id === deletingEvent.id || news.id === deletingEvent.id
+            );
+          })
+        : null;
+      const remoteItem = remote as Record<string, unknown> | null;
+      const id = remoteItem?._id || deletingEvent.id;
       await authFetch(`/news/${id}`, { method: 'DELETE' });
       refetchNews();
       setDeletingEvent(null);
     } catch (err) {
       console.error('Delete failed', err);
-      const { error } = useToast();
       error('Failed to delete event', { title: 'Delete failed' });
     }
   };
 
   const getCategoryColor = (category: CalendarEvent['category']) => {
+    // Replace invalid Tailwind scales like 150 with standard ones
     switch (category) {
       case 'Event':
-        return 'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-150';
+        return 'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200';
       case 'Announcement':
-        return 'border-green-500 bg-gradient-to-r from-green-50 to-green-100 hover:from-green-100 hover:to-green-150';
+        return 'border-green-500 bg-gradient-to-r from-green-50 to-green-100 hover:from-green-100 hover:to-green-200';
       case 'Notice':
-        return 'border-yellow-500 bg-gradient-to-r from-yellow-50 to-yellow-100 hover:from-yellow-100 hover:to-yellow-150';
+        return 'border-yellow-500 bg-gradient-to-r from-yellow-50 to-yellow-100 hover:from-yellow-100 hover:to-yellow-200';
       case 'Meeting':
-        return 'border-purple-500 bg-gradient-to-r from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-150';
+        return 'border-purple-500 bg-gradient-to-r from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200';
       default:
-        return 'border-gray-500 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-150';
+        return 'border-gray-500 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200';
     }
   };
 
@@ -614,15 +633,15 @@ const News: React.FC = () => {
   };
 
   return (
-    <div className="p-3 sm:p-6 md:p-8 space-y-4 sm:space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+    <div className="p-2 sm:p-6 md:p-8 space-y-3 sm:space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
       {/* Enhanced Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2.5 sm:gap-4 mb-3 sm:mb-8">
         <div>
-          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
-            <Calendar className="w-6 h-6 sm:w-10 sm:h-10 text-green-600" />
+          <h1 className="text-xl sm:text-4xl font-bold text-gray-900 flex items-center gap-1.5 sm:gap-3">
+            <Calendar className="w-5 h-5 sm:w-10 sm:h-10 text-green-600" />
             <span className="leading-tight">Calendar Events & News</span>
           </h1>
-          <p className="text-sm sm:text-lg text-gray-700 mt-2 sm:mt-3 font-medium">
+          <p className="text-xs sm:text-lg text-gray-700 mt-1.5 sm:mt-3 font-medium">
             Manage barangay calendar events, announcements and news
             <span className="ml-2 sm:ml-3 px-2 sm:px-3 py-0.5 sm:py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
               {events.length} {events.length === 1 ? 'Event' : 'Events'}
@@ -631,7 +650,7 @@ const News: React.FC = () => {
         </div>
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg sm:rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-1.5 sm:gap-2 justify-center sm:justify-start"
+          className="px-3 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-1.5 sm:gap-2 justify-center sm:justify-start"
         >
           <svg
             className="w-4 h-4 sm:w-5 sm:h-5"
@@ -651,13 +670,13 @@ const News: React.FC = () => {
       </div>
 
       {/* Enhanced Content with Timeline View */}
-      <div className="grid grid-cols-1 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 gap-3 sm:gap-6">
         <Card className="border-2 border-gray-200 shadow-lg">
           <CardHeader className="bg-gradient-to-r from-green-50 to-white border-b-2 border-green-100">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg sm:text-2xl font-bold text-gray-900 flex items-center gap-1.5 sm:gap-2">
+              <CardTitle className="text-base sm:text-2xl font-bold text-gray-900 flex items-center gap-1.5 sm:gap-2">
                 <svg
-                  className="w-5 h-5 sm:w-6 sm:h-6 text-green-600"
+                  className="w-4 h-4 sm:w-6 sm:h-6 text-green-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -680,8 +699,8 @@ const News: React.FC = () => {
               )}
             </div>
           </CardHeader>
-          <CardContent className="p-3 sm:p-6">
-            <div className="space-y-3 sm:space-y-5">
+          <CardContent className="p-2.5 sm:p-6">
+            <div className="space-y-2.5 sm:space-y-5">
               {events.length > 0 ? (
                 events
                   .sort(
@@ -692,27 +711,27 @@ const News: React.FC = () => {
                   .map((event, index) => (
                     <div
                       key={event.id}
-                      className={`relative p-3 sm:p-6 border-l-4 rounded-lg sm:rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${getCategoryColor(
+                      className={`relative p-2.5 sm:p-6 border-l-4 rounded-lg sm:rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${getCategoryColor(
                         event.category
                       )} group`}
                     >
                       {/* Timeline connector (except for last item) */}
                       {index < events.length - 1 && (
-                        <div className="absolute left-[-2px] top-full h-3 sm:h-5 w-1 bg-gradient-to-b from-gray-300 to-transparent"></div>
+                        <div className="absolute left-[-2px] top-full h-2.5 sm:h-5 w-1 bg-gradient-to-b from-gray-300 to-transparent"></div>
                       )}
 
                       <div className="flex justify-between items-start gap-2 sm:gap-4">
                         <div className="flex-1 min-w-0">
                           {/* Header with priority and category */}
                           <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 flex-wrap">
-                            <span className="text-lg sm:text-2xl">
+                            <span className="text-base sm:text-2xl">
                               {getPriorityIcon(event.priority)}
                             </span>
-                            <h4 className="font-bold text-base sm:text-lg text-gray-900 group-hover:text-blue-600 transition-colors flex-1 min-w-0 break-words">
+                            <h4 className="font-bold text-sm sm:text-lg text-gray-900 group-hover:text-blue-600 transition-colors flex-1 min-w-0 break-words">
                               {event.title}
                             </h4>
                             <span
-                              className={`text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-full font-bold whitespace-nowrap ${
+                              className={`text-xs px-2 sm:px-3 py-0.5 sm:py-1.5 rounded-full font-bold whitespace-nowrap ${
                                 event.category === 'Event'
                                   ? 'bg-blue-600 text-white'
                                   : event.category === 'Announcement'
@@ -732,7 +751,7 @@ const News: React.FC = () => {
                           </div>
 
                           {/* Description */}
-                          <p className="text-xs sm:text-sm text-gray-700 mb-3 sm:mb-4 leading-relaxed font-medium break-words">
+                          <p className="text-xs sm:text-sm text-gray-700 mb-2.5 sm:mb-4 leading-relaxed font-medium break-words">
                             {event.description}
                           </p>
 
@@ -775,7 +794,7 @@ const News: React.FC = () => {
                               </span>
                             </div>
                             {event.location && (
-                              <div className="flex items-center gap-1.5 sm:gap-2 bg-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-md sm:rounded-lg border border-gray-200 shadow-sm">
+                              <div className="flex items-center gap-1.5 sm:gap-2 bg-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-md sm:rounded-lg border border-gray-200 shadow-sm min-w-0">
                                 <svg
                                   className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0"
                                   fill="none"
@@ -795,7 +814,7 @@ const News: React.FC = () => {
                                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                                   />
                                 </svg>
-                                <span className="font-bold text-gray-900 truncate">
+                                <span className="font-bold text-gray-900 break-words overflow-hidden">
                                   {event.location}
                                 </span>
                               </div>
@@ -848,10 +867,10 @@ const News: React.FC = () => {
                     </div>
                   ))
               ) : (
-                <div className="text-center py-8 sm:py-16 bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-dashed border-gray-300">
-                  <div className="bg-gradient-to-br from-blue-100 to-blue-200 w-16 h-16 sm:w-24 sm:h-24 rounded-full mx-auto flex items-center justify-center mb-4 sm:mb-6">
+                <div className="text-center py-6 sm:py-16 bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-dashed border-gray-300">
+                  <div className="bg-gradient-to-br from-blue-100 to-blue-200 w-14 h-14 sm:w-24 sm:h-24 rounded-full mx-auto flex items-center justify-center mb-3.5 sm:mb-6">
                     <svg
-                      className="h-8 w-8 sm:h-12 sm:w-12 text-blue-600"
+                      className="h-7 w-7 sm:h-12 sm:w-12 text-blue-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -864,16 +883,16 @@ const News: React.FC = () => {
                       />
                     </svg>
                   </div>
-                  <p className="text-lg sm:text-xl font-bold text-gray-900 mb-1 sm:mb-2">
+                  <p className="text-base sm:text-xl font-bold text-gray-900 mb-1 sm:mb-2">
                     No events found
                   </p>
-                  <p className="text-sm sm:text-base font-medium text-gray-600 mb-4 sm:mb-6 px-4">
+                  <p className="text-xs sm:text-base font-medium text-gray-600 mb-3.5 sm:mb-6 px-4">
                     Get started by creating your first calendar event or
                     announcement.
                   </p>
                   <button
                     onClick={() => setIsAddModalOpen(true)}
-                    className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl flex items-center gap-2 sm:gap-3 text-sm sm:text-base font-bold mx-auto shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+                    className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-5 sm:px-8 py-2.5 sm:py-4 rounded-lg sm:rounded-xl flex items-center gap-2 sm:gap-3 text-sm sm:text-base font-bold mx-auto shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
                   >
                     <svg
                       className="w-5 h-5 sm:w-6 sm:h-6"
