@@ -179,7 +179,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
       {/* Mobile overlay */}
       {!isOpen ? null : (
         <div
-          className="sm:hidden fixed inset-0 z-40 bg-black/40"
+          className="sm:hidden fixed inset-0 z-[1000] bg-black/40"
           onClick={onClose}
         />
       )}
@@ -223,7 +223,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
               <button
                 onClick={() => handleItemClick(item)}
                 className={cn(
-                  'w-full flex items-center justify-between px-3 py-3 sm:px-4 sm:py-3.5 text-left transition-all duration-200 text-sm sm:text-base sm:text-lg font-medium rounded-xl',
+                  'w-full flex items-center justify-between px-3 py-3 sm:px-4 sm:py-3.5 text-left transition-all duration-200 text-sm sm:text-base font-medium rounded-xl',
                   location.pathname === item.href ||
                     (item.submenu &&
                       item.submenu.some(
@@ -266,7 +266,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
                       <button
                         onClick={() => navigate(subItem.href!)}
                         className={cn(
-                          'w-full flex items-center space-x-2.5 sm:space-x-3 pr-3 py-2.5 sm:pr-4 sm:py-3 text-left transition-all duration-300 ease-in-out text-sm sm:text-base sm:text-lg rounded-xl transform',
+                          'w-full flex items-center space-x-2.5 sm:space-x-3 pr-3 py-2.5 sm:pr-4 sm:py-3 text-left transition-all duration-300 ease-in-out text-sm sm:text-base rounded-xl transform',
                           'hover:scale-[1.02] hover:shadow-md hover:bg-white/15 hover:text-white hover:font-semibold',
                           'active:scale-95',
                           location.pathname === subItem.href
@@ -292,7 +292,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
         <div className="px-3 pb-4 sm:px-4 sm:pb-5 border-t border-green-700/30 pt-4 sm:pt-5 bg-gradient-to-t from-green-950/50 to-transparent">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center space-x-2.5 sm:space-x-3 px-3 py-3 sm:px-4 sm:py-3.5 text-left transition-all duration-200 text-green-100 hover:bg-red-500/20 hover:text-white text-sm sm:text-base sm:text-lg font-medium rounded-xl group hover:shadow-lg"
+            className="w-full flex items-center space-x-2.5 sm:space-x-3 px-3 py-3 sm:px-4 sm:py-3.5 text-left transition-all duration-200 text-green-100 hover:bg-red-500/20 hover:text-white text-sm sm:text-base font-medium rounded-xl group hover:shadow-lg"
           >
             <LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-red-400 group-hover:text-red-300 transition-colors" />
             <span className="font-semibold text-sm sm:text-base">Logout</span>

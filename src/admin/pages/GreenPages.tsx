@@ -382,6 +382,11 @@ const GreenPages: React.FC = () => {
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: linear-gradient(to bottom, #15803d, #166534);
         }
+        /* When the admin sidebar is open, darken the map for visual context */
+        .sidebar-open .greenpages-map-wrapper {
+          filter: brightness(0.6) saturate(0.9);
+          transition: filter 200ms ease-in-out;
+        }
       `}</style>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-gray-50 p-2 sm:p-4 md:p-6 lg:p-8 space-y-3 sm:space-y-4 md:space-y-6">
         {/* Header */}
@@ -398,7 +403,7 @@ const GreenPages: React.FC = () => {
 
         {/* Leaflet Map - Full Width on Top */}
         <Card className="rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg sm:shadow-xl md:shadow-2xl border border-gray-200 sm:border-2 overflow-hidden hover:shadow-xl sm:hover:shadow-3xl transition-shadow duration-300">
-          <div className="w-full h-48 sm:h-56 md:h-80 lg:h-96 relative">
+          <div className="greenpages-map-wrapper w-full h-48 sm:h-56 md:h-80 lg:h-96 relative">
             <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10 bg-white/95 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 rounded-md sm:rounded-lg md:rounded-xl shadow-md sm:shadow-lg border border-gray-200">
               <p className="text-xs sm:text-sm font-bold text-gray-800 flex items-center gap-1 sm:gap-1.5 md:gap-2">
                 <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />

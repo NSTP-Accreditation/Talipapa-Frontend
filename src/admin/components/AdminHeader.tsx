@@ -5,12 +5,14 @@ interface AdminHeaderProps {
   title?: string;
   subtitle?: string;
   onToggleSidebar?: () => void;
+  isSidebarOpen?: boolean;
 }
 
 const AdminHeader: React.FC<AdminHeaderProps> = ({
   title = 'Barangay Information System',
   subtitle = 'Content Management System',
   onToggleSidebar,
+  isSidebarOpen = false,
 }) => {
   const { user } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -48,7 +50,11 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
     date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
   return (
-    <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-b border-green-700/30 shadow-xl sticky top-0 backdrop-blur-sm z-[1001]">
+    <div
+      className={`bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-b border-green-700/30 shadow-xl sticky top-0 backdrop-blur-sm z-[1001] ${
+        isSidebarOpen ? 'filter brightness-75' : ''
+      }`}
+    >
       <div className="flex items-center justify-between px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-7 gap-3 sm:gap-4">
         {/* Left Side - Mobile hamburger + Date/Time aligned */}
         <div className="flex items-center gap-3 sm:gap-4 flex-1">

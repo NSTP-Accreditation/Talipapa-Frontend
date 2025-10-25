@@ -22,23 +22,25 @@ export default function Footer() {
       </div>
 
       {/* Main Footer Content */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-3 sm:mb-4">
-          {/* About Section - Compact */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-green-400 to-green-500 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-base sm:text-lg">🏘️</span>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 mb-8">
+          {/* About Section */}
+          <div className="md:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-400 to-green-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                <span className="text-xl sm:text-2xl">🏘️</span>
               </div>
               <div>
-                <h3 className="text-sm sm:text-base font-bold text-white">
+                <h3 className="text-base sm:text-lg font-bold text-white leading-tight">
                   Barangay Talipapa
                 </h3>
-                <p className="text-green-200 text-xs">Quezon City, PH</p>
+                <p className="text-green-200 text-xs sm:text-sm">
+                  Quezon City, PH
+                </p>
               </div>
             </div>
 
-            <p className="text-green-50 text-xs sm:text-sm font-medium italic leading-relaxed mb-3">
+            <p className="text-green-50 text-sm sm:text-base font-medium italic leading-relaxed mb-5">
               "Sa{' '}
               <span className="font-extrabold text-lime-300">
                 #TaliPaPaNATIN
@@ -49,16 +51,16 @@ export default function Footer() {
               <span className="font-bold text-rose-200"> PA</span>gmamahal."
             </p>
 
-            {/* Social Links - Compact */}
-            <div className="flex gap-1.5">
+            {/* Social Links */}
+            <div className="flex gap-2 sm:gap-3">
               <a
                 href="https://web.facebook.com/TalipapaPeoplesCivicCenterD6"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-blue-600 transition-all duration-300 border border-white/20 active:scale-95"
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-blue-600 hover:scale-110 transition-all duration-300 border border-white/20 active:scale-95"
               >
-                <Facebook className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white" />
+                <Facebook className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-white" />
               </a>
 
               <a
@@ -66,9 +68,9 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-red-600 transition-all duration-300 border border-white/20 active:scale-95"
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-red-600 hover:scale-110 transition-all duration-300 border border-white/20 active:scale-95"
               >
-                <Youtube className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white" />
+                <Youtube className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-white" />
               </a>
 
               <a
@@ -76,96 +78,96 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Official website"
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-green-600 transition-all duration-300 border border-white/20 active:scale-95"
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-green-600 hover:scale-110 transition-all duration-300 border border-white/20 active:scale-95"
               >
-                <Globe className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white" />
+                <Globe className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-white" />
               </a>
             </div>
           </div>
 
-          {/* Quick Links - Compact */}
+          {/* Quick Links */}
           <div>
-            <h3 className="text-xs sm:text-sm font-bold text-white mb-2 flex items-center gap-2">
-              <span className="w-1 h-3 sm:h-4 bg-green-400 rounded-full"></span>
+            <h3 className="text-sm sm:text-base font-bold text-white mb-4 flex items-center gap-2">
+              <span className="w-1.5 h-5 sm:h-6 bg-green-400 rounded-full"></span>
               Quick Links
             </h3>
-            <ul className="space-y-1">
+            <ul className="space-y-2.5">
               <li>
                 <Link
                   to="/"
-                  className="text-green-100 hover:text-white transition-colors text-xs flex items-center gap-2 group hover:translate-x-1 transform transition-transform duration-200 active:scale-95"
+                  className="text-green-100 hover:text-white transition-colors text-sm sm:text-base flex items-center gap-2.5 group hover:translate-x-1 transform transition-transform duration-200 active:scale-95"
                 >
-                  <span className="w-1 h-1 bg-green-400 rounded-full group-hover:w-1.5 group-hover:h-1.5 transition-all"></span>
+                  <span className="w-1.5 h-1.5 bg-green-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
                   Home
                 </Link>
               </li>
               <li>
                 <Link
                   to="/aboutus"
-                  className="text-green-100 hover:text-white transition-colors text-xs flex items-center gap-2 group hover:translate-x-1 transform transition-transform duration-200 active:scale-95"
+                  className="text-green-100 hover:text-white transition-colors text-sm sm:text-base flex items-center gap-2.5 group hover:translate-x-1 transform transition-transform duration-200 active:scale-95"
                 >
-                  <span className="w-1 h-1 bg-green-400 rounded-full group-hover:w-1.5 group-hover:h-1.5 transition-all"></span>
+                  <span className="w-1.5 h-1.5 bg-green-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
                   About Us
                 </Link>
               </li>
               <li>
                 <Link
                   to="/guidelines"
-                  className="text-green-100 hover:text-white transition-colors text-xs flex items-center gap-2 group hover:translate-x-1 transform transition-transform duration-200 active:scale-95"
+                  className="text-green-100 hover:text-white transition-colors text-sm sm:text-base flex items-center gap-2.5 group hover:translate-x-1 transform transition-transform duration-200 active:scale-95"
                 >
-                  <span className="w-1 h-1 bg-green-400 rounded-full group-hover:w-1.5 group-hover:h-1.5 transition-all"></span>
+                  <span className="w-1.5 h-1.5 bg-green-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
                   Guidelines
                 </Link>
               </li>
               <li>
                 <Link
                   to="/trading"
-                  className="text-green-100 hover:text-white transition-colors text-xs flex items-center gap-2 group hover:translate-x-1 transform transition-transform duration-200 active:scale-95"
+                  className="text-green-100 hover:text-white transition-colors text-sm sm:text-base flex items-center gap-2.5 group hover:translate-x-1 transform transition-transform duration-200 active:scale-95"
                 >
-                  <span className="w-1 h-1 bg-green-400 rounded-full group-hover:w-1.5 group-hover:h-1.5 transition-all"></span>
+                  <span className="w-1.5 h-1.5 bg-green-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
                   Trading
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Contact Info - Compact */}
-          <div className="sm:col-span-2 lg:col-span-2">
-            <h3 className="text-xs sm:text-sm font-bold text-white mb-2 flex items-center gap-2">
-              <span className="w-1 h-3 sm:h-4 bg-green-400 rounded-full"></span>
+          {/* Contact Info */}
+          <div className="md:col-span-2 lg:col-span-2">
+            <h3 className="text-sm sm:text-base font-bold text-white mb-4 flex items-center gap-2">
+              <span className="w-1.5 h-5 sm:h-6 bg-green-400 rounded-full"></span>
               Contact Us
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <ul className="space-y-1.5">
-                <li className="flex items-start gap-2 text-xs">
-                  <MapPin className="w-3 h-3 text-green-300 flex-shrink-0 mt-0.5" />
-                  <span className="text-green-100 leading-snug">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3 text-sm sm:text-base">
+                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-green-300 flex-shrink-0 mt-1" />
+                  <span className="text-green-100 leading-relaxed">
                     506 Quirino Hwy, Novaliches, QC
                   </span>
                 </li>
 
-                <li className="flex items-start gap-2 text-xs">
-                  <Phone className="w-3 h-3 text-green-300 flex-shrink-0 mt-0.5" />
-                  <div className="text-green-100">
+                <li className="flex items-start gap-3 text-sm sm:text-base">
+                  <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-green-300 flex-shrink-0 mt-1" />
+                  <div className="text-green-100 space-y-1">
                     <p>0917-5586735</p>
                     <p>8-7110745</p>
                   </div>
                 </li>
               </ul>
 
-              <ul className="space-y-1.5">
-                <li className="flex items-start gap-2 text-xs">
-                  <Mail className="w-3 h-3 text-green-300 flex-shrink-0 mt-0.5" />
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3 text-sm sm:text-base">
+                  <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-green-300 flex-shrink-0 mt-1" />
                   <a
                     href="mailto:barangay.talipapa2018@gmail.com"
-                    className="text-green-100 hover:text-white transition-colors break-words active:scale-95"
+                    className="text-green-100 hover:text-white transition-colors break-all active:scale-95 hover:underline"
                   >
                     barangay.talipapa2018@gmail.com
                   </a>
                 </li>
 
-                <li className="flex items-start gap-2 text-xs">
-                  <Clock className="w-3 h-3 text-green-300 flex-shrink-0 mt-0.5" />
+                <li className="flex items-start gap-3 text-sm sm:text-base">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-green-300 flex-shrink-0 mt-1" />
                   <span className="text-green-100">Mon-Fri: 8AM - 5PM</span>
                 </li>
               </ul>
@@ -174,22 +176,22 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-white/20 my-3 sm:my-4"></div>
+        <div className="border-t border-white/20 my-6 sm:my-8"></div>
 
-        {/* Bottom Bar - Compact */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 text-green-200">
+        {/* Bottom Bar */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-xs sm:text-sm">
+          <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-green-200 text-center sm:text-left">
             <span>© {currentYear} Barangay Talipapa</span>
             <span className="hidden sm:inline">•</span>
             <span>All rights reserved</span>
           </div>
 
-          <div className="flex items-center gap-1 text-green-300">
+          <div className="flex items-center gap-1.5 text-green-300">
             <span>Made with</span>
             <Link
               to="/admin"
               aria-label="Go to admin"
-              className="text-red-400 active:scale-95"
+              className="text-red-400 hover:scale-125 transition-transform active:scale-95 inline-block"
             >
               <span>❤️</span>
             </Link>
