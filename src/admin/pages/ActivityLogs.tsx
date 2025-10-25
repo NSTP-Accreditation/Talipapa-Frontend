@@ -183,10 +183,10 @@ const ActivityLogs: React.FC = () => {
 
             <button
               onClick={() => refetch()}
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-all text-sm sm:text-base flex-1"
+              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all text-sm sm:text-base flex-1"
             >
-              <RefreshCw size={14} className="sm:w-4 sm:h-4" />
-              Refresh
+              <RefreshCw className="w-4 h-4" />
+              <span className="leading-none">Refresh</span>
             </button>
           </div>
         </div>
