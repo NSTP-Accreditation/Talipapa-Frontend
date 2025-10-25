@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/useToast';
+import { sanitizeName, validateName } from '@/utils/validation';
 import {
   FileText,
   CheckCircle,
@@ -274,6 +275,12 @@ export default function Trading() {
 
   // toast via useToast
   const showRecord = async () => {
+    // validate last name before API call
+    const { valid: lastValid, message: lastMsg } = validateName(lastName, true);
+    if (!lastValid) {
+      showError(lastMsg || 'Invalid last name');
+      return;
+    }
     try {
       const fullId = `BT-${recordId}`;
       const record = await authFetch(`/records/${fullId}?lastName=${lastName}`);
@@ -517,27 +524,93 @@ export default function Trading() {
                 </label>
                 <div className="relative">
                   <Input
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="e.g., 2.5"
                     value={weight}
                     min={0}
                     max={599}
+                    onKeyDown={(e) => {
+                      // Allow navigation/editing keys
+                      const allowedKeys = [
+                        'Backspace',
+                        'Tab',
+                        'ArrowLeft',
+                        'ArrowRight',
+                        'Delete',
+                        'Home',
+                        'End',
+                      ];
+                      if (allowedKeys.includes(e.key)) return;
+
+                      // Allow ctrl/cmd shortcuts
+                      if (e.ctrlKey || e.metaKey) return;
+
+                      // Allow digits and dot
+                      if (/^[0-9.]$/.test(e.key)) return;
+
+                      // Prevent anything else (letters, symbols)
+                      e.preventDefault();
+                      showError(
+                        'Only numeric characters and a single decimal point are allowed',
+                        { title: 'Validation' }
+                      );
+                    }}
+                    onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => {
+                      const pasted = e.clipboardData.getData('text');
+                      const sanitized = pasted.replace(/[^0-9.]/g, '');
+                      if (sanitized !== pasted) {
+                        e.preventDefault();
+                        showError(
+                          'Pasted content contains invalid characters. Only numbers and a decimal point are allowed.',
+                          { title: 'Validation' }
+                        );
+                      }
+                    }}
                     onChange={(e) => {
-                      // clamp to 599
-                      const val = e.target.value;
-                      const num = parseFloat(val);
-                      if (!val) {
+                      const raw = e.target.value || '';
+
+                      // Keep only digits and decimal point
+                      const sanitized = raw.replace(/[^0-9.]/g, '');
+
+                      // Allow only a single decimal point
+                      const parts = sanitized.split('.');
+                      const normalized =
+                        parts.length > 1
+                          ? parts[0] + '.' + parts.slice(1).join('')
+                          : sanitized;
+
+                      // If characters were removed, show a validation toast
+                      if (sanitized !== raw) {
+                        showError(
+                          'Only numeric characters and a single decimal point are allowed',
+                          { title: 'Validation' }
+                        );
+                      }
+
+                      if (!normalized) {
                         setWeight('');
                         return;
                       }
+
+                      const num = parseFloat(normalized);
                       if (!isNaN(num)) {
                         if (num > 599) {
                           setWeight('599');
+                          showError('Maximum weight allowed is 599 kg', {
+                            title: 'Validation',
+                          });
                         } else if (num < 0) {
                           setWeight('0');
+                          showError('Minimum weight is 0 kg', {
+                            title: 'Validation',
+                          });
                         } else {
-                          setWeight(val);
+                          // preserve user-typed normalized string (so decimals are kept)
+                          setWeight(normalized);
                         }
+                      } else {
+                        setWeight('');
                       }
                     }}
                     className="h-10 sm:h-12 px-3 sm:px-4 text-sm sm:text-base border-2 border-gray-300 rounded-lg sm:rounded-xl hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all no-spinner"
@@ -713,6 +786,42 @@ export default function Trading() {
                     <Input
                       type="text"
                       value={recordId}
+                      onKeyDown={(e) => {
+                        // Allow navigation/editing keys
+                        const allowedKeys = [
+                          'Backspace',
+                          'Tab',
+                          'ArrowLeft',
+                          'ArrowRight',
+                          'Delete',
+                          'Home',
+                          'End',
+                        ];
+                        if (allowedKeys.includes(e.key)) return;
+
+                        // Allow ctrl/cmd shortcuts
+                        if (e.ctrlKey || e.metaKey) return;
+
+                        // Allow digits only
+                        if (/^[0-9]$/.test(e.key)) return;
+
+                        // Prevent anything else
+                        e.preventDefault();
+                        showError('Record ID accepts digits only', {
+                          title: 'Validation',
+                        });
+                      }}
+                      onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => {
+                        const pasted = e.clipboardData.getData('text');
+                        const sanitized = pasted.replace(/\D/g, '');
+                        if (sanitized !== pasted) {
+                          e.preventDefault();
+                          showError(
+                            'Pasted content contains invalid characters. Record ID accepts digits only.',
+                            { title: 'Validation' }
+                          );
+                        }
+                      }}
                       onChange={(e) => {
                         // Allow digits only and limit to 4 digits
                         const digitsOnly = e.target.value.replace(/\D/g, '');
@@ -733,7 +842,32 @@ export default function Trading() {
                   <Input
                     type="text"
                     value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={(e) => {
+                      const raw = e.target.value || '';
+                      const sanitized = sanitizeName(raw);
+                      if (sanitized !== raw) {
+                        showError(
+                          'Only letters, spaces, apostrophes and hyphens are allowed in names',
+                          { title: 'Validation' }
+                        );
+                      }
+                      setLastName(sanitized);
+                    }}
+                    onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => {
+                      const pasted = e.clipboardData.getData('text');
+                      const sanitized = sanitizeName(pasted);
+                      if (sanitized !== pasted) {
+                        e.preventDefault();
+                        showError(
+                          'Pasted content contains invalid characters. Only letters, spaces, apostrophes and hyphens are allowed.',
+                          { title: 'Validation' }
+                        );
+                      }
+                    }}
+                    onBlur={() => {
+                      const { valid, message } = validateName(lastName, true);
+                      if (!valid) showError(message || 'Invalid last name');
+                    }}
                     placeholder="Enter your last name"
                     className="h-10 sm:h-12 px-3 sm:px-4 rounded-lg sm:rounded-xl border-2 border-gray-300 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all text-sm sm:text-base"
                   />
