@@ -786,31 +786,8 @@ export default function Trading() {
                     <Input
                       type="text"
                       value={recordId}
-                      onKeyDown={(e) => {
-                        // Allow navigation/editing keys
-                        const allowedKeys = [
-                          'Backspace',
-                          'Tab',
-                          'ArrowLeft',
-                          'ArrowRight',
-                          'Delete',
-                          'Home',
-                          'End',
-                        ];
-                        if (allowedKeys.includes(e.key)) return;
-
-                        // Allow ctrl/cmd shortcuts
-                        if (e.ctrlKey || e.metaKey) return;
-
-                        // Allow digits only
-                        if (/^[0-9]$/.test(e.key)) return;
-
-                        // Prevent anything else
-                        e.preventDefault();
-                        showError('Record ID accepts digits only', {
-                          title: 'Validation',
-                        });
-                      }}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => {
                         const pasted = e.clipboardData.getData('text');
                         const sanitized = pasted.replace(/\D/g, '');
@@ -824,7 +801,13 @@ export default function Trading() {
                       }}
                       onChange={(e) => {
                         // Allow digits only and limit to 4 digits
-                        const digitsOnly = e.target.value.replace(/\D/g, '');
+                        const raw = e.target.value || '';
+                        const digitsOnly = raw.replace(/\D/g, '');
+                        if (digitsOnly !== raw) {
+                          showError('Record ID accepts digits only', {
+                            title: 'Validation',
+                          });
+                        }
                         const limited = digitsOnly.slice(0, 4);
                         setRecordId(limited);
                       }}
