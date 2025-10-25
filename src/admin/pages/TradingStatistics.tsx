@@ -17,8 +17,20 @@ import { TradingStatisticsSkeleton } from '../../components/LoadingSkeletons';
 import useFetchData from '../hooks/useFetchData';
 import { useToast } from '@/hooks/useToast';
 import dayjs from 'dayjs';
+import { ImageInt } from '../components/OfficialsPanel';
 
 declare const jsPDF: any;
+
+interface Product {
+  id: string;
+  name: string;
+  image?: ImageInt;
+  category?: string;
+  subCategory?: string;
+  description?: string;
+  stocks?: number;
+  requiredPoints?: number;
+}
 
 export default function TradingStatisticsPage() {
   const { data, loading, error } = useFetchData(
@@ -31,6 +43,8 @@ export default function TradingStatisticsPage() {
   const { data: logsData, loading: logsDataLoading } = useFetchData(
     '/logs?category=RECORD%20MANAGEMENT&action=UPDATE%20RECORD&limit=5'
   );
+
+  const { data: products, loading: loadingProducts } = useFetchData<Product[]>("/products");
 
   const recordsToday = useMemo(() => {
     return recordsData?.filter((rec) =>
@@ -414,7 +428,7 @@ export default function TradingStatisticsPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-4 sm:pt-6 pb-4 sm:pb-6">
-                  <div className="w-full overflow-x-auto">
+                  <div className="w-full overflow-x-auto max-h-96">
                     <table className="w-full text-xs sm:text-sm min-w-[500px]">
                       <thead>
                         <tr className="border-b-2 border-[#1b4c2e]/30">
@@ -431,17 +445,19 @@ export default function TradingStatisticsPage() {
                       </thead>
                       <tbody>
                         {/* Example row (replace with dynamic data later) */}
-                        <tr className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200">
-                          <td className="p-2 sm:p-4 text-gray-800 font-semibold text-xs sm:text-sm">
-                            Eco Bag
-                          </td>
-                          <td className="p-2 sm:p-4 text-gray-700 text-xs sm:text-sm">
-                            Agricultural
-                          </td>
-                          <td className="p-2 sm:p-4 text-gray-800 font-semibold text-xs sm:text-sm">
-                            1000
-                          </td>
-                        </tr>
+                        {products.map(product => (
+                          <tr className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200">
+                            <td className="p-2 sm:p-4 text-gray-800 font-semibold text-xs sm:text-sm">
+                              {product.name}
+                            </td>
+                            <td className="p-2 sm:p-4 text-gray-700 text-xs sm:text-sm">
+                              {product.category}
+                            </td>
+                            <td className="p-2 sm:p-4 text-gray-800 font-semibold text-xs sm:text-sm">
+                              {product.stocks}
+                            </td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                     <div className="block sm:hidden text-xs text-gray-400 mt-2 sm:mt-3 text-center">
