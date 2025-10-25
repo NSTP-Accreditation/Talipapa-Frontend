@@ -13,7 +13,10 @@ const AdminLayout: React.FC = () => {
       {/* Main Content Area - offset by sidebar width */}
       <div className="sm:ml-[310px] flex flex-col min-h-screen">
         {/* Admin Header */}
-        <AdminHeader onToggleSidebar={() => setSidebarOpen((s) => !s)} />
+        <AdminHeader
+          isSidebarOpen={sidebarOpen}
+          onToggleSidebar={() => setSidebarOpen((s) => !s)}
+        />
 
         {/* Content */}
         <main className="flex-1 overflow-y-auto p-6">
