@@ -124,7 +124,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
     },
     {
       icon: <Package className="w-5 h-5" />,
-      label: 'Inventory',
+      label: 'Product Inventory',
       href: APP_ROUTES.ADMIN.INVENTORY,
     },
     {

@@ -557,28 +557,63 @@ const FarmInventory: React.FC = () => {
     if (!itemFormData.imageFile && itemMode === 'add')
       return showError('Please upload an image', { title: 'Validation' });
 
-    const formData = new FormData();
-    formData.append('name', itemFormData.name.trim());
-    formData.append('description', itemFormData.description.trim());
-    formData.append('subCategory', itemFormData.subCategory.trim());
-    formData.append('stocks', itemFormData.stocks);
-    formData.append('unit', itemFormData.unit);
-    if (itemFormData.farmOrigin) {
-      formData.append('farmOrigin', itemFormData.farmOrigin.trim());
-    }
-    if (itemFormData.imageFile) {
-      formData.append('image', itemFormData.imageFile);
-    }
-
     try {
       if (itemMode === 'edit' && editingItem) {
-        const response = await authFetch(`/farm-inventory/${editingItem.id}`, {
-          method: 'PUT',
-          body: formData,
-        });
-        await refetchFarmItems();
-        success(response.message || 'Farm item updated', { title: 'Success' });
+        // For edit mode, only use FormData if there's a new image
+        if (itemFormData.imageFile && itemFormData.imageFile instanceof File) {
+          // Use FormData when uploading a new image
+          const formData = new FormData();
+          formData.append('name', itemFormData.name.trim());
+          formData.append('description', itemFormData.description.trim());
+          formData.append('subCategory', itemFormData.subCategory.trim());
+          formData.append('stocks', itemFormData.stocks);
+          formData.append('unit', itemFormData.unit);
+          if (itemFormData.farmOrigin) {
+            formData.append('farmOrigin', itemFormData.farmOrigin.trim());
+          }
+          formData.append('image', itemFormData.imageFile);
+
+          const response = await authFetch(`/farm-inventory/${editingItem.id}`, {
+            method: 'PUT',
+            body: formData,
+          });
+          await refetchFarmItems();
+          success(response.message || 'Farm item updated', { title: 'Success' });
+        } else {
+          // Use JSON when no new image
+          const updateData: any = {
+            name: itemFormData.name.trim(),
+            description: itemFormData.description.trim(),
+            subCategory: itemFormData.subCategory.trim(),
+            stocks: Number(itemFormData.stocks),
+            unit: itemFormData.unit,
+          };
+          if (itemFormData.farmOrigin) {
+            updateData.farmOrigin = itemFormData.farmOrigin.trim();
+          }
+
+          const response = await authFetch(`/farm-inventory/${editingItem.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(updateData),
+          });
+          await refetchFarmItems();
+          success(response.message || 'Farm item updated', { title: 'Success' });
+        }
       } else {
+        // For create mode, always use FormData
+        const formData = new FormData();
+        formData.append('name', itemFormData.name.trim());
+        formData.append('description', itemFormData.description.trim());
+        formData.append('subCategory', itemFormData.subCategory.trim());
+        formData.append('stocks', itemFormData.stocks);
+        formData.append('unit', itemFormData.unit);
+        if (itemFormData.farmOrigin) {
+          formData.append('farmOrigin', itemFormData.farmOrigin.trim());
+        }
+        if (itemFormData.imageFile) {
+          formData.append('image', itemFormData.imageFile);
+        }
+
         const response = await authFetch('/farm-inventory', {
           method: 'POST',
           body: formData,
