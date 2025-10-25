@@ -139,7 +139,7 @@ const ActivityLogs: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200 p-3 sm:p-6 mb-4 sm:mb-8 flex flex-col gap-3">
+      <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200 p-3 sm:p-6 mb-4 sm:mb-8 flex flex-col items-start gap-3">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           <input
             type="text"

@@ -175,10 +175,10 @@ const Settings: React.FC = () => {
     }
 
     const payload = { ...newAdmin, roles: {} };
-    const newRoles: { Editor?: number; Admin?: number } = {};
+    const newRoles: { SuperAdmin?: number; Admin?: number } = {};
 
-    if (roles.includes('Editor')) {
-      newRoles.Editor = Number(import.meta.env.VITE_EDITOR);
+    if (roles.includes('SuperAdmin')) {
+      newRoles.SuperAdmin = Number(import.meta.env.VITE_SUPERADMIN);
     }
 
     if (roles.includes('Admin')) {
@@ -379,7 +379,7 @@ const Settings: React.FC = () => {
                           <span
                             key={role}
                             className={`px-2 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-semibold shadow-sm ${
-                              role === 'Admin'
+                              role === 'SuperAdmin'
                                 ? 'bg-green-100 text-green-800 border border-green-200'
                                 : 'text-green-800 border border-green-200'
                             }`}
@@ -484,7 +484,7 @@ const Settings: React.FC = () => {
                     Roles
                   </label>
                   <div className="space-y-2">
-                    {['Admin'].map((roleOption) => (
+                    {['SuperAdmin', 'Admin'].map((roleOption) => (
                       <label
                         key={roleOption}
                         className="flex items-center space-x-2 md:space-x-3 cursor-pointer"
