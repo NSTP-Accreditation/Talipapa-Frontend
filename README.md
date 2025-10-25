@@ -259,6 +259,7 @@ npm run dev
 | `/admin/inventory?tab=overview`  | 📦 Inventory overview          |
 | `/admin/inventory?tab=products`  | 📦 Product management          |
 | `/admin/inventory?tab=materials` | ♻️ Material tracking           |
+| `/admin/farm-inventory`          | 🌱 Farm inventory (Agricultural) |
 | **Content Management**           |                                |
 | `/admin/guidelines`              | 📝 Manage service guidelines   |
 | `/admin/news`                    | 📰 News & announcements        |

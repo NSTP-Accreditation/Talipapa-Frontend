@@ -38,6 +38,7 @@ export const APP_ROUTES = {
     USERS: '/admin/users',
     NOTIFICATIONS: '/admin/notifications',
     INVENTORY: '/admin/inventory',
+    FARM_INVENTORY: '/admin/farm-inventory',
     SETTINGS: '/admin/settings',
     ACTIVITYLOGS: '/admin/activity-logs',
     TALIPAPANATIN: '/admin/talipapa-natin',

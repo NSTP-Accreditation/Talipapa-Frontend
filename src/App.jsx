@@ -22,6 +22,7 @@ const AboutUsAdmin = lazy(() => import('@/admin/pages/AboutUs'));
 const Achievements = lazy(() => import('@/admin/pages/Achievements'));
 const AdminLogin = lazy(() => import('@/admin/auth/AdminLogin'));
 const Inventory = lazy(() => import('@/admin/pages/Inventory'));
+const FarmInventory = lazy(() => import('@/admin/pages/FarmInventory'));
 const SwapItem = lazy(() => import('@/admin/pages/SwapItem'));
 const GreenPages = lazy(() => import('@/admin/pages/GreenPages'));
 const Records = lazy(() => import('@/admin/pages/Records'));
@@ -97,6 +98,9 @@ function App() {
 
                 {/* Inventory Route */}
                 <Route path="inventory" element={<Inventory />} />
+
+                {/* Farm Inventory Route */}
+                <Route path="farm-inventory" element={<FarmInventory />} />
 
                 {/* Logs Routes (same as trading but under notifications path) */}
                 <Route

@@ -128,6 +128,11 @@ const MenuBar: React.FC<MenuBarProps> = ({
       href: APP_ROUTES.ADMIN.INVENTORY,
     },
     {
+      icon: <Sprout className="w-4 h-4 sm:w-5 sm:h-5" />,
+      label: 'Farm Inventory',
+      href: APP_ROUTES.ADMIN.FARM_INVENTORY,
+    },
+    {
       icon: <FileText className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Activity Logs',
       href: APP_ROUTES.ADMIN.ACTIVITYLOGS,
