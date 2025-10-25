@@ -22,7 +22,6 @@ interface Step {
   stepNumber: number;
   title: string;
   description: string;
-  location?: string;
   requiredDocuments?: string[];
   estimatedTime?: string;
   tips?: string[];
@@ -53,7 +52,6 @@ interface EditModalProps {
 interface StepFormData {
   title: string;
   description: string;
-  location: string;
   requiredDocuments: string;
   estimatedTime: string;
   tips: string;
@@ -80,7 +78,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
   const [stepFormData, setStepFormData] = useState<StepFormData>({
     title: '',
     description: '',
-    location: '',
     requiredDocuments: '',
     estimatedTime: '',
     tips: '',
@@ -110,7 +107,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
     setStepFormData({
       title: '',
       description: '',
-      location: '',
       requiredDocuments: '',
       estimatedTime: '',
       tips: '',
@@ -123,7 +119,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
       stepNumber: formData.steps.length + 1,
       title: stepFormData.title,
       description: stepFormData.description,
-      location: stepFormData.location || undefined,
       requiredDocuments: stepFormData.requiredDocuments
         ? stepFormData.requiredDocuments
             .split(',')
@@ -152,7 +147,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
     setStepFormData({
       title: step.title,
       description: step.description,
-      location: step.location || '',
       requiredDocuments: step.requiredDocuments?.join(', ') || '',
       estimatedTime: step.estimatedTime || '',
       tips: step.tips?.join(', ') || '',
@@ -167,7 +161,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
       stepNumber: formData.steps[editingStepIndex].stepNumber,
       title: stepFormData.title,
       description: stepFormData.description,
-      location: stepFormData.location || undefined,
       requiredDocuments: stepFormData.requiredDocuments
         ? stepFormData.requiredDocuments
             .split(',')
@@ -479,11 +472,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
                           {step.description}
                         </p>
                         <div className="flex flex-wrap gap-2 text-xs">
-                          {step.location && (
-                            <span className="px-2 py-1 bg-gray-100 rounded-full text-gray-700">
-                              {step.location}
-                            </span>
-                          )}
                           {step.requiredDocuments?.map((d) => (
                             <span
                               key={d}
@@ -548,18 +536,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
                       }
                       className="px-3 py-2 border rounded-lg"
                     />
-                    <input
-                      type="text"
-                      placeholder="Location (optional)"
-                      value={stepFormData.location}
-                      onChange={(e) =>
-                        setStepFormData({
-                          ...stepFormData,
-                          location: e.target.value,
-                        })
-                      }
-                      className="px-3 py-2 border rounded-lg"
-                    />
+                    {/* removed location field (no longer used) */}
                     <textarea
                       required
                       placeholder="Description"
