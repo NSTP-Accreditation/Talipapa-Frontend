@@ -87,7 +87,7 @@ export default function CalendarEvents() {
   }, [data, loading, error]);
 
   return (
-    <section className="bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6">
+    <section className="bg-gradient-professional gradient-mesh relative py-12 sm:py-16 md:py-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <header className="text-center mb-10 sm:mb-12 md:mb-16">
