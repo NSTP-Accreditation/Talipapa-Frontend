@@ -185,14 +185,14 @@ const MenuBar: React.FC<MenuBarProps> = ({
       {/* Mobile overlay */}
       {!isOpen ? null : (
         <div
-          className="sm:hidden fixed inset-0 z-1002 bg-black/40"
+          className="sm:hidden fixed inset-0 z-[500] bg-black/40"
           onClick={onClose}
         />
       )}
 
       <div
         className={cn(
-          'w-[270px] sm:w-[320px] h-screen text-white flex flex-col fixed left-0 top-0 overflow-hidden transform transition-transform duration-300 z-[1002] shadow-2xl bg-gradient-to-b from-green-900 via-green-800 to-green-900',
+          'w-[270px] sm:w-[320px] h-screen text-white flex flex-col fixed left-0 top-0 overflow-hidden transform transition-transform duration-300 z-[500] shadow-2xl bg-gradient-to-b from-green-900 via-green-800 to-green-900',
           // hide on small screens unless isOpen
           isOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0',
           className

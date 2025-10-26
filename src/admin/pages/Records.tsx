@@ -347,7 +347,6 @@ const ResidentRecords: React.FC = () => {
       };
 
       console.log(payload);
-      
 
       await authFetch(`/records/${editingResident._id}`, {
         method: 'PATCH',
@@ -922,7 +921,7 @@ const ResidentRecords: React.FC = () => {
       {/* Add Modal */}
       {isAddModalOpen && (
         <div
-          className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
+          className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
           onClick={(e) => {
@@ -1303,7 +1302,7 @@ const ResidentRecords: React.FC = () => {
       {/* Edit Modal */}
       {isEditModalOpen && editingResident && (
         <div
-          className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
+          className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
           onClick={(e) => {
@@ -1622,7 +1621,7 @@ const ResidentRecords: React.FC = () => {
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && deletingResident && (
         <div
-          className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
+          className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
           onClick={(e) => {

@@ -89,9 +89,9 @@ const DeleteModal: React.FC<{
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
       <div className="absolute inset-0 bg-black/70" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 z-10 animate-in zoom-in-95 duration-200">
+      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 z-[10] animate-in zoom-in-95 duration-200">
         <div className="p-6">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-3 bg-red-100 rounded-full">
@@ -193,12 +193,12 @@ const ProductModal: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
       <div
         className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl w-full mx-3 sm:mx-4 z-10 animate-in zoom-in-95 duration-300 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl w-full mx-3 sm:mx-4 z-[10] animate-in zoom-in-95 duration-300 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
@@ -513,12 +513,12 @@ const MaterialModal: React.FC<{
   };
 
   return (
-    <div className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
       <div
         className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-3xl w-full mx-3 sm:mx-4 z-10 animate-in zoom-in-95 duration-300 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-3xl w-full mx-3 sm:mx-4 z-[10] animate-in zoom-in-95 duration-300 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>

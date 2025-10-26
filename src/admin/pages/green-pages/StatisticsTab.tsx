@@ -331,7 +331,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
       {/* Add Farm Modal */}
       {isAddFarmOpen && (
         <div
-          className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
+          className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
           role="dialog"
           aria-modal="true"
           onClick={(e) => {

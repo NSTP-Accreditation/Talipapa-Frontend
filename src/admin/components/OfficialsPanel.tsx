@@ -101,7 +101,7 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-1003 p-2 sm:p-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-[1003] p-2 sm:p-4">
       <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-hidden">
         {/* Records-style gradient header */}
         <div className="relative p-4 sm:p-6 bg-gradient-to-br from-[#1b4c2e] via-[#2d6b42] to-emerald-600 text-white overflow-hidden">
@@ -270,7 +270,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4"
+      className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}

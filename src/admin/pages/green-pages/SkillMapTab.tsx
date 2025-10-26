@@ -60,7 +60,7 @@ const SkillMapTab: React.FC<SkillMapTabProps> = ({
               <div className="absolute inset-0 bg-white/0 group-hover:bg-white/20 transition-colors duration-300"></div>
 
               {/* Skill short name - responsive text sizing */}
-              <p className="text-xs sm:text-sm md:text-base lg:text-lg leading-tight relative z-10 mb-1 sm:mb-1.5">
+              <p className="text-xs sm:text-sm md:text-base lg:text-lg leading-tight relative z-[10] mb-1 sm:mb-1.5">
                 {skill.short}
               </p>
 

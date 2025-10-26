@@ -431,7 +431,7 @@ const GreenPages: React.FC = () => {
         {/* Leaflet Map - Full Width on Top */}
         <Card className="rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg sm:shadow-xl md:shadow-2xl border border-gray-200 sm:border-2 overflow-hidden hover:shadow-xl sm:hover:shadow-3xl transition-shadow duration-300">
           <div className="greenpages-map-wrapper w-full h-48 sm:h-56 md:h-80 lg:h-96 relative">
-            <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-10 bg-white/95 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 rounded-md sm:rounded-lg md:rounded-xl shadow-md sm:shadow-lg border border-gray-200">
+            <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-[10] bg-white/95 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 rounded-md sm:rounded-lg md:rounded-xl shadow-md sm:shadow-lg border border-gray-200">
               <p className="text-xs sm:text-sm font-bold text-gray-800 flex items-center gap-1 sm:gap-1.5 md:gap-2">
                 <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
                 Talipapa Location
@@ -455,7 +455,7 @@ const GreenPages: React.FC = () => {
               <Card className="rounded-lg sm:rounded-xl shadow-lg border border-gray-200 sm:border-2 overflow-hidden hover:shadow-xl transition-all duration-300 group">
                 <div className="w-full h-24 sm:h-32 bg-gradient-to-br from-green-50 via-green-100 to-green-200 flex items-center justify-center text-gray-600 font-bold text-xs sm:text-sm relative overflow-hidden">
                   <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyMTYsMjM5LDIyMCwwLjQpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
-                  <div className="text-center z-10 group-hover:scale-110 transition-transform duration-300 h-full w-full">
+                  <div className="text-center z-[10] group-hover:scale-110 transition-transform duration-300 h-full w-full">
                     {farmData?.image ? (
                       <img
                         src={farmData?.image?.url}
@@ -690,7 +690,7 @@ const GreenPages: React.FC = () => {
             <Card className="rounded-xl sm:rounded-2xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-300 group flex-shrink-0">
               <div className="w-full h-60 sm:h-48 md:h-56 bg-gradient-to-br from-green-50 via-green-100 to-green-200 flex items-center justify-center text-gray-600 font-bold text-base sm:text-lg relative overflow-hidden">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyMTYsMjM5LDIyMCwwLjQpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
-                <div className="text-center z-10 group-hover:scale-110 transition-transform duration-300 h-full w-full">
+                <div className="text-center z-[10] group-hover:scale-110 transition-transform duration-300 h-full w-full">
                   {farmData?.image ? (
                     <img
                       src={farmData?.image?.url}
@@ -882,7 +882,7 @@ const GreenPages: React.FC = () => {
         {/* Enhanced Add Staff Modal */}
         {isAddStaffModalOpen && (
           <div
-            className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
+            className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
             role="dialog"
             aria-modal="true"
             onClick={(e) => {

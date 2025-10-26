@@ -274,7 +274,7 @@ export default function TalipapaNatin() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
       {/* Header */}
-      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200/50 shadow-sm">
+      <div className="sticky top-0 z-[50] bg-white/80 backdrop-blur-lg border-b border-slate-200/50 shadow-sm">
         <div className="px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -400,7 +400,7 @@ export default function TalipapaNatin() {
                       <button className="p-2 rounded-lg hover:bg-slate-100 transition-colors opacity-0 group-hover:opacity-100">
                         <MoreVertical className="w-4 h-4 text-slate-400" />
                       </button>
-                      <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-10 opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all">
+                      <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-[10] opacity-0 invisible group-hover/menu:opacity-100 group-hover/menu:visible transition-all">
                         <button
                           onClick={() => openEdit(program)}
                           className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
@@ -468,7 +468,7 @@ export default function TalipapaNatin() {
       {/* Floating Add Button (Mobile) */}
       <button
         onClick={handleAddProgram}
-        className="fixed right-6 bottom-6 sm:hidden w-14 h-14 rounded-full bg-gradient-to-br from-[#1b4c2e] to-[#2d5a3d] hover:from-[#2d5a3d] hover:to-[#1b4c2e] text-white shadow-2xl hover:shadow-xl transition-all hover:scale-110 flex items-center justify-center z-40"
+        className="fixed right-6 bottom-6 sm:hidden w-14 h-14 rounded-full bg-gradient-to-br from-[#1b4c2e] to-[#2d5a3d] hover:from-[#2d5a3d] hover:to-[#1b4c2e] text-white shadow-2xl hover:shadow-xl transition-all hover:scale-110 flex items-center justify-center z-[40]"
         aria-label="Add Program"
       >
         <Plus className="w-6 h-6" />
@@ -477,7 +477,7 @@ export default function TalipapaNatin() {
       {/* Edit/Create Modal */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
+          className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
           onClick={(e) => {
             if (e.target === e.currentTarget) closeModal();
           }}
