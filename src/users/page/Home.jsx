@@ -15,7 +15,7 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
+    <div className="min-h-screen bg-gradient-professional gradient-mesh relative">
       <Carousel />
       <MissionVision />
       <CalendarEvents />
