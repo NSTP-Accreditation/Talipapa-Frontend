@@ -731,7 +731,7 @@ const News: React.FC = () => {
                               {event.title}
                             </h4>
                             <span
-                              className={`text-xs px-2 sm:px-3 py-0.5 sm:py-1.5 rounded-full font-bold whitespace-nowrap ${
+                              className={`text-[10px] px-1.5 py-0.5 sm:text-xs sm:px-3 sm:py-1.5 rounded-full font-bold whitespace-nowrap ${
                                 event.category === 'Event'
                                   ? 'bg-blue-600 text-white'
                                   : event.category === 'Announcement'
