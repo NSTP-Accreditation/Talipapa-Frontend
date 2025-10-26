@@ -17,6 +17,7 @@ const ActivityLogs = lazy(() => import('@/admin/pages/ActivityLogs'));
 const EarnPointsLogs = lazy(() => import('@/admin/pages/EarnPoints'));
 const SwapLogs = lazy(() => import('@/admin/pages/SwapItem'));
 const Guidelines = lazy(() => import('@/admin/pages/Guidelines'));
+const CarouselEditor = lazy(() => import('@/admin/pages/CarouselEditor'));
 const News = lazy(() => import('@/admin/pages/NewsEvents'));
 const AboutUsAdmin = lazy(() => import('@/admin/pages/AboutUs'));
 const Achievements = lazy(() => import('@/admin/pages/Achievements'));
@@ -88,6 +89,7 @@ function App() {
                 <Route path="about" element={<AboutUsAdmin />} />
                 <Route path="about/achievements" element={<Achievements />} />
                 <Route path="news" element={<News />} />
+                <Route path="carousel-editor" element={<CarouselEditor />} />
                 <Route path="talipapa-natin" element={<TalipapaNatin />} />
 
                 {/* Forms Route (Admin version) - Disabled: Forms.tsx doesn't exist */}

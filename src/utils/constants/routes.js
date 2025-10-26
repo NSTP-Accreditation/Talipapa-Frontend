@@ -31,6 +31,7 @@ export const APP_ROUTES = {
     BASE: '/admin',
     DASHBOARD: '/admin/dashboard',
     ABOUT: '/admin/about',
+    CAROUSEL: '/admin/carousel-editor',
     SERVICES: '/admin/services',
     RESOURCES: '/admin/records',
     TRADING: '/admin/trading',

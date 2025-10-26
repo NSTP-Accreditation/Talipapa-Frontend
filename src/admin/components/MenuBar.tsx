@@ -21,6 +21,7 @@ import {
   Trophy,
   Recycle,
   Sprout,
+  RotateCwSquare,
 } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 
@@ -104,6 +105,11 @@ const MenuBar: React.FC<MenuBarProps> = ({
           icon: <Newspaper className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'News',
           href: APP_ROUTES.ADMIN.NEWS,
+        },
+        {
+          icon: <RotateCwSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
+          label: 'Carousel',
+          href: APP_ROUTES.ADMIN.CAROUSEL,
         },
         {
           icon: <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
