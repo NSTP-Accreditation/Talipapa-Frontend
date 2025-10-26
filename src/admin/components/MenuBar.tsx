@@ -179,7 +179,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
       {/* Mobile overlay */}
       {!isOpen ? null : (
         <div
-          className="sm:hidden fixed inset-0 z-[1000] bg-black/40"
+          className="sm:hidden fixed inset-0 z-1002 bg-black/40"
           onClick={onClose}
         />
       )}

@@ -132,7 +132,7 @@ const ResidentRecords: React.FC = () => {
     middleName: '',
     points: 0,
     age: '',
-    contact: '',
+    contact_number: '',
     address: '',
   });
   // Name validation state
@@ -179,7 +179,7 @@ const ResidentRecords: React.FC = () => {
       points: 0,
       age: '',
       address: '',
-      contact: '',
+      contact_number: '',
     });
     setContactRest('');
     setRecordIdRest('');
@@ -198,7 +198,7 @@ const ResidentRecords: React.FC = () => {
       age: String(resident.age || ''),
     });
     // Extract the contact rest (remove '09' prefix if present)
-    const contact = resident.contact || '';
+    const contact = resident.contact_number || '';
     setEditContactRest(contact.startsWith('09') ? contact.slice(2) : contact);
     setEditFirstNameError('');
     setEditLastNameError('');
@@ -283,7 +283,7 @@ const ResidentRecords: React.FC = () => {
       const payload = {
         ...newResident,
         age: isNaN(ageNumber) ? 0 : ageNumber,
-        contact: contactRest ? `09${contactRest}` : '',
+        contact_number: contactRest ? `09${contactRest}` : '',
         // include the full record id with BT- prefix when provided
         ...(recordIdRest ? { record_id: `BT-${recordIdRest}` } : {}),
       };
@@ -343,11 +343,14 @@ const ResidentRecords: React.FC = () => {
       const payload = {
         ...editingResident,
         age: isNaN(ageNumber) ? 0 : ageNumber,
-        contact: editContactRest ? `09${editContactRest}` : '',
+        contact_number: editContactRest ? `09${editContactRest}` : '',
       };
 
+      console.log(payload);
+      
+
       await authFetch(`/records/${editingResident._id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         body: JSON.stringify(payload),
       });
 
