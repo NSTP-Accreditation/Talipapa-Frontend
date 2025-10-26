@@ -18,6 +18,7 @@ import {
   Trees,
 } from 'lucide-react';
 import { PageLoadingSkeleton } from '@/components/LoadingSkeletons';
+import { ResponsiveSkeleton } from '@/components/ResponsiveSkeleton';
 import useFetchData from '../hooks/useFetchData';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 
@@ -697,7 +698,7 @@ const FarmInventory: React.FC = () => {
   }, [farmItems]);
 
   if (isLoading) {
-    return <PageLoadingSkeleton />;
+    return <ResponsiveSkeleton page="inventory" />;
   }
 
   return (

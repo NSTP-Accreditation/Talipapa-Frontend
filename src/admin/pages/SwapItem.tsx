@@ -9,6 +9,7 @@ import {
   InlineLoader,
   FormTablePageSkeleton,
 } from '@/components/LoadingSkeletons';
+import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { ArrowLeftRight, Search } from 'lucide-react';
 import { ImageInt } from '../components/OfficialsPanel';
@@ -177,7 +178,7 @@ const SwapItem = () => {
 
   // Show loading skeleton while loading
   if (pageLoading) {
-    return <FormTablePageSkeleton />;
+    return <ResponsiveSkeleton page="formtable" />;
   }
 
   return (

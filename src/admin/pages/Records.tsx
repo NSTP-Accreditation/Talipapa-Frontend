@@ -17,7 +17,7 @@ import {
 import useFetchData from '../hooks/useFetchData';
 import { useToast } from '@/hooks/useToast';
 import { debounce } from 'lodash';
-import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
+import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useAuth } from '@/contexts/AuthContext';
 import dayjs from 'dayjs';
@@ -667,9 +667,9 @@ const ResidentRecords: React.FC = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  // Show loading skeleton while loading
+  // Show loading skeleton while loading (responsive)
   if (loading) {
-    return <FormTablePageSkeleton />;
+    return <ResponsiveSkeleton page="records" />;
   }
 
   // Update all references to use safeRecords instead of records

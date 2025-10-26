@@ -38,6 +38,7 @@ import useFetchData from '../hooks/useFetchData';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { GreenPagesSkeleton } from '../../components/LoadingSkeletons';
+import ResponsiveSkeleton from '../../components/ResponsiveSkeleton';
 import ProfileTab from './green-pages/ProfileTab';
 import SkillMapTab from './green-pages/SkillMapTab';
 import StatisticsTab from './green-pages/StatisticsTab';
@@ -388,7 +389,7 @@ const GreenPages: React.FC = () => {
   };
 
   if (farmsLoading) {
-    return <GreenPagesSkeleton />;
+    return <ResponsiveSkeleton page="greenpages" />;
   }
 
   return (

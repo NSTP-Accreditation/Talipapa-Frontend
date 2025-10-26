@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useToast } from '@/hooks/useToast';
 import { SquarePen, Save, Home } from 'lucide-react';
-import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
+import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import useFetchData from '../hooks/useFetchData';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import OfficialsPanel from '../components/OfficialsPanel';
@@ -158,7 +158,7 @@ export default function AboutBarangayEditable() {
   }, [showEditMenu]);
 
   if (dataLoading) {
-    return <FormTablePageSkeleton />;
+    return <ResponsiveSkeleton page="aboutus" />;
   }
 
   if (error) {
