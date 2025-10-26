@@ -142,7 +142,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
         <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           {/* Mobile Welcome Text - Compact */}
           <div className="text-right sm:hidden">
-            <p className="text-sm font-bold leading-tight text-white">
+            <p className="text-xs font-bold leading-tight text-white">
               Admin {user.userData.username}
             </p>
           </div>
