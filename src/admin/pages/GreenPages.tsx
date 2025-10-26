@@ -683,6 +683,8 @@ const GreenPages: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:items-start">
           {/* Left Side - Farm Photo and Info (Desktop Only) */}
           <div className="hidden lg:flex lg:col-span-1 flex-col gap-4 sm:gap-6">
+            {/* Desktop: toggle will be rendered below the photo when collapsed (visible),
+                and inside the Farm Information header when expanded. */}
             {/* Farm Photo Placeholder */}
             <Card className="rounded-xl sm:rounded-2xl shadow-xl border-2 border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-300 group flex-shrink-0">
               <div className="w-full h-60 sm:h-48 md:h-56 bg-gradient-to-br from-green-50 via-green-100 to-green-200 flex items-center justify-center text-gray-600 font-bold text-base sm:text-lg relative overflow-hidden">
@@ -707,108 +709,138 @@ const GreenPages: React.FC = () => {
                 </div>
               </div>
             </Card>
+            {/* Desktop toggle shown below the photo when details are collapsed */}
+            <div className="hidden lg:block">
+              {!isFarmDetailsOpen && (
+                <div className="mt-3">
+                  <button
+                    onClick={() => setIsFarmDetailsOpen(true)}
+                    className="w-full bg-gradient-to-r from-green-600 to-green-700 p-2 rounded-lg flex items-center justify-center text-white hover:from-green-700 hover:to-green-800 transition-all"
+                  >
+                    <span className="text-sm font-bold flex items-center gap-2">
+                      <Leaf className="w-4 h-4" />
+                      Show Farm Details
+                    </span>
+                  </button>
+                </div>
+              )}
+            </div>
 
-            {/* Farm Information (Desktop Only) */}
-            <Card className="rounded-2xl shadow-xl border-2 border-gray-200 hover:shadow-2xl transition-all duration-300 flex-1 flex flex-col">
-              <div className="bg-gradient-to-r from-green-600 to-green-700 p-4 rounded-t-2xl flex-shrink-0">
-                <h3 className="text-white font-bold text-base sm:text-lg flex items-center gap-2">
-                  <Leaf className="w-5 h-5" />
-                  Farm Details
-                </h3>
-              </div>
-              <CardContent className="p-4 sm:p-5 space-y-3 bg-gradient-to-br from-white to-green-50/20 flex-1 overflow-y-auto custom-scrollbar">
-                <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
-                    <span className="text-green-700 font-bold text-base sm:text-lg">
-                      🏷️
-                    </span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
-                      Name
-                    </p>
-                    <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                      {farmData?.name ?? '—'}
-                    </p>
+            {/* Farm Information (Desktop Only) - show only when expanded */}
+            {isFarmDetailsOpen && (
+              <Card className="rounded-2xl shadow-xl border-2 border-gray-200 hover:shadow-2xl transition-all duration-300 flex-1 flex flex-col">
+                <div className="bg-gradient-to-r from-green-600 to-green-700 p-4 rounded-t-2xl flex-shrink-0 flex items-center justify-between">
+                  <h3 className="text-white font-bold text-base sm:text-lg flex items-center gap-2">
+                    <Leaf className="w-5 h-5" />
+                    Farm Details
+                  </h3>
+                  {/* Toggle inside header when details are expanded (visible only on lg) */}
+                  <div className="hidden lg:block">
+                    {isFarmDetailsOpen && (
+                      <button
+                        onClick={() => setIsFarmDetailsOpen(false)}
+                        className="w-10 h-10 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center transition-all"
+                        aria-label="Collapse details"
+                      >
+                        <ChevronUp className="w-4 h-4 text-white" />
+                      </button>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
-                    <span className="text-blue-700 font-bold text-base sm:text-lg">
-                      📐
-                    </span>
+                <CardContent className="p-4 sm:p-5 space-y-3 bg-gradient-to-br from-white to-green-50/20 flex-1 overflow-y-auto custom-scrollbar">
+                  <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
+                      <span className="text-green-700 font-bold text-base sm:text-lg">
+                        🏷️
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
+                        Name
+                      </p>
+                      <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
+                        {farmData?.name ?? '—'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
-                      Size
-                    </p>
-                    <p className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed">
-                      {farmData?.size ?? '—'}
-                    </p>
+                  <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
+                      <span className="text-blue-700 font-bold text-base sm:text-lg">
+                        📐
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
+                        Size
+                      </p>
+                      <p className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed">
+                        {farmData?.size ?? '—'}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
-                    <span className="text-purple-700 font-bold text-base sm:text-lg">
-                      ⏳
-                    </span>
+                  <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
+                      <span className="text-purple-700 font-bold text-base sm:text-lg">
+                        ⏳
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
+                        Age
+                      </p>
+                      <p className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed">
+                        {farmData?.age ?? '—'} years
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
-                      Age
-                    </p>
-                    <p className="text-sm sm:text-base font-bold text-gray-900 leading-relaxed">
-                      {farmData?.age ?? '—'} years
-                    </p>
+                  <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
+                      <span className="text-amber-700 font-bold text-base sm:text-lg">
+                        🌾
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
+                        Type
+                      </p>
+                      <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
+                        {farmData?.farmType ?? '—'}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
-                    <span className="text-amber-700 font-bold text-base sm:text-lg">
-                      🌾
-                    </span>
+                  <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
+                      <span className="text-red-700 font-bold text-base sm:text-lg">
+                        📍
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
+                        Address
+                      </p>
+                      <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
+                        {farmData?.address ?? '—'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
-                      Type
-                    </p>
-                    <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                      {farmData?.farmType ?? '—'}
-                    </p>
+                  <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
+                      <span className="text-teal-700 font-bold text-base sm:text-lg">
+                        📝
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
+                        Description
+                      </p>
+                      <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
+                        {farmData?.description ?? '—'}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
-                    <span className="text-red-700 font-bold text-base sm:text-lg">
-                      📍
-                    </span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
-                      Address
-                    </p>
-                    <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                      {farmData?.address ?? '—'}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 sm:p-3.5 bg-white rounded-lg border border-gray-100 hover:border-green-400 hover:bg-green-50/30 hover:shadow-md transition-all duration-200 cursor-pointer group">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
-                    <span className="text-teal-700 font-bold text-base sm:text-lg">
-                      📝
-                    </span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-0.5">
-                      Description
-                    </p>
-                    <p className="text-sm sm:text-base font-bold text-gray-900 break-words leading-relaxed">
-                      {farmData?.description ?? '—'}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Right Side - Tab Content */}
