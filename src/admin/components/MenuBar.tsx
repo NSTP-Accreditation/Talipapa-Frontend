@@ -192,16 +192,16 @@ const MenuBar: React.FC<MenuBarProps> = ({
 
       <div
         className={cn(
-          'w-[270px] sm:w-[320px] h-screen text-white flex flex-col fixed left-0 top-0 overflow-hidden transform transition-transform duration-300 z-[500] shadow-2xl bg-gradient-to-b from-green-900 via-green-800 to-green-900',
-          // hide on small screens unless isOpen
-          isOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0',
+          'w-[270px] sm:w-[320px] h-screen text-white flex flex-col fixed left-0 top-0 overflow-hidden transition-all duration-300 z-[500] shadow-2xl bg-gradient-to-b from-green-900 via-green-800 to-green-900',
+          // hide on small screens unless isOpen (use negative margin rather than transform)
+          isOpen ? 'ml-0' : '-ml-[270px] sm:ml-0',
           className
         )}
       >
         {/* Header */}
         <div className="px-4 py-4 sm:px-6 sm:py-6 bg-gradient-to-r from-green-950 to-green-900">
           <div className="flex items-center justify-center space-x-2 sm:space-x-3">
-            <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-white/30">
+            <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-white/30">
               <img
                 src={data?.image?.url ? data.image.url : '/brgy talipapa.png'}
                 alt="Barangay Talipapa Logo"
@@ -235,7 +235,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
                       item.submenu.some(
                         (sub) => location.pathname === sub.href
                       ))
-                    ? 'bg-white/20 text-white shadow-lg backdrop-blur-sm ring-1 ring-white/30'
+                    ? 'bg-white/20 text-white shadow-lg ring-1 ring-white/30'
                     : 'text-green-100 hover:bg-white/10 hover:text-white hover:shadow-md'
                 )}
               >
@@ -248,7 +248,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
                 {item.submenu && (
                   <ChevronDown
                     className={cn(
-                      'w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200',
+                      'w-3.5 h-3.5 sm:w-4 sm:h-4 transition',
                       expandedItems.includes(item.label) ? 'rotate-180' : ''
                     )}
                   />
@@ -272,11 +272,10 @@ const MenuBar: React.FC<MenuBarProps> = ({
                       <button
                         onClick={() => navigate(subItem.href!)}
                         className={cn(
-                          'w-full flex items-center space-x-2.5 sm:space-x-3 pr-3 py-2.5 sm:pr-4 sm:py-3 text-left transition-all duration-300 ease-in-out text-sm sm:text-base rounded-xl transform',
-                          'hover:scale-[1.02] hover:shadow-md hover:bg-white/15 hover:text-white hover:font-semibold',
-                          'active:scale-95',
+                          'w-full flex items-center space-x-2.5 sm:space-x-3 pr-3 py-2.5 sm:pr-4 sm:py-3 text-left transition-all duration-300 ease-in-out text-sm sm:text-base rounded-xl',
+                          'hover:shadow-md hover:bg-white/15 hover:text-white hover:font-semibold',
                           location.pathname === subItem.href
-                            ? 'bg-white/20 text-white font-semibold scale-[1.02] shadow-md ring-1 ring-white/20'
+                            ? 'bg-white/20 text-white font-semibold shadow-md ring-1 ring-white/20'
                             : 'text-green-100'
                         )}
                         style={{ paddingLeft: '2.5rem' }}

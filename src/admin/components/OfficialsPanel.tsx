@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Save, SquarePen, Plus, Trash2, AlertCircle } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
@@ -100,7 +101,7 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-[1003] p-2 sm:p-4">
       <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-hidden">
         {/* Records-style gradient header */}
@@ -249,7 +250,8 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -268,7 +270,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 }) => {
   if (!isOpen || !official) return null;
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4"
       onClick={(e) => {
@@ -335,7 +337,8 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -351,6 +354,7 @@ export default function OfficialsPanel() {
   );
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const authFetch = useAuthFetch();
+  const toast = useToast();
 
   useEffect(() => {
     if (Array.isArray(data)) setOfficials(data);
@@ -408,16 +412,18 @@ export default function OfficialsPanel() {
     if (singleRoles.includes(newPosition)) {
       const existing = officials.find((o) => o.position === newPosition);
       if (existing && isCreating) {
-        alert(
-          `${newPosition} already exists. Only one ${newPosition} is allowed.`
+        toast.error(
+          `${newPosition} already exists. Only one ${newPosition} is allowed.`,
+          { title: 'Validation' }
         );
         setIsSaving(false);
         return;
       }
       // If editing, allow if the existing one is the same being edited
       if (existing && !isCreating && editingOfficial?._id !== existing._id) {
-        alert(
-          `${newPosition} already exists. Only one ${newPosition} is allowed.`
+        toast.error(
+          `${newPosition} already exists. Only one ${newPosition} is allowed.`,
+          { title: 'Validation' }
         );
         setIsSaving(false);
         return;
@@ -429,7 +435,9 @@ export default function OfficialsPanel() {
       const existingCount = countRole('Kagawad');
       // If creating, existingCount must be < 7; if editing and not changing position, allow
       if (isCreating && existingCount >= 7) {
-        alert('You can only have up to 7 Kagawads.');
+        toast.error('You can only have up to 7 Kagawads.', {
+          title: 'Validation',
+        });
         setIsSaving(false);
         return;
       }
@@ -439,7 +447,9 @@ export default function OfficialsPanel() {
         editingOfficial.position !== 'Kagawad' &&
         existingCount >= 7
       ) {
-        alert('You can only have up to 7 Kagawads.');
+        toast.error('You can only have up to 7 Kagawads.', {
+          title: 'Validation',
+        });
         setIsSaving(false);
         return;
       }
@@ -448,7 +458,9 @@ export default function OfficialsPanel() {
     if (newPosition === 'SK Member') {
       const existingCount = countRole('SK Member');
       if (isCreating && existingCount >= 7) {
-        alert('You can only have up to 7 SK Members.');
+        toast.error('You can only have up to 7 SK Members.', {
+          title: 'Validation',
+        });
         setIsSaving(false);
         return;
       }
@@ -458,7 +470,9 @@ export default function OfficialsPanel() {
         editingOfficial.position !== 'SK Member' &&
         existingCount >= 7
       ) {
-        alert('You can only have up to 7 SK Members.');
+        toast.error('You can only have up to 7 SK Members.', {
+          title: 'Validation',
+        });
         setIsSaving(false);
         return;
       }
@@ -492,7 +506,7 @@ export default function OfficialsPanel() {
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : 'Failed to save official';
-      alert('Save failed: ' + msg);
+      toast.error('Save failed: ' + msg, { title: 'Save failed' });
     } finally {
       setIsSaving(false);
     }
@@ -520,7 +534,7 @@ export default function OfficialsPanel() {
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : 'Failed to delete official';
-      alert('Delete failed: ' + msg);
+      toast.error('Delete failed: ' + msg, { title: 'Delete failed' });
     } finally {
       setIsSaving(false);
     }

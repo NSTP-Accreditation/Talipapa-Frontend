@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Card,
   CardHeader,
@@ -66,7 +67,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 }) => {
   if (!isOpen || !guideline) return null;
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4"
       onClick={(e) => {
@@ -153,7 +154,8 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

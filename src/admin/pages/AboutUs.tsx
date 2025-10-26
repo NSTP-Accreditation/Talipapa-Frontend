@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useToast } from '@/hooks/useToast';
 import { SquarePen, Save, Home } from 'lucide-react';
 import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
@@ -34,7 +35,7 @@ const ContentModal: React.FC<ContentModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-[1003] p-2 sm:p-4">
       <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-hidden">
         {/* Records-style gradient header */}
@@ -91,7 +92,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

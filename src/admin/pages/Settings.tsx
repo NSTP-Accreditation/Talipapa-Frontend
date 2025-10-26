@@ -9,6 +9,8 @@ import {
   Plus,
   Trash,
 } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { useToast } from '@/hooks/useToast';
 import {
   Card,
   CardHeader,
@@ -45,6 +47,9 @@ const Settings: React.FC = () => {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [editingBarangay, setEditingBarangay] = useState(false);
   const authFetch = useAuthFetch();
+
+  // Toast hook (call once at component top to avoid invalid hook calls)
+  const toast = useToast();
 
   const [admins, setAdmins] = useState<Admin[]>();
   const {
@@ -83,11 +88,13 @@ const Settings: React.FC = () => {
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
         // 2MB limit
-        alert('File size should be less than 2MB');
+        toast.error('File size should be less than 2MB', {
+          title: 'File Error',
+        });
         return;
       }
       if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
+        toast.error('Please select an image file', { title: 'File Error' });
         return;
       }
 
@@ -103,7 +110,9 @@ const Settings: React.FC = () => {
           }
         );
 
-        alert('Barangay Image updated successfully');
+        toast.success('Barangay Image updated successfully', {
+          title: 'Updated',
+        });
       } catch (error) {
         console.log(error);
       }
@@ -130,23 +139,42 @@ const Settings: React.FC = () => {
           }),
         }
       );
-      alert('Barangay Name updated successfully');
+      toast.success('Barangay Name updated successfully', { title: 'Updated' });
       setEditingBarangay(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleDeleteAdmin = async (id: string) => {
-    try {
-      await authFetch(`/users/${id}`, {
-        method: 'DELETE',
-      });
+  // Open delete confirmation modal for admin
+  const handleDeleteAdmin = (id: string) => {
+    setDeletingAdminId(id);
+    setIsDeleteAdminOpen(true);
+  };
 
-      alert('User Deleted');
+  // delete modal state and confirm handler
+  const [isDeleteAdminOpen, setIsDeleteAdminOpen] = useState(false);
+  const [deletingAdminId, setDeletingAdminId] = useState<string | null>(null);
+  const [isDeletingAdmin, setIsDeletingAdmin] = useState(false);
+
+  const closeDeleteAdminModal = () => {
+    setIsDeleteAdminOpen(false);
+    setDeletingAdminId(null);
+    setIsDeletingAdmin(false);
+  };
+
+  const confirmDeleteAdmin = async () => {
+    if (!deletingAdminId) return;
+    setIsDeletingAdmin(true);
+    try {
+      await authFetch(`/users/${deletingAdminId}`, { method: 'DELETE' });
+      toast.success('User deleted.', { title: 'Deleted' });
       refetchAdmins();
-    } catch (error) {
-      alert(error);
+      closeDeleteAdminModal();
+    } catch (err) {
+      console.error('Delete admin failed', err);
+      toast.error(err?.message || String(err), { title: 'Delete failed' });
+      setIsDeletingAdmin(false);
     }
   };
 
@@ -159,18 +187,18 @@ const Settings: React.FC = () => {
       !newAdmin.password ||
       !newAdmin.contactNumber
     ) {
-      alert('Please fill in all fields');
+      toast.error('Please fill in all fields', { title: 'Validation' });
       return;
     }
 
     if (newAdmin.contactNumber.length !== 11) {
-      alert('Invalid Contact Number');
+      toast.error('Invalid Contact Number', { title: 'Validation' });
       return;
     }
 
     const roles = newAdmin.roles;
     if (roles.length === 0) {
-      alert('At least 1 role is required');
+      toast.error('At least 1 role is required', { title: 'Validation' });
       return;
     }
 
@@ -193,7 +221,7 @@ const Settings: React.FC = () => {
         body: JSON.stringify(payload),
       });
 
-      alert(`Added New User`);
+      toast.success(`Added New User`, { title: 'User Added' });
       refetchAdmins();
       setNewAdmin({
         username: '',
@@ -203,7 +231,7 @@ const Settings: React.FC = () => {
         roles: [],
       });
     } catch (error) {
-      alert(error);
+      toast.error(String(error), { title: 'Error' });
     }
   };
 
@@ -226,6 +254,44 @@ const Settings: React.FC = () => {
           Manage system configuration and preferences
         </p>
       </div>
+      {/* Admin delete confirmation modal */}
+      {isDeleteAdminOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[1005] flex items-center justify-center bg-black/60 p-4"
+            role="dialog"
+            aria-modal="true"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) closeDeleteAdminModal();
+            }}
+          >
+            <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
+              <div className="p-6 border-b">
+                <h3 className="text-lg font-bold text-gray-900">
+                  Delete Account
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Deleting this admin account cannot be undone. Are you sure?
+                </p>
+              </div>
+              <div className="p-4 flex items-center justify-end gap-3 bg-gray-50">
+                <button
+                  onClick={closeDeleteAdminModal}
+                  className="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDeleteAdmin}
+                  className={`px-4 py-2 rounded-lg bg-red-600 text-white font-semibold shadow-sm hover:bg-red-700 ${isDeletingAdmin ? 'opacity-70 pointer-events-none' : ''}`}
+                >
+                  {isDeletingAdmin ? 'Deleting...' : 'Delete'}
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
 
       {/* Content */}
       <div className="grid grid-cols-1 gap-6 md:gap-8">

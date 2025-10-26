@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Card,
   CardHeader,
@@ -119,7 +120,7 @@ const EventModal: React.FC<EventModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
       onClick={(e) => {
@@ -351,7 +352,8 @@ const EventModal: React.FC<EventModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -363,7 +365,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
 }) => {
   if (!isOpen || !event) return null;
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
       onClick={(e) => {
@@ -472,7 +474,8 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

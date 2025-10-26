@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useToast } from '@/hooks/useToast';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -79,7 +80,7 @@ const DeleteModal: React.FC<{
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
       <div className="absolute inset-0 bg-black/70" onClick={onClose} />
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 z-[10] animate-in zoom-in-95 duration-200">
@@ -89,7 +90,7 @@ const DeleteModal: React.FC<{
               <AlertTriangle className="w-6 h-6 text-red-600" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900">
+              <h3 className="text-lg font-bold text-gray-900">
                 Delete Farm Item?
               </h3>
               <p className="text-sm text-gray-500 mt-1">
@@ -97,6 +98,7 @@ const DeleteModal: React.FC<{
               </p>
             </div>
           </div>
+
           <p className="text-gray-600 mb-6">
             Are you sure you want to delete{' '}
             <span className="font-bold text-gray-900">"{itemName}"</span>?
@@ -118,7 +120,8 @@ const DeleteModal: React.FC<{
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -200,7 +203,7 @@ const FarmItemModal: React.FC<{
     }
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
       <div
         className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70"
@@ -457,7 +460,8 @@ const FarmItemModal: React.FC<{
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

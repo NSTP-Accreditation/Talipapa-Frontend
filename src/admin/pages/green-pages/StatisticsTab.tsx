@@ -12,6 +12,8 @@ import {
   SquarePen,
 } from 'lucide-react';
 import React, { useState } from 'react';
+import { useToast } from '@/hooks/useToast';
+import { createPortal } from 'react-dom';
 import {
   Card,
   CardHeader,
@@ -117,6 +119,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
     image: null,
   });
   const authFetch = useAuthFetch();
+  const toast = useToast();
 
   const openAddFarm = () => {
     setNewFarm({
@@ -154,12 +157,16 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
     if (isSubmittingFarm) return;
     // Basic validation
     if (!newFarm.name || !newFarm.location) {
-      alert('Farm name and location are required');
+      toast.error('Farm name and location are required', {
+        title: 'Validation',
+      });
       return;
     }
     setIsSubmittingFarm(true);
     if (!newFarm.image || !newFarm.description) {
-      alert('Image and Description are required!');
+      toast.error('Image and Description are required!', {
+        title: 'Validation',
+      });
       return;
     }
 
@@ -329,223 +336,225 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
       </Card>
 
       {/* Add Farm Modal */}
-      {isAddFarmOpen && (
-        <div
-          className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
-          role="dialog"
-          aria-modal="true"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) closeAddFarm();
-          }}
-        >
-          <form
-            onSubmit={handleCreateFarm}
-            className="w-full max-w-xs sm:max-w-2xl md:max-w-3xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[95vh] flex flex-col animate-slideUp"
+      {isAddFarmOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
+            role="dialog"
+            aria-modal="true"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) closeAddFarm();
+            }}
           >
-            <div className="relative p-4 sm:p-6 md:p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 sm:w-64 sm:h-64 bg-white/10 rounded-full -mr-16 sm:-mr-32 -mt-16 sm:-mt-32"></div>
-              <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-48 sm:h-48 bg-white/10 rounded-full -ml-12 sm:-ml-24 -mb-12 sm:-mb-24"></div>
-              <div className="relative flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-4">
-                  <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center">
-                    <UsersIcon className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg sm:text-2xl font-bold">
-                      Add New Farm
-                    </h3>
-                    <p className="text-green-100 text-xs sm:text-sm">
-                      Fill in the details to create a new farm
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={closeAddFarm}
-                  className="text-white/90 p-1.5 sm:p-2 rounded-full hover:bg-white/10"
-                >
-                  <X className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
-              </div>
-            </div>
-
-            <div className="p-3 sm:p-4 md:p-6 overflow-y-auto">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div>
-                  <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
-                    <HopOff className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
-                    Farm Name <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    required
-                    value={newFarm.name}
-                    onChange={(e) =>
-                      setNewFarm({ ...newFarm, name: e.target.value })
-                    }
-                    placeholder="Name of the farm"
-                    className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
-                    <MapPin className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
-                    Location <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    required
-                    value={newFarm.location}
-                    onChange={(e) =>
-                      setNewFarm({ ...newFarm, location: e.target.value })
-                    }
-                    placeholder="Google Map Location"
-                    className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
-                    <Contact className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
-                    Size <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    required
-                    value={newFarm.size}
-                    onChange={(e) =>
-                      setNewFarm({ ...newFarm, size: e.target.value })
-                    }
-                    placeholder="Size"
-                    className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
-                    <UsersIcon className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
-                    Age <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    required
-                    value={newFarm.age}
-                    onChange={(e) =>
-                      setNewFarm({ ...newFarm, age: e.target.value })
-                    }
-                    placeholder="Age"
-                    className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
-                    <Contact className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
-                    Farm Type <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    required
-                    value={newFarm.farmType}
-                    onChange={(e) =>
-                      setNewFarm({ ...newFarm, farmType: e.target.value })
-                    }
-                    placeholder="Farm Type"
-                    className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                  />
-                </div>
-
-                <div>
-                  <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
-                    <MapPin className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
-                    Address <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    required
-                    value={newFarm.address}
-                    onChange={(e) =>
-                      setNewFarm({ ...newFarm, address: e.target.value })
-                    }
-                    placeholder="Address"
-                    className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                  />
-                </div>
-
-                <div className="sm:col-span-2 flex items-center gap-3 sm:gap-5">
-                  <label className="cursor-pointer bg-[#1b4c2e] text-white px-3 py-2 sm:px-4 sm:py-2 rounded-md hover:bg-[#2d6b42] transition-colors inline-block text-xs sm:text-sm">
-                    Choose Image
-                    <input
-                      required
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                  </label>
-
-                  <p className="text-xs sm:text-sm text-gray-600 truncate flex-1">
-                    File: {newFarm?.image?.name || 'No file selected'}
-                  </p>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
-                    <SquarePen className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
-                    Description <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    required
-                    value={newFarm.description}
-                    onChange={(e) =>
-                      setNewFarm({ ...newFarm, description: e.target.value })
-                    }
-                    className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none h-20 sm:h-28 text-sm sm:text-base"
-                    placeholder="Short description or notes"
-                  />
-                  {/* Info Note */}
-                  <div className="bg-green-50 border border-green-200 sm:border-2 rounded-lg sm:rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3 mt-2 sm:mt-3">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-white text-xs font-bold">i</span>
+            <form
+              onSubmit={handleCreateFarm}
+              className="w-full max-w-xs sm:max-w-2xl md:max-w-3xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[95vh] flex flex-col animate-slideUp"
+            >
+              <div className="relative p-4 sm:p-6 md:p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 sm:w-64 sm:h-64 bg-white/10 rounded-full -mr-16 sm:-mr-32 -mt-16 sm:-mt-32"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-48 sm:h-48 bg-white/10 rounded-full -ml-12 sm:-ml-24 -mb-12 sm:-mb-24"></div>
+                <div className="relative flex items-center justify-between">
+                  <div className="flex items-center gap-2 sm:gap-4">
+                    <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center">
+                      <UsersIcon className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-xs sm:text-sm text-green-800 font-medium">
-                        <span className="font-bold">Note:</span> Fields marked
-                        with <span className="text-red-500 font-bold">*</span>{' '}
-                        are required. Please ensure all information is accurate
-                        before submitting.
+                    <div>
+                      <h3 className="text-lg sm:text-2xl font-bold">
+                        Add New Farm
+                      </h3>
+                      <p className="text-green-100 text-xs sm:text-sm">
+                        Fill in the details to create a new farm
                       </p>
                     </div>
                   </div>
+                  <button
+                    type="button"
+                    onClick={closeAddFarm}
+                    className="text-white/90 p-1.5 sm:p-2 rounded-full hover:bg-white/10"
+                  >
+                    <X className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </button>
                 </div>
               </div>
-            </div>
 
-            <div className="p-3 sm:p-4 md:p-6 bg-gray-50 flex items-center justify-end gap-2 sm:gap-3">
-              <button
-                type="button"
-                onClick={closeAddFarm}
-                className="px-4 py-2.5 sm:px-8 sm:py-3.5 rounded-lg sm:rounded-xl border border-gray-300 sm:border-2 font-bold text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
-                disabled={isSubmittingFarm}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmittingFarm}
-                className="px-6 py-2.5 sm:px-10 sm:py-3.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
-              >
-                {isSubmittingFarm ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 sm:border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    <span>Adding...</span>
+              <div className="p-3 sm:p-4 md:p-6 overflow-y-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div>
+                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
+                      <HopOff className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
+                      Farm Name <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      required
+                      value={newFarm.name}
+                      onChange={(e) =>
+                        setNewFarm({ ...newFarm, name: e.target.value })
+                      }
+                      placeholder="Name of the farm"
+                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                    />
                   </div>
-                ) : (
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <Sprout className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>Add Farm</span>
+
+                  <div>
+                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
+                      <MapPin className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
+                      Location <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      required
+                      value={newFarm.location}
+                      onChange={(e) =>
+                        setNewFarm({ ...newFarm, location: e.target.value })
+                      }
+                      placeholder="Google Map Location"
+                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                    />
                   </div>
-                )}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+
+                  <div>
+                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
+                      <Contact className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
+                      Size <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      required
+                      value={newFarm.size}
+                      onChange={(e) =>
+                        setNewFarm({ ...newFarm, size: e.target.value })
+                      }
+                      placeholder="Size"
+                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
+                      <UsersIcon className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
+                      Age <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      required
+                      value={newFarm.age}
+                      onChange={(e) =>
+                        setNewFarm({ ...newFarm, age: e.target.value })
+                      }
+                      placeholder="Age"
+                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
+                      <Contact className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
+                      Farm Type <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      required
+                      value={newFarm.farmType}
+                      onChange={(e) =>
+                        setNewFarm({ ...newFarm, farmType: e.target.value })
+                      }
+                      placeholder="Farm Type"
+                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
+                      <MapPin className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
+                      Address <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      required
+                      value={newFarm.address}
+                      onChange={(e) =>
+                        setNewFarm({ ...newFarm, address: e.target.value })
+                      }
+                      placeholder="Address"
+                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2 flex items-center gap-3 sm:gap-5">
+                    <label className="cursor-pointer bg-[#1b4c2e] text-white px-3 py-2 sm:px-4 sm:py-2 rounded-md hover:bg-[#2d6b42] transition-colors inline-block text-xs sm:text-sm">
+                      Choose Image
+                      <input
+                        required
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </label>
+
+                    <p className="text-xs sm:text-sm text-gray-600 truncate flex-1">
+                      File: {newFarm?.image?.name || 'No file selected'}
+                    </p>
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
+                      <SquarePen className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
+                      Description <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      required
+                      value={newFarm.description}
+                      onChange={(e) =>
+                        setNewFarm({ ...newFarm, description: e.target.value })
+                      }
+                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none h-20 sm:h-28 text-sm sm:text-base"
+                      placeholder="Short description or notes"
+                    />
+                    {/* Info Note */}
+                    <div className="bg-green-50 border border-green-200 sm:border-2 rounded-lg sm:rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3 mt-2 sm:mt-3">
+                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-white text-xs font-bold">i</span>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs sm:text-sm text-green-800 font-medium">
+                          <span className="font-bold">Note:</span> Fields marked
+                          with <span className="text-red-500 font-bold">*</span>{' '}
+                          are required. Please ensure all information is
+                          accurate before submitting.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3 sm:p-4 md:p-6 bg-gray-50 flex items-center justify-end gap-2 sm:gap-3">
+                <button
+                  type="button"
+                  onClick={closeAddFarm}
+                  className="px-4 py-2.5 sm:px-8 sm:py-3.5 rounded-lg sm:rounded-xl border border-gray-300 sm:border-2 font-bold text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
+                  disabled={isSubmittingFarm}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingFarm}
+                  className="px-6 py-2.5 sm:px-10 sm:py-3.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
+                >
+                  {isSubmittingFarm ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 sm:border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Adding...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <Sprout className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span>Add Farm</span>
+                    </div>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

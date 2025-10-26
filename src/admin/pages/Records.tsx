@@ -1,4 +1,5 @@
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import {
@@ -919,827 +920,859 @@ const ResidentRecords: React.FC = () => {
       </div>
 
       {/* Add Modal */}
-      {isAddModalOpen && (
-        <div
-          className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
-          role="dialog"
-          aria-modal="true"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) closeAddModal();
-          }}
-        >
-          <form
-            onSubmit={handleCreateResident}
-            className="w-full max-w-3xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[95vh] flex flex-col animate-slideUp"
+      {isAddModalOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
+            role="dialog"
+            aria-modal="true"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) closeAddModal();
+            }}
           >
-            {/* Enhanced Header */}
-            <div className="relative p-4 sm:p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 sm:w-64 sm:h-64 bg-white/10 rounded-full -mr-16 sm:-mr-32 -mt-16 sm:-mt-32"></div>
-              <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-48 sm:h-48 bg-white/10 rounded-full -ml-12 sm:-ml-24 -mb-12 sm:-mb-24"></div>
+            <form
+              onSubmit={handleCreateResident}
+              className="w-full max-w-3xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[95vh] flex flex-col animate-slideUp"
+            >
+              {/* Enhanced Header */}
+              <div className="relative p-4 sm:p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 sm:w-64 sm:h-64 bg-white/10 rounded-full -mr-16 sm:-mr-32 -mt-16 sm:-mt-32"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-48 sm:h-48 bg-white/10 rounded-full -ml-12 sm:-ml-24 -mb-12 sm:-mb-24"></div>
 
-              <div className="relative flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-4">
-                  <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 sm:ring-4 ring-white/30 shadow-lg">
-                    <User className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+                <div className="relative flex items-center justify-between">
+                  <div className="flex items-center gap-2 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 sm:ring-4 ring-white/30 shadow-lg">
+                      <User className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl sm:text-3xl font-bold text-white mb-0 sm:mb-1">
+                        Add New Resident
+                      </h3>
+                      <p className="text-green-100 text-xs sm:text-sm font-medium">
+                        Fill in the details to create a new record
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl sm:text-3xl font-bold text-white mb-0 sm:mb-1">
-                      Add New Resident
-                    </h3>
-                    <p className="text-green-100 text-xs sm:text-sm font-medium">
-                      Fill in the details to create a new record
+                  <button
+                    type="button"
+                    onClick={closeAddModal}
+                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all hover:rotate-90 duration-300 ring-1 sm:ring-2 ring-white/30"
+                    title="Close"
+                  >
+                    <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Enhanced Form Content */}
+              <div className="p-4 sm:p-8 space-y-4 sm:space-y-6 overflow-y-auto flex-1 bg-gradient-to-br from-gray-50 to-white">
+                {/* Personal Information Section */}
+                <div className="space-y-3 sm:space-y-5">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                      <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold text-gray-800">
+                      Personal Information
+                    </h4>
+                    <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+                  </div>
+
+                  {/* Name fields in a row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5">
+                    {/* First Name */}
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span className="text-red-500">*</span>
+                        <span>First Name</span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          required
+                          type="text"
+                          value={newResident.firstName}
+                          onChange={(e) => {
+                            // strip disallowed characters (allow letters, spaces, apostrophes, hyphens)
+                            const filtered = e.target.value.replace(
+                              /[^\p{L}\s'\-]/gu,
+                              ''
+                            );
+                            setNewResident((s) => ({
+                              ...s,
+                              firstName: filtered,
+                            }));
+                            const res = validateName(filtered, true);
+                            setFirstNameError(res.valid ? '' : res.message);
+                          }}
+                          onBlur={() => {
+                            const res = validateName(
+                              newResident.firstName,
+                              true
+                            );
+                            setFirstNameError(res.valid ? '' : res.message);
+                          }}
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="Enter first name"
+                        />
+                        {firstNameError ? (
+                          <p className="text-xs sm:text-sm text-red-600 mt-1">
+                            {firstNameError}
+                          </p>
+                        ) : null}
+                      </div>
+                    </label>
+                    {/* Last Name */}
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span className="text-red-500">*</span>
+                        <span>Last Name</span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          required
+                          type="text"
+                          value={newResident.lastName}
+                          onChange={(e) => {
+                            const filtered = e.target.value.replace(
+                              /[^\p{L}\s'\-]/gu,
+                              ''
+                            );
+                            setNewResident((s) => ({
+                              ...s,
+                              lastName: filtered,
+                            }));
+                            const res = validateName(filtered, true);
+                            setLastNameError(res.valid ? '' : res.message);
+                          }}
+                          onBlur={() => {
+                            const res = validateName(
+                              newResident.lastName,
+                              true
+                            );
+                            setLastNameError(res.valid ? '' : res.message);
+                          }}
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="Enter last name"
+                        />
+                        {lastNameError ? (
+                          <p className="text-xs sm:text-sm text-red-600 mt-1">
+                            {lastNameError}
+                          </p>
+                        ) : null}
+                      </div>
+                    </label>
+                    {/* Middle Name (now required) */}
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span className="text-red-500">*</span>
+                        <span>Middle Name</span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          required
+                          type="text"
+                          value={newResident.middleName}
+                          onChange={(e) => {
+                            const filtered = e.target.value.replace(
+                              /[^\p{L}\s'\-]/gu,
+                              ''
+                            );
+                            setNewResident((s) => ({
+                              ...s,
+                              middleName: filtered,
+                            }));
+                            const res = validateName(filtered, true);
+                            setMiddleNameError(res.valid ? '' : res.message);
+                          }}
+                          onBlur={() => {
+                            const res = validateName(
+                              newResident.middleName,
+                              true
+                            );
+                            setMiddleNameError(res.valid ? '' : res.message);
+                          }}
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="If none put None"
+                        />
+                        {middleNameError ? (
+                          <p className="text-xs sm:text-sm text-red-600 mt-1">
+                            {middleNameError}
+                          </p>
+                        ) : null}
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Additional Details Section */}
+                <div className="space-y-3 sm:space-y-5">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                      <Award className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold text-gray-800">
+                      Additional Details
+                    </h4>
+                    <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                        <span className="text-red-500">*</span>
+                        <span>Age</span>
+                      </div>
+                      <input
+                        required
+                        type="text"
+                        inputMode="numeric"
+                        pattern="\d*"
+                        value={newResident.age as string}
+                        onChange={(e) => {
+                          const digitsOnly = e.target.value.replace(/\D/g, '');
+                          const limited = digitsOnly.slice(0, 3);
+                          setNewResident((s) => ({ ...s, age: limited }));
+                          // validate age (0-120)
+                          const n = limited === '' ? NaN : Number(limited);
+                          if (limited === '') {
+                            setIsAgeValid(false);
+                            setAgeError('Age is required.');
+                          } else if (isNaN(n) || n < 0 || n > 120) {
+                            setIsAgeValid(false);
+                            setAgeError('Enter a valid age between 0 and 120.');
+                          } else {
+                            setIsAgeValid(true);
+                            setAgeError('');
+                          }
+                        }}
+                        onBlur={() => {
+                          const v = String(newResident.age || '').trim();
+                          const n = v === '' ? NaN : Number(v);
+                          if (v === '') {
+                            setIsAgeValid(false);
+                            setAgeError('Age is required.');
+                          } else if (isNaN(n) || n < 0 || n > 120) {
+                            setIsAgeValid(false);
+                            setAgeError('Enter a valid age between 0 and 120.');
+                          } else {
+                            setIsAgeValid(true);
+                            setAgeError('');
+                          }
+                        }}
+                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                        placeholder="0"
+                      />
+                      {ageError ? (
+                        <p className="text-xs sm:text-sm text-red-600 mt-1">
+                          {ageError}
+                        </p>
+                      ) : null}
+                    </label>
+
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                        <span>Contact</span>
+                      </div>
+
+                      <div className="relative">
+                        <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold text-sm sm:text-base">
+                          09
+                        </span>
+                        <input
+                          type="text"
+                          value={contactRest}
+                          onChange={(e) => {
+                            // Allow digits only, remove non-digits, and limit to 9 digits (since 09 + 9 = 11)
+                            const digitsOnly = e.target.value.replace(
+                              /\D/g,
+                              ''
+                            );
+                            const limited = digitsOnly.slice(0, 9);
+                            setContactRest(limited);
+                          }}
+                          className="w-full pl-10 sm:pl-14 border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="9XXXXXXXX"
+                        />
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1 sm:mt-2">
+                        Contact will be saved as{' '}
+                        <span className="font-medium">09XXXXXXXXX</span>. Only
+                        numbers allowed. Total digits including prefix will be
+                        11.
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Address Section */}
+                <div className="space-y-3 sm:space-y-5">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                      <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold text-gray-800">
+                      Location
+                    </h4>
+                    <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+                  </div>
+
+                  <label className="block group">
+                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                      <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                      <span>Address</span>
+                    </div>
+                    <textarea
+                      rows={3}
+                      value={newResident.address}
+                      onChange={(e) =>
+                        setNewResident((s) => ({
+                          ...s,
+                          address: e.target.value,
+                        }))
+                      }
+                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none text-sm sm:text-base"
+                      placeholder="Enter complete address..."
+                    />
+                    {addressError ? (
+                      <p className="text-xs sm:text-sm text-red-600 mt-1 sm:mt-2">
+                        {addressError}
+                      </p>
+                    ) : (
+                      <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
+                        Provide full house number, street, barangay/purok, city
+                        or municipality.
+                      </p>
+                    )}
+                  </label>
+                </div>
+
+                {/* Info Note */}
+                <div className="bg-green-50 border-2 border-green-200 rounded-lg sm:rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-white text-xs font-bold">i</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs sm:text-sm text-green-800 font-medium">
+                      <span className="font-bold">Note:</span> Fields marked
+                      with <span className="text-red-500 font-bold">*</span> are
+                      required. Please ensure all information is accurate before
+                      submitting.
                     </p>
                   </div>
                 </div>
+              </div>
+
+              {/* Enhanced Footer */}
+              <div className="flex justify-end gap-2 sm:gap-4 p-4 sm:p-6 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white">
                 <button
                   type="button"
                   onClick={closeAddModal}
-                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all hover:rotate-90 duration-300 ring-1 sm:ring-2 ring-white/30"
-                  title="Close"
+                  disabled={isCreating}
+                  className="px-4 sm:px-8 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl border-2 border-gray-300 font-bold text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
-                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={
+                    isCreating ||
+                    !isAddressValid ||
+                    !areNamesValid ||
+                    !isAgeValid
+                  }
+                  className="px-6 sm:px-10 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm sm:text-base"
+                >
+                  {isCreating ? (
+                    <>
+                      <svg
+                        className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      <span>Creating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <User className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span>Create Resident</span>
+                    </>
+                  )}
                 </button>
               </div>
-            </div>
+            </form>
+          </div>,
+          document.body
+        )}
 
-            {/* Enhanced Form Content */}
-            <div className="p-4 sm:p-8 space-y-4 sm:space-y-6 overflow-y-auto flex-1 bg-gradient-to-br from-gray-50 to-white">
-              {/* Personal Information Section */}
-              <div className="space-y-3 sm:space-y-5">
-                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
-                    <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+      {/* Edit Modal */}
+      {isEditModalOpen &&
+        editingResident &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
+            role="dialog"
+            aria-modal="true"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) closeEditModal();
+            }}
+          >
+            <form
+              onSubmit={handleUpdateResident}
+              className="w-full max-w-3xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[95vh] flex flex-col animate-slideUp"
+            >
+              {/* Enhanced Header */}
+              <div className="relative p-4 sm:p-8 bg-gradient-to-br from-green-500 via-green-600 to-green-700 text-white overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 sm:w-64 sm:h-64 bg-white/10 rounded-full -mr-16 sm:-mr-32 -mt-16 sm:-mt-32"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-48 sm:h-48 bg-white/10 rounded-full -ml-12 sm:-ml-24 -mb-12 sm:-mb-24"></div>
+
+                <div className="relative flex items-center justify-between">
+                  <div className="flex items-center gap-2 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 sm:ring-4 ring-white/30 shadow-lg">
+                      <Edit className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl sm:text-3xl font-bold text-white mb-0 sm:mb-1">
+                        Edit Resident
+                      </h3>
+                      <p className="text-green-100 text-xs sm:text-sm font-medium">
+                        Update resident information
+                      </p>
+                    </div>
                   </div>
-                  <h4 className="text-base sm:text-lg font-bold text-gray-800">
-                    Personal Information
-                  </h4>
-                  <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
-                </div>
-
-                {/* Name fields in a row */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5">
-                  {/* First Name */}
-                  <label className="block group">
-                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                      <span className="text-red-500">*</span>
-                      <span>First Name</span>
-                    </div>
-                    <div className="relative">
-                      <input
-                        required
-                        type="text"
-                        value={newResident.firstName}
-                        onChange={(e) => {
-                          // strip disallowed characters (allow letters, spaces, apostrophes, hyphens)
-                          const filtered = e.target.value.replace(
-                            /[^\p{L}\s'\-]/gu,
-                            ''
-                          );
-                          setNewResident((s) => ({
-                            ...s,
-                            firstName: filtered,
-                          }));
-                          const res = validateName(filtered, true);
-                          setFirstNameError(res.valid ? '' : res.message);
-                        }}
-                        onBlur={() => {
-                          const res = validateName(newResident.firstName, true);
-                          setFirstNameError(res.valid ? '' : res.message);
-                        }}
-                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                        placeholder="Enter first name"
-                      />
-                      {firstNameError ? (
-                        <p className="text-xs sm:text-sm text-red-600 mt-1">
-                          {firstNameError}
-                        </p>
-                      ) : null}
-                    </div>
-                  </label>
-                  {/* Last Name */}
-                  <label className="block group">
-                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                      <span className="text-red-500">*</span>
-                      <span>Last Name</span>
-                    </div>
-                    <div className="relative">
-                      <input
-                        required
-                        type="text"
-                        value={newResident.lastName}
-                        onChange={(e) => {
-                          const filtered = e.target.value.replace(
-                            /[^\p{L}\s'\-]/gu,
-                            ''
-                          );
-                          setNewResident((s) => ({ ...s, lastName: filtered }));
-                          const res = validateName(filtered, true);
-                          setLastNameError(res.valid ? '' : res.message);
-                        }}
-                        onBlur={() => {
-                          const res = validateName(newResident.lastName, true);
-                          setLastNameError(res.valid ? '' : res.message);
-                        }}
-                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                        placeholder="Enter last name"
-                      />
-                      {lastNameError ? (
-                        <p className="text-xs sm:text-sm text-red-600 mt-1">
-                          {lastNameError}
-                        </p>
-                      ) : null}
-                    </div>
-                  </label>
-                  {/* Middle Name (now required) */}
-                  <label className="block group">
-                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                      <span className="text-red-500">*</span>
-                      <span>Middle Name</span>
-                    </div>
-                    <div className="relative">
-                      <input
-                        required
-                        type="text"
-                        value={newResident.middleName}
-                        onChange={(e) => {
-                          const filtered = e.target.value.replace(
-                            /[^\p{L}\s'\-]/gu,
-                            ''
-                          );
-                          setNewResident((s) => ({
-                            ...s,
-                            middleName: filtered,
-                          }));
-                          const res = validateName(filtered, true);
-                          setMiddleNameError(res.valid ? '' : res.message);
-                        }}
-                        onBlur={() => {
-                          const res = validateName(
-                            newResident.middleName,
-                            true
-                          );
-                          setMiddleNameError(res.valid ? '' : res.message);
-                        }}
-                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                        placeholder="If none put None"
-                      />
-                      {middleNameError ? (
-                        <p className="text-xs sm:text-sm text-red-600 mt-1">
-                          {middleNameError}
-                        </p>
-                      ) : null}
-                    </div>
-                  </label>
+                  <button
+                    type="button"
+                    onClick={closeEditModal}
+                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all hover:rotate-90 duration-300 ring-1 sm:ring-2 ring-white/30"
+                    title="Close"
+                  >
+                    <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                  </button>
                 </div>
               </div>
 
-              {/* Additional Details Section */}
-              <div className="space-y-3 sm:space-y-5">
-                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
-                    <Award className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+              {/* Form Content */}
+              <div className="p-4 sm:p-8 space-y-4 sm:space-y-6 overflow-y-auto flex-1 bg-gradient-to-br from-gray-50 to-white">
+                {/* Personal Information Section */}
+                <div className="space-y-3 sm:space-y-5">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                      <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold text-gray-800">
+                      Personal Information
+                    </h4>
+                    <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
                   </div>
-                  <h4 className="text-base sm:text-lg font-bold text-gray-800">
-                    Additional Details
-                  </h4>
-                  <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5">
+                    {/* First Name */}
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span className="text-red-500">*</span>
+                        <span>First Name</span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          required
+                          type="text"
+                          value={editingResident.firstName}
+                          onChange={(e) => {
+                            const filtered = e.target.value.replace(
+                              /[^\p{L}\s'\-]/gu,
+                              ''
+                            );
+                            setEditingResident((s: any) => ({
+                              ...s,
+                              firstName: filtered,
+                            }));
+                          }}
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="Enter first name"
+                        />
+                        {editFirstNameError ? (
+                          <p className="text-xs sm:text-sm text-red-600 mt-1">
+                            {editFirstNameError}
+                          </p>
+                        ) : null}
+                      </div>
+                    </label>
+
+                    {/* Last Name */}
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span className="text-red-500">*</span>
+                        <span>Last Name</span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          required
+                          type="text"
+                          value={editingResident.lastName}
+                          onChange={(e) => {
+                            const filtered = e.target.value.replace(
+                              /[^\p{L}\s'\-]/gu,
+                              ''
+                            );
+                            setEditingResident((s: any) => ({
+                              ...s,
+                              lastName: filtered,
+                            }));
+                          }}
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="Enter last name"
+                        />
+                        {editLastNameError ? (
+                          <p className="text-xs sm:text-sm text-red-600 mt-1">
+                            {editLastNameError}
+                          </p>
+                        ) : null}
+                      </div>
+                    </label>
+
+                    {/* Middle Name */}
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span className="text-red-500">*</span>
+                        <span>Middle Name</span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          required
+                          type="text"
+                          value={editingResident.middleName}
+                          onChange={(e) => {
+                            const filtered = e.target.value.replace(
+                              /[^\p{L}\s'\-]/gu,
+                              ''
+                            );
+                            setEditingResident((s: any) => ({
+                              ...s,
+                              middleName: filtered,
+                            }));
+                          }}
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="If none put None"
+                        />
+                        {editMiddleNameError ? (
+                          <p className="text-xs sm:text-sm text-red-600 mt-1">
+                            {editMiddleNameError}
+                          </p>
+                        ) : null}
+                      </div>
+                    </label>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
+                {/* Additional Details Section */}
+                <div className="space-y-3 sm:space-y-5">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                      <Award className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold text-gray-800">
+                      Additional Details
+                    </h4>
+                    <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                        <span className="text-red-500">*</span>
+                        <span>Age</span>
+                      </div>
+                      <input
+                        required
+                        type="text"
+                        inputMode="numeric"
+                        pattern="\d*"
+                        value={editingResident.age as string}
+                        onChange={(e) => {
+                          const digitsOnly = e.target.value.replace(/\D/g, '');
+                          const limited = digitsOnly.slice(0, 3);
+                          setEditingResident((s: any) => ({
+                            ...s,
+                            age: limited,
+                          }));
+                        }}
+                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                        placeholder="0"
+                      />
+                      {editAgeError ? (
+                        <p className="text-xs sm:text-sm text-red-600 mt-1">
+                          {editAgeError}
+                        </p>
+                      ) : null}
+                    </label>
+
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                        <span>Contact</span>
+                      </div>
+                      <div className="relative">
+                        <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold text-sm sm:text-base">
+                          09
+                        </span>
+                        <input
+                          type="text"
+                          value={editContactRest}
+                          onChange={(e) => {
+                            const digitsOnly = e.target.value.replace(
+                              /\D/g,
+                              ''
+                            );
+                            const limited = digitsOnly.slice(0, 9);
+                            setEditContactRest(limited);
+                          }}
+                          className="w-full pl-10 sm:pl-14 border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="9XXXXXXXX"
+                        />
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Address Section */}
+                <div className="space-y-3 sm:space-y-5">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                      <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold text-gray-800">
+                      Location
+                    </h4>
+                    <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+                  </div>
+
                   <label className="block group">
                     <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                      <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
-                      <span className="text-red-500">*</span>
-                      <span>Age</span>
+                      <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                      <span>Address</span>
                     </div>
-                    <input
-                      required
-                      type="text"
-                      inputMode="numeric"
-                      pattern="\d*"
-                      value={newResident.age as string}
-                      onChange={(e) => {
-                        const digitsOnly = e.target.value.replace(/\D/g, '');
-                        const limited = digitsOnly.slice(0, 3);
-                        setNewResident((s) => ({ ...s, age: limited }));
-                        // validate age (0-120)
-                        const n = limited === '' ? NaN : Number(limited);
-                        if (limited === '') {
-                          setIsAgeValid(false);
-                          setAgeError('Age is required.');
-                        } else if (isNaN(n) || n < 0 || n > 120) {
-                          setIsAgeValid(false);
-                          setAgeError('Enter a valid age between 0 and 120.');
-                        } else {
-                          setIsAgeValid(true);
-                          setAgeError('');
-                        }
-                      }}
-                      onBlur={() => {
-                        const v = String(newResident.age || '').trim();
-                        const n = v === '' ? NaN : Number(v);
-                        if (v === '') {
-                          setIsAgeValid(false);
-                          setAgeError('Age is required.');
-                        } else if (isNaN(n) || n < 0 || n > 120) {
-                          setIsAgeValid(false);
-                          setAgeError('Enter a valid age between 0 and 120.');
-                        } else {
-                          setIsAgeValid(true);
-                          setAgeError('');
-                        }
-                      }}
-                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                      placeholder="0"
+                    <textarea
+                      rows={3}
+                      value={editingResident.address}
+                      onChange={(e) =>
+                        setEditingResident((s: any) => ({
+                          ...s,
+                          address: e.target.value,
+                        }))
+                      }
+                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none text-sm sm:text-base"
+                      placeholder="Enter complete address..."
                     />
-                    {ageError ? (
-                      <p className="text-xs sm:text-sm text-red-600 mt-1">
-                        {ageError}
+                    {editAddressError ? (
+                      <p className="text-xs sm:text-sm text-red-600 mt-1 sm:mt-2">
+                        {editAddressError}
                       </p>
                     ) : null}
                   </label>
-
-                  <label className="block group">
-                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                      <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
-                      <span>Contact</span>
-                    </div>
-
-                    <div className="relative">
-                      <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold text-sm sm:text-base">
-                        09
-                      </span>
-                      <input
-                        type="text"
-                        value={contactRest}
-                        onChange={(e) => {
-                          // Allow digits only, remove non-digits, and limit to 9 digits (since 09 + 9 = 11)
-                          const digitsOnly = e.target.value.replace(/\D/g, '');
-                          const limited = digitsOnly.slice(0, 9);
-                          setContactRest(limited);
-                        }}
-                        className="w-full pl-10 sm:pl-14 border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                        placeholder="9XXXXXXXX"
-                      />
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1 sm:mt-2">
-                      Contact will be saved as{' '}
-                      <span className="font-medium">09XXXXXXXXX</span>. Only
-                      numbers allowed. Total digits including prefix will be 11.
-                    </div>
-                  </label>
                 </div>
               </div>
 
-              {/* Address Section */}
-              <div className="space-y-3 sm:space-y-5">
-                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
-                    <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                  </div>
-                  <h4 className="text-base sm:text-lg font-bold text-gray-800">
-                    Location
-                  </h4>
-                  <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
-                </div>
-
-                <label className="block group">
-                  <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                    <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
-                    <span>Address</span>
-                  </div>
-                  <textarea
-                    rows={3}
-                    value={newResident.address}
-                    onChange={(e) =>
-                      setNewResident((s) => ({ ...s, address: e.target.value }))
-                    }
-                    className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none text-sm sm:text-base"
-                    placeholder="Enter complete address..."
-                  />
-                  {addressError ? (
-                    <p className="text-xs sm:text-sm text-red-600 mt-1 sm:mt-2">
-                      {addressError}
-                    </p>
-                  ) : (
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
-                      Provide full house number, street, barangay/purok, city or
-                      municipality.
-                    </p>
-                  )}
-                </label>
-              </div>
-
-              {/* Info Note */}
-              <div className="bg-green-50 border-2 border-green-200 rounded-lg sm:rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
-                <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-white text-xs font-bold">i</span>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs sm:text-sm text-green-800 font-medium">
-                    <span className="font-bold">Note:</span> Fields marked with{' '}
-                    <span className="text-red-500 font-bold">*</span> are
-                    required. Please ensure all information is accurate before
-                    submitting.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Enhanced Footer */}
-            <div className="flex justify-end gap-2 sm:gap-4 p-4 sm:p-6 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white">
-              <button
-                type="button"
-                onClick={closeAddModal}
-                disabled={isCreating}
-                className="px-4 sm:px-8 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl border-2 border-gray-300 font-bold text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={
-                  isCreating || !isAddressValid || !areNamesValid || !isAgeValid
-                }
-                className="px-6 sm:px-10 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm sm:text-base"
-              >
-                {isCreating ? (
-                  <>
-                    <svg
-                      className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    <span>Creating...</span>
-                  </>
-                ) : (
-                  <>
-                    <User className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>Create Resident</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* Edit Modal */}
-      {isEditModalOpen && editingResident && (
-        <div
-          className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
-          role="dialog"
-          aria-modal="true"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) closeEditModal();
-          }}
-        >
-          <form
-            onSubmit={handleUpdateResident}
-            className="w-full max-w-3xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[95vh] flex flex-col animate-slideUp"
-          >
-            {/* Enhanced Header */}
-            <div className="relative p-4 sm:p-8 bg-gradient-to-br from-green-500 via-green-600 to-green-700 text-white overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 sm:w-64 sm:h-64 bg-white/10 rounded-full -mr-16 sm:-mr-32 -mt-16 sm:-mt-32"></div>
-              <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-48 sm:h-48 bg-white/10 rounded-full -ml-12 sm:-ml-24 -mb-12 sm:-mb-24"></div>
-
-              <div className="relative flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-4">
-                  <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 sm:ring-4 ring-white/30 shadow-lg">
-                    <Edit className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl sm:text-3xl font-bold text-white mb-0 sm:mb-1">
-                      Edit Resident
-                    </h3>
-                    <p className="text-green-100 text-xs sm:text-sm font-medium">
-                      Update resident information
-                    </p>
-                  </div>
-                </div>
+              {/* Footer */}
+              <div className="flex justify-end gap-2 sm:gap-4 p-4 sm:p-6 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white">
                 <button
                   type="button"
                   onClick={closeEditModal}
-                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all hover:rotate-90 duration-300 ring-1 sm:ring-2 ring-white/30"
-                  title="Close"
+                  disabled={isUpdating}
+                  className="px-4 sm:px-8 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl border-2 border-gray-300 font-bold text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
-                  <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={
+                    isUpdating ||
+                    !editIsAddressValid ||
+                    !editAreNamesValid ||
+                    !editIsAgeValid
+                  }
+                  className="px-6 sm:px-10 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm sm:text-base"
+                >
+                  {isUpdating ? (
+                    <>
+                      <svg
+                        className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      <span>Updating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Edit className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span>Update Resident</span>
+                    </>
+                  )}
                 </button>
               </div>
-            </div>
-
-            {/* Form Content */}
-            <div className="p-4 sm:p-8 space-y-4 sm:space-y-6 overflow-y-auto flex-1 bg-gradient-to-br from-gray-50 to-white">
-              {/* Personal Information Section */}
-              <div className="space-y-3 sm:space-y-5">
-                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
-                    <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                  </div>
-                  <h4 className="text-base sm:text-lg font-bold text-gray-800">
-                    Personal Information
-                  </h4>
-                  <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5">
-                  {/* First Name */}
-                  <label className="block group">
-                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                      <span className="text-red-500">*</span>
-                      <span>First Name</span>
-                    </div>
-                    <div className="relative">
-                      <input
-                        required
-                        type="text"
-                        value={editingResident.firstName}
-                        onChange={(e) => {
-                          const filtered = e.target.value.replace(
-                            /[^\p{L}\s'\-]/gu,
-                            ''
-                          );
-                          setEditingResident((s: any) => ({
-                            ...s,
-                            firstName: filtered,
-                          }));
-                        }}
-                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                        placeholder="Enter first name"
-                      />
-                      {editFirstNameError ? (
-                        <p className="text-xs sm:text-sm text-red-600 mt-1">
-                          {editFirstNameError}
-                        </p>
-                      ) : null}
-                    </div>
-                  </label>
-
-                  {/* Last Name */}
-                  <label className="block group">
-                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                      <span className="text-red-500">*</span>
-                      <span>Last Name</span>
-                    </div>
-                    <div className="relative">
-                      <input
-                        required
-                        type="text"
-                        value={editingResident.lastName}
-                        onChange={(e) => {
-                          const filtered = e.target.value.replace(
-                            /[^\p{L}\s'\-]/gu,
-                            ''
-                          );
-                          setEditingResident((s: any) => ({
-                            ...s,
-                            lastName: filtered,
-                          }));
-                        }}
-                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                        placeholder="Enter last name"
-                      />
-                      {editLastNameError ? (
-                        <p className="text-xs sm:text-sm text-red-600 mt-1">
-                          {editLastNameError}
-                        </p>
-                      ) : null}
-                    </div>
-                  </label>
-
-                  {/* Middle Name */}
-                  <label className="block group">
-                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                      <span className="text-red-500">*</span>
-                      <span>Middle Name</span>
-                    </div>
-                    <div className="relative">
-                      <input
-                        required
-                        type="text"
-                        value={editingResident.middleName}
-                        onChange={(e) => {
-                          const filtered = e.target.value.replace(
-                            /[^\p{L}\s'\-]/gu,
-                            ''
-                          );
-                          setEditingResident((s: any) => ({
-                            ...s,
-                            middleName: filtered,
-                          }));
-                        }}
-                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                        placeholder="If none put None"
-                      />
-                      {editMiddleNameError ? (
-                        <p className="text-xs sm:text-sm text-red-600 mt-1">
-                          {editMiddleNameError}
-                        </p>
-                      ) : null}
-                    </div>
-                  </label>
-                </div>
-              </div>
-
-              {/* Additional Details Section */}
-              <div className="space-y-3 sm:space-y-5">
-                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
-                    <Award className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                  </div>
-                  <h4 className="text-base sm:text-lg font-bold text-gray-800">
-                    Additional Details
-                  </h4>
-                  <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
-                  <label className="block group">
-                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                      <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
-                      <span className="text-red-500">*</span>
-                      <span>Age</span>
-                    </div>
-                    <input
-                      required
-                      type="text"
-                      inputMode="numeric"
-                      pattern="\d*"
-                      value={editingResident.age as string}
-                      onChange={(e) => {
-                        const digitsOnly = e.target.value.replace(/\D/g, '');
-                        const limited = digitsOnly.slice(0, 3);
-                        setEditingResident((s: any) => ({
-                          ...s,
-                          age: limited,
-                        }));
-                      }}
-                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                      placeholder="0"
-                    />
-                    {editAgeError ? (
-                      <p className="text-xs sm:text-sm text-red-600 mt-1">
-                        {editAgeError}
-                      </p>
-                    ) : null}
-                  </label>
-
-                  <label className="block group">
-                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                      <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
-                      <span>Contact</span>
-                    </div>
-                    <div className="relative">
-                      <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold text-sm sm:text-base">
-                        09
-                      </span>
-                      <input
-                        type="text"
-                        value={editContactRest}
-                        onChange={(e) => {
-                          const digitsOnly = e.target.value.replace(/\D/g, '');
-                          const limited = digitsOnly.slice(0, 9);
-                          setEditContactRest(limited);
-                        }}
-                        className="w-full pl-10 sm:pl-14 border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                        placeholder="9XXXXXXXX"
-                      />
-                    </div>
-                  </label>
-                </div>
-              </div>
-
-              {/* Address Section */}
-              <div className="space-y-3 sm:space-y-5">
-                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
-                    <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                  </div>
-                  <h4 className="text-base sm:text-lg font-bold text-gray-800">
-                    Location
-                  </h4>
-                  <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
-                </div>
-
-                <label className="block group">
-                  <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                    <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
-                    <span>Address</span>
-                  </div>
-                  <textarea
-                    rows={3}
-                    value={editingResident.address}
-                    onChange={(e) =>
-                      setEditingResident((s: any) => ({
-                        ...s,
-                        address: e.target.value,
-                      }))
-                    }
-                    className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none text-sm sm:text-base"
-                    placeholder="Enter complete address..."
-                  />
-                  {editAddressError ? (
-                    <p className="text-xs sm:text-sm text-red-600 mt-1 sm:mt-2">
-                      {editAddressError}
-                    </p>
-                  ) : null}
-                </label>
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div className="flex justify-end gap-2 sm:gap-4 p-4 sm:p-6 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white">
-              <button
-                type="button"
-                onClick={closeEditModal}
-                disabled={isUpdating}
-                className="px-4 sm:px-8 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl border-2 border-gray-300 font-bold text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={
-                  isUpdating ||
-                  !editIsAddressValid ||
-                  !editAreNamesValid ||
-                  !editIsAgeValid
-                }
-                className="px-6 sm:px-10 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm sm:text-base"
-              >
-                {isUpdating ? (
-                  <>
-                    <svg
-                      className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    <span>Updating...</span>
-                  </>
-                ) : (
-                  <>
-                    <Edit className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>Update Resident</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+            </form>
+          </div>,
+          document.body
+        )}
 
       {/* Delete Confirmation Modal */}
-      {isDeleteModalOpen && deletingResident && (
-        <div
-          className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
-          role="dialog"
-          aria-modal="true"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) closeDeleteModal();
-          }}
-        >
-          <div className="w-full max-w-md bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden animate-slideUp">
-            {/* Header */}
-            <div className="relative p-4 sm:p-6 bg-gradient-to-br from-red-500 via-red-600 to-red-700 text-white overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
+      {isDeleteModalOpen &&
+        deletingResident &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
+            role="dialog"
+            aria-modal="true"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) closeDeleteModal();
+            }}
+          >
+            <div className="w-full max-w-md bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden animate-slideUp">
+              {/* Header */}
+              <div className="relative p-4 sm:p-6 bg-gradient-to-br from-red-500 via-red-600 to-red-700 text-white overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12"></div>
 
-              <div className="relative flex items-center justify-between">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center ring-2 ring-white/30 shadow-lg">
-                    <Trash2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                <div className="relative flex items-center justify-between">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center ring-2 ring-white/30 shadow-lg">
+                      <Trash2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg sm:text-2xl font-bold text-white">
+                        Delete Resident
+                      </h3>
+                      <p className="text-red-100 text-xs sm:text-sm font-medium">
+                        This action cannot be undone
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg sm:text-2xl font-bold text-white">
-                      Delete Resident
-                    </h3>
-                    <p className="text-red-100 text-xs sm:text-sm font-medium">
-                      This action cannot be undone
+                  <button
+                    type="button"
+                    onClick={closeDeleteModal}
+                    className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all hover:rotate-90 duration-300 ring-1 ring-white/30"
+                    title="Close"
+                  >
+                    <X className="w-4 h-4 text-white" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="p-4 sm:p-6 bg-gradient-to-br from-gray-50 to-white">
+                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
+                  <p className="text-sm sm:text-base text-gray-800 font-medium">
+                    Are you sure you want to delete the record for{' '}
+                    <span className="font-bold text-red-700">
+                      {deletingResident.firstName} {deletingResident.lastName}
+                    </span>
+                    ?
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-600 mt-2">
+                    Record ID:{' '}
+                    <span className="font-semibold">
+                      {deletingResident._id}
+                    </span>
+                  </p>
+                </div>
+
+                <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-white text-xs font-bold">!</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs sm:text-sm text-yellow-800 font-medium">
+                      <span className="font-bold">Warning:</span> This will
+                      permanently delete all data associated with this resident.
+                      This action cannot be reversed.
                     </p>
                   </div>
                 </div>
+              </div>
+
+              {/* Footer */}
+              <div className="flex justify-end gap-2 sm:gap-3 p-4 sm:p-6 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white">
                 <button
                   type="button"
                   onClick={closeDeleteModal}
-                  className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all hover:rotate-90 duration-300 ring-1 ring-white/30"
-                  title="Close"
+                  disabled={isDeleting}
+                  className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg border-2 border-gray-300 font-bold text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
-                  <X className="w-4 h-4 text-white" />
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteResident}
+                  disabled={isDeleting}
+                  className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm sm:text-base"
+                >
+                  {isDeleting ? (
+                    <>
+                      <svg
+                        className="animate-spin h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      <span>Deleting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-4 h-4" />
+                      <span>Delete</span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>
-
-            {/* Content */}
-            <div className="p-4 sm:p-6 bg-gradient-to-br from-gray-50 to-white">
-              <div className="bg-red-50 border-2 border-red-200 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
-                <p className="text-sm sm:text-base text-gray-800 font-medium">
-                  Are you sure you want to delete the record for{' '}
-                  <span className="font-bold text-red-700">
-                    {deletingResident.firstName} {deletingResident.lastName}
-                  </span>
-                  ?
-                </p>
-                <p className="text-xs sm:text-sm text-gray-600 mt-2">
-                  Record ID:{' '}
-                  <span className="font-semibold">{deletingResident._id}</span>
-                </p>
-              </div>
-
-              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
-                <div className="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-white text-xs font-bold">!</span>
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs sm:text-sm text-yellow-800 font-medium">
-                    <span className="font-bold">Warning:</span> This will
-                    permanently delete all data associated with this resident.
-                    This action cannot be reversed.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div className="flex justify-end gap-2 sm:gap-3 p-4 sm:p-6 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white">
-              <button
-                type="button"
-                onClick={closeDeleteModal}
-                disabled={isDeleting}
-                className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg border-2 border-gray-300 font-bold text-gray-700 hover:bg-gray-100 hover:border-gray-400 transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleDeleteResident}
-                disabled={isDeleting}
-                className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm sm:text-base"
-              >
-                {isDeleting ? (
-                  <>
-                    <svg
-                      className="animate-spin h-4 w-4 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    <span>Deleting...</span>
-                  </>
-                ) : (
-                  <>
-                    <Trash2 className="w-4 h-4" />
-                    <span>Delete</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

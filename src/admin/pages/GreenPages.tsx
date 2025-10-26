@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useToast } from '@/hooks/useToast';
+import { createPortal } from 'react-dom';
 import { sanitizeName, validateName } from '@/utils/validation';
 import {
   Card,
@@ -880,373 +881,254 @@ const GreenPages: React.FC = () => {
         </div>
 
         {/* Enhanced Add Staff Modal */}
-        {isAddStaffModalOpen && (
-          <div
-            className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
-            role="dialog"
-            aria-modal="true"
-            onClick={(e) => {
-              if (e.target === e.currentTarget) closeAddStaffModal();
-            }}
-          >
-            <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden animate-slideUp">
-              {/* Modal Header */}
-              <div className="relative p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 bg-white/10 rounded-full -mr-16 sm:-mr-24 lg:-mr-32 -mt-16 sm:-mt-24 lg:-mt-32"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-36 sm:h-36 lg:w-48 lg:h-48 bg-white/10 rounded-full -ml-12 sm:-ml-18 lg:-ml-24 -mb-12 sm:-mb-18 lg:-mb-24"></div>
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
+        {isAddStaffModalOpen &&
+          createPortal(
+            <div
+              className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
+              role="dialog"
+              aria-modal="true"
+              onClick={(e) => {
+                if (e.target === e.currentTarget) closeAddStaffModal();
+              }}
+            >
+              <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden animate-slideUp">
+                {/* Modal Header */}
+                <div className="relative p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 bg-white/10 rounded-full -mr-16 sm:-mr-24 lg:-mr-32 -mt-16 sm:-mt-24 lg:-mt-32"></div>
+                  <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-36 sm:h-36 lg:w-48 lg:h-48 bg-white/10 rounded-full -ml-12 sm:-ml-18 lg:-ml-24 -mb-12 sm:-mb-18 lg:-mb-24"></div>
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
 
-                <div className="relative flex items-center justify-between">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30">
-                      <Users className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" />
+                  <div className="relative flex items-center justify-between">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30">
+                        <Users className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">
+                          Add New Staff Member
+                        </h3>
+                        <p className="text-green-100 text-xs sm:text-sm font-medium">
+                          Enter staff details below
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">
-                        Add New Staff Member
-                      </h3>
-                      <p className="text-green-100 text-xs sm:text-sm font-medium">
-                        Enter staff details below
-                      </p>
-                    </div>
+                    <button
+                      onClick={closeAddStaffModal}
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center transition-all hover:scale-110 ring-1 ring-white/30"
+                      aria-label="Close modal"
+                    >
+                      <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </button>
                   </div>
-                  <button
-                    onClick={closeAddStaffModal}
-                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center transition-all hover:scale-110 ring-1 ring-white/30"
-                    aria-label="Close modal"
-                  >
-                    <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                  </button>
                 </div>
-              </div>
 
-              {/* Modal Body - Scrollable */}
-              <form
-                onSubmit={handleSubmitStaff}
-                className="overflow-y-auto max-h-[calc(90vh-200px)]"
-              >
-                <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
-                  {/* Personal Information Section */}
-                  <div className="space-y-3 sm:space-y-4">
-                    <div className="flex items-center gap-2 sm:gap-3 pb-2 sm:pb-3 border-b border-green-100 sm:border-b-2">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
-                        <User className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                      </div>
-                      <h4 className="text-lg sm:text-xl font-bold text-gray-900">
-                        Personal Information
-                      </h4>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                      {/* Full Name */}
-                      <div className="space-y-1 sm:space-y-2">
-                        <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
-                          <User className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                          Full Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          value={staffForm.name}
-                          onChange={(e) => {
-                            const filtered = sanitizeName(e.target.value);
-                            handleStaffFormChange('name', filtered);
-                          }}
-                          onBlur={() => {
-                            // show toast once when leaving field if invalid and not empty
-                            if (!staffForm.name) return;
-                            const { valid, message } = validateName(
-                              staffForm.name as string,
-                              true
-                            );
-                            if (!valid)
-                              showError(message || 'Invalid name', {
-                                title: 'Validation',
-                              });
-                          }}
-                          className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
-                          placeholder="Enter full name"
-                          required
-                        />
+                {/* Modal Body - Scrollable */}
+                <form
+                  onSubmit={handleSubmitStaff}
+                  className="overflow-y-auto max-h-[calc(90vh-200px)]"
+                >
+                  <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
+                    {/* Personal Information Section */}
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="flex items-center gap-2 sm:gap-3 pb-2 sm:pb-3 border-b border-green-100 sm:border-b-2">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+                          <User className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                        </div>
+                        <h4 className="text-lg sm:text-xl font-bold text-gray-900">
+                          Personal Information
+                        </h4>
                       </div>
 
-                      {/* Position */}
-                      <div className="space-y-1 sm:space-y-2">
-                        <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
-                          <Briefcase className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                          Position <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          value={staffForm.position}
-                          onChange={(e) =>
-                            handleStaffFormChange('position', e.target.value)
-                          }
-                          className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
-                          placeholder="e.g., Machine Operator"
-                          required
-                        />
-                      </div>
-                    </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                        {/* Full Name */}
+                        <div className="space-y-1 sm:space-y-2">
+                          <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
+                            <User className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                            Full Name <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={staffForm.name}
+                            onChange={(e) => {
+                              const filtered = sanitizeName(e.target.value);
+                              handleStaffFormChange('name', filtered);
+                            }}
+                            onBlur={() => {
+                              // show toast once when leaving field if invalid and not empty
+                              if (!staffForm.name) return;
+                              const { valid, message } = validateName(
+                                staffForm.name as string,
+                                true
+                              );
+                              if (!valid)
+                                showError(message || 'Invalid name', {
+                                  title: 'Validation',
+                                });
+                            }}
+                            className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                            placeholder="Enter full name"
+                            required
+                          />
+                        </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                      {/* Age Range */}
-                      <div className="space-y-1 sm:space-y-2">
+                        {/* Position */}
+                        <div className="space-y-1 sm:space-y-2">
+                          <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
+                            <Briefcase className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                            Position <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={staffForm.position}
+                            onChange={(e) =>
+                              handleStaffFormChange('position', e.target.value)
+                            }
+                            className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                            placeholder="e.g., Machine Operator"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                        {/* Age Range */}
+                        <div className="space-y-1 sm:space-y-2">
+                          <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
+                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                            Age Range
+                          </label>
+                          <select
+                            value={staffForm.age}
+                            onChange={(e) =>
+                              handleStaffFormChange('age', e.target.value)
+                            }
+                            className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium bg-white text-sm sm:text-base"
+                          >
+                            <option value="">Select age range</option>
+                            <option value="18-25 years old">
+                              18-25 years old
+                            </option>
+                            <option value="26-35 years old">
+                              26-35 years old
+                            </option>
+                            <option value="36-45 years old">
+                              36-45 years old
+                            </option>
+                            <option value="46-55 years old">
+                              46-55 years old
+                            </option>
+                            <option value="Above 55 years old">
+                              Above 55 years old
+                            </option>
+                          </select>
+                        </div>
+
+                        {/* Gender */}
+                        <div className="space-y-1 sm:space-y-2">
+                          <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
+                            <User className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                            Gender
+                          </label>
+                          <select
+                            value={staffForm.gender}
+                            onChange={(e) =>
+                              handleStaffFormChange('gender', e.target.value)
+                            }
+                            className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium bg-white text-sm sm:text-base"
+                          >
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3 sm:space-y-4">
                         <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
                           <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                          Age Range
+                          Skills
                         </label>
-                        <select
-                          value={staffForm.age}
-                          onChange={(e) =>
-                            handleStaffFormChange('age', e.target.value)
-                          }
-                          className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium bg-white text-sm sm:text-base"
-                        >
-                          <option value="">Select age range</option>
-                          <option value="18-25 years old">
-                            18-25 years old
-                          </option>
-                          <option value="26-35 years old">
-                            26-35 years old
-                          </option>
-                          <option value="36-45 years old">
-                            36-45 years old
-                          </option>
-                          <option value="46-55 years old">
-                            46-55 years old
-                          </option>
-                          <option value="Above 55 years old">
-                            Above 55 years old
-                          </option>
-                        </select>
-                      </div>
 
-                      {/* Gender */}
-                      <div className="space-y-1 sm:space-y-2">
-                        <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
-                          <User className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                          Gender
-                        </label>
-                        <select
-                          value={staffForm.gender}
-                          onChange={(e) =>
-                            handleStaffFormChange('gender', e.target.value)
-                          }
-                          className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium bg-white text-sm sm:text-base"
-                        >
-                          <option value="">Select gender</option>
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                          <option value="Other">Other</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3 sm:space-y-4">
-                      <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
-                        <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                        Skills
-                      </label>
-
-                      {/* Skills Checkbox Grid */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 max-h-48 sm:max-h-60 overflow-y-auto p-2 border border-gray-200 rounded-lg bg-gray-50">
-                        {skillsData.map((skill) => (
-                          <div
-                            key={skill._id}
-                            className="flex items-center space-x-2 p-1.5 sm:p-2 hover:bg-white rounded-md transition-colors"
-                          >
-                            <input
-                              type="checkbox"
-                              id={`skill-${skill._id}`}
-                              checked={
-                                staffForm.skills?.includes(skill._id) || false
-                              }
-                              onChange={(e) => {
-                                const isChecked = e.target.checked;
-                                const updatedSkills = isChecked
-                                  ? [...(staffForm.skills || []), skill._id]
-                                  : (staffForm.skills || []).filter(
-                                      (id) => id !== skill._id
-                                    );
-
-                                handleStaffFormChange('skills', updatedSkills);
-                              }}
-                              className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2"
-                            />
-                            <label
-                              htmlFor={`skill-${skill._id}`}
-                              className="flex flex-col text-xs sm:text-sm font-medium text-gray-700 cursor-pointer"
+                        {/* Skills Checkbox Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 max-h-48 sm:max-h-60 overflow-y-auto p-2 border border-gray-200 rounded-lg bg-gray-50">
+                          {skillsData.map((skill) => (
+                            <div
+                              key={skill._id}
+                              className="flex items-center space-x-2 p-1.5 sm:p-2 hover:bg-white rounded-md transition-colors"
                             >
-                              <span className="font-semibold">
-                                {skill.name}
-                              </span>
-                              <span className="text-xs text-gray-500">
-                                {skill.type}
-                              </span>
-                            </label>
-                          </div>
-                        ))}
-
-                        {skillsData.length === 0 && (
-                          <div className="col-span-2 text-center py-3 sm:py-4 text-gray-500 text-xs sm:text-sm">
-                            No skills available
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Selected Skills Display */}
-                      {staffForm.skills && staffForm.skills.length > 0 && (
-                        <div className="mt-2 sm:mt-3">
-                          <p className="text-xs font-semibold text-gray-600 mb-1 sm:mb-2">
-                            Selected Skills ({staffForm.skills.length}):
-                          </p>
-                          <div className="flex flex-wrap gap-1 sm:gap-2">
-                            {staffForm.skills.map((skillId) => {
-                              const skill = skillsData.find(
-                                (s) => s._id === skillId
-                              );
-                              return skill ? (
-                                <span
-                                  key={skillId}
-                                  className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full border border-green-200"
-                                >
-                                  {skill.name}
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      const updatedSkills =
-                                        staffForm.skills.filter(
-                                          (id) => id !== skillId
-                                        );
-                                      handleStaffFormChange(
-                                        'skills',
-                                        updatedSkills
+                              <input
+                                type="checkbox"
+                                id={`skill-${skill._id}`}
+                                checked={
+                                  staffForm.skills?.includes(skill._id) || false
+                                }
+                                onChange={(e) => {
+                                  const isChecked = e.target.checked;
+                                  const updatedSkills = isChecked
+                                    ? [...(staffForm.skills || []), skill._id]
+                                    : (staffForm.skills || []).filter(
+                                        (id) => id !== skill._id
                                       );
-                                    }}
-                                    className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-green-200 hover:bg-green-300 text-green-800 flex items-center justify-center text-xs font-bold"
-                                  >
-                                    ×
-                                  </button>
+
+                                  handleStaffFormChange(
+                                    'skills',
+                                    updatedSkills
+                                  );
+                                }}
+                                className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                              />
+                              <label
+                                htmlFor={`skill-${skill._id}`}
+                                className="flex flex-col text-xs sm:text-sm font-medium text-gray-700 cursor-pointer"
+                              >
+                                <span className="font-semibold">
+                                  {skill.name}
                                 </span>
-                              ) : null;
-                            })}
-                          </div>
+                                <span className="text-xs text-gray-500">
+                                  {skill.type}
+                                </span>
+                              </label>
+                            </div>
+                          ))}
+
+                          {skillsData.length === 0 && (
+                            <div className="col-span-2 text-center py-3 sm:py-4 text-gray-500 text-xs sm:text-sm">
+                              No skills available
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
 
-                    <div className="space-y-1 sm:space-y-2">
-                      <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
-                        <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                        Time in Field
-                      </label>
-                      <select
-                        value={staffForm.time_in_field}
-                        onChange={(e) =>
-                          handleStaffFormChange('time_in_field', e.target.value)
-                        }
-                        className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium bg-white text-sm sm:text-base"
-                      >
-                        <option value="">Select Time in Field Range</option>
-                        <option value="1-2 years">0 - 1 year</option>
-                        <option value="1-2 years">1 - 2 years</option>
-                        <option value="2-3 years">2 - 3 years</option>
-                        <option value="3-4 years">3 - 4 years</option>
-                        <option value="Above 5 years">Above 5 years</option>
-                      </select>
-                    </div>
-
-                    <div className="space-y-3 sm:space-y-4">
-                      <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
-                        <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                        Assigned Farms
-                      </label>
-
-                      {/* Farms Checkbox Grid */}
-                      <div className="grid grid-cols-1 gap-2 sm:gap-3 max-h-48 sm:max-h-60 overflow-y-auto p-2 border border-gray-200 rounded-lg bg-gray-50">
-                        {farmsData.map((farm) => (
-                          <div
-                            key={farm._id}
-                            className="flex items-center space-x-2 p-1.5 sm:p-2 hover:bg-white rounded-md transition-colors"
-                          >
-                            <input
-                              type="checkbox"
-                              id={`farm-${farm._id}`}
-                              checked={
-                                staffForm.assigned_farm?.includes(farm._id) ||
-                                false
-                              }
-                              onChange={(e) => {
-                                const isChecked = e.target.checked;
-                                const updatedFarms = isChecked
-                                  ? [
-                                      ...(staffForm.assigned_farm || []),
-                                      farm._id,
-                                    ]
-                                  : (staffForm.assigned_farm || []).filter(
-                                      (id) => id !== farm._id
-                                    );
-
-                                handleStaffFormChange(
-                                  'assigned_farm',
-                                  updatedFarms
-                                );
-                              }}
-                              className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2"
-                            />
-                            <label
-                              htmlFor={`farm-${farm._id}`}
-                              className="flex flex-col text-xs sm:text-sm font-medium text-gray-700 cursor-pointer flex-1"
-                            >
-                              <span className="font-semibold">{farm.name}</span>
-                              <span className="text-xs text-gray-500">
-                                {farm.farmType} • {farm.size}
-                              </span>
-                              <span className="text-xs text-gray-400">
-                                {farm.address}
-                              </span>
-                            </label>
-                          </div>
-                        ))}
-
-                        {farmsData.length === 0 && (
-                          <div className="text-center py-3 sm:py-4 text-gray-500 text-xs sm:text-sm">
-                            No farms available
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Selected Farms Display */}
-                      {staffForm.assigned_farm &&
-                        staffForm.assigned_farm.length > 0 && (
+                        {/* Selected Skills Display */}
+                        {staffForm.skills && staffForm.skills.length > 0 && (
                           <div className="mt-2 sm:mt-3">
                             <p className="text-xs font-semibold text-gray-600 mb-1 sm:mb-2">
-                              Selected Farms ({staffForm.assigned_farm.length}):
+                              Selected Skills ({staffForm.skills.length}):
                             </p>
                             <div className="flex flex-wrap gap-1 sm:gap-2">
-                              {staffForm.assigned_farm.map((farmId) => {
-                                const farm = farmsData.find(
-                                  (f) => f._id === farmId
+                              {staffForm.skills.map((skillId) => {
+                                const skill = skillsData.find(
+                                  (s) => s._id === skillId
                                 );
-                                return farm ? (
+                                return skill ? (
                                   <span
-                                    key={farmId}
-                                    className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full border border-blue-200"
+                                    key={skillId}
+                                    className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full border border-green-200"
                                   >
-                                    {farm.name}
+                                    {skill.name}
                                     <button
                                       type="button"
                                       onClick={() => {
-                                        const updatedFarms =
-                                          staffForm.assigned_farm.filter(
-                                            (id) => id !== farmId
+                                        const updatedSkills =
+                                          staffForm.skills.filter(
+                                            (id) => id !== skillId
                                           );
                                         handleStaffFormChange(
-                                          'assigned_farm',
-                                          updatedFarms
+                                          'skills',
+                                          updatedSkills
                                         );
                                       }}
-                                      className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-blue-200 hover:bg-blue-300 text-blue-800 flex items-center justify-center text-xs font-bold"
+                                      className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-green-200 hover:bg-green-300 text-green-800 flex items-center justify-center text-xs font-bold"
                                     >
                                       ×
                                     </button>
@@ -1256,200 +1138,333 @@ const GreenPages: React.FC = () => {
                             </div>
                           </div>
                         )}
-                    </div>
-                  </div>
-
-                  {/* Contact Information Section */}
-                  <div className="space-y-3 sm:space-y-4">
-                    <div className="flex items-center gap-2 sm:gap-3 pb-2 sm:pb-3 border-b border-green-100 sm:border-b-2">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
-                        <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                       </div>
-                      <h4 className="text-lg sm:text-xl font-bold text-gray-900">
-                        Contact Information
-                      </h4>
-                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                      {/* Email */}
                       <div className="space-y-1 sm:space-y-2">
                         <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
-                          <Mail className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                          Email Address
+                          <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                          Time in Field
                         </label>
-                        <input
-                          type="email"
-                          value={staffForm.email}
+                        <select
+                          value={staffForm.time_in_field}
                           onChange={(e) =>
-                            handleStaffFormChange('email', e.target.value)
+                            handleStaffFormChange(
+                              'time_in_field',
+                              e.target.value
+                            )
                           }
-                          className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-blue-500 focus:ring-2 sm:focus:ring-4 focus:ring-blue-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
-                          placeholder="email@example.com"
-                        />
+                          className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium bg-white text-sm sm:text-base"
+                        >
+                          <option value="">Select Time in Field Range</option>
+                          <option value="1-2 years">0 - 1 year</option>
+                          <option value="1-2 years">1 - 2 years</option>
+                          <option value="2-3 years">2 - 3 years</option>
+                          <option value="3-4 years">3 - 4 years</option>
+                          <option value="Above 5 years">Above 5 years</option>
+                        </select>
                       </div>
 
-                      {/* Contact Number */}
-                      <div className="space-y-1 sm:space-y-2">
+                      <div className="space-y-3 sm:space-y-4">
                         <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
-                          <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                          Contact Number <span className="text-red-500">*</span>
+                          <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                          Assigned Farms
                         </label>
 
-                        <div className="relative">
-                          <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold text-sm sm:text-base">
-                            09
-                          </span>
+                        {/* Farms Checkbox Grid */}
+                        <div className="grid grid-cols-1 gap-2 sm:gap-3 max-h-48 sm:max-h-60 overflow-y-auto p-2 border border-gray-200 rounded-lg bg-gray-50">
+                          {farmsData.map((farm) => (
+                            <div
+                              key={farm._id}
+                              className="flex items-center space-x-2 p-1.5 sm:p-2 hover:bg-white rounded-md transition-colors"
+                            >
+                              <input
+                                type="checkbox"
+                                id={`farm-${farm._id}`}
+                                checked={
+                                  staffForm.assigned_farm?.includes(farm._id) ||
+                                  false
+                                }
+                                onChange={(e) => {
+                                  const isChecked = e.target.checked;
+                                  const updatedFarms = isChecked
+                                    ? [
+                                        ...(staffForm.assigned_farm || []),
+                                        farm._id,
+                                      ]
+                                    : (staffForm.assigned_farm || []).filter(
+                                        (id) => id !== farm._id
+                                      );
+
+                                  handleStaffFormChange(
+                                    'assigned_farm',
+                                    updatedFarms
+                                  );
+                                }}
+                                className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                              />
+                              <label
+                                htmlFor={`farm-${farm._id}`}
+                                className="flex flex-col text-xs sm:text-sm font-medium text-gray-700 cursor-pointer flex-1"
+                              >
+                                <span className="font-semibold">
+                                  {farm.name}
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  {farm.farmType} • {farm.size}
+                                </span>
+                                <span className="text-xs text-gray-400">
+                                  {farm.address}
+                                </span>
+                              </label>
+                            </div>
+                          ))}
+
+                          {farmsData.length === 0 && (
+                            <div className="text-center py-3 sm:py-4 text-gray-500 text-xs sm:text-sm">
+                              No farms available
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Selected Farms Display */}
+                        {staffForm.assigned_farm &&
+                          staffForm.assigned_farm.length > 0 && (
+                            <div className="mt-2 sm:mt-3">
+                              <p className="text-xs font-semibold text-gray-600 mb-1 sm:mb-2">
+                                Selected Farms ({staffForm.assigned_farm.length}
+                                ):
+                              </p>
+                              <div className="flex flex-wrap gap-1 sm:gap-2">
+                                {staffForm.assigned_farm.map((farmId) => {
+                                  const farm = farmsData.find(
+                                    (f) => f._id === farmId
+                                  );
+                                  return farm ? (
+                                    <span
+                                      key={farmId}
+                                      className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full border border-blue-200"
+                                    >
+                                      {farm.name}
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          const updatedFarms =
+                                            staffForm.assigned_farm.filter(
+                                              (id) => id !== farmId
+                                            );
+                                          handleStaffFormChange(
+                                            'assigned_farm',
+                                            updatedFarms
+                                          );
+                                        }}
+                                        className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-blue-200 hover:bg-blue-300 text-blue-800 flex items-center justify-center text-xs font-bold"
+                                      >
+                                        ×
+                                      </button>
+                                    </span>
+                                  ) : null;
+                                })}
+                              </div>
+                            </div>
+                          )}
+                      </div>
+                    </div>
+
+                    {/* Contact Information Section */}
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="flex items-center gap-2 sm:gap-3 pb-2 sm:pb-3 border-b border-green-100 sm:border-b-2">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+                          <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                        </div>
+                        <h4 className="text-lg sm:text-xl font-bold text-gray-900">
+                          Contact Information
+                        </h4>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                        {/* Email */}
+                        <div className="space-y-1 sm:space-y-2">
+                          <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
+                            <Mail className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                            Email Address
+                          </label>
                           <input
-                            type="text"
-                            value={contactRest}
-                            onChange={(e) => {
-                              const digitsOnly = e.target.value.replace(
-                                /\D/g,
-                                ''
-                              );
-                              const limited = digitsOnly.slice(0, 9); // 09 + 9 digits = 11
-                              setContactRest(limited);
-                              // keep staffForm.contact_number in sync for any other uses
-                              handleStaffFormChange(
-                                'contact_number',
-                                limited ? `09${limited}` : ''
-                              );
-                            }}
-                            className="w-full pl-10 sm:pl-14 px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
-                            placeholder="9XXXXXXXX"
+                            type="email"
+                            value={staffForm.email}
+                            onChange={(e) =>
+                              handleStaffFormChange('email', e.target.value)
+                            }
+                            className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-blue-500 focus:ring-2 sm:focus:ring-4 focus:ring-blue-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                            placeholder="email@example.com"
                           />
                         </div>
-                        <div className="text-xs text-gray-500">
-                          Contact will be saved as{' '}
-                          <span className="font-medium">09XXXXXXXXX</span>. Only
-                          numbers allowed.
+
+                        {/* Contact Number */}
+                        <div className="space-y-1 sm:space-y-2">
+                          <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700">
+                            <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                            Contact Number{' '}
+                            <span className="text-red-500">*</span>
+                          </label>
+
+                          <div className="relative">
+                            <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold text-sm sm:text-base">
+                              09
+                            </span>
+                            <input
+                              type="text"
+                              value={contactRest}
+                              onChange={(e) => {
+                                const digitsOnly = e.target.value.replace(
+                                  /\D/g,
+                                  ''
+                                );
+                                const limited = digitsOnly.slice(0, 9); // 09 + 9 digits = 11
+                                setContactRest(limited);
+                                // keep staffForm.contact_number in sync for any other uses
+                                handleStaffFormChange(
+                                  'contact_number',
+                                  limited ? `09${limited}` : ''
+                                );
+                              }}
+                              className="w-full pl-10 sm:pl-14 px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                              placeholder="9XXXXXXXX"
+                            />
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            Contact will be saved as{' '}
+                            <span className="font-medium">09XXXXXXXXX</span>.
+                            Only numbers allowed.
+                          </div>
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Info Note */}
+                    <div className="bg-green-50 border border-green-200 sm:border-2 rounded-lg sm:rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
+                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-white text-xs font-bold">i</span>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs sm:text-sm text-green-800 font-medium">
+                          <span className="font-bold">Note:</span> Fields marked
+                          with <span className="text-red-500 font-bold">*</span>{' '}
+                          are required. Please ensure all information is
+                          accurate before submitting.
+                        </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Info Note */}
-                  <div className="bg-green-50 border border-green-200 sm:border-2 rounded-lg sm:rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-white text-xs font-bold">i</span>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs sm:text-sm text-green-800 font-medium">
-                        <span className="font-bold">Note:</span> Fields marked
-                        with <span className="text-red-500 font-bold">*</span>{' '}
-                        are required. Please ensure all information is accurate
-                        before submitting.
-                      </p>
-                    </div>
+                  {/* Modal Footer */}
+                  <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-5 bg-gradient-to-r from-gray-50 to-white border-t border-gray-100 sm:border-t-2 flex gap-2 sm:gap-3 justify-end">
+                    <button
+                      type="button"
+                      onClick={closeAddStaffModal}
+                      disabled={isSubmitting}
+                      className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold text-gray-700 bg-white border border-gray-300 sm:border-2 hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="px-6 sm:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 sm:gap-2 text-sm sm:text-base"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 sm:border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                          <span>Adding...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span>Add Staff</span>
+                        </>
+                      )}
+                    </button>
                   </div>
-                </div>
-
-                {/* Modal Footer */}
-                <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-5 bg-gradient-to-r from-gray-50 to-white border-t border-gray-100 sm:border-t-2 flex gap-2 sm:gap-3 justify-end">
-                  <button
-                    type="button"
-                    onClick={closeAddStaffModal}
-                    disabled={isSubmitting}
-                    className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold text-gray-700 bg-white border border-gray-300 sm:border-2 hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="px-6 sm:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 sm:gap-2 text-sm sm:text-base"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 sm:border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        <span>Adding...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Users className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span>Add Staff</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+                </form>
+              </div>
+            </div>,
+            document.body
+          )}
 
         {/* Skill -> Staff Modal */}
-        {skillModalOpen && (
-          <div
-            className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
-            onClick={(e) => {
-              if (e.target === e.currentTarget) setSkillModalOpen(false);
-            }}
-          >
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-auto p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <h3 className="text-lg sm:text-xl font-bold">
-                  Staff with this skill
-                </h3>
-                <button
-                  onClick={() => setSkillModalOpen(false)}
-                  className="text-gray-600 text-sm sm:text-base"
-                >
-                  Close
-                </button>
-              </div>
+        {skillModalOpen &&
+          createPortal(
+            <div
+              className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setSkillModalOpen(false);
+              }}
+            >
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-auto p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <h3 className="text-lg sm:text-xl font-bold">
+                    Staff with this skill
+                  </h3>
+                  <button
+                    onClick={() => setSkillModalOpen(false)}
+                    className="text-gray-600 text-sm sm:text-base"
+                  >
+                    Close
+                  </button>
+                </div>
 
-              {skillLoading && <p className="text-sm">Loading...</p>}
-              {!skillLoading && (!skillStaff || skillStaff.length === 0) && (
-                <p className="text-xs sm:text-sm text-gray-600">
-                  No staff found for this skill.
-                </p>
-              )}
+                {skillLoading && <p className="text-sm">Loading...</p>}
+                {!skillLoading && (!skillStaff || skillStaff.length === 0) && (
+                  <p className="text-xs sm:text-sm text-gray-600">
+                    No staff found for this skill.
+                  </p>
+                )}
 
-              {!skillLoading && skillStaff && skillStaff.length > 0 && (
-                <div className="grid grid-cols-1 gap-2 sm:gap-3">
-                  {skillStaff.map((s) => (
-                    <div
-                      key={s._id ?? s.name}
-                      className="p-2 sm:p-3 border rounded-lg"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="font-bold text-base sm:text-lg">
-                            {s.name}
-                          </p>
-                          <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                            <span className="font-semibold">Skills:</span>{' '}
-                            {(Array.isArray(s.skills)
-                              ? s.skills.map((sk) => sk.name).filter(Boolean)
-                              : []
-                            ).join(', ') || '—'}
-                          </p>
-                          <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                            <span className="font-semibold">Farms:</span>{' '}
-                            {(Array.isArray(s.assigned_farm)
-                              ? s.assigned_farm
-                                  .map((f) => f.name)
-                                  .filter(Boolean)
-                              : []
-                            ).join(', ') || '—'}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs sm:text-sm font-semibold">
-                            Contact
-                          </p>
-                          <p className="text-xs sm:text-sm text-gray-700">
-                            {formatContact(s.contact_number) || 'No contact'}
-                          </p>
+                {!skillLoading && skillStaff && skillStaff.length > 0 && (
+                  <div className="grid grid-cols-1 gap-2 sm:gap-3">
+                    {skillStaff.map((s) => (
+                      <div
+                        key={s._id ?? s.name}
+                        className="p-2 sm:p-3 border rounded-lg"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="font-bold text-base sm:text-lg">
+                              {s.name}
+                            </p>
+                            <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                              <span className="font-semibold">Skills:</span>{' '}
+                              {(Array.isArray(s.skills)
+                                ? s.skills.map((sk) => sk.name).filter(Boolean)
+                                : []
+                              ).join(', ') || '—'}
+                            </p>
+                            <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                              <span className="font-semibold">Farms:</span>{' '}
+                              {(Array.isArray(s.assigned_farm)
+                                ? s.assigned_farm
+                                    .map((f) => f.name)
+                                    .filter(Boolean)
+                                : []
+                              ).join(', ') || '—'}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-xs sm:text-sm font-semibold">
+                              Contact
+                            </p>
+                            <p className="text-xs sm:text-sm text-gray-700">
+                              {formatContact(s.contact_number) || 'No contact'}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>,
+            document.body
+          )}
       </div>
     </>
   );

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useToast } from '@/hooks/useToast';
+import { createPortal } from 'react-dom';
 import {
   BookOpen,
   FileText,
@@ -63,6 +65,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
   onClose,
   onSave,
 }) => {
+  const toast = useToast();
   const [formData, setFormData] = useState<Guideline>({
     id: guideline?.id || '',
     title: guideline?.title || '',
@@ -244,7 +247,9 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
     }
 
     if (errors.length > 0) {
-      alert('Please fix the following errors:\n\n• ' + errors.join('\n• '));
+      toast.error(
+        'Please fix the following errors:\n\n• ' + errors.join('\n• ')
+      );
       return;
     }
 
@@ -282,13 +287,13 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : 'Failed to save guideline';
-      alert(msg);
+      toast.error(msg);
     }
   };
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 sm:p-5"
       onClick={(e) => {
@@ -651,7 +656,8 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
