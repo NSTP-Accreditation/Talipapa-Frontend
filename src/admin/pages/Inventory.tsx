@@ -1079,10 +1079,10 @@ const Inventory: React.FC = () => {
               <Package className="w-6 h-6 sm:w-8 sm:h-8 text-green-700" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
+              <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
                 Inventory Management
               </h1>
-              <p className="text-xs sm:text-sm text-gray-500 mt-0.5 sm:mt-1">
+              <p className="text-[11px] sm:text-sm text-gray-500 mt-0.5 sm:mt-1">
                 Manage products and materials for trading operations
               </p>
             </div>
@@ -1096,7 +1096,7 @@ const Inventory: React.FC = () => {
             placeholder="Search inventory..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 sm:pl-12 pr-9 sm:pr-10 py-2.5 sm:py-3 w-full border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 text-sm sm:text-base bg-white"
+            className="pl-10 sm:pl-12 pr-9 sm:pr-10 py-2.5 sm:py-3 w-full border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 text-[13px] sm:text-base bg-white"
           />
           {search && (
             <button
@@ -1119,10 +1119,10 @@ const Inventory: React.FC = () => {
                   <Package className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-green-700" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                  <p className="text-[10px] sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
                     Products
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
+                  <p className="text-xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
                     {products.length}
                   </p>
                 </div>
@@ -1141,10 +1141,10 @@ const Inventory: React.FC = () => {
                   <Box className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-emerald-700" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                  <p className="text-[10px] sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
                     Materials
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
+                  <p className="text-xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
                     {materials.length}
                   </p>
                 </div>
@@ -1163,10 +1163,10 @@ const Inventory: React.FC = () => {
                   <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-yellow-700" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                  <p className="text-[10px] sm:text-sm font-semibold text-gray-500 uppercase tracking-wide inline">
                     Low Stock
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
+                  <p className="text-xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
                     {lowStockCount}
                   </p>
                 </div>
@@ -1185,10 +1185,10 @@ const Inventory: React.FC = () => {
                   <Box className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-red-700" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                  <p className="text-[10px] sm:text-sm font-semibold text-gray-500 uppercase tracking-wide inline-block">
                     Out of Stock
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
+                  <p className="text-xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
                     {outOfStockCount}
                   </p>
                 </div>
