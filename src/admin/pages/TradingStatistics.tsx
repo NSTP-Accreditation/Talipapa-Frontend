@@ -44,7 +44,8 @@ export default function TradingStatisticsPage() {
     '/logs?category=RECORD%20MANAGEMENT&action=UPDATE%20RECORD&limit=5'
   );
 
-  const { data: products, loading: loadingProducts } = useFetchData<Product[]>("/products");
+  const { data: products, loading: loadingProducts } =
+    useFetchData<Product[]>('/products');
 
   const recordsToday = useMemo(() => {
     return recordsData?.filter((rec) =>
@@ -445,7 +446,7 @@ export default function TradingStatisticsPage() {
                       </thead>
                       <tbody>
                         {/* Example row (replace with dynamic data later) */}
-                        {products.map(product => (
+                        {products.map((product) => (
                           <tr className="border-b border-gray-200 hover:bg-[#1b4c2e]/5 transition-colors duration-200">
                             <td className="p-2 sm:p-4 text-gray-800 font-semibold text-xs sm:text-sm">
                               {product.name}
