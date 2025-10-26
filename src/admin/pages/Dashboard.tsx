@@ -19,6 +19,7 @@ import {
 import { useLoadingState } from '../../hooks/useLoadingState';
 import Login from '../components/Login'; // Import your login form
 import { DashboardSkeleton } from '../../components/LoadingSkeletons';
+import ResponsiveSkeleton from '../../components/ResponsiveSkeleton';
 import useFetchData from '../hooks/useFetchData';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -166,7 +167,7 @@ const Dashboard: React.FC = () => {
     };
   }, [recordsData, visitLogs, logsData, achievements]);
 
-  if (isLoading) return <DashboardSkeleton />;
+  if (isLoading) return <ResponsiveSkeleton page="dashboard" />;
 
   return (
     <div className="p-3 sm:p-4 md:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">

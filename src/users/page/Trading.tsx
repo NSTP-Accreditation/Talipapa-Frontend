@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { TradingPageSkeleton } from '@/components/LoadingSkeletons';
+import ResponsiveSkeleton from '@/components/ResponsiveSkeleton';
 import useFetchData from '@/admin/hooks/useFetchData';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 
@@ -299,7 +300,7 @@ export default function Trading() {
   };
 
   if (isLoading) {
-    return <TradingPageSkeleton />;
+    return <ResponsiveSkeleton page="trading" />;
   }
 
   const selectedWasteType = materials.find((type) => type._id === selectedType);

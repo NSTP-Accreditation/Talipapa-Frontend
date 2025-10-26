@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Save, SquarePen, Plus, Trash2, AlertCircle } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
+import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
 import { sanitizeName, validateName } from '@/utils/validation';
@@ -355,7 +356,7 @@ export default function OfficialsPanel() {
     if (Array.isArray(data)) setOfficials(data);
   }, [data]);
 
-  if (loading) return <FormTablePageSkeleton />;
+  if (loading) return <ResponsiveSkeleton page="formtable" />;
 
   if (error)
     return (

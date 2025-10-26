@@ -5,8 +5,7 @@ import { guidesData } from './guideData';
 import useFetchData from '@/admin/hooks/useFetchData';
 import { Building2 } from 'lucide-react';
 import NotFound from '@/components/NotFound';
-import { PageLoadingSkeleton } from '@/components/LoadingSkeletons';
-import { useLoadingState } from '@/hooks/useLoadingState';
+import { ResponsiveSkeleton } from '@/components/ResponsiveSkeleton';
 
 // Define types for your guide data
 interface GuideStep {
@@ -63,8 +62,11 @@ const UnifiedGuide: React.FC = () => {
 
   const uniqueRequirements = getUniqueRequiredDocuments();
 
-  if (error) {
-    return <NotFound />;
+  if (error) return <NotFound />;
+
+  // Show responsive skeleton while loading or if guide is not yet available
+  if (loading || !guide) {
+    return <ResponsiveSkeleton page="guidelines" />;
   }
 
   return (
@@ -75,8 +77,8 @@ const UnifiedGuide: React.FC = () => {
       estimatedTime={guide?.totalEstimatedTime}
       difficulty={guide?.difficulty as 'Easy' | 'Medium' | 'Hard'}
       steps={guide?.steps}
-      requirements={uniqueRequirements} // Use the unique requirements here
-      tips={guide?.steps?.flatMap((step) => step.tips || [])} // Also fix tips to get all tips
+      requirements={uniqueRequirements}
+      tips={guide?.steps?.flatMap((step) => step.tips || [])}
     />
   );
 };

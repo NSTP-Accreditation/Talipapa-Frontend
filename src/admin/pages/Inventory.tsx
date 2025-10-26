@@ -18,6 +18,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { PageLoadingSkeleton } from '@/components/LoadingSkeletons';
+import ResponsiveSkeleton from '@/components/ResponsiveSkeleton';
 import useFetchData from '../hooks/useFetchData';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 
@@ -1065,7 +1066,7 @@ const Inventory: React.FC = () => {
   const outOfStockCount = products.filter((p) => (p.stocks || 0) === 0).length;
 
   if (isLoading) {
-    return <PageLoadingSkeleton />;
+    return <ResponsiveSkeleton page="inventory" />;
   }
 
   return (

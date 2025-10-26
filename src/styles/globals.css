@@ -147,7 +147,7 @@ html {
 }
 
 /* Modal animations */
-@keyframes fadeIn {
+@keyframes fade-in {
   from {
     opacity: 0;
   }
@@ -157,7 +157,7 @@ html {
   }
 }
 
-@keyframes slideUp {
+@keyframes slide-up {
   from {
     opacity: 0;
     transform: translateY(20px) scale(0.95);
@@ -169,7 +169,7 @@ html {
   }
 }
 
-@keyframes slideDown {
+@keyframes slide-down {
   from {
     opacity: 0;
     transform: translateY(-10px);
@@ -182,27 +182,28 @@ html {
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.2s ease-out;
+  animation: fade-in 0.2s ease-out;
 }
 
 .animate-slideUp {
-  animation: slideUp 0.3s ease-out;
+  animation: slide-up 0.3s ease-out;
 }
 
 .animate-slideDown {
-  animation: slideDown 0.2s ease-out;
+  animation: slide-down 0.2s ease-out;
 }
 
 /* Hide number input spinner for inputs with .no-spinner */
 .no-spinner::-webkit-outer-spin-button,
 .no-spinner::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 
 .no-spinner {
-  -moz-appearance: textfield;
+  appearance: textfield;
 }
+
 /* Modern Gradient Backgrounds - Professional & Elegant (Lighter Version) */
 .bg-gradient-modern-light {
   background: linear-gradient(
@@ -214,7 +215,7 @@ html {
     #fdfffd 100%
   );
   background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+  animation: gradient-shift 15s ease infinite;
 }
 
 .bg-gradient-modern-green {
@@ -228,13 +229,13 @@ html {
     #f8fcf9 100%
   );
   background-size: 400% 400%;
-  animation: gradientShift 20s ease infinite;
+  animation: gradient-shift 20s ease infinite;
 }
 
 .bg-gradient-professional {
   background: linear-gradient(
     to bottom right,
-    #ffffff 0%,
+    #fff 0%,
     #fdfffd 15%,
     #f8fcf9 30%,
     #f4faf5 50%,
@@ -255,13 +256,15 @@ html {
   );
 }
 
-@keyframes gradientShift {
+@keyframes gradient-shift {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -275,24 +278,24 @@ html {
   background:
     radial-gradient(
       circle at 20% 30%,
-      rgba(228, 243, 229, 0.08) 0%,
+      rgb(228 243 229 / 8%) 0%,
       transparent 50%
     ),
     radial-gradient(
       circle at 80% 70%,
-      rgba(210, 235, 211, 0.06) 0%,
+      rgb(210 235 211 / 6%) 0%,
       transparent 50%
     ),
     radial-gradient(
       circle at 50% 50%,
-      rgba(244, 250, 245, 0.05) 0%,
+      rgb(244 250 245 / 5%) 0%,
       transparent 70%
     );
   pointer-events: none;
   z-index: 0;
 }
 
-.gradient-mesh > *:not(.fixed):not(.absolute):not(.sticky) {
+.gradient-mesh > *:not(.fixed, .absolute, .sticky) {
   /* Only make direct children stacking context if they are not already positioned.
      This avoids overriding elements that rely on fixed/absolute positioning
      (for example modals or overlays) which were previously being forced to

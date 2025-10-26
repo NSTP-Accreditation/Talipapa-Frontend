@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { useToast } from '@/hooks/useToast';
-import { AchievementsPageSkeleton } from '../../components/LoadingSkeletons';
+import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import useFetchData from '../hooks/useFetchData';
@@ -255,9 +255,9 @@ export default function AchievementsAdmin() {
     </div>
   );
 
-  // Show loading skeleton while loading
+  // Show loading skeleton while loading (responsive)
   if (achievementsLoading) {
-    return <AchievementsPageSkeleton />;
+    return <ResponsiveSkeleton page="achievements" />;
   }
 
   return (

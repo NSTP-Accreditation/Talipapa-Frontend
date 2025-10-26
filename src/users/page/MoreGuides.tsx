@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Link } from 'react-router-dom';
-import { GuidelinesPageSkeleton } from '../../components/LoadingSkeletons';
+import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useEffect, useState } from 'react';
 import useFetchData from '@/admin/hooks/useFetchData';
 
@@ -48,7 +48,7 @@ export default function MoreGuides() {
 
   // Show loading skeleton while loading
   if (loading) {
-    return <GuidelinesPageSkeleton />;
+    return <ResponsiveSkeleton page="guidelines" />;
   }
 
   return (

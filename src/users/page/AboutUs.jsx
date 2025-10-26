@@ -2,7 +2,7 @@ import AboutBarangay from '../components/AboutBarangay';
 import { User, MapPin, ExternalLink, Home, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { AboutUsPageSkeleton } from '../../components/LoadingSkeletons';
+import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useEffect, useState } from 'react';
 import useFetchData from '@/admin/hooks/useFetchData';
 
@@ -12,7 +12,7 @@ const AboutUs = () => {
 
   // Show loading skeleton while loading
   if (isLoading) {
-    return <AboutUsPageSkeleton />;
+    return <ResponsiveSkeleton page="aboutus" />;
   }
 
   return (

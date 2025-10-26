@@ -5,7 +5,7 @@ import {
   CardContent,
   CardTitle,
 } from '../../components/ui/card';
-import { NewsEventsPageSkeleton } from '../../components/LoadingSkeletons';
+import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import {
   Calendar,
   Clock,
@@ -521,9 +521,9 @@ const News: React.FC = () => {
   );
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  // Show loading skeleton while loading
+  // Show loading skeleton while loading (responsive)
   if (newsLoading) {
-    return <NewsEventsPageSkeleton />;
+    return <ResponsiveSkeleton page="news" />;
   }
 
   const handleSaveEvent = async (event: CalendarEvent) => {

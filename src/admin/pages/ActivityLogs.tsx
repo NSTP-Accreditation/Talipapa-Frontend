@@ -7,7 +7,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
-import { ActivityLogsPageSkeleton } from '../../components/LoadingSkeletons';
+import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 
 // Types for API response
 interface PerformedBy {
@@ -114,7 +114,7 @@ const ActivityLogs: React.FC = () => {
     });
   }, [filteredLogs, sort]);
 
-  if (loading) return <ActivityLogsPageSkeleton />;
+  if (loading) return <ResponsiveSkeleton page="activitylogs" />;
 
   if (error) {
     return (
