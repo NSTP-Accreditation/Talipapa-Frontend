@@ -38,6 +38,7 @@ interface ToastState {
 type ToastAction =
   | { type: 'ADD_TOAST'; payload: Toast }
   | { type: 'REMOVE_TOAST'; payload: string }
+  | { type: 'UPDATE_TOAST'; payload: Toast }
   | { type: 'CLEAR_ALL' };
 
 // Toast Context
@@ -74,6 +75,13 @@ const toastReducer = (state: ToastState, action: ToastAction): ToastState => {
         ...state,
         toasts: [...state.toasts, action.payload],
       };
+    case 'UPDATE_TOAST':
+      return {
+        ...state,
+        toasts: state.toasts.map((t) =>
+          t.id === action.payload.id ? action.payload : t
+        ),
+      };
     case 'REMOVE_TOAST':
       return {
         ...state,
@@ -109,6 +117,27 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
 
   const addToast = useCallback(
     (toast: Omit<Toast, 'id'>) => {
+      // If a toast with same type+title+message exists, update it in-place (resets duration)
+      const duplicate = state.toasts.find(
+        (t) =>
+          t.type === toast.type &&
+          t.message === toast.message &&
+          t.title === toast.title
+      );
+
+      if (duplicate) {
+        const updated: Toast = {
+          ...duplicate,
+          duration: toast.duration ?? 4000,
+          persistent: toast.persistent ?? duplicate.persistent,
+          title: toast.title ?? duplicate.title,
+          message: toast.message ?? duplicate.message,
+        };
+
+        dispatch({ type: 'UPDATE_TOAST', payload: updated });
+        return duplicate.id;
+      }
+
       const id = generateId();
       const newToast: Toast = {
         id,
@@ -118,16 +147,9 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
 
       dispatch({ type: 'ADD_TOAST', payload: newToast });
 
-      // Auto remove if not persistent
-      if (!newToast.persistent && newToast.duration && newToast.duration > 0) {
-        setTimeout(() => {
-          dispatch({ type: 'REMOVE_TOAST', payload: id });
-        }, newToast.duration);
-      }
-
       return id;
     },
-    [generateId]
+    [generateId, state.toasts]
   );
 
   const removeToast = useCallback((id: string) => {
@@ -233,6 +255,9 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onRemove }) => {
 
   useEffect(() => {
     if (!toast.persistent && toast.duration && toast.duration > 0) {
+      // reset progress when toast changes
+      setProgress(100);
+
       const interval = setInterval(() => {
         setProgress((prev) => {
           const newProgress = prev - 100 / (toast.duration! / 50);
@@ -242,7 +267,26 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onRemove }) => {
 
       return () => clearInterval(interval);
     }
-  }, [toast.duration, toast.persistent]);
+  }, [toast]);
+
+  // Reset visibility and progress when the toast object updates (in-place refresh)
+  useEffect(() => {
+    setIsExiting(false);
+    setIsVisible(true);
+    setProgress(100);
+  }, [toast]);
+
+  // Auto-remove timer handled here so updates to the same toast can reset the timer
+  useEffect(() => {
+    if (!toast.persistent && toast.duration && toast.duration > 0) {
+      const timer = setTimeout(() => {
+        onRemove(toast.id);
+      }, toast.duration);
+      return () => clearTimeout(timer);
+    }
+
+    return;
+  }, [toast, onRemove]);
 
   const handleRemove = () => {
     setIsExiting(true);
