@@ -23,7 +23,7 @@ const AdminLayout: React.FC = () => {
     };
   }, [sidebarOpen]);
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100/50 to-green-50">
+    <div className="min-h-screen bg-gradient-professional gradient-mesh relative">
       {/* Fixed Admin MenuBar */}
       <MenuBar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 

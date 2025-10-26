@@ -292,7 +292,11 @@ html {
   z-index: 0;
 }
 
-.gradient-mesh > * {
+.gradient-mesh > *:not(.fixed):not(.absolute):not(.sticky) {
+  /* Only make direct children stacking context if they are not already positioned.
+     This avoids overriding elements that rely on fixed/absolute positioning
+     (for example modals or overlays) which were previously being forced to
+     `position: relative` and therefore lost their viewport-fixed behavior. */
   position: relative;
   z-index: 1;
 }
