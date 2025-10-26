@@ -16,8 +16,7 @@ const NotFound: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4 py-8"
-      style={{ backgroundColor: '#F6F6F6' }}
+      className="min-h-screen flex items-center justify-center px-4 py-8 bg-gradient-professional gradient-mesh relative"
     >
       <div className="max-w-4xl w-full">
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
