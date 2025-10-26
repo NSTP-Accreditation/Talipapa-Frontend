@@ -269,7 +269,7 @@ export default function AchievementsAdmin() {
             <Trophy className="w-10 h-10 text-yellow-500" />
             Achievements
           </h1>
-          <p className="text-lg text-gray-700 mt-3 font-medium">
+          <p className="text-md text-gray-700 mt-3 font-medium">
             Manage community achievements and milestones
             <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
               {items.length}{' '}

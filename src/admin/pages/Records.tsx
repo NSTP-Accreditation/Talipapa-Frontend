@@ -512,7 +512,7 @@ const ResidentRecords: React.FC = () => {
             <UserRoundPen className="w-7 h-7 sm:w-10 sm:h-10 text-green-600" />
             Resident Records
           </h1>
-          <p className="text-sm sm:text-base text-gray-700 font-medium">
+          <p className="text-xs sm:text-base text-gray-700 font-medium">
             List of the resident records created
             <span className="ml-2 sm:ml-3 px-2 sm:px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
               {safeRecords.length}{' '}

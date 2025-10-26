@@ -531,7 +531,7 @@ export default function OfficialsPanel() {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
           <h2 className="text-xl sm:text-2xl font-bold text-[#1b4c2e] flex items-center gap-2">
             <span className="text-lg sm:text-xl">👥</span>
-            <span className="text-base sm:text-2xl">Barangay Officials</span>
+            <span className="text-sm sm:text-2xl">Barangay Officials</span>
             <span className="ml-2 sm:ml-3 px-2 py-1 sm:px-3 sm:py-1 bg-[#1b4c2e]/10 text-[#1b4c2e] rounded-full text-xs sm:text-sm font-semibold">
               {officials.length} Officials
             </span>
