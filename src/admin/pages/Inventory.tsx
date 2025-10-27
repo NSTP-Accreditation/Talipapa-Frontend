@@ -315,18 +315,23 @@ const ProductModal: React.FC<{
                     <option value="">Select</option>
                     {formData.category === 'Agricultural' && (
                       <>
-                        <option value="Crops">Recyclable</option>
+                        <option value="Vegetable">Vegetables</option>
                         <option value="Fertilizers">Fertilizers</option>
-                        <option value="Seeds">Soil</option>
-                        <option value="Livestock">Livestock</option>
+                        <option value="Soil">Soil</option>
+                        <option value="Fruits">Fruits</option>
+                        <option value="Seedlings">Seedlings</option>
+                        <option value="Herbal Plants">Herbal Plants</option>
+                        <option value="Fruits">Fruits</option>
                       </>
                     )}
                     {formData.category === 'Non Agricultural' && (
                       <>
-                        <option value="Household">Household</option>
-                        <option value="Electronics">Electronics</option>
-                        <option value="Clothing">Clothing</option>
-                        <option value="Construction">Construction</option>
+                        <option value="Household">Eco Bags and Eco Rags</option>
+                        <option value="Toys">Toys</option>
+                        <option value="School Supplies">School Supplies</option>
+                        <option value="Medicines">Medicines</option>
+                        <option value="Cashback">Cashback</option>
+                        <option value="Books">Books</option>
                       </>
                     )}
                   </select>
@@ -766,6 +771,10 @@ const Inventory: React.FC = () => {
   }, [materialssData, materialsDataLoading, materialsDataErr]);
 
   const [search, setSearch] = useState('');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('');
+  const [hiddenProductIds, setHiddenProductIds] = useState<Set<string>>(new Set());
+  const [hiddenMaterialIds, setHiddenMaterialIds] = useState<Set<string>>(new Set());
+  const [showHidden, setShowHidden] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
   const [showMaterialModal, setShowMaterialModal] = useState(false);
   const [productMode, setProductMode] = useState<'add' | 'edit'>('add');
@@ -838,22 +847,63 @@ const Inventory: React.FC = () => {
 
   const filteredProducts = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return products;
-    return products.filter(
-      (p) =>
+    return products.filter((p) => {
+      // Filter by selected subcategory when set
+      if (selectedSubcategory && p.subCategory !== selectedSubcategory)
+        return false;
+
+      // Respect hidden state unless showing hidden items
+      if (!showHidden && hiddenProductIds.has(p.id)) return false;
+
+      if (!q) return true;
+
+      return (
         p.name.toLowerCase().includes(q) ||
         p.id.includes(q) ||
         p.category?.toLowerCase().includes(q)
-    );
-  }, [products, search]);
+      );
+    });
+  }, [products, search, selectedSubcategory, showHidden, hiddenProductIds]);
+
+  const availableSubcategories = useMemo(() => {
+    const set = new Set<string>();
+    products.forEach((p) => {
+      if (p.subCategory) set.add(p.subCategory);
+    });
+    return Array.from(set).sort();
+  }, [products]);
+
+  const selectedSubcategoryCount = useMemo(() => {
+    if (!selectedSubcategory) return 0;
+    return products.filter((p) => p.subCategory === selectedSubcategory).length;
+  }, [products, selectedSubcategory]);
 
   const filteredMaterials = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return materials;
-    return materials.filter(
-      (m) => m.name.toLowerCase().includes(q) || m.id.includes(q)
-    );
-  }, [materials, search]);
+    return materials.filter((m) => {
+      if (!showHidden && hiddenMaterialIds.has(m.id)) return false;
+      if (!q) return true;
+      return m.name.toLowerCase().includes(q) || m.id.includes(q);
+    });
+  }, [materials, search, showHidden, hiddenMaterialIds]);
+
+  function toggleHideProduct(id: string) {
+    setHiddenProductIds((prev) => {
+      const s = new Set(prev);
+      if (s.has(id)) s.delete(id);
+      else s.add(id);
+      return s;
+    });
+  }
+
+  function toggleHideMaterial(id: string) {
+    setHiddenMaterialIds((prev) => {
+      const s = new Set(prev);
+      if (s.has(id)) s.delete(id);
+      else s.add(id);
+      return s;
+    });
+  }
 
   async function handleAddProduct() {
     if (!productFormData.name.trim())
@@ -1215,15 +1265,52 @@ const Inventory: React.FC = () => {
               Showing {filteredProducts.length} of {products.length} products
             </p>
           </div>
-          <Button
-            onClick={() => {
-              setProductMode('add');
-              setShowProductModal(true);
-            }}
-            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
-          >
-            <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add Product
-          </Button>
+
+          <div className="flex items-center gap-3">
+            {/* Subcategory filter - placed left of Add Product */}
+            <div className="hidden sm:flex items-center gap-2">
+              <select
+                value={selectedSubcategory}
+                onChange={(e) => setSelectedSubcategory(e.target.value)}
+                className="h-9 text-sm border-2 border-gray-200 focus:border-green-500 rounded-xl px-3 bg-white"
+              >
+                <option value="">All subcategories</option>
+                {availableSubcategories.map((sc) => (
+                  <option key={sc} value={sc}>
+                    {sc}
+                  </option>
+                ))}
+              </select>
+
+              {selectedSubcategory ? (
+                <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-lg">
+                  {selectedSubcategoryCount} item{selectedSubcategoryCount !== 1 ? 's' : ''}
+                </div>
+              ) : null}
+              {/* show hidden toggle */}
+              <div className="ml-2">
+                <label className="inline-flex items-center text-sm text-gray-600">
+                  <input
+                    type="checkbox"
+                    checked={showHidden}
+                    onChange={(e) => setShowHidden(e.target.checked)}
+                    className="mr-2 h-4 w-4"
+                  />
+                  Show hidden
+                </label>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => {
+                setProductMode('add');
+                setShowProductModal(true);
+              }}
+              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
+            >
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add Product
+            </Button>
+          </div>
         </div>
 
         <Card className="border-none shadow-xl overflow-hidden">
@@ -1261,6 +1348,11 @@ const Inventory: React.FC = () => {
                       <div className="flex-1 min-w-0">
                         <div className="font-bold text-gray-900 text-sm sm:text-base lg:text-lg group-hover:text-green-700 transition-colors duration-200 break-words">
                           {p.name}
+                          {hiddenProductIds.has(p.id) && (
+                            <span className="ml-2 inline-block text-[10px] text-red-600 bg-red-50 px-2 py-0.5 rounded">
+                              Hidden
+                            </span>
+                          )}
                         </div>
 
                         {p.description && (
@@ -1285,10 +1377,18 @@ const Inventory: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 lg:gap-3 flex-shrink-0 self-end sm:self-center">
+                      <div className="flex items-center gap-2 lg:gap-3 flex-shrink-0 self-end sm:self-center">
                       <div className="text-xs sm:text-sm font-bold text-green-700 bg-green-50 px-2.5 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-lg whitespace-nowrap">
                         {p.requiredPoints} pts
                       </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => toggleHideProduct(p.id)}
+                        className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      >
+                        {hiddenProductIds.has(p.id) ? 'Unhide' : 'Hide'}
+                      </Button>
                       <Button
                         variant="outline"
                         size="sm"
@@ -1373,6 +1473,11 @@ const Inventory: React.FC = () => {
                       <div className="flex-1 min-w-0">
                         <div className="font-bold text-gray-900 text-sm sm:text-base lg:text-lg group-hover:text-emerald-700 transition-colors duration-200 break-words">
                           {m.name}
+                          {hiddenMaterialIds.has(m.id) && (
+                            <span className="ml-2 inline-block text-[10px] text-red-600 bg-red-50 px-2 py-0.5 rounded">
+                              Hidden
+                            </span>
+                          )}
                         </div>
 
                         {m.description && (
@@ -1388,10 +1493,18 @@ const Inventory: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 lg:gap-3 flex-shrink-0 self-end sm:self-center">
+                      <div className="flex items-center gap-2 lg:gap-3 flex-shrink-0 self-end sm:self-center">
                       <div className="text-xs sm:text-sm font-bold text-emerald-700 bg-emerald-50 px-2.5 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-lg whitespace-nowrap">
                         {m.pointsPerKg} pts/kg
                       </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => toggleHideMaterial(m.id)}
+                        className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      >
+                        {hiddenMaterialIds.has(m.id) ? 'Unhide' : 'Hide'}
+                      </Button>
                       <Button
                         variant="outline"
                         size="sm"
