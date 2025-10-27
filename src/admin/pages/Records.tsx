@@ -80,7 +80,7 @@ const ResidentRecords: React.FC = () => {
   const [records, setRecords] = useState<any[]>([]); // Explicitly type as array
   const authFetch = useAuthFetch();
   const { user } = useAuth();
-  const { data, loading, error, refetch } = useFetchData('/records');
+  const { data, loading, error, refetch } = useFetchData('/records?type=resident');
   const { success, error: showError } = useToast();
 
   const debouncedSearch = useCallback(
@@ -93,7 +93,7 @@ const ResidentRecords: React.FC = () => {
       const fetchSearch = async () => {
         try {
           const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/records/search?query=${query}`,
+            `${import.meta.env.VITE_API_URL}/records/search?query=${query}&type=resident`,
             {
               method: 'GET',
               headers: {
@@ -131,6 +131,8 @@ const ResidentRecords: React.FC = () => {
     firstName: '',
     lastName: '',
     middleName: '',
+    suffix: '',
+    gender: '',
     points: 0,
     age: '',
     contact_number: '',
@@ -177,6 +179,8 @@ const ResidentRecords: React.FC = () => {
       firstName: '',
       lastName: '',
       middleName: '',
+      suffix: '',
+      gender: '',
       points: 0,
       age: '',
       address: '',
@@ -197,6 +201,8 @@ const ResidentRecords: React.FC = () => {
     setEditingResident({
       ...resident,
       age: String(resident.age || ''),
+      suffix: resident.suffix || '',
+      gender: resident.gender || '',
     });
     // Extract the contact rest (remove '09' prefix if present)
     const contact = resident.contact_number || '';
@@ -287,6 +293,7 @@ const ResidentRecords: React.FC = () => {
         contact_number: contactRest ? `09${contactRest}` : '',
         // include the full record id with BT- prefix when provided
         ...(recordIdRest ? { record_id: `BT-${recordIdRest}` } : {}),
+        type: 'resident',
       };
 
       const data = await authFetch('/records', {
@@ -345,6 +352,7 @@ const ResidentRecords: React.FC = () => {
         ...editingResident,
         age: isNaN(ageNumber) ? 0 : ageNumber,
         contact_number: editContactRest ? `09${editContactRest}` : '',
+        type: 'resident',
       };
 
       console.log(payload);
@@ -979,7 +987,7 @@ const ResidentRecords: React.FC = () => {
                   </div>
 
                   {/* Name fields in a row */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-5">
                     {/* First Name */}
                     <label className="block group">
                       <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
@@ -992,7 +1000,6 @@ const ResidentRecords: React.FC = () => {
                           type="text"
                           value={newResident.firstName}
                           onChange={(e) => {
-                            // strip disallowed characters (allow letters, spaces, apostrophes, hyphens)
                             const filtered = e.target.value.replace(
                               /[^\p{L}\s'\-]/gu,
                               ''
@@ -1021,46 +1028,7 @@ const ResidentRecords: React.FC = () => {
                         ) : null}
                       </div>
                     </label>
-                    {/* Last Name */}
-                    <label className="block group">
-                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                        <span className="text-red-500">*</span>
-                        <span>Last Name</span>
-                      </div>
-                      <div className="relative">
-                        <input
-                          required
-                          type="text"
-                          value={newResident.lastName}
-                          onChange={(e) => {
-                            const filtered = e.target.value.replace(
-                              /[^\p{L}\s'\-]/gu,
-                              ''
-                            );
-                            setNewResident((s) => ({
-                              ...s,
-                              lastName: filtered,
-                            }));
-                            const res = validateName(filtered, true);
-                            setLastNameError(res.valid ? '' : res.message);
-                          }}
-                          onBlur={() => {
-                            const res = validateName(
-                              newResident.lastName,
-                              true
-                            );
-                            setLastNameError(res.valid ? '' : res.message);
-                          }}
-                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                          placeholder="Enter last name"
-                        />
-                        {lastNameError ? (
-                          <p className="text-xs sm:text-sm text-red-600 mt-1">
-                            {lastNameError}
-                          </p>
-                        ) : null}
-                      </div>
-                    </label>
+
                     {/* Middle Name (now required) */}
                     <label className="block group">
                       <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
@@ -1101,6 +1069,65 @@ const ResidentRecords: React.FC = () => {
                         ) : null}
                       </div>
                     </label>
+
+                    {/* Last Name */}
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span className="text-red-500">*</span>
+                        <span>Last Name</span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          required
+                          type="text"
+                          value={newResident.lastName}
+                          onChange={(e) => {
+                            const filtered = e.target.value.replace(
+                              /[^\p{L}\s'\-]/gu,
+                              ''
+                            );
+                            setNewResident((s) => ({
+                              ...s,
+                              lastName: filtered,
+                            }));
+                            const res = validateName(filtered, true);
+                            setLastNameError(res.valid ? '' : res.message);
+                          }}
+                          onBlur={() => {
+                            const res = validateName(
+                              newResident.lastName,
+                              true
+                            );
+                            setLastNameError(res.valid ? '' : res.message);
+                          }}
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="Enter last name"
+                        />
+                        {lastNameError ? (
+                          <p className="text-xs sm:text-sm text-red-600 mt-1">
+                            {lastNameError}
+                          </p>
+                        ) : null}
+                      </div>
+                    </label>
+
+                    {/* Suffix (optional) */}
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span>Suffix</span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={newResident.suffix}
+                          onChange={(e) =>
+                            setNewResident((s) => ({ ...s, suffix: e.target.value }))
+                          }
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="Suffix (optional)"
+                        />
+                      </div>
+                    </label>
                   </div>
                 </div>
 
@@ -1116,7 +1143,7 @@ const ResidentRecords: React.FC = () => {
                     <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5">
                     <label className="block group">
                       <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
                         <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
@@ -1168,6 +1195,21 @@ const ResidentRecords: React.FC = () => {
                           {ageError}
                         </p>
                       ) : null}
+                    </label>
+
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span className="text-red-500">*</span>
+                        <span>Gender</span>
+                      </div>
+                      <div className="relative">
+                        <select required value={newResident.gender} onChange={(e) => setNewResident((s) => ({ ...s, gender: e.target.value }))} className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base">
+                          <option value="">Select</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
                     </label>
 
                     <label className="block group">
@@ -1381,7 +1423,7 @@ const ResidentRecords: React.FC = () => {
                     <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-5">
                     {/* First Name */}
                     <label className="block group">
                       <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
@@ -1414,7 +1456,7 @@ const ResidentRecords: React.FC = () => {
                       </div>
                     </label>
 
-                    {/* Last Name */}
+                    {/* Middle Name (was third) - keep order similar to add modal */}
                     <label className="block group">
                       <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
                         <span className="text-red-500">*</span>
@@ -1446,7 +1488,7 @@ const ResidentRecords: React.FC = () => {
                       </div>
                     </label>
 
-                    {/* Middle Name */}
+                    {/* Last Name */}
                     <label className="block group">
                       <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
                         <span className="text-red-500">*</span>
@@ -1477,6 +1519,22 @@ const ResidentRecords: React.FC = () => {
                         ) : null}
                       </div>
                     </label>
+
+                    {/* Suffix (optional) */}
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span>Suffix</span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={editingResident.suffix}
+                          onChange={(e) => setEditingResident((s: any) => ({ ...s, suffix: e.target.value }))}
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="Suffix (optional)"
+                        />
+                      </div>
+                    </label>
                   </div>
                 </div>
 
@@ -1492,7 +1550,7 @@ const ResidentRecords: React.FC = () => {
                     <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5">
                     <label className="block group">
                       <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
                         <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
@@ -1521,6 +1579,21 @@ const ResidentRecords: React.FC = () => {
                           {editAgeError}
                         </p>
                       ) : null}
+                    </label>
+
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span className="text-red-500">*</span>
+                        <span>Gender</span>
+                      </div>
+                      <div className="relative">
+                        <select required value={editingResident.gender} onChange={(e) => setEditingResident((s: any) => ({ ...s, gender: e.target.value }))} className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base">
+                          <option value="">Select</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
                     </label>
 
                     <label className="block group">
