@@ -22,6 +22,7 @@ import {
   Recycle,
   Sprout,
   RotateCwSquare,
+  Building,
 } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 
@@ -75,7 +76,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
           href: APP_ROUTES.ADMIN.RESOURCES + '/non-resident',
         },
         {
-          icon: <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
+          icon: <Building className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Establishment',
           href: APP_ROUTES.ADMIN.RESOURCES + '/establishment',
         },
