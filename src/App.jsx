@@ -27,6 +27,8 @@ const FarmInventory = lazy(() => import('@/admin/pages/FarmInventory'));
 const SwapItem = lazy(() => import('@/admin/pages/SwapItem'));
 const GreenPages = lazy(() => import('@/admin/pages/GreenPages'));
 const Records = lazy(() => import('@/admin/pages/Records'));
+const NonResidentRecords = lazy(() => import('@/admin/pages/NonResidentRecords'));
+const EstablishmentRecords = lazy(() => import('@/admin/pages/EstablishmentRecords'));
 const TalipapaNatin = lazy(() => import('@/admin/pages/TalipapaNatin'));
 
 // USER PAGE EXPORT HERE - Lazy loaded
@@ -128,6 +130,8 @@ function App() {
                 <Route path="settings" element={<Settings />} />
                 {/* Records Route */}
                 <Route path="records" element={<Records />} />
+                <Route path="records/non-resident" element={<NonResidentRecords />} />
+                <Route path="records/establishment" element={<EstablishmentRecords />} />
 
                 {/* 404 for unknown admin routes */}
                 <Route path="*" element={<NotFound />} />
