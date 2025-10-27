@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -12,6 +13,7 @@ const AdminLogin: React.FC = () => {
     password: '',
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { login, isAuthenticated, loading, setLoading } = useAuth();
@@ -211,20 +213,39 @@ const AdminLogin: React.FC = () => {
                     >
                       Password
                     </label>
-                    <Input
-                      id="form2"
-                      name="password"
-                      type="password"
-                      placeholder="Enter your password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      className={`w-full h-12 sm:h-14 px-3 sm:px-4 bg-white border-2 rounded-xl text-sm sm:text-base placeholder:text-gray-400 focus:ring-0 focus:outline-none transition-all duration-300 ${
-                        errors.password
-                          ? 'border-red-500 focus:border-red-500'
-                          : 'border-gray-200 focus:border-[#1a4d2e] hover:border-gray-300'
-                      }`}
-                      disabled={loading}
-                    />
+                    <div className="relative">
+                      <Input
+                        id="form2"
+                        name="password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Enter your password"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        className={`w-full h-12 sm:h-14 pr-12 px-3 sm:px-4 bg-white border-2 rounded-xl text-sm sm:text-base placeholder:text-gray-400 focus:ring-0 focus:outline-none transition-all duration-300 ${
+                          errors.password
+                            ? 'border-red-500 focus:border-red-500'
+                            : 'border-gray-200 focus:border-[#1a4d2e] hover:border-gray-300'
+                        }`}
+                        disabled={loading}
+                      />
+                      {formData.password &&
+                        formData.password.trim().length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword((s) => !s)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-600"
+                            aria-label={
+                              showPassword ? 'Hide password' : 'Show password'
+                            }
+                          >
+                            {showPassword ? (
+                              <EyeOff className="w-5 h-5 text-gray-700" />
+                            ) : (
+                              <Eye className="w-5 h-5 text-gray-700" />
+                            )}
+                          </button>
+                        )}
+                    </div>
                     {errors.password && (
                       <p className="text-xs sm:text-sm text-red-600 mt-2 font-medium">
                         {errors.password}
