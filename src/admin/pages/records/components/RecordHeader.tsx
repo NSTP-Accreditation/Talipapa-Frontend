@@ -5,15 +5,17 @@ import { useToast } from '@/hooks/useToast';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import dayjs from 'dayjs';
+import { Dispatch, SetStateAction } from 'react';
 
 type RecordHeaderProps = {
   recordsData: RecordInterface[]
+  setOpenAddRecordModal: Dispatch<SetStateAction<boolean>>
 }
 
-const RecordHeader = ({ recordsData } : RecordHeaderProps ) => {
+const RecordHeader = ({ recordsData, setOpenAddRecordModal } : RecordHeaderProps ) => {
+  const { error: showError } = useToast();
 
   const handleExportToExcel = async () => {
-    const { error: showError } = useToast();
 
     if (!recordsData || recordsData.length === 0) {
       showError('No records available to export.', { title: 'Export' });
@@ -208,7 +210,7 @@ const RecordHeader = ({ recordsData } : RecordHeaderProps ) => {
       {/* Right side: Add Residents and Download button */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
         <Button
-          // onClick={openAddModal}
+          onClick={() => setOpenAddRecordModal(true)}
           className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm flex items-center justify-center gap-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
         >
           + Add Residents

@@ -1,8 +1,11 @@
+import { RecordInterface } from '@/types/global.types';
 import useFetchData from '../../hooks/useFetchData';
+import AddRecordModal from './components/AddRecordModal';
+import DeleterecordModal from './components/DeleterecordModal';
+import EditRecordModal from './components/EditRecordModal';
 import RecordFilter from './components/RecordFilter';
 import RecordHeader from './components/RecordHeader';
 import RecordTable from './components/RecordTable';
-import { RecordInterface } from './Record.types';
 import { useEffect, useState } from 'react';
 
 const Records = () => {
@@ -31,13 +34,16 @@ const Records = () => {
   );
 
   // State for modals
-  const [openEditModal, setOpenEditModal] = useState<RecordInterface>();
-  const [openDeleteModal, setOpenDeleteModal] = useState<RecordInterface>();
+  const [openAddRecordModal, setOpenAddRecordModal] = useState(false);
+  const [editRecord, setEditRecord] = useState<RecordInterface | null>(null);
+  const [deleteRecord, setDeleteRecord] = useState<RecordInterface | null>(null);
 
   return (
     <main className="md:p-5">
       {/* Record Header */}
-      <RecordHeader recordsData={recordsData} />
+      <RecordHeader 
+        setOpenAddRecordModal={setOpenAddRecordModal}
+        recordsData={recordsData} />
 
       {/* Enhanced Search Bar */}
       <RecordFilter
@@ -50,15 +56,35 @@ const Records = () => {
       {/* Record Table */}
       <RecordTable
         showingRecords={showingRecords}
-        setOpenEditModal={setOpenEditModal}
-        setOpenDeleteModal={setOpenDeleteModal}
+        setEditRecord={setEditRecord}
+        setDeleteRecord={setDeleteRecord}
         startIndex={startIndex}
         recordsPerPage={recordsPerPage}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         totalPages={totalPages}
       />
-      
+
+      {/* MODALS */}
+      {/* ADD MODAL */}
+      <AddRecordModal 
+        openAddRecordModal={openAddRecordModal}
+        setOpenAddRecordModal={setOpenAddRecordModal}
+        refetchRecords={refetchRecords}
+      />
+
+      {/* EDIT MODAL */}
+      <EditRecordModal 
+        editRecord={editRecord}
+        setEditRecord={setEditRecord}
+        refetchRecords={refetchRecords}
+      />
+
+      <DeleterecordModal 
+        deleteRecord={deleteRecord}
+        setDeleteRecord={setDeleteRecord}
+        refetchRecords={refetchRecords}
+      />
     </main>
   );
 };
