@@ -8,43 +8,26 @@ type RecordFilterProps = {
   originalRecords: RecordInterface[],
   recordsData: RecordInterface[],
   setOriginalRecords: Dispatch<SetStateAction<RecordInterface[]>>
+  refetchRecords: (fetchUrl?: string) => Promise<RecordInterface[]>
 }
 
-const RecordFilter = ({ originalRecords, recordsData, setOriginalRecords } : RecordFilterProps ) => {
+const RecordFilter = ({ originalRecords, recordsData, setOriginalRecords, refetchRecords } : RecordFilterProps ) => {
   const [ searchTerm, setSearchTerm ] = useState("");
-
+  
   const debouncedSearch = useCallback(
-    debounce((query: string) => {
+    debounce(async (query: string) => {
       if (!query) {
         setOriginalRecords(recordsData || []);
         return;
       }
 
-      
-      // const fetchSearch = async () => {
-      //   try {
-      //     const response = await fetch(
-      //       `${import.meta.env.VITE_API_URL}/records/search?query=${query}`,
-      //       {
-      //         method: 'GET',
-      //         headers: {
-      //           Authorization: `Bearer ${user?.accessToken}`,
-      //         },
-      //         credentials: 'include',
-      //       }
-      //     );
+      try {
+        const result = await refetchRecords(`${import.meta.env.VITE_API_URL}/records/search?query=${encodeURIComponent(query)}`);
+        setOriginalRecords(result)
+      } catch {
+        setOriginalRecords([])
+      }
 
-      //     const result = await response.json();
-      //     if (!response.ok) {
-      //       throw new Error(result.message);
-      //     }
-      //     setRecords(result?.results || []); // Ensure array
-      //   } catch (error) {
-      //     console.log(error);
-      //     setRecords([]);
-      //   }
-      // };
-      // fetchSearch();
     }, 700),
     [recordsData]
   );

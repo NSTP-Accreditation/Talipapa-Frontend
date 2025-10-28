@@ -1,5 +1,5 @@
 // import React from 'react';
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SuspenseWrapper from '@/components/SuspenseWrapper';
 import { FullPageSpinner } from '@/components/LoadingSkeletons';
@@ -26,7 +26,7 @@ const Inventory = lazy(() => import('@/admin/pages/Inventory'));
 const FarmInventory = lazy(() => import('@/admin/pages/FarmInventory'));
 const SwapItem = lazy(() => import('@/admin/pages/SwapItem'));
 const GreenPages = lazy(() => import('@/admin/pages/GreenPages'));
-const Records = lazy(() => import('@/admin/pages/Records'));
+const Records = lazy(() => import('@/admin/pages/records/Records'));
 const TalipapaNatin = lazy(() => import('@/admin/pages/TalipapaNatin'));
 
 // USER PAGE EXPORT HERE - Lazy loaded

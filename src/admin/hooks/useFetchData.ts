@@ -6,7 +6,7 @@ interface FetchDataResponse<T> {
   data: T | null;
   loading: boolean;
   error: string | null;
-  refetch: () => Promise<T | null>;
+  refetch: (fetchUrl?: string) => Promise<T | null>;
 }
 
 interface FetchOptions extends RequestInit {}
@@ -20,7 +20,7 @@ const useFetchData = <T = any>(
   const [error, setError] = useState<string | null>(null);
   const authFetch = useAuthFetch();
 
-  const fetchData = useCallback(async (): Promise<T | null> => {
+  const fetchData = useCallback(async (fetchUrl: string = url ): Promise<T | null> => {
     if (!url) {
       setLoading(false);
       return null;
@@ -29,7 +29,7 @@ const useFetchData = <T = any>(
     try {
       setLoading(true);
       setError(null);
-      const result = await authFetch<T>(url, options);
+      const result = await authFetch<T>(fetchUrl, options);
       setData(result as T);
       return result as T;
     } catch (err) {
