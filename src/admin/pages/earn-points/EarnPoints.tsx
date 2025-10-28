@@ -1,15 +1,15 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { sanitizeName, validateName } from '@/utils/validation';
 import { Recycle, CheckCircle2 } from 'lucide-react';
-import { useAuthFetch } from '../hooks/useAuthFetch';
-import { useLoadingState } from '../../hooks/useLoadingState';
+import { useAuthFetch } from '../../hooks/useAuthFetch';
+import { useLoadingState } from '../../../hooks/useLoadingState';
 import { useToast } from '@/hooks/useToast';
-import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
-import useFetchData from '../hooks/useFetchData';
+import { FormTablePageSkeleton } from '../../../components/LoadingSkeletons';
+import useFetchData from '../../hooks/useFetchData';
+import { MaterialInterface } from '@/types/global.types';
 
 export default function App() {
-  const { isLoading: pageLoading } = useLoadingState(1000);
-  const { data: materialsData, loading, error } = useFetchData('/materials');
+  const { data: materialsData, loading, error } = useFetchData<MaterialInterface[]>('/materials');
 
   const [recordIdRest, setRecordIdRest] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -20,7 +20,6 @@ export default function App() {
   const authFetch = useAuthFetch();
   const { success, error: toastError } = useToast();
 
-  // Initialize weights when materialsData is loaded
   useEffect(() => {
     if (materialsData && materialsData.length > 0) {
       const initialWeights: { [key: string]: string } = {};
@@ -122,7 +121,7 @@ export default function App() {
   };
 
   // Show loading skeleton while loading
-  if (pageLoading || loading) {
+  if (loading) {
     return <FormTablePageSkeleton />;
   }
 
@@ -156,9 +155,9 @@ export default function App() {
   }
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 bg-gradient-to-br from-emerald-50 via-white to-green-50 min-h-screen">
+    <div className="p-5 grid gap-5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 w-full">
         <div>
           <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
             <Recycle className="w-6 h-6 sm:w-10 sm:h-10 text-green-600" />
@@ -172,7 +171,7 @@ export default function App() {
 
       {/* Full width card form */}
       <form
-        className="bg-white rounded-2xl border border-gray-200 shadow-lg p-4 sm:p-8 w-full max-w-5xl mx-auto"
+        className="bg-white rounded-2xl border border-gray-200 shadow-lg p-4 sm:p-8 w-full mx-auto"
         onSubmit={handleConfirm}
       >
         {/* Record Info */}
