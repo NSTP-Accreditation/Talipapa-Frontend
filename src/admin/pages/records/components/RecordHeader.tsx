@@ -13,9 +13,9 @@ type RecordHeaderProps = {
 }
 
 const RecordHeader = ({ recordsData, setOpenAddRecordModal } : RecordHeaderProps ) => {
+  const { error: showError } = useToast();
 
   const handleExportToExcel = async () => {
-    const { error: showError } = useToast();
 
     if (!recordsData || recordsData.length === 0) {
       showError('No records available to export.', { title: 'Export' });
