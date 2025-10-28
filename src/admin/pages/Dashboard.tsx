@@ -19,13 +19,16 @@ const Dashboard: React.FC = () => {
 
   // Show login toast on first load if redirected
   useEffect(() => {
-    success('Login successful!', { title: 'Welcome' });
-  }, []);
+    if (sessionStorage.getItem('loginSuccess') === 'true') {
+      success('Login successful!', { title: 'Welcome' });
+      sessionStorage.removeItem('loginSuccess');
+    }
+  }, [success]);
 
   if (isLoading) return <ResponsiveSkeleton page="dashboard" />;
 
   return (
-    <div className="p-3 sm:p-4 md:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
+    <main className="md:p-5">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-3 mb-4 sm:mb-6 lg:mb-8">
         <div>
@@ -51,7 +54,7 @@ const Dashboard: React.FC = () => {
         <DashboardAchievements />
 
       </div>
-    </div>
+    </main>
   );
 };
 
