@@ -344,18 +344,18 @@ export default function Trading() {
       {/* Hero Section */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16 lg:py-20">
         <div className="text-center mb-8 sm:mb-12 md:mb-16 lg:mb-20">
-          <div className="inline-block mb-4 sm:mb-6">
+          <div className="inline-block mb-2 sm:mb-4">
             <Recycle
               className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 text-green-600 mx-auto animate-spin"
               style={{ animationDuration: '3s' }}
             />
           </div>
 
-          <h1 className="mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-600 to-green-700">
+          <h1 className="mb-2 sm:mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-green-600 to-green-700 leading-normal">
             EcoCycle
           </h1>
 
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 px-4 font-medium max-w-4xl mx-auto leading-relaxed mb-6 sm:mb-8">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 px-4 font-medium max-w-4xl mx-auto leading-normal mb-6 sm:mb-8">
             Transform your waste into{' '}
             <span className="text-green-600 font-bold">valuable resources</span>{' '}
             and earn <span className="text-green-600 font-bold">rewards</span>{' '}
@@ -713,7 +713,7 @@ export default function Trading() {
                           className="flex items-center gap-2 bg-white border border-green-200 rounded-md sm:rounded-lg px-2 sm:px-3 py-1.5 sm:py-2"
                         >
                           <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 flex-shrink-0" />
-                          <span className="text-xs sm:text-sm font-medium text-gray-800 leading-tight">
+                          <span className="text-xs sm:text-sm font-medium text-gray-800 leading-normal">
                             {opt.name}
                           </span>
                         </div>
@@ -927,9 +927,9 @@ export default function Trading() {
                             <span className="w-5 sm:w-6 flex items-start justify-center mt-0.5 sm:mt-1 mr-2">
                               <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-green-600" />
                             </span>
-                            <span className="text-xs font-medium text-gray-700 leading-relaxed">
-                              {item.name}
-                            </span>
+                            <span className="text-xs font-medium text-gray-700 leading-normal">
+                                {item.name}
+                              </span>
                           </li>
                         ))}
                       </ul>

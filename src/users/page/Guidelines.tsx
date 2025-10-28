@@ -75,7 +75,7 @@ export default function Guidelines() {
           <div className="inline-block p-3 sm:p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-full mb-4 sm:mb-6 shadow-lg">
             <span className="text-4xl sm:text-5xl lg:text-6xl">📚</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent px-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent px-4 leading-normal">
             Talipapa How-To Guides
           </h1>
           <p className="text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto px-4">
@@ -110,11 +110,11 @@ export default function Guidelines() {
                         style={{ color: '#1b4c2e' }}
                       />
                     </div>
-                    <h3 className="text-gray-800 text-base sm:text-lg font-semibold leading-relaxed group-hover:text-green-700 transition-colors px-2">
+                    <h3 className="text-gray-800 text-base sm:text-lg font-semibold leading-normal group-hover:text-green-700 transition-colors px-2">
                       {guide.title}
                     </h3>
                     {guide.description && (
-                      <p className="text-xs sm:text-sm text-gray-500 mt-2 px-2 line-clamp-2">
+                      <p className="text-xs sm:text-sm text-gray-500 mt-2 px-2 line-clamp-2 leading-normal pb-0.5">
                         {guide.description}
                       </p>
                     )}
@@ -138,10 +138,10 @@ export default function Guidelines() {
 
         {/* CTA Section */}
         <div className="text-center bg-white rounded-xl sm:rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-100">
-          <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4 leading-normal">
             Need More Help?
           </h3>
-          <p className="text-gray-600 mb-4 sm:mb-6 max-w-xl mx-auto text-sm sm:text-base px-4">
+          <p className="text-gray-600 mb-4 sm:mb-6 max-w-xl mx-auto text-sm sm:text-base px-4 leading-normal">
             Explore our complete collection of guides and resources
           </p>
           <Link to="/guidelines/more">
