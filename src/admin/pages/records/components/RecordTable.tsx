@@ -106,10 +106,14 @@ const RecordTable = ({
                     </td>
                     <td className="px-2 sm:px-6 py-3 sm:py-4">
                       <div className="flex items-center gap-1 sm:gap-2">
-                        <span className="text-gray-400">📍</span>
-                        <span className="text-xs sm:text-sm text-gray-700 font-medium max-w-[150px] sm:max-w-none truncate sm:whitespace-normal">
-                          {record?.address}
-                        </span>
+                        {record?.address ? (
+                          <>
+                            <span className="text-gray-400">📍</span>
+                            <span className="text-xs sm:text-sm text-gray-700 font-medium max-w-[150px] sm:max-w-none truncate sm:whitespace-normal">
+                              {record?.address}
+                            </span>
+                          </>
+                        ) : <p>No Address Provided</p>}
                       </div>
                     </td>
                     <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
@@ -130,7 +134,7 @@ const RecordTable = ({
                     <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <Button
-                          onClick={() => setEditRecord(record)}
+                          onClick={() => setEditRecord({...record, contact_number: record.contact_number.slice(2)})}
                           className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
                         >
                           <Edit className="w-3 h-3 sm:w-4 sm:h-4" />

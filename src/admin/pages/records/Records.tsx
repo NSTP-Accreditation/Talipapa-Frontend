@@ -1,5 +1,6 @@
 import useFetchData from '../../hooks/useFetchData';
 import AddRecordModal from './components/AddRecordModal';
+import EditRecordModal from './components/EditRecordModal';
 import RecordFilter from './components/RecordFilter';
 import RecordHeader from './components/RecordHeader';
 import RecordTable from './components/RecordTable';
@@ -64,12 +65,21 @@ const Records = () => {
       />
 
       {/* MODALS */}
+      {/* ADD MODAL */}
       <AddRecordModal 
         openAddRecordModal={openAddRecordModal}
         setOpenAddRecordModal={setOpenAddRecordModal}
         refetchRecords={refetchRecords}
       />
 
+      {/* EDIT MODAL */}
+      <EditRecordModal 
+        editRecord={editRecord}
+        setEditRecord={setEditRecord}
+        refetchRecords={refetchRecords}
+      />
+
+      
     </main>
   );
 };
