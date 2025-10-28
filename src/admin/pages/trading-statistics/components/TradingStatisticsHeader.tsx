@@ -1,19 +1,9 @@
 import { useToast } from '@/hooks/useToast';
-import { LogInterface, RecordInterface } from '@/types/global.types';
-import { PaginationInterface } from '@/types/pagination';
 import dayjs from 'dayjs';
 import { BarChart3, Download } from 'lucide-react';
+import { TradingStatisticsProps } from '../TradingStatistics.types';
 
-type TradingStatisticsHeaderProps = {
-  logsData: PaginationInterface<LogInterface>,
-  recordsData: RecordInterface[],
-  recordsToday: RecordInterface[],   
-  totalPoints: number,
-  topList: any[]
-  
-}
-
-const TradingStatisticsHeader = ({ recordsData, logsData, recordsToday, totalPoints, topList } : TradingStatisticsHeaderProps ) => {
+const TradingStatisticsHeader = ({ recordsData, logsData, recordsToday, totalPoints, topList } : TradingStatisticsProps ) => {
 
   const { error: showError } = useToast();
 
