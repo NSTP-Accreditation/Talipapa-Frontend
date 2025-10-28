@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useToast } from '@/hooks/useToast';
+import { createPortal } from 'react-dom';
 import {
   BookOpen,
   FileText,
@@ -22,7 +24,6 @@ interface Step {
   stepNumber: number;
   title: string;
   description: string;
-  location?: string;
   requiredDocuments?: string[];
   estimatedTime?: string;
   tips?: string[];
@@ -53,7 +54,6 @@ interface EditModalProps {
 interface StepFormData {
   title: string;
   description: string;
-  location: string;
   requiredDocuments: string;
   estimatedTime: string;
   tips: string;
@@ -65,6 +65,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
   onClose,
   onSave,
 }) => {
+  const toast = useToast();
   const [formData, setFormData] = useState<Guideline>({
     id: guideline?.id || '',
     title: guideline?.title || '',
@@ -80,7 +81,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
   const [stepFormData, setStepFormData] = useState<StepFormData>({
     title: '',
     description: '',
-    location: '',
     requiredDocuments: '',
     estimatedTime: '',
     tips: '',
@@ -110,7 +110,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
     setStepFormData({
       title: '',
       description: '',
-      location: '',
       requiredDocuments: '',
       estimatedTime: '',
       tips: '',
@@ -123,7 +122,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
       stepNumber: formData.steps.length + 1,
       title: stepFormData.title,
       description: stepFormData.description,
-      location: stepFormData.location || undefined,
       requiredDocuments: stepFormData.requiredDocuments
         ? stepFormData.requiredDocuments
             .split(',')
@@ -152,7 +150,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
     setStepFormData({
       title: step.title,
       description: step.description,
-      location: step.location || '',
       requiredDocuments: step.requiredDocuments?.join(', ') || '',
       estimatedTime: step.estimatedTime || '',
       tips: step.tips?.join(', ') || '',
@@ -167,7 +164,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
       stepNumber: formData.steps[editingStepIndex].stepNumber,
       title: stepFormData.title,
       description: stepFormData.description,
-      location: stepFormData.location || undefined,
       requiredDocuments: stepFormData.requiredDocuments
         ? stepFormData.requiredDocuments
             .split(',')
@@ -251,7 +247,9 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
     }
 
     if (errors.length > 0) {
-      alert('Please fix the following errors:\n\n• ' + errors.join('\n• '));
+      toast.error(
+        'Please fix the following errors:\n\n• ' + errors.join('\n• ')
+      );
       return;
     }
 
@@ -289,13 +287,13 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : 'Failed to save guideline';
-      alert(msg);
+      toast.error(msg);
     }
   };
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 sm:p-5"
       onClick={(e) => {
@@ -479,11 +477,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
                           {step.description}
                         </p>
                         <div className="flex flex-wrap gap-2 text-xs">
-                          {step.location && (
-                            <span className="px-2 py-1 bg-gray-100 rounded-full text-gray-700">
-                              {step.location}
-                            </span>
-                          )}
                           {step.requiredDocuments?.map((d) => (
                             <span
                               key={d}
@@ -548,18 +541,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
                       }
                       className="px-3 py-2 border rounded-lg"
                     />
-                    <input
-                      type="text"
-                      placeholder="Location (optional)"
-                      value={stepFormData.location}
-                      onChange={(e) =>
-                        setStepFormData({
-                          ...stepFormData,
-                          location: e.target.value,
-                        })
-                      }
-                      className="px-3 py-2 border rounded-lg"
-                    />
+                    {/* removed location field (no longer used) */}
                     <textarea
                       required
                       placeholder="Description"
@@ -674,7 +656,8 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

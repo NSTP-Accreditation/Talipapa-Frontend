@@ -10,7 +10,8 @@ const FloatingLabelInput = ({
   inputClassName = '',
 }) => {
   // Match EarnPoints input sizing and style: px-3 py-2, border-2, bg-gray-50, font-normal
-  const baseInputClasses = 'w-full px-3 py-2 border-2 rounded-lg bg-gray-50 font-normal text-gray-800 peer focus:ring-2 focus:ring-green-500 focus:border-green-500';
+  const baseInputClasses =
+    'w-full px-3 py-2 border-2 rounded-lg bg-gray-50 font-normal text-gray-800 peer focus:ring-2 focus:ring-green-500 focus:border-green-500';
   const inputClasses = prefix
     ? `w-full pl-12 pr-3 px-3 py-2 border-2 rounded-lg bg-gray-50 font-normal text-gray-800 peer focus:ring-2 focus:ring-green-500 focus:border-green-500 ${inputClassName}`
     : `${baseInputClasses} ${inputClassName}`;

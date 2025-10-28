@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useToast } from '../../hooks/useToast';
 import {
   Card,
   CardHeader,
@@ -18,159 +19,12 @@ import {
 import { useLoadingState } from '../../hooks/useLoadingState';
 import Login from '../components/Login'; // Import your login form
 import { DashboardSkeleton } from '../../components/LoadingSkeletons';
+import ResponsiveSkeleton from '../../components/ResponsiveSkeleton';
 import useFetchData from '../hooks/useFetchData';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import { useNavigate, useLocation } from 'react-router-dom';
 dayjs.extend(isBetween);
-// -------------------- Toast Types & Component --------------------
-type ToastType = 'success' | 'error' | 'info' | 'warning';
-
-interface Toast {
-  id: number;
-  type: ToastType;
-  title?: string;
-  message: string;
-}
-
-interface ToastProps {
-  toasts: Toast[];
-  removeToast: (id: number) => void;
-}
-
-const ToastMessage: React.FC<ToastProps> = ({ toasts, removeToast }) => {
-  useEffect(() => {
-    const timers = toasts.map((toast) =>
-      window.setTimeout(() => removeToast(toast.id), 4000)
-    );
-    return () => timers.forEach((timer) => clearTimeout(timer));
-  }, [toasts, removeToast]);
-
-  const Icon = ({ type }: { type: ToastType }) => {
-    switch (type) {
-      case 'success':
-        return (
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-        );
-      case 'error':
-        return (
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        );
-      case 'warning':
-        return (
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 8v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-            />
-          </svg>
-        );
-      case 'info':
-      default:
-        return (
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
-            />
-          </svg>
-        );
-    }
-  };
-
-  return (
-    <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col gap-3 items-center">
-      {toasts.map((toast) => (
-        <div
-          key={toast.id}
-          className={`w-80 max-w-full transform transition-all duration-300 shadow-xl rounded-xl overflow-hidden ring-1 ring-black/5
-            ${toast.type === 'success' ? 'bg-white' : 'bg-white'}`}
-          role="status"
-        >
-          <div className="flex items-start p-3">
-            <div
-              className={`flex-shrink-0 rounded-full p-2 mr-3
-                ${toast.type === 'success' ? 'bg-green-100 text-green-700' : ''}
-                ${toast.type === 'error' ? 'bg-red-100 text-red-700' : ''}
-                ${toast.type === 'warning' ? 'bg-yellow-100 text-yellow-700' : ''}
-                ${toast.type === 'info' ? 'bg-blue-100 text-blue-700' : ''}`}
-            >
-              <Icon type={toast.type} />
-            </div>
-            <div className="flex-1 min-w-0">
-              {toast.title && (
-                <p className="text-sm font-semibold mb-0">{toast.title}</p>
-              )}
-              <p className="text-sm mt-1 break-words text-gray-700">
-                {toast.message}
-              </p>
-            </div>
-            <button
-              onClick={() => removeToast(toast.id)}
-              className="ml-3 p-1 rounded-md hover:bg-gray-100 transition-colors"
-              aria-label="Dismiss"
-            >
-              <svg
-                className="w-4 h-4 text-gray-500"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-          <div
-            className={`h-1 ${toast.type === 'success' ? 'bg-green-500' : ''} ${toast.type === 'error' ? 'bg-red-500' : ''} ${toast.type === 'warning' ? 'bg-yellow-500' : ''} ${toast.type === 'info' ? 'bg-blue-500' : ''}`}
-          />
-        </div>
-      ))}
-    </div>
-  );
-};
 
 interface PerformedBy {
   _id: string;
@@ -226,37 +80,15 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   //const location = useLocation();
 
-  // Toast state
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [toasts, setToasts] = useState<Toast[]>([]);
-  const nextIdRef = React.useRef<number>(1);
-
-  const addToast = (payload: {
-    type?: ToastType;
-    title?: string;
-    message: string;
-  }) => {
-    const id = nextIdRef.current++;
-    const toast: Toast = {
-      id,
-      type: payload.type ?? 'info',
-      title: payload.title,
-      message: payload.message,
-    };
-    setToasts((prev) => [...prev, toast]);
-    return id;
-  };
-
-  const removeToast = (id: number) =>
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+  const { success, info } = useToast();
 
   // Show login toast on first load if redirected
   useEffect(() => {
     if (sessionStorage.getItem('loginSuccess') === 'true') {
-      addToast({ type: 'success', message: 'Login successful!' });
+      success('Login successful!', { title: 'Welcome' });
       sessionStorage.removeItem('loginSuccess');
     }
-  }, []);
+  }, [success]);
 
   // Simple logout function
   const logout = () => {
@@ -265,13 +97,9 @@ const Dashboard: React.FC = () => {
   };
 
   // Handle logout
-  const showToast = (message: string) => {
-    setToastMessage(message);
-    setTimeout(() => setToastMessage(null), 3000); // hide after 3s
-  };
   const handleLogout = () => {
     logout();
-    showToast('Logged out successfully!');
+    info('Logged out successfully!', { title: 'Logged out' });
 
     setTimeout(() => {
       navigate('/admin/login', { replace: true });
@@ -339,40 +167,39 @@ const Dashboard: React.FC = () => {
     };
   }, [recordsData, visitLogs, logsData, achievements]);
 
-  if (isLoading) return <DashboardSkeleton />;
+  if (isLoading) return <ResponsiveSkeleton page="dashboard" />;
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 space-y-8">
-      <ToastMessage toasts={toasts} removeToast={removeToast} />
+    <div className="p-3 sm:p-4 md:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-3 mb-4 sm:mb-6 lg:mb-8">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-3 flex items-center gap-3">
-            <BarChart3 className="w-10 h-10 text-green-600" />
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2 lg:mb-3 flex items-center gap-2 sm:gap-3">
+            <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-green-600" />
             Dashboard
           </h1>
-          <p className="text-lg text-gray-700 font-medium">
+          <p className="text-sm sm:text-base lg:text-lg text-gray-700 font-medium">
             Overview of your Barangay Information System
           </p>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         {/* Today's Visits Card */}
         <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
-            <CardTitle className="text-sm font-bold text-gray-800">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 pt-3 sm:pt-4 lg:pt-6 px-3 sm:px-4 lg:px-6">
+            <CardTitle className="text-xs sm:text-sm font-bold text-gray-800">
               Today's Visits
             </CardTitle>
-            <Eye className="h-5 w-5 text-gray-500" />
+            <Eye className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-gray-500" />
           </CardHeader>
-          <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-900 mb-1">
+          <CardContent className="px-3 sm:px-4 lg:px-6 pb-3 sm:pb-4 lg:pb-6">
+            <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
               {dashboardData.todaysVisits}
             </div>
             <p
-              className={`text-xs ${dashboardData.todaysVisitsChange.includes('+') ? 'text-blue-600' : 'text-red-600'}`}
+              className={`text-[10px] sm:text-xs ${dashboardData.todaysVisitsChange.includes('+') ? 'text-blue-600' : 'text-red-600'}`}
             >
               {dashboardData.todaysVisitsChange} from yesterday
             </p>
@@ -381,18 +208,18 @@ const Dashboard: React.FC = () => {
 
         {/* Total Visits Card */}
         <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
-            <CardTitle className="text-sm font-bold text-gray-800">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 pt-3 sm:pt-4 lg:pt-6 px-3 sm:px-4 lg:px-6">
+            <CardTitle className="text-xs sm:text-sm font-bold text-gray-800">
               Total Visits
             </CardTitle>
-            <SquareMousePointer className="h-5 w-5 text-gray-500" />
+            <SquareMousePointer className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-gray-500" />
           </CardHeader>
-          <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-900 mb-1">
+          <CardContent className="px-3 sm:px-4 lg:px-6 pb-3 sm:pb-4 lg:pb-6">
+            <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
               {dashboardData.totalVisits}
             </div>
             <p
-              className={`text-xs ${dashboardData.totalVisitsChange.includes('+') ? 'text-blue-600' : 'text-red-600'}`}
+              className={`text-[10px] sm:text-xs ${dashboardData.totalVisitsChange.includes('+') ? 'text-blue-600' : 'text-red-600'}`}
             >
               {dashboardData.totalVisitsChange} from last month
             </p>
@@ -401,17 +228,17 @@ const Dashboard: React.FC = () => {
 
         {/* Total Users Card */}
         <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
-            <CardTitle className="text-sm font-bold text-gray-800">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 pt-3 sm:pt-4 lg:pt-6 px-3 sm:px-4 lg:px-6">
+            <CardTitle className="text-xs sm:text-sm font-bold text-gray-800">
               Total Records
             </CardTitle>
-            <Users className="h-5 w-5 text-gray-500" />
+            <Users className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-gray-500" />
           </CardHeader>
-          <CardContent className="px-6 pb-6">
-            <div className="text-3xl font-bold text-gray-900 mb-1">
+          <CardContent className="px-3 sm:px-4 lg:px-6 pb-3 sm:pb-4 lg:pb-6">
+            <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">
               {dashboardData.totalRecords}
             </div>
-            <p className="text-xs text-blue-600">
+            <p className="text-[10px] sm:text-xs text-blue-600">
               {dashboardData.totalRecordsChange} from last month
             </p>
           </CardContent>
@@ -419,15 +246,15 @@ const Dashboard: React.FC = () => {
 
         {/* Placeholder Card */}
         <Card className="border border-orange-200 shadow-md hover:shadow-lg transition-shadow bg-orange-50 rounded-xl">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-6 px-6">
-            <CardTitle className="text-sm font-bold text-orange-700">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 pt-3 sm:pt-4 lg:pt-6 px-3 sm:px-4 lg:px-6">
+            <CardTitle className="text-xs sm:text-sm font-bold text-orange-700">
               Coming Soon
             </CardTitle>
-            <FileText className="h-5 w-5 text-orange-600" />
+            <FileText className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-orange-600" />
           </CardHeader>
-          <CardContent className="px-6 pb-6">
-            <TrendingUp className="w-8 h-8 text-orange-600 mb-1" />
-            <p className="text-xs text-orange-700 font-medium">
+          <CardContent className="px-3 sm:px-4 lg:px-6 pb-3 sm:pb-4 lg:pb-6">
+            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-orange-600 mb-1" />
+            <p className="text-[10px] sm:text-xs text-orange-700 font-medium">
               Feature in development
             </p>
           </CardContent>
@@ -435,30 +262,58 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Bottom Section - Recent Activity and Achievements */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-6 lg:mt-8">
         {/* Recent Activity */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl overflow-x-auto">
-          <CardHeader className="px-4 sm:px-6 py-4 pb-3 flex flex-row items-center gap-2 border-b border-gray-200">
-            <Activity className="h-5 w-5 text-green-600" />
-            <CardTitle className="text-lg font-bold text-gray-800">
+        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl overflow-hidden">
+          <CardHeader className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 pb-2 sm:pb-3 flex flex-row items-center gap-2 border-b border-gray-200">
+            <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
+            <CardTitle className="text-sm sm:text-base lg:text-lg font-bold text-gray-800">
               Recent Activity
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-2 sm:px-6 py-4">
-            <div className="overflow-x-auto">
-              <table className="min-w-[400px] w-full text-sm">
+          <CardContent className="p-0">
+            {/* Mobile Card Layout */}
+            <div className="sm:hidden">
+              {dashboardData.recentActivity.map((activity) => (
+                <div
+                  key={activity._id}
+                  className="p-3 border-b border-gray-200 last:border-0"
+                >
+                  <div className="flex justify-between items-start mb-1">
+                    <span className="text-sm font-bold text-gray-900">
+                      {activity.action}
+                    </span>
+                    <span className="text-xs text-gray-600">
+                      {dayjs(activity.created_at).format('MMM D')}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-1 rounded">
+                      {activity.category}
+                    </span>
+                    <span className="text-xs font-bold text-gray-900">
+                      {activity.description} pts
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table Layout */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-xs sm:text-sm">
                 <thead>
                   <tr className="bg-green-50">
-                    <th className="py-3 px-3 sm:px-5 font-bold text-left text-gray-700">
+                    <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-left text-gray-700">
                       Action
                     </th>
-                    <th className="py-3 px-3 sm:px-5 font-bold text-left text-gray-700">
+                    <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-left text-gray-700">
                       Category
                     </th>
-                    <th className="py-3 px-3 sm:px-5 font-bold text-right text-gray-700">
+                    <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-right text-gray-700">
                       Description
                     </th>
-                    <th className="py-3 px-3 sm:px-5 font-bold text-right text-gray-700">
+                    <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-right text-gray-700">
                       Date
                     </th>
                   </tr>
@@ -469,16 +324,16 @@ const Dashboard: React.FC = () => {
                       key={activity._id}
                       className="border-b border-gray-200 last:border-0"
                     >
-                      <td className="py-3 px-3 sm:px-5 font-semibold text-gray-900">
+                      <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-semibold text-gray-900">
                         {activity.action}
                       </td>
-                      <td className="py-3 px-3 sm:px-5 text-blue-600 font-medium">
+                      <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 text-blue-600 font-medium">
                         {activity.category}
                       </td>
-                      <td className="py-3 px-3 sm:px-5 font-bold text-gray-900 text-right">
+                      <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-gray-900 text-right">
                         {activity.description} pts
                       </td>
-                      <td className="py-3 px-3 sm:px-5 text-gray-700 font-medium text-right">
+                      <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 text-gray-700 font-medium text-right">
                         {dayjs(activity.created_at).format(
                           'MMM D, YYYY h:mm A'
                         )}
@@ -492,25 +347,48 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Achievements */}
-        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl overflow-x-auto gap-0">
-          <CardHeader className="px-4 sm:px-6 py-4 pb-3 flex flex-row items-center gap-2 border-b border-gray-200">
-            <Trophy className="h-5 w-5 text-green-600" />
-            <CardTitle className="text-lg font-bold text-gray-800">
+        <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl overflow-hidden">
+          <CardHeader className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 pb-2 sm:pb-3 flex flex-row items-center gap-2 border-b border-gray-200">
+            <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
+            <CardTitle className="text-sm sm:text-base lg:text-lg font-bold text-gray-800">
               Achievements
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-2 sm:px-6 py-4">
-            <div className="overflow-x-auto">
-              <table className="min-w-[400px] w-full text-sm">
+          <CardContent className="p-0">
+            {/* Mobile Card Layout */}
+            <div className="sm:hidden">
+              {dashboardData.recentAchievements.map((achievement, index) => (
+                <div
+                  key={index}
+                  className="border-b border-gray-200 last:border-0 p-3"
+                >
+                  <div className="flex justify-between items-start mb-1">
+                    <div className="font-semibold text-gray-900 text-xs flex-1 pr-2">
+                      {achievement.title}
+                    </div>
+                    <div className="text-[10px] text-gray-600 flex-shrink-0">
+                      {achievement.createdAt}
+                    </div>
+                  </div>
+                  <div className="text-gray-700 font-medium text-[10px] leading-relaxed">
+                    {achievement.description}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table Layout */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="w-full text-xs sm:text-sm">
                 <thead>
                   <tr className="bg-green-50">
-                    <th className="py-3 px-3 sm:px-5 font-bold text-left text-gray-700">
+                    <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-left text-gray-700">
                       Title
                     </th>
-                    <th className="py-3 px-3 sm:px-5 font-bold text-left text-gray-700">
+                    <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-left text-gray-700">
                       Description
                     </th>
-                    <th className="py-3 px-3 sm:px-5 font-bold text-center text-gray-700">
+                    <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-center text-gray-700">
                       Date
                     </th>
                   </tr>
@@ -522,13 +400,13 @@ const Dashboard: React.FC = () => {
                         key={index}
                         className="border-b border-gray-200 last:border-0"
                       >
-                        <td className="py-3 px-3 sm:px-5 font-semibold text-gray-900">
+                        <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-semibold text-gray-900">
                           {achievement.title}
                         </td>
-                        <td className="py-3 px-3 sm:px-5 text-gray-700 font-medium">
+                        <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 text-gray-700 font-medium">
                           {achievement.description}
                         </td>
-                        <td className="py-3 px-3 sm:px-5 text-center">
+                        <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 text-center">
                           {achievement.createdAt}
                         </td>
                       </tr>

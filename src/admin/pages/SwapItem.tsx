@@ -1,12 +1,15 @@
 import { useCallback, useMemo, useState } from 'react';
 import { formatName, formatPoints } from '@/utils/formatter';
 import { useAuthFetch } from '../hooks/useAuthFetch';
+import { useToast } from '@/hooks/useToast';
+import { sanitizeName, validateName } from '@/utils/validation';
 import FloatingLabelInput from '../components/FloatingLabelInput';
 import {
   Spinner,
   InlineLoader,
   FormTablePageSkeleton,
 } from '@/components/LoadingSkeletons';
+import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { ArrowLeftRight, Search } from 'lucide-react';
 import { ImageInt } from '../components/OfficialsPanel';
@@ -36,15 +39,26 @@ const SwapItem = () => {
   // Store only the editable part (suffix) of the Record ID, fixed prefix is 'BT-'
   const [recordIdRest, setRecordIdRest] = useState('');
   const [lastName, setLastName] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [isLastNameValid, setIsLastNameValid] = useState(false);
   const [recordData, setRecordData] = useState<RecordData | null>(null);
   const [availableProducts, setAvailableProducts] = useState<Product[]>([]);
   const [quantityInputs, setQuantityInputs] = useState<Record<string, number>>(
     {}
   );
   const authFetch = useAuthFetch();
+  const { success, error: showError } = useToast();
 
   const handleFindRecord = async (e: React.FormEvent) => {
     e.preventDefault();
+    // validate last name before searching
+    const { valid, message } = validateName(lastName, true);
+    if (!valid) {
+      setLastNameError(message);
+      showError(message || 'Invalid Last Name', { title: 'Invalid' });
+      return;
+    }
+
     setSearchingRecord(true);
     await findRecord();
     setSearchingRecord(false);
@@ -56,9 +70,9 @@ const SwapItem = () => {
         `/records/BT-${recordIdRest}?lastName=${lastName}`
       );
       setRecordData(updatedRecord);
-    } catch (error) {
-      console.error('Error finding record:', error);
-      alert('No Record Found');
+    } catch (err) {
+      console.error('Error finding record:', err);
+      showError('No Record Found', { title: 'Not Found' });
       setRecordData(null);
     }
   };
@@ -107,7 +121,7 @@ const SwapItem = () => {
     const quantity = quantityInputs[product._id] || 0;
 
     if (quantity <= 0) {
-      alert('Invalid Quantity');
+      showError('Invalid Quantity', { title: 'Invalid' });
       setRedeemInProgress(false);
       return;
     }
@@ -115,7 +129,9 @@ const SwapItem = () => {
     const totalRequiredPoints = quantity * product.requiredPoints;
 
     if (totalRequiredPoints > recordData.points) {
-      alert('Not Enough Points to Redeem Product');
+      showError('Not Enough Points to Redeem Product', {
+        title: 'Insufficient Points',
+      });
       setRedeemInProgress(false);
       return;
     }
@@ -133,10 +149,9 @@ const SwapItem = () => {
         body: JSON.stringify(requestBody),
       });
 
-      alert(
-        `${data.message}: Current Points: ${
-          recordData.points - totalRequiredPoints
-        }`
+      success(
+        `${data.message}: Current Points: ${recordData.points - totalRequiredPoints}`,
+        { title: 'Redemption Successful' }
       );
 
       // Refresh data after successful redemption
@@ -152,7 +167,10 @@ const SwapItem = () => {
         [product._id]: 0,
       }));
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'An error occurred');
+      const { error: showError } = useToast();
+      showError(error instanceof Error ? error.message : 'An error occurred', {
+        title: 'Error',
+      });
     } finally {
       setRedeemInProgress(false);
     }
@@ -160,21 +178,21 @@ const SwapItem = () => {
 
   // Show loading skeleton while loading
   if (pageLoading) {
-    return <FormTablePageSkeleton />;
+    return <ResponsiveSkeleton page="formtable" />;
   }
 
   return (
-    <main className="flex flex-col gap-8 p-8">
+    <main className="flex flex-col gap-4 sm:gap-8 p-4 sm:p-8">
       {/* Header Section */}
       <div>
-        <div className="flex items-center gap-3">
-          <ArrowLeftRight className="w-10 h-10 text-green-600" />
-          <h1 className="font-bold text-4xl tracking-wide text-gray-900">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <ArrowLeftRight className="w-6 h-6 sm:w-10 sm:h-10 text-green-600" />
+          <h1 className="font-bold text-2xl sm:text-4xl tracking-wide text-gray-900">
             Trade Points
           </h1>
         </div>
-        <div className="mt-3">
-          <p className="text-lg" style={{ color: '#838383' }}>
+        <div className="mt-2 sm:mt-3">
+          <p className="text-sm sm:text-lg" style={{ color: '#838383' }}>
             Exchange accumulated points for community products and rewards
           </p>
         </div>
@@ -182,14 +200,14 @@ const SwapItem = () => {
 
       {/* Search Form */}
       <form onSubmit={handleFindRecord}>
-        <div className="bg-white rounded-xl shadow-md p-8">
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-8">
           <h5
-            className="text-lg font-semibold mb-6"
+            className="text-base sm:text-lg font-semibold mb-4 sm:mb-6"
             style={{ color: '#1a4d2e' }}
           >
             Find Resident Record
           </h5>
-          <div className="flex flex-col sm:flex-row items-stretch gap-5 w-full">
+          <div className="flex flex-col sm:flex-row items-stretch gap-3 sm:gap-5 w-full">
             {/* Record ID with BT- prefix using FloatingLabelInput */}
             <FloatingLabelInput
               label="Record ID"
@@ -207,12 +225,24 @@ const SwapItem = () => {
             <FloatingLabelInput
               label="Last Name"
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={(e) => {
+                const filtered = sanitizeName(e.target.value);
+                setLastName(filtered);
+                // live-validate
+                const { valid, message } = validateName(filtered, true);
+                setIsLastNameValid(valid);
+                setLastNameError(valid ? '' : message || 'Invalid Last Name');
+              }}
               required
             />
+            {lastNameError ? (
+              <p className="text-xs sm:text-sm text-red-600 mt-1">
+                {lastNameError}
+              </p>
+            ) : null}
 
             <button
-              className="text-lg font-semibold text-white px-10 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="text-sm sm:text-lg font-semibold text-white px-6 sm:px-10 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               style={{ backgroundColor: '#1a4d2e' }}
               type="submit"
               disabled={searchingRecord}
@@ -220,12 +250,12 @@ const SwapItem = () => {
               {searchingRecord ? (
                 <>
                   <Spinner size="sm" color="#ffffff" />
-                  <span>Searching...</span>
+                  <span className="text-sm sm:text-base">Searching...</span>
                 </>
               ) : (
                 <>
-                  <Search className="w-5 h-5" />
-                  Find Record
+                  <Search className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base">Find Record</span>
                 </>
               )}
             </button>
@@ -234,7 +264,7 @@ const SwapItem = () => {
       </form>
 
       {/* Content Section */}
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-8">
         {searchingRecord ? (
           <InlineLoader text="Searching for record..." />
         ) : null}
@@ -271,31 +301,33 @@ const RecordInformation = ({
   onConfirmRecord,
 }: RecordInformationProps) => {
   return (
-    <div className="flex flex-col gap-8 w-full lg:max-w-md">
+    <div className="flex flex-col gap-4 sm:gap-8 w-full lg:max-w-md">
       <div
-        className="p-10 bg-white rounded-lg shadow-md"
+        className="p-6 sm:p-10 bg-white rounded-lg shadow-md"
         style={{ color: '#1a4d2e' }}
       >
-        <h1 className="font-bold text-3xl mb-8">Record Information</h1>
+        <h1 className="font-bold text-xl sm:text-3xl mb-4 sm:mb-8">
+          Record Information
+        </h1>
 
-        <div className="flex flex-col gap-4 text-lg">
-          <p>
+        <div className="flex flex-col gap-2 sm:gap-4 text-sm sm:text-lg">
+          <p className="break-words">
             <span className="font-semibold">Record ID:</span>{' '}
             <span>{recordData._id}</span>
           </p>
-          <p>
+          <p className="break-words">
             <span className="font-semibold">Name:</span>{' '}
             <span>{formatName(recordData)}</span>
           </p>
-          <p>
+          <p className="break-words">
             <span className="font-semibold">Address:</span>{' '}
             <span>{recordData.address}</span>
           </p>
-          <p>
+          <p className="break-words">
             <span className="font-semibold">Contact:</span>{' '}
             <span>{recordData.contact_number}</span>
           </p>
-          <p className="text-3xl font-bold mt-4">
+          <p className="text-xl sm:text-3xl font-bold mt-2 sm:mt-4">
             <span className="font-semibold">Points:</span>{' '}
             <span>{formatPoints(recordData.points)}</span>
           </p>
@@ -303,7 +335,7 @@ const RecordInformation = ({
       </div>
 
       <button
-        className="py-4 px-6 text-lg font-semibold text-white rounded-lg shadow-md hover:opacity-80 transition-opacity duration-300"
+        className="py-3 sm:py-4 px-4 sm:px-6 text-base sm:text-lg font-semibold text-white rounded-lg shadow-md hover:opacity-80 transition-opacity duration-300"
         style={{ backgroundColor: '#1a4d2e' }}
         onClick={onConfirmRecord}
       >
@@ -334,14 +366,14 @@ const AvailableProductsSection = ({
 
   return (
     <div
-      className="grow bg-white shadow-md p-10 rounded-lg"
+      className="grow bg-white shadow-md p-4 sm:p-10 rounded-lg"
       style={{ color: '#1a4d2e' }}
     >
-      <h1 className="font-bold text-3xl mb-8">
+      <h1 className="font-bold text-xl sm:text-3xl mb-4 sm:mb-8">
         Available Products based on points from record:
       </h1>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
         {availableProducts.map((product) => (
           <ProductCard
             key={product._id}
@@ -374,31 +406,33 @@ const ProductCard = ({
 }: ProductCardProps) => {
   return (
     <div
-      className="px-6 py-6 rounded-lg text-white shadow-md"
+      className="px-4 sm:px-6 py-4 sm:py-6 rounded-lg text-white shadow-md"
       style={{ backgroundColor: '#1a4d2e' }}
     >
-      <div className="flex flex-col sm:flex-row gap-5 mb-5">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 mb-3 sm:mb-5">
         <div
-          className="shrink-0 p-3 rounded-lg grid place-items-center max-h-32"
+          className="shrink-0 p-2 sm:p-3 rounded-lg grid place-items-center max-h-24 sm:max-h-32 mx-auto sm:mx-0"
           style={{ backgroundColor: '#F6F6F6' }}
         >
           <img
             src={product.image?.url || '/placeholder.png'}
             alt={product.name}
-            className="h-20 w-24 object-contain rounded"
+            className="h-16 w-20 sm:h-20 sm:w-24 object-contain rounded"
           />
         </div>
 
-        <div className="flex flex-col justify-start gap-2 grow">
-          <h1 className="font-bold text-xl">{product.name}</h1>
-          <p className="text-base opacity-90">{product.description}</p>
+        <div className="flex flex-col justify-start gap-1 sm:gap-2 grow text-center sm:text-left">
+          <h1 className="font-bold text-lg sm:text-xl">{product.name}</h1>
+          <p className="text-sm sm:text-base opacity-90">
+            {product.description}
+          </p>
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 text-base">
+      <div className="flex flex-col gap-3 sm:gap-4 text-sm sm:text-base">
         <label
           htmlFor={`quantity-${product._id}`}
-          className="flex items-center gap-3 font-semibold"
+          className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 font-semibold"
         >
           <span>Quantity:</span>
           <input
@@ -406,16 +440,18 @@ const ProductCard = ({
             type="number"
             placeholder="0"
             min="0"
-            className="w-20 px-2 py-1 placeholder:text-center bg-white/10 border-2 border-white rounded text-center outline-none"
+            className="w-full sm:w-20 px-2 py-1 placeholder:text-center bg-white/10 border-2 border-white rounded text-center outline-none"
             value={quantity || ''}
             onChange={(e) => onQuantityInput(product._id, e.target.value)}
           />
         </label>
 
-        <div className="flex items-center justify-between text-lg">
-          <p className="font-bold">{product.requiredPoints} points</p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 text-base sm:text-lg">
+          <p className="font-bold text-center sm:text-left">
+            {product.requiredPoints} points
+          </p>
           <button
-            className="font-semibold py-2 px-6 rounded-lg bg-white shadow-md hover:opacity-80 transition-opacity duration-300"
+            className="font-semibold py-2 px-4 sm:px-6 rounded-lg bg-white shadow-md hover:opacity-80 transition-opacity duration-300 text-sm sm:text-base"
             style={{ color: '#1a4d2e' }}
             onClick={() => onRedeem(product)}
             disabled={redeemInProgress}

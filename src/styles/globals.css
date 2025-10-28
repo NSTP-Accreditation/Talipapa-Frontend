@@ -147,7 +147,7 @@ html {
 }
 
 /* Modal animations */
-@keyframes fadeIn {
+@keyframes fade-in {
   from {
     opacity: 0;
   }
@@ -157,7 +157,7 @@ html {
   }
 }
 
-@keyframes slideUp {
+@keyframes slide-up {
   from {
     opacity: 0;
     transform: translateY(20px) scale(0.95);
@@ -169,7 +169,7 @@ html {
   }
 }
 
-@keyframes slideDown {
+@keyframes slide-down {
   from {
     opacity: 0;
     transform: translateY(-10px);
@@ -182,24 +182,124 @@ html {
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.2s ease-out;
+  animation: fade-in 0.2s ease-out;
 }
 
 .animate-slideUp {
-  animation: slideUp 0.3s ease-out;
+  animation: slide-up 0.3s ease-out;
 }
 
 .animate-slideDown {
-  animation: slideDown 0.2s ease-out;
+  animation: slide-down 0.2s ease-out;
 }
 
 /* Hide number input spinner for inputs with .no-spinner */
 .no-spinner::-webkit-outer-spin-button,
 .no-spinner::-webkit-inner-spin-button {
-  -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 
 .no-spinner {
-  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Modern Gradient Backgrounds - Professional & Elegant (Lighter Version) */
+.bg-gradient-modern-light {
+  background: linear-gradient(
+    135deg,
+    #fdfffd 0%,
+    #f4faf5 25%,
+    #f8fcf9 50%,
+    #f4faf5 75%,
+    #fdfffd 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+.bg-gradient-modern-green {
+  background: linear-gradient(
+    135deg,
+    #f4faf5 0%,
+    #e4f3e5 20%,
+    #d2ebd3 40%,
+    #e4f3e5 60%,
+    #f4faf5 80%,
+    #f8fcf9 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 20s ease infinite;
+}
+
+.bg-gradient-professional {
+  background: linear-gradient(
+    to bottom right,
+    #fff 0%,
+    #fdfffd 15%,
+    #f8fcf9 30%,
+    #f4faf5 50%,
+    #e4f3e5 70%,
+    #f4faf5 85%,
+    #fdfffd 100%
+  );
+}
+
+.bg-gradient-subtle-green {
+  background: linear-gradient(
+    135deg,
+    #feffff 0%,
+    #f8fcf9 25%,
+    #f4faf5 50%,
+    #f8fcf9 75%,
+    #feffff 100%
+  );
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Mesh gradient overlay for depth (lighter version) */
+.gradient-mesh::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 20% 30%,
+      rgb(228 243 229 / 8%) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      rgb(210 235 211 / 6%) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgb(244 250 245 / 5%) 0%,
+      transparent 70%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gradient-mesh > *:not(.fixed, .absolute, .sticky) {
+  /* Only make direct children stacking context if they are not already positioned.
+     This avoids overriding elements that rely on fixed/absolute positioning
+     (for example modals or overlays) which were previously being forced to
+     `position: relative` and therefore lost their viewport-fixed behavior. */
+  position: relative;
+  z-index: 1;
 }

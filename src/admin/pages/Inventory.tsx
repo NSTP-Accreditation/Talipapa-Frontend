@@ -1,4 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { useToast } from '@/hooks/useToast';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +19,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { PageLoadingSkeleton } from '@/components/LoadingSkeletons';
+import ResponsiveSkeleton from '@/components/ResponsiveSkeleton';
 import useFetchData from '../hooks/useFetchData';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 
@@ -25,7 +28,7 @@ interface Product {
   name: string;
   image?: string;
   category?: string;
-  subCategory?: string,
+  subCategory?: string;
   description?: string;
   stocks?: number;
   requiredPoints?: number;
@@ -86,10 +89,10 @@ const DeleteModal: React.FC<{
 
   if (!open) return null;
 
-  return (
-    <div className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
+  return createPortal(
+    <div className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
       <div className="absolute inset-0 bg-black/70" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 z-10 animate-in zoom-in-95 duration-200">
+      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 z-[10] animate-in zoom-in-95 duration-200">
         <div className="p-6">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-3 bg-red-100 rounded-full">
@@ -125,7 +128,8 @@ const DeleteModal: React.FC<{
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -188,15 +192,15 @@ const ProductModal: React.FC<{
     const url = URL.createObjectURL(file);
     fileUrlRef.current = url;
     setFormData((prev: any) => ({ ...prev, image: url, imageFile: file }));
-  };  
+  };
 
-  return (
-    <div className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
+  return createPortal(
+    <div className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
       <div
         className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl w-full mx-3 sm:mx-4 z-10 animate-in zoom-in-95 duration-300 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-4xl w-full mx-3 sm:mx-4 z-[10] animate-in zoom-in-95 duration-300 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
@@ -311,18 +315,23 @@ const ProductModal: React.FC<{
                     <option value="">Select</option>
                     {formData.category === 'Agricultural' && (
                       <>
-                        <option value="Crops">Recyclable</option>
+                        <option value="Vegetable">Vegetables</option>
                         <option value="Fertilizers">Fertilizers</option>
-                        <option value="Seeds">Soil</option>
-                        <option value="Livestock">Livestock</option>
+                        <option value="Soil">Soil</option>
+                        <option value="Fruits">Fruits</option>
+                        <option value="Seedlings">Seedlings</option>
+                        <option value="Herbal Plants">Herbal Plants</option>
+                        <option value="Fruits">Fruits</option>
                       </>
                     )}
                     {formData.category === 'Non Agricultural' && (
                       <>
-                        <option value="Household">Household</option>
-                        <option value="Electronics">Electronics</option>
-                        <option value="Clothing">Clothing</option>
-                        <option value="Construction">Construction</option>
+                        <option value="Household">Eco Bags and Eco Rags</option>
+                        <option value="Toys">Toys</option>
+                        <option value="School Supplies">School Supplies</option>
+                        <option value="Medicines">Medicines</option>
+                        <option value="Cashback">Cashback</option>
+                        <option value="Books">Books</option>
                       </>
                     )}
                   </select>
@@ -448,7 +457,8 @@ const ProductModal: React.FC<{
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -510,13 +520,13 @@ const MaterialModal: React.FC<{
     setFormData((prev: any) => ({ ...prev, image: url, imageFile: file }));
   };
 
-  return (
-    <div className="fixed inset-0 z-1003 flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
+  return createPortal(
+    <div className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
       <div
         className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/70"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-3xl w-full mx-3 sm:mx-4 z-10 animate-in zoom-in-95 duration-300 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl max-w-3xl w-full mx-3 sm:mx-4 z-[10] animate-in zoom-in-95 duration-300 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         <div className="relative p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -ml-24 -mb-24"></div>
@@ -705,15 +715,26 @@ const MaterialModal: React.FC<{
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
 const Inventory: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { data: productsData, loading: productsDataLoading, error: productsDataErr, refetch: refetchProduct } = useFetchData("/products");
-  const { data: materialssData, loading: materialsDataLoading, error: materialsDataErr, refetch: refetchMaterials } = useFetchData("/materials");
-  
+  const {
+    data: productsData,
+    loading: productsDataLoading,
+    error: productsDataErr,
+    refetch: refetchProduct,
+  } = useFetchData('/products');
+  const {
+    data: materialssData,
+    loading: materialsDataLoading,
+    error: materialsDataErr,
+    refetch: refetchMaterials,
+  } = useFetchData('/materials');
+
   const authFetch = useAuthFetch();
 
   useEffect(() => {
@@ -722,35 +743,38 @@ const Inventory: React.FC = () => {
   }, []);
 
   const products: Product[] = useMemo(() => {
-    if(productsData && !productsDataLoading && !productsDataErr) {
-      return  productsData?.map(product => {
+    if (productsData && !productsDataLoading && !productsDataErr) {
+      return productsData?.map((product) => {
         const { _id, image, ...rest } = product;
         return {
           ...rest,
           id: _id,
-          image: image.url
-        }
-      })  
+          image: image.url,
+        };
+      });
     }
     return [];
-  }, [productsData, productsDataLoading, productsDataErr])
+  }, [productsData, productsDataLoading, productsDataErr]);
 
   const materials: Material[] = useMemo(() => {
-    if(materialssData && !materialsDataLoading && !materialsDataErr) {
-      return  materialssData?.map(material => {
+    if (materialssData && !materialsDataLoading && !materialsDataErr) {
+      return materialssData?.map((material) => {
         const { _id, image, ...rest } = material;
         return {
           ...rest,
           id: _id,
-          image: image.url
-        }
-      })  
+          image: image.url,
+        };
+      });
     }
     return [];
-  }, [materialssData, materialsDataLoading, materialsDataErr])
-
+  }, [materialssData, materialsDataLoading, materialsDataErr]);
 
   const [search, setSearch] = useState('');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('');
+  const [hiddenProductIds, setHiddenProductIds] = useState<Set<string>>(new Set());
+  const [hiddenMaterialIds, setHiddenMaterialIds] = useState<Set<string>>(new Set());
+  const [showHidden, setShowHidden] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
   const [showMaterialModal, setShowMaterialModal] = useState(false);
   const [productMode, setProductMode] = useState<'add' | 'edit'>('add');
@@ -775,7 +799,7 @@ const Inventory: React.FC = () => {
     stocks: '',
     requiredPoints: '',
     image: '',
-    imageFile: null
+    imageFile: null,
   });
 
   const [materialFormData, setMaterialFormData] = useState({
@@ -783,10 +807,10 @@ const Inventory: React.FC = () => {
     description: '',
     pointsPerKg: '',
     image: '',
-    imageFile: null
+    imageFile: null,
   });
 
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const { success, error: showError } = useToast();
 
   useEffect(() => {
     if (!showProductModal) {
@@ -798,7 +822,7 @@ const Inventory: React.FC = () => {
         stocks: '',
         requiredPoints: '',
         image: '',
-        imageFile: null
+        imageFile: null,
       });
       setProductMode('add');
       setEditingProduct(null);
@@ -812,137 +836,222 @@ const Inventory: React.FC = () => {
         description: '',
         pointsPerKg: '',
         image: '',
-        imageFile: null
+        imageFile: null,
       });
       setMaterialMode('add');
       setEditingMaterial(null);
     }
   }, [showMaterialModal]);
 
-  useEffect(() => {
-    if (successMessage) {
-      const timer = setTimeout(() => setSuccessMessage(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [successMessage]);
+  // toasts handled via useToast
 
   const filteredProducts = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return products;
-    return products.filter(
-      (p) =>
+    return products.filter((p) => {
+      // Filter by selected subcategory when set
+      if (selectedSubcategory && p.subCategory !== selectedSubcategory)
+        return false;
+
+      // Respect hidden state unless showing hidden items
+      if (!showHidden && hiddenProductIds.has(p.id)) return false;
+
+      if (!q) return true;
+
+      return (
         p.name.toLowerCase().includes(q) ||
         p.id.includes(q) ||
         p.category?.toLowerCase().includes(q)
-    );
-  }, [products, search]);
+      );
+    });
+  }, [products, search, selectedSubcategory, showHidden, hiddenProductIds]);
+
+  const availableSubcategories = useMemo(() => {
+    const set = new Set<string>();
+    products.forEach((p) => {
+      if (p.subCategory) set.add(p.subCategory);
+    });
+    return Array.from(set).sort();
+  }, [products]);
+
+  const selectedSubcategoryCount = useMemo(() => {
+    if (!selectedSubcategory) return 0;
+    return products.filter((p) => p.subCategory === selectedSubcategory).length;
+  }, [products, selectedSubcategory]);
 
   const filteredMaterials = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return materials;
-    return materials.filter(
-      (m) => m.name.toLowerCase().includes(q) || m.id.includes(q)
-    );
-  }, [materials, search]);
+    return materials.filter((m) => {
+      if (!showHidden && hiddenMaterialIds.has(m.id)) return false;
+      if (!q) return true;
+      return m.name.toLowerCase().includes(q) || m.id.includes(q);
+    });
+  }, [materials, search, showHidden, hiddenMaterialIds]);
+
+  function toggleHideProduct(id: string) {
+    setHiddenProductIds((prev) => {
+      const s = new Set(prev);
+      if (s.has(id)) s.delete(id);
+      else s.add(id);
+      return s;
+    });
+  }
+
+  function toggleHideMaterial(id: string) {
+    setHiddenMaterialIds((prev) => {
+      const s = new Set(prev);
+      if (s.has(id)) s.delete(id);
+      else s.add(id);
+      return s;
+    });
+  }
 
   async function handleAddProduct() {
     if (!productFormData.name.trim())
-      return alert('Please enter a product name');
+      return showError('Please enter a product name', { title: 'Validation' });
     if (!productFormData.category.trim())
-      return alert('Please select a category');
+      return showError('Please select a category', { title: 'Validation' });
     if (!productFormData.subCategory.trim())
-      return alert('Please select a subcategory');
+      return showError('Please select a subcategory', { title: 'Validation' });
     if (!productFormData.stocks.trim() || Number(productFormData.stocks) < 0)
-      return alert('Please enter valid stocks');
+      return showError('Please enter valid stocks', { title: 'Validation' });
     if (
       !productFormData.requiredPoints.trim() ||
       Number(productFormData.requiredPoints) < 0
     )
-    return alert('Please enter valid required points');
-
-    const newProduct: Product = {
-      id:
-        productMode === 'edit' && editingProduct
-          ? editingProduct.id
-          : Date.now().toString(16),
-      name: productFormData.name.trim(),
-      image: productFormData.imageFile,
-      category: `${productFormData.category.trim()}`,
-      subCategory: `${productFormData.category.trim()}`,
-      description: productFormData.description.trim() || undefined,
-      stocks: Number(productFormData.stocks),
-      requiredPoints: Number(productFormData.requiredPoints),
-    };
-
-    const formData = new FormData();
-    Object.entries(newProduct).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
+      return showError('Please enter valid required points', {
+        title: 'Validation',
+      });
 
     try {
       if (productMode === 'edit' && editingProduct) {
-        // setProducts((prev) =>
-        //   prev.map((p) => (p.id === editingProduct.id ? newProduct : p))
-        // );
-        setSuccessMessage('Product updated successfully!');
+        // For edit mode, only use FormData if there's a new image
+        if (
+          productFormData.imageFile &&
+          productFormData.imageFile instanceof File
+        ) {
+          // Use FormData when uploading a new image
+          const formData = new FormData();
+          formData.append('name', productFormData.name.trim());
+          formData.append('description', productFormData.description.trim());
+          formData.append('category', productFormData.category.trim());
+          formData.append('subCategory', productFormData.subCategory.trim());
+          formData.append('stocks', productFormData.stocks);
+          formData.append('requiredPoints', productFormData.requiredPoints);
+          formData.append('image', productFormData.imageFile);
+
+          const response = await authFetch(`/products/${editingProduct.id}`, {
+            method: 'PUT',
+            body: formData,
+          });
+          await refetchProduct();
+          success(response.message || 'Product updated', { title: 'Success' });
+        } else {
+          // Use JSON when no new image
+          const response = await authFetch(`/products/${editingProduct.id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+              name: productFormData.name.trim(),
+              description: productFormData.description.trim(),
+              category: productFormData.category.trim(),
+              subCategory: productFormData.subCategory.trim(),
+              stocks: Number(productFormData.stocks),
+              requiredPoints: Number(productFormData.requiredPoints),
+            }),
+          });
+          await refetchProduct();
+          success(response.message || 'Product updated', { title: 'Success' });
+        }
       } else {
-        const response = await authFetch("/products", {
-          method: "POST",
-          body: formData
-        })
-        
+        // For create mode, always use FormData
+        const formData = new FormData();
+        formData.append('name', productFormData.name.trim());
+        formData.append('description', productFormData.description.trim());
+        formData.append('category', productFormData.category.trim());
+        formData.append('subCategory', productFormData.subCategory.trim());
+        formData.append('stocks', productFormData.stocks);
+        formData.append('requiredPoints', productFormData.requiredPoints);
+        if (productFormData.imageFile) {
+          formData.append('image', productFormData.imageFile);
+        }
+
+        const response = await authFetch('/products', {
+          method: 'POST',
+          body: formData,
+        });
         await refetchProduct();
-        setSuccessMessage(response?.message);
+        success(response?.message || 'Product created', { title: 'Success' });
       }
     } catch (error) {
-      console.log(error);
+      // Error is already handled by useAuthFetch
     }
-    
 
     setShowProductModal(false);
   }
 
   async function handleAddMaterial() {
     if (!materialFormData.name.trim())
-      return alert('Please enter a material name');
+      return showError('Please enter a material name', { title: 'Validation' });
     if (
       !materialFormData.pointsPerKg.trim() ||
       Number(materialFormData.pointsPerKg) < 0
     )
-      return alert('Please enter valid points per kilogram');
+      return showError('Please enter valid points per kilogram', {
+        title: 'Validation',
+      });
 
-    const newMaterial: Material = {
-      id:
-        materialMode === 'edit' && editingMaterial
-          ? editingMaterial.id
-          : Date.now().toString(16),
-      name: materialFormData.name.trim(),
-      image: materialFormData.imageFile,
-      description: materialFormData.description.trim() || undefined,
-      pointsPerKg: Number(materialFormData.pointsPerKg),
-    };
-
-    const formData = new FormData();
-    Object.entries(newMaterial).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
     try {
       if (materialMode === 'edit' && editingMaterial) {
-      
-        setSuccessMessage('Material updated successfully!');
+        // For edit mode, only use FormData if there's a new image
+        if (
+          materialFormData.imageFile &&
+          materialFormData.imageFile instanceof File
+        ) {
+          // Use FormData when uploading a new image
+          const formData = new FormData();
+          formData.append('name', materialFormData.name.trim());
+          formData.append('description', materialFormData.description.trim());
+          formData.append('pointsPerKg', materialFormData.pointsPerKg);
+          formData.append('image', materialFormData.imageFile);
+
+          const response = await authFetch(`/materials/${editingMaterial.id}`, {
+            method: 'PUT',
+            body: formData,
+          });
+          await refetchMaterials();
+          success(response.message || 'Material updated', { title: 'Success' });
+        } else {
+          // Use JSON when no new image
+          const response = await authFetch(`/materials/${editingMaterial.id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+              name: materialFormData.name.trim(),
+              description: materialFormData.description.trim(),
+              pointsPerKg: Number(materialFormData.pointsPerKg),
+            }),
+          });
+          await refetchMaterials();
+          success(response.message || 'Material updated', { title: 'Success' });
+        }
       } else {
-        const response = await authFetch("/materials", {
-          method: "POST",
-          body: formData
-        })
-        
+        // For create mode, always use FormData
+        const formData = new FormData();
+        formData.append('name', materialFormData.name.trim());
+        formData.append('description', materialFormData.description.trim());
+        formData.append('pointsPerKg', materialFormData.pointsPerKg);
+        if (materialFormData.imageFile) {
+          formData.append('image', materialFormData.imageFile);
+        }
+
+        const response = await authFetch('/materials', {
+          method: 'POST',
+          body: formData,
+        });
         await refetchMaterials();
-        setSuccessMessage(response.message);
+        success(response.message || 'Material created', { title: 'Success' });
       }
     } catch (error) {
-      console.log(error);
+      // Error is already handled by useAuthFetch
     }
-    
 
     setShowMaterialModal(false);
   }
@@ -950,10 +1059,10 @@ const Inventory: React.FC = () => {
   function handleEditProduct(product: Product) {
     setProductMode('edit');
     setEditingProduct(product);
-    
+
     const category = product.category;
     const subCategory = product.subCategory;
-    
+
     setProductFormData({
       name: product.name,
       description: product.description || '',
@@ -977,7 +1086,7 @@ const Inventory: React.FC = () => {
       description: material.description || '',
       pointsPerKg: material.pointsPerKg?.toString() || '',
       image: material.image || '',
-      imageFile: null
+      imageFile: null,
     });
 
     setShowMaterialModal(true);
@@ -992,16 +1101,16 @@ const Inventory: React.FC = () => {
 
     if (deleteModal.type === 'product') {
       await authFetch(`/products/${deleteModal?.item.id}`, {
-        method: "DELETE"
-      })
+        method: 'DELETE',
+      });
       await refetchProduct();
-      setSuccessMessage('Product deleted successfully!');
+      success('Product deleted successfully!', { title: 'Deleted' });
     } else {
       await authFetch(`/materials/${deleteModal?.item.id}`, {
-        method: "DELETE"
-      })
+        method: 'DELETE',
+      });
       await refetchMaterials();
-      setSuccessMessage('Material deleted successfully!');
+      success('Material deleted successfully!', { title: 'Deleted' });
     }
 
     setDeleteModal({ open: false, item: null, type: null });
@@ -1011,19 +1120,12 @@ const Inventory: React.FC = () => {
   const outOfStockCount = products.filter((p) => (p.stocks || 0) === 0).length;
 
   if (isLoading) {
-    return <PageLoadingSkeleton />;
+    return <ResponsiveSkeleton page="inventory" />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 p-3 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
-      {successMessage && (
-        <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-5 duration-300">
-          <div className="bg-green-600 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 backdrop-blur-sm">
-            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
-            <span className="font-medium text-sm">{successMessage}</span>
-          </div>
-        </div>
-      )}
+      {/* Success toasts are rendered by the global ToastProvider */}
 
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-6">
         <div className="flex-shrink-0">
@@ -1032,10 +1134,10 @@ const Inventory: React.FC = () => {
               <Package className="w-6 h-6 sm:w-8 sm:h-8 text-green-700" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
+              <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
                 Inventory Management
               </h1>
-              <p className="text-xs sm:text-sm text-gray-500 mt-0.5 sm:mt-1">
+              <p className="text-[11px] sm:text-sm text-gray-500 mt-0.5 sm:mt-1">
                 Manage products and materials for trading operations
               </p>
             </div>
@@ -1049,7 +1151,7 @@ const Inventory: React.FC = () => {
             placeholder="Search inventory..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 sm:pl-12 pr-9 sm:pr-10 py-2.5 sm:py-3 w-full border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 text-sm sm:text-base bg-white"
+            className="pl-10 sm:pl-12 pr-9 sm:pr-10 py-2.5 sm:py-3 w-full border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 text-[13px] sm:text-base bg-white"
           />
           {search && (
             <button
@@ -1072,10 +1174,10 @@ const Inventory: React.FC = () => {
                   <Package className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-green-700" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                  <p className="text-[10px] sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
                     Products
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
+                  <p className="text-xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
                     {products.length}
                   </p>
                 </div>
@@ -1094,10 +1196,10 @@ const Inventory: React.FC = () => {
                   <Box className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-emerald-700" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                  <p className="text-[10px] sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
                     Materials
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
+                  <p className="text-xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
                     {materials.length}
                   </p>
                 </div>
@@ -1116,10 +1218,10 @@ const Inventory: React.FC = () => {
                   <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-yellow-700" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                  <p className="text-[10px] sm:text-sm font-semibold text-gray-500 uppercase tracking-wide inline">
                     Low Stock
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
+                  <p className="text-xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
                     {lowStockCount}
                   </p>
                 </div>
@@ -1138,10 +1240,10 @@ const Inventory: React.FC = () => {
                   <Box className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-red-700" />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                  <p className="text-[10px] sm:text-sm font-semibold text-gray-500 uppercase tracking-wide inline-block">
                     Out of Stock
                   </p>
-                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
+                  <p className="text-xl sm:text-3xl font-bold text-gray-900 mt-0.5 sm:mt-1">
                     {outOfStockCount}
                   </p>
                 </div>
@@ -1163,15 +1265,52 @@ const Inventory: React.FC = () => {
               Showing {filteredProducts.length} of {products.length} products
             </p>
           </div>
-          <Button
-            onClick={() => {
-              setProductMode('add');
-              setShowProductModal(true);
-            }}
-            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
-          >
-            <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add Product
-          </Button>
+
+          <div className="flex items-center gap-3">
+            {/* Subcategory filter - placed left of Add Product */}
+            <div className="hidden sm:flex items-center gap-2">
+              <select
+                value={selectedSubcategory}
+                onChange={(e) => setSelectedSubcategory(e.target.value)}
+                className="h-9 text-sm border-2 border-gray-200 focus:border-green-500 rounded-xl px-3 bg-white"
+              >
+                <option value="">All subcategories</option>
+                {availableSubcategories.map((sc) => (
+                  <option key={sc} value={sc}>
+                    {sc}
+                  </option>
+                ))}
+              </select>
+
+              {selectedSubcategory ? (
+                <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-lg">
+                  {selectedSubcategoryCount} item{selectedSubcategoryCount !== 1 ? 's' : ''}
+                </div>
+              ) : null}
+              {/* show hidden toggle */}
+              <div className="ml-2">
+                <label className="inline-flex items-center text-sm text-gray-600">
+                  <input
+                    type="checkbox"
+                    checked={showHidden}
+                    onChange={(e) => setShowHidden(e.target.checked)}
+                    className="mr-2 h-4 w-4"
+                  />
+                  Show hidden
+                </label>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => {
+                setProductMode('add');
+                setShowProductModal(true);
+              }}
+              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
+            >
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add Product
+            </Button>
+          </div>
         </div>
 
         <Card className="border-none shadow-xl overflow-hidden">
@@ -1209,6 +1348,11 @@ const Inventory: React.FC = () => {
                       <div className="flex-1 min-w-0">
                         <div className="font-bold text-gray-900 text-sm sm:text-base lg:text-lg group-hover:text-green-700 transition-colors duration-200 break-words">
                           {p.name}
+                          {hiddenProductIds.has(p.id) && (
+                            <span className="ml-2 inline-block text-[10px] text-red-600 bg-red-50 px-2 py-0.5 rounded">
+                              Hidden
+                            </span>
+                          )}
                         </div>
 
                         {p.description && (
@@ -1233,10 +1377,18 @@ const Inventory: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 lg:gap-3 flex-shrink-0 self-end sm:self-center">
+                      <div className="flex items-center gap-2 lg:gap-3 flex-shrink-0 self-end sm:self-center">
                       <div className="text-xs sm:text-sm font-bold text-green-700 bg-green-50 px-2.5 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-lg whitespace-nowrap">
                         {p.requiredPoints} pts
                       </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => toggleHideProduct(p.id)}
+                        className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      >
+                        {hiddenProductIds.has(p.id) ? 'Unhide' : 'Hide'}
+                      </Button>
                       <Button
                         variant="outline"
                         size="sm"
@@ -1321,6 +1473,11 @@ const Inventory: React.FC = () => {
                       <div className="flex-1 min-w-0">
                         <div className="font-bold text-gray-900 text-sm sm:text-base lg:text-lg group-hover:text-emerald-700 transition-colors duration-200 break-words">
                           {m.name}
+                          {hiddenMaterialIds.has(m.id) && (
+                            <span className="ml-2 inline-block text-[10px] text-red-600 bg-red-50 px-2 py-0.5 rounded">
+                              Hidden
+                            </span>
+                          )}
                         </div>
 
                         {m.description && (
@@ -1336,10 +1493,18 @@ const Inventory: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 lg:gap-3 flex-shrink-0 self-end sm:self-center">
+                      <div className="flex items-center gap-2 lg:gap-3 flex-shrink-0 self-end sm:self-center">
                       <div className="text-xs sm:text-sm font-bold text-emerald-700 bg-emerald-50 px-2.5 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-lg whitespace-nowrap">
                         {m.pointsPerKg} pts/kg
                       </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => toggleHideMaterial(m.id)}
+                        className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-50 transition-all duration-200"
+                      >
+                        {hiddenMaterialIds.has(m.id) ? 'Unhide' : 'Hide'}
+                      </Button>
                       <Button
                         variant="outline"
                         size="sm"

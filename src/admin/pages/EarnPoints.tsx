@@ -1,63 +1,90 @@
-import React, { useMemo, useState } from 'react';
-import { Recycle } from 'lucide-react';
+import React, { useMemo, useState, useEffect } from 'react';
+import { sanitizeName, validateName } from '@/utils/validation';
+import { Recycle, CheckCircle2 } from 'lucide-react';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useLoadingState } from '../../hooks/useLoadingState';
+import { useToast } from '@/hooks/useToast';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
-
-const MATERIALS = [
-  'PET bottles',
-  'Soft and hard plastics',
-  'Candy and chichirya wrapper',
-  'Plastic bags and food wrapping',
-  'Food takeaway containers',
-  'Water cooler bottles, baby cups, fiberglass',
-  'Used cotton clothes',
-];
+import useFetchData from '../hooks/useFetchData';
 
 export default function App() {
-  // Add loading state with 1 second display
   const { isLoading: pageLoading } = useLoadingState(1000);
+  const { data: materialsData, loading, error } = useFetchData('/materials');
 
-  // Store only the editable part (suffix) of the Record ID, fixed prefix is 'BT-'
   const [recordIdRest, setRecordIdRest] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
-  const [weights, setWeights] = useState<string[]>(MATERIALS.map(() => '0'));
+  const [lastNameError, setLastNameError] = useState('');
+  const [isLastNameValid, setIsLastNameValid] = useState(false);
+  const [weights, setWeights] = useState<{ [key: string]: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const authFetch = useAuthFetch();
+  const { success, error: toastError } = useToast();
 
-  function handleWeightChange(index: number, value: string) {
-    const newWeights = [...weights];
+  // Initialize weights when materialsData is loaded
+  useEffect(() => {
+    if (materialsData && materialsData.length > 0) {
+      const initialWeights: { [key: string]: string } = {};
+      materialsData.forEach((material) => {
+        initialWeights[material._id] = '';
+      });
+      setWeights(initialWeights);
+    }
+  }, [materialsData]);
+
+  function handleWeightChange(materialId: string, value: string) {
     if (value === '' || /^\d*\.?\d*$/.test(value)) {
-      newWeights[index] = value;
-      setWeights(newWeights);
+      setWeights((prev) => ({
+        ...prev,
+        [materialId]: value,
+      }));
     }
   }
 
   const totalPoints = useMemo(() => {
-    return weights.reduce((total, weight) => {
-      const numWeight = parseFloat(weight) || 0;
-      return total + numWeight;
+    if (!materialsData) return 0;
+
+    return materialsData.reduce((total, material) => {
+      const weight = parseFloat(weights[material._id]) || 0;
+      return total + weight * material.pointsPerKg;
     }, 0);
-  }, [weights]);
+  }, [weights, materialsData]);
 
   const materialsWithValue = useMemo((): string[] => {
-    return MATERIALS.filter((_, index) => {
-      const weight = parseFloat(weights[index]) || 0;
-      return weight > 0;
-    });
-  }, [weights]);
+    if (!materialsData) return [];
+
+    return materialsData
+      .filter((material) => {
+        const weight = parseFloat(weights[material._id]) || 0;
+        return weight > 0;
+      })
+      .map((material) => material.name);
+  }, [weights, materialsData]);
 
   const handleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const hasValidWeight = weights.some((weight) => {
-      const numWeight = parseFloat(weight) || 0;
-      return numWeight > 0;
+    const hasValidWeight = materialsData?.some((material) => {
+      const weight = parseFloat(weights[material._id]) || 0;
+      return weight > 0;
     });
 
     if (!hasValidWeight) {
-      alert('Please enter at least one material weight greater than 0');
+      toastError('Please enter at least one material weight greater than 0', {
+        title: 'Validation Error',
+      });
       return;
     }
+
+    // validate last name
+    const lastNameRes = validateName(lastName, true);
+    if (!lastNameRes.valid) {
+      toastError(lastNameRes.message || 'Please enter a valid last name', {
+        title: 'Validation Error',
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       const requestBody = {
@@ -70,128 +97,231 @@ export default function App() {
         method: 'PATCH',
         body: JSON.stringify(requestBody),
       });
-      alert(
-        `${result.record_id} ${result.lastName} current point is ${result.currentPoints}`
+
+      success(
+        `${result.record_id} ${result.lastName} current point is ${result.currentPoints}`,
+        { title: 'Success' }
       );
-    } catch (error) {
-      console.log(error);
+
+      // Reset form after success
+      setRecordIdRest('');
+      setLastName('');
+      const resetWeights: { [key: string]: string } = {};
+      materialsData?.forEach((material) => {
+        resetWeights[material._id] = '';
+      });
+      setWeights(resetWeights);
+    } catch (err) {
+      console.error(err);
+      toastError('Failed to update record. Please try again.', {
+        title: 'Error',
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   // Show loading skeleton while loading
-  if (pageLoading) {
+  if (pageLoading || loading) {
     return <FormTablePageSkeleton />;
   }
 
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+        <div className="bg-white rounded-xl border-2 border-red-200 shadow-lg p-8 max-w-md">
+          <div className="text-red-600 text-center">
+            <div className="text-xl font-semibold mb-2">
+              Error Loading Materials
+            </div>
+            <div className="text-sm text-gray-600">{error}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!materialsData || materialsData.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+        <div className="bg-white rounded-xl border-2 border-gray-200 shadow-lg p-8 max-w-md">
+          <div className="text-gray-600 text-center">
+            <Recycle className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+            <div className="text-xl font-semibold mb-2">No Materials Found</div>
+            <div className="text-sm">Please add materials to get started.</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+    <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 bg-gradient-to-br from-emerald-50 via-white to-green-50 min-h-screen">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <Recycle className="w-10 h-10 text-green-600" />
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+            <Recycle className="w-6 h-6 sm:w-10 sm:h-10 text-green-600" />
             Earn Points
           </h1>
-          <p className="text-lg text-gray-700 mt-2 font-medium">
-            Accumulate points of residents' record
+          <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
+            Accumulate points for residents' recycling records
           </p>
         </div>
-        <div />
       </div>
 
       {/* Full width card form */}
       <form
-        className="bg-white rounded-xl border-2 border-gray-200 shadow-md p-8 w-full"
+        className="bg-white rounded-2xl border border-gray-200 shadow-lg p-4 sm:p-8 w-full max-w-5xl mx-auto"
         onSubmit={handleConfirm}
       >
         {/* Record Info */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 w-full">
-          <label className="block group">
-            <label className="text-xs text-gray-500 mb-1 block">
-              <span>Record ID</span>
-            </label>
-            <div className="relative">
-              <label className="sr-only">Record ID</label>
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-700 select-none font-normal text-base leading-6" style={{ fontWeight: 400 }}>BT-</span>
-              <input
-                type="text"
-                value={recordIdRest}
-                onChange={(e) => {
-                  // Allow digits only and limit to 4 digits
-                  const digitsOnly = e.target.value.replace(/\D/g, '');
-                  const limited = digitsOnly.slice(0, 4);
-                  setRecordIdRest(limited);
-                }}
-                className="w-full pl-12 px-3 py-2 border-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500 font-normal text-base leading-6"
-                placeholder="0001"
-                required
-              />
-            </div>
-            <div className="text-xs text-gray-500 mt-2">
-              Record ID will be stored as <span className="font-medium">BT-0001</span>. Only 4 digits allowed.
-            </div>
-          </label>
-          <div>
-            <label className="text-xs text-gray-500 mb-1 block">
-              Last Name
-            </label>
-            <input
-              required
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="w-full px-3 py-2 border-2 rounded-lg bg-gray-50 focus:ring-2 focus:ring-green-500 focus:border-green-500"
-              placeholder="Last Name"
-            />
-          </div>
-        </div>
-
-        {/* Table Headers */}
-        <div className="grid grid-cols-12 gap-[23px] text-xs font-semibold text-gray-600 mb-2">
-          <div className="col-span-6">Material</div>
-          <div className="col-span-3">Weight</div>
-          <div className="col-span-3 flex items-center justify-center">
-            Unit
-          </div>
-        </div>
-
-        {/* Input Rows */}
-        {MATERIALS.map((mat, idx) => (
-          <div
-            key={idx}
-            className="grid grid-cols-12 gap-[23px] items-center mb-3"
-          >
-            <div className="col-span-6">
-              <div className="bg-gradient-to-r from-green-50 to-white px-3 py-2 rounded font-semibold text-gray-800">
-                {mat}
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-green-600" />
+            Record Information
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="block group">
+              <label className="text-sm font-medium text-gray-700 mb-2 block">
+                Record ID
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 select-none font-medium text-sm sm:text-base">
+                  BT-
+                </span>
+                <input
+                  type="text"
+                  value={recordIdRest}
+                  onChange={(e) => {
+                    const digitsOnly = e.target.value.replace(/\D/g, '');
+                    const limited = digitsOnly.slice(0, 4);
+                    setRecordIdRest(limited);
+                  }}
+                  className="w-full pl-10 sm:pl-12 pr-3 py-2.5 border-2 border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
+                  placeholder="0001"
+                  required
+                />
               </div>
+              <p className="text-xs text-gray-500 mt-1.5">
+                Format:{' '}
+                <span className="font-medium text-gray-700">BT-0001</span> (4
+                digits only)
+              </p>
             </div>
-            <div className="col-span-3">
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-2 block">
+                Last Name
+              </label>
               <input
-                type="text"
-                inputMode="decimal"
-                value={weights[idx]}
-                onChange={(e) => handleWeightChange(idx, e.target.value)}
-                className="w-full px-3 py-2 border rounded bg-gray-50"
-                placeholder="0"
+                required
+                value={lastName}
+                onChange={(e) => {
+                  const filtered = sanitizeName(e.target.value);
+                  setLastName(filtered);
+                  const res = validateName(filtered, true);
+                  setLastNameError(res.valid ? '' : res.message);
+                  setIsLastNameValid(res.valid);
+                }}
+                onBlur={() => {
+                  const res = validateName(lastName, true);
+                  setLastNameError(res.valid ? '' : res.message);
+                  setIsLastNameValid(res.valid);
+                }}
+                className="w-full px-3 py-2.5 border-2 border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
+                placeholder="Enter last name"
               />
-            </div>
-            <div className="col-span-3 text-gray-700 flex items-center justify-center">
-              Kilogram
+              {lastNameError ? (
+                <p className="text-xs sm:text-sm text-red-600 mt-1">
+                  {lastNameError}
+                </p>
+              ) : null}
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* Materials Section */}
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
+            Materials & Weights
+          </h2>
+
+          {/* Table Headers */}
+          <div className="hidden sm:grid grid-cols-12 gap-4 text-sm font-semibold text-gray-600 mb-3 px-2">
+            <div className="col-span-5">Material</div>
+            <div className="col-span-3">Weight (kg)</div>
+            <div className="col-span-2">Points/kg</div>
+            <div className="col-span-2 text-right">Subtotal</div>
+          </div>
+
+          {/* Input Rows */}
+          <div className="space-y-3">
+            {materialsData.map((material) => {
+              const weight = parseFloat(weights[material._id]) || 0;
+              const subtotal = weight * material.pointsPerKg;
+
+              return (
+                <div
+                  key={material._id}
+                  className="bg-gradient-to-r from-green-50 to-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-md transition-all"
+                >
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 items-center">
+                    <div className="sm:col-span-5">
+                      <div className="font-semibold text-gray-800 text-sm sm:text-base">
+                        {material.name}
+                      </div>
+                      <div className="text-xs text-gray-500 sm:hidden mt-1">
+                        {material.pointsPerKg} points/kg
+                      </div>
+                    </div>
+                    <div className="sm:col-span-3">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={weights[material._id] || ''}
+                          onChange={(e) =>
+                            handleWeightChange(material._id, e.target.value)
+                          }
+                          className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
+                          placeholder="0.0"
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs sm:text-sm">
+                          kg
+                        </span>
+                      </div>
+                    </div>
+                    <div className="hidden sm:block sm:col-span-2 text-gray-600 text-sm">
+                      {material.pointsPerKg}
+                    </div>
+                    <div className="sm:col-span-2 text-right">
+                      <span className="text-green-700 font-semibold text-sm sm:text-base">
+                        {subtotal > 0 ? subtotal.toFixed(2) : '0'} pts
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
         {/* Footer */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
-          <div className="flex items-center gap-4">
-            <p className="text-lg font-semibold">Total Points:</p>
-            <span className="text-emerald-700 ml-6 font-lg">{totalPoints}</span>
+        <div className="flex flex-col sm:flex-row justify-between items-center pt-6 border-t-2 border-gray-200 gap-4">
+          <div className="flex items-center gap-3">
+            <span className="text-base sm:text-lg font-semibold text-gray-700">
+              Total Points:
+            </span>
+            <span className="text-2xl sm:text-3xl font-bold text-green-600">
+              {totalPoints.toFixed(2)}
+            </span>
           </div>
           <button
             type="submit"
-            className="bg-green-600 text-white px-6 py-2 w-full sm:w-[220px] rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all"
+            disabled={isSubmitting}
+            className="bg-green-600 text-white px-6 sm:px-8 py-3 w-full sm:w-auto rounded-lg shadow-md hover:bg-green-700 hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm sm:text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
           >
-            Confirm
+            {isSubmitting ? 'Processing...' : 'Confirm & Submit'}
           </button>
         </div>
       </form>

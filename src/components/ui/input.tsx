@@ -6,7 +6,13 @@ export const Input = React.forwardRef<
   HTMLInputElement,
   React.InputHTMLAttributes<HTMLInputElement>
 >(({ className, ...props }, ref) => {
-  return <input ref={ref} className={cn('form-input', 'w-full', 'block', className)} {...props} />;
+  return (
+    <input
+      ref={ref}
+      className={cn('form-input', 'w-full', 'block', className)}
+      {...props}
+    />
+  );
 });
 
 Input.displayName = 'Input';

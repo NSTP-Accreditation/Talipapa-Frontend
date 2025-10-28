@@ -346,8 +346,8 @@ export const AboutUsPageSkeleton: React.FC = () => {
             </div>
 
             {/* Vision Card */}
-            <div className="bg-white border-2 border-blue-100 rounded-2xl shadow-xl p-10 text-center">
-              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mb-6 shadow-md">
+            <div className="bg-white border-2 border-green-100 rounded-2xl shadow-xl p-10 text-center">
+              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mb-6 shadow-md">
                 <Skeleton className="h-10 w-10" />
               </div>
               <Skeleton className="h-8 w-40 mx-auto mb-6" />
@@ -362,7 +362,7 @@ export const AboutUsPageSkeleton: React.FC = () => {
           <div className="max-w-4xl mx-auto">
             <div className="bg-white border-2 border-gray-100 rounded-2xl shadow-xl p-10">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl flex items-center justify-center shadow-md">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-md">
                   <Skeleton className="h-8 w-8" />
                 </div>
                 <Skeleton className="h-9 w-56" />
@@ -1250,4 +1250,260 @@ export const ActivityLogsPageSkeleton: React.FC = () => {
       </div>
     </div>
   );
+};
+
+// ============= MOBILE-SPECIFIC COMPACT SKELETONS =============
+
+import { useEffect, useState } from 'react';
+
+// Hook to detect mobile viewport (client-side)
+const useIsMobile = (breakpoint = 768) => {
+  const [isMobile, setIsMobile] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= breakpoint;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const media = window.matchMedia(`(max-width: ${breakpoint}px)`);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    // older browsers
+    try {
+      media.addEventListener('change', handler);
+    } catch (err) {
+      // @ts-ignore
+      media.addListener(handler);
+    }
+    setIsMobile(media.matches);
+    return () => {
+      try {
+        media.removeEventListener('change', handler);
+      } catch (err) {
+        // @ts-ignore
+        media.removeListener(handler);
+      }
+    };
+  }, [breakpoint]);
+
+  return isMobile;
+};
+
+// Compact mobile skeleton variations (smaller heights, fewer items)
+export const MobileHomeSkeleton: React.FC = () => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50 p-4">
+      <Skeleton className="h-40 w-full rounded-lg mb-4" />
+      <div className="space-y-3">
+        {[1, 2].map((i) => (
+          <div key={i} className="bg-white p-3 rounded-xl shadow-sm">
+            <Skeleton className="h-4 w-40 mb-2" />
+            <Skeleton className="h-3 w-full" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const MobileGreenPagesSkeleton: React.FC = () => {
+  return (
+    <div className="min-h-screen p-3 bg-gradient-to-br from-gray-50 via-green-50/20 to-gray-50">
+      <Skeleton className="h-44 w-full rounded-lg mb-3" />
+      <div className="bg-white rounded-xl p-3 shadow-sm">
+        <Skeleton className="h-6 w-28 mb-2" />
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="flex items-center gap-3 mb-2">
+            <Skeleton className="h-9 w-9 rounded" />
+            <Skeleton className="h-3 w-3/4" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const MobileTradingSkeleton: React.FC = () => {
+  return (
+    <div className="min-h-screen p-4 bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <Skeleton className="h-12 w-12 rounded-full mx-auto mb-3" />
+      <Skeleton className="h-8 w-3/4 mx-auto mb-4" />
+      <div className="space-y-3">
+        <Skeleton className="h-12 w-full rounded-lg" />
+        <Skeleton className="h-12 w-full rounded-lg" />
+      </div>
+    </div>
+  );
+};
+
+export const MobileGuidelinesSkeleton: React.FC = () => {
+  return (
+    <div className="min-h-screen p-4 bg-gradient-to-br from-gray-50 to-green-50">
+      <Skeleton className="h-16 w-16 rounded-full mx-auto mb-4" />
+      <div className="space-y-3">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="bg-white p-3 rounded-lg shadow-sm">
+            <Skeleton className="h-4 w-3/4 mb-2" />
+            <Skeleton className="h-3 w-full" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const MobileDashboardSkeleton: React.FC = () => {
+  return (
+    <div className="p-3 space-y-4">
+      <Skeleton className="h-8 w-48 mb-2" />
+      <div className="grid grid-cols-2 gap-3">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="bg-white p-3 rounded-lg shadow-sm">
+            <Skeleton className="h-6 w-20 mb-2" />
+            <Skeleton className="h-4 w-12" />
+          </div>
+        ))}
+      </div>
+      <Skeleton className="h-40 w-full rounded-lg mt-3" />
+    </div>
+  );
+};
+
+export const MobileInventorySkeleton: React.FC = () => {
+  return (
+    <div className="p-3 space-y-3">
+      <Skeleton className="h-8 w-40 mb-2" />
+      <Skeleton className="h-12 w-full rounded-lg mb-2" />
+      <div className="space-y-2">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="bg-white p-3 rounded-lg shadow-sm flex items-center gap-3"
+          >
+            <Skeleton className="h-12 w-12 rounded" />
+            <div className="flex-1">
+              <Skeleton className="h-4 w-3/4 mb-1" />
+              <Skeleton className="h-3 w-1/2" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const MobileNewsEventsSkeleton: React.FC = () => {
+  return (
+    <div className="p-3 space-y-3">
+      <Skeleton className="h-8 w-48 mb-2" />
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="bg-white p-3 rounded-lg shadow-sm">
+          <Skeleton className="h-36 w-full mb-3 rounded" />
+          <Skeleton className="h-4 w-2/3 mb-1" />
+          <Skeleton className="h-3 w-1/2" />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const MobileAchievementsSkeleton: React.FC = () => {
+  return (
+    <div className="p-3 space-y-3">
+      <Skeleton className="h-8 w-48 mb-2" />
+      <div className="grid grid-cols-2 gap-3">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="bg-white p-3 rounded-lg shadow-sm">
+            <Skeleton className="h-28 w-full rounded mb-2" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export const MobileActivityLogsSkeleton: React.FC = () => {
+  return (
+    <div className="p-3 space-y-3">
+      <Skeleton className="h-8 w-40 mb-2" />
+      {[1, 2, 3, 4].map((i) => (
+        <div
+          key={i}
+          className="flex gap-3 items-start bg-white p-3 rounded-lg shadow-sm"
+        >
+          <Skeleton className="h-10 w-10 rounded-full" />
+          <div className="flex-1">
+            <Skeleton className="h-4 w-3/4 mb-1" />
+            <Skeleton className="h-3 w-1/2" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const MobileFormTableSkeleton: React.FC = () => {
+  return (
+    <div className="p-3 space-y-3">
+      <Skeleton className="h-8 w-56 mb-2" />
+      <Skeleton className="h-12 w-full rounded-lg mb-3" />
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="bg-white p-3 rounded-lg shadow-sm">
+          <Skeleton className="h-4 w-3/4 mb-2" />
+          <Skeleton className="h-8 w-full rounded-lg" />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// MobileSkeleton: choose a compact skeleton by key; falls back to a generic compact page
+export const MobileSkeleton: React.FC<{ page?: string }> = ({ page }) => {
+  const isMobile = useIsMobile();
+  if (!isMobile) return <PageLoadingSkeleton />;
+
+  switch ((page || '').toLowerCase()) {
+    case 'home':
+    case 'homepage':
+      return <MobileHomeSkeleton />;
+    case 'greenpages':
+    case 'green-pages':
+      return <MobileGreenPagesSkeleton />;
+    case 'trading':
+      return <MobileTradingSkeleton />;
+    case 'guidelines':
+      return <MobileGuidelinesSkeleton />;
+    case 'dashboard':
+      return <MobileDashboardSkeleton />;
+    case 'inventory':
+      return <MobileInventorySkeleton />;
+    case 'news':
+    case 'newsandevents':
+    case 'news-events':
+      return <MobileNewsEventsSkeleton />;
+    case 'achievements':
+      return <MobileAchievementsSkeleton />;
+    case 'activitylogs':
+    case 'activity-logs':
+      return <MobileActivityLogsSkeleton />;
+    case 'formtable':
+    case 'records':
+    case 'earnpoints':
+      return <MobileFormTableSkeleton />;
+    default:
+      // generic compact skeleton
+      return (
+        <div className="min-h-screen p-4 bg-gradient-to-br from-gray-50 to-green-50">
+          <Skeleton className="h-12 w-56 mb-4" />
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white p-3 rounded-lg shadow-sm">
+                <Skeleton className="h-4 w-3/4 mb-2" />
+                <Skeleton className="h-3 w-full" />
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+  }
 };

@@ -3,19 +3,19 @@ import MissionVision from '../components/MissionVision';
 import Achievements from '../components/Achievement';
 import CalendarEvents from '../components/CalendarEvents';
 import { useLoadingState } from '../../hooks/useLoadingState';
-import { HomePageSkeleton } from '../../components/LoadingSkeletons';
+import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 
 const Home = () => {
   // Add loading state with 1 second display
   const { isLoading } = useLoadingState(1000);
 
-  // Show loading skeleton while loading
+  // Show loading skeleton while loading (responsive: mobile compact, desktop page-specific)
   if (isLoading) {
-    return <HomePageSkeleton />;
+    return <ResponsiveSkeleton page="home" />;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
+    <div className="min-h-screen bg-gradient-professional gradient-mesh relative">
       <Carousel />
       <MissionVision />
       <CalendarEvents />
