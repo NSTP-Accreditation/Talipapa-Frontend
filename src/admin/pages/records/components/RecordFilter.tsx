@@ -13,11 +13,12 @@ type RecordFilterProps = {
 
 const RecordFilter = ({ originalRecords, recordsData, setOriginalRecords, refetchRecords } : RecordFilterProps ) => {
   const [ searchTerm, setSearchTerm ] = useState("");
+
   
   const debouncedSearch = useCallback(
     debounce(async (query: string) => {
       if (!query) {
-        setOriginalRecords(recordsData || []);
+        refetchRecords();
         return;
       }
 

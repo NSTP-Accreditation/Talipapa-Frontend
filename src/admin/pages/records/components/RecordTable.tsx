@@ -37,7 +37,7 @@ const RecordTable = ({
   };
 
   return (
-    <section id="record_table">
+    <section id="record_table" className='grid gap-5'>
       <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200">
         <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-green-200 scrollbar-track-green-50">
           <table className="w-full text-xs sm:text-sm min-w-[700px]">
