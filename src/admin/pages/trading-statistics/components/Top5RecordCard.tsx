@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
-import { Award, TrendingUp } from 'lucide-react';
+import { Award } from 'lucide-react';
 import { TradingStatisticsProps } from '../TradingStatistics.types';
 
 
-const Top5Record = ({ topList, topLoading } : TradingStatisticsProps & { topLoading: boolean }) => {
+const Top5RecordCard = ({ topList, topLoading } : TradingStatisticsProps & { topLoading: boolean }) => {
   return (
     <Card className="border-2 border-[#1b4c2e]/20 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg sm:rounded-xl overflow-hidden">
       <CardHeader className="bg-gradient-to-r from-[#1b4c2e] to-[#2d6b47] text-white pb-4 sm:pb-6">
@@ -85,4 +85,4 @@ const Top5Record = ({ topList, topLoading } : TradingStatisticsProps & { topLoad
   );
 };
 
-export default Top5Record;
+export default Top5RecordCard;
