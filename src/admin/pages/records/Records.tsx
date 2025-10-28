@@ -1,4 +1,5 @@
 import useFetchData from '../../hooks/useFetchData';
+import AddRecordModal from './components/AddRecordModal';
 import RecordFilter from './components/RecordFilter';
 import RecordHeader from './components/RecordHeader';
 import RecordTable from './components/RecordTable';
@@ -38,7 +39,9 @@ const Records = () => {
   return (
     <main className="md:p-5">
       {/* Record Header */}
-      <RecordHeader recordsData={recordsData} />
+      <RecordHeader 
+        setOpenAddRecordModal={setOpenAddRecordModal}
+        recordsData={recordsData} />
 
       {/* Enhanced Search Bar */}
       <RecordFilter
@@ -61,7 +64,11 @@ const Records = () => {
       />
 
       {/* MODALS */}
-      
+      <AddRecordModal 
+        openAddRecordModal={openAddRecordModal}
+        setOpenAddRecordModal={setOpenAddRecordModal}
+        refetchRecords={refetchRecords}
+      />
 
     </main>
   );
