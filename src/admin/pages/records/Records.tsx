@@ -1,3 +1,4 @@
+import { RecordInterface } from '@/types/global.types';
 import useFetchData from '../../hooks/useFetchData';
 import AddRecordModal from './components/AddRecordModal';
 import DeleterecordModal from './components/DeleterecordModal';
@@ -5,7 +6,6 @@ import EditRecordModal from './components/EditRecordModal';
 import RecordFilter from './components/RecordFilter';
 import RecordHeader from './components/RecordHeader';
 import RecordTable from './components/RecordTable';
-import { RecordInterface } from './Record.types';
 import { useEffect, useState } from 'react';
 
 const Records = () => {
