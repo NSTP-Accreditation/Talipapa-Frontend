@@ -92,7 +92,7 @@ export default function Carousel() {
 
   return (
     <div
-      className="relative group w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden"
+      className="relative group w-full h-[600px] sm:h-[700px] md:h-[800px] lg:h-[900px] overflow-hidden"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -122,17 +122,17 @@ export default function Carousel() {
       <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none px-4">
         <div
           key={current}
-          className={`text-white rounded-2xl md:rounded-3xl text-center transition-opacity duration-500 ease-[cubic-bezier(.25,.1,.25,1)] max-w-sm sm:max-w-xl md:max-w-4xl w-full ${
+          className={`text-white rounded-2xl md:rounded-3xl text-center transition-opacity duration-500 ease-[cubic-bezier(.25,.1,.25,1)] max-w-lg sm:max-w-4xl md:max-w-7xl w-full ${
             slides[current] && !isPaused ? 'opacity-100' : 'opacity-0'
           }`}
           style={{ willChange: 'opacity' }}
         >
           {/* Mobile: no backdrop/blur, smaller padding and text. Desktop (md+): translucent white + blur + larger padding/text */}
-          <div className="w-full mx-auto bg-black/10 backdrop-blur-sm md:bg-black/30 md:backdrop-blur-xl border border-transparent md:border-black/30 shadow-2xl px-4 py-3 sm:px-6 sm:py-4 md:px-10 md:py-8 rounded-2xl md:rounded-3xl pointer-events-none">
-            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3 md:mb-4 drop-shadow-lg">
+          <div className="w-full mx-auto bg-black/10 backdrop-blur-sm md:bg-black/30 md:backdrop-blur-xl border border-transparent md:border-black/30 shadow-2xl px-8 py-6 sm:px-10 sm:py-8 md:px-20 md:py-16 rounded-2xl md:rounded-3xl pointer-events-none">
+            <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 md:mb-8 drop-shadow-lg">
               {slides[current]?.title}
             </h2>
-            <p className="text-base sm:text-lg md:text-xl font-light drop-shadow-md">
+            <p className="text-2xl sm:text-3xl md:text-4xl font-light drop-shadow-md">
               {slides[current]?.subtitle}
             </p>
           </div>
@@ -142,31 +142,31 @@ export default function Carousel() {
       {/* Previous Button */}
       <button
         onClick={prevSlide}
-        className="absolute left-2 sm:left-4 md:left-6 lg:left-8 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-full transition-opacity duration-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto z-20"
+        className="absolute left-2 sm:left-4 md:left-6 lg:left-8 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-full transition-opacity duration-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto z-20"
         aria-label="Previous slide"
       >
-        <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 text-white group-hover:scale-110 transition-transform" />
+        <ChevronLeft className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white group-hover:scale-110 transition-transform" />
       </button>
 
       {/* Next Button */}
       <button
         onClick={() => nextSlide(true)}
-        className="absolute right-2 sm:right-4 md:right-6 lg:right-8 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-full transition-opacity duration-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto z-20"
+        className="absolute right-2 sm:right-4 md:right-6 lg:right-8 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-full transition-opacity duration-300 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto z-20"
         aria-label="Next slide"
       >
-        <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 text-white group-hover:scale-110 transition-transform" />
+        <ChevronRight className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 text-white group-hover:scale-110 transition-transform" />
       </button>
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 lg:bottom-10 left-1/2 -translate-x-1/2 flex gap-2 sm:gap-3 z-20">
+      <div className="absolute bottom-6 sm:bottom-8 md:bottom-10 lg:bottom-12 left-1/2 -translate-x-1/2 flex gap-3 sm:gap-4 z-20">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrent(index)}
-            className={`h-2 sm:h-2.5 md:h-3 rounded-full transition-all duration-300 ${
+            className={`h-4 sm:h-5 md:h-6 rounded-full transition-all duration-300 ${
               index === current
-                ? 'bg-white w-6 sm:w-7 md:w-8 shadow-lg'
-                : 'bg-white/50 hover:bg-white/70 w-2 sm:w-2.5 md:w-3'
+                ? 'bg-white w-10 sm:w-12 md:w-16 shadow-lg'
+                : 'bg-white/50 hover:bg-white/70 w-4 sm:w-5 md:w-6'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />
