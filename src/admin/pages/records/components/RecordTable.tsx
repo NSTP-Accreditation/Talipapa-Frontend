@@ -6,8 +6,8 @@ import { Dispatch, SetStateAction } from 'react';
 
 type RecordTableType = {
   showingRecords: RecordInterface[];
-  setOpenEditModal: Dispatch<SetStateAction<RecordInterface>>;
-  setOpenDeleteModal: Dispatch<SetStateAction<RecordInterface>>;
+  setEditRecord: Dispatch<SetStateAction<RecordInterface>>;
+  setDeleteRecord: Dispatch<SetStateAction<RecordInterface>>;
 };
 
 type PaginationType = {
@@ -20,8 +20,8 @@ type PaginationType = {
 
 const RecordTable = ({
   showingRecords,
-  setOpenEditModal,
-  setOpenDeleteModal,
+  setEditRecord,
+  setDeleteRecord,
   startIndex,
   recordsPerPage,
   currentPage,
@@ -38,7 +38,7 @@ const RecordTable = ({
 
   return (
     <section id="record_table" className='grid gap-5'>
-      <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200">
+      <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200 overflow-x-auto">
         <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-green-200 scrollbar-track-green-50">
           <table className="w-full text-xs sm:text-sm min-w-[700px]">
             <thead className="bg-gradient-to-r from-green-50 to-green-100 border-b-2 border-green-200">
@@ -130,14 +130,14 @@ const RecordTable = ({
                     <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <Button
-                          onClick={() => setOpenEditModal(record)}
+                          onClick={() => setEditRecord(record)}
                           className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
                         >
                           <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span className="hidden sm:inline">Edit</span>
                         </Button>
                         <Button
-                          onClick={() => setOpenDeleteModal(record)}
+                          onClick={() => setDeleteRecord(record)}
                           className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
                         >
                           <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />

@@ -31,8 +31,9 @@ const Records = () => {
   );
 
   // State for modals
-  const [openEditModal, setOpenEditModal] = useState<RecordInterface>();
-  const [openDeleteModal, setOpenDeleteModal] = useState<RecordInterface>();
+  const [openAddRecordModal, setOpenAddRecordModal] = useState(false);
+  const [editRecord, setEditRecord] = useState<RecordInterface | null>(null);
+  const [deleteRecord, setDeleteRecord] = useState<RecordInterface | null>(null);
 
   return (
     <main className="md:p-5">
@@ -50,15 +51,18 @@ const Records = () => {
       {/* Record Table */}
       <RecordTable
         showingRecords={showingRecords}
-        setOpenEditModal={setOpenEditModal}
-        setOpenDeleteModal={setOpenDeleteModal}
+        setEditRecord={setEditRecord}
+        setDeleteRecord={setDeleteRecord}
         startIndex={startIndex}
         recordsPerPage={recordsPerPage}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         totalPages={totalPages}
       />
+
+      {/* MODALS */}
       
+
     </main>
   );
 };
