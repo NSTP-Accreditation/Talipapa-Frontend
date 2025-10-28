@@ -1,16 +1,41 @@
-import dayjs from "dayjs"
-import { RecordInterface } from "../Record.types"
-import { Button } from "@/components/ui"
-import { Edit, Search, Trash2 } from "lucide-react"
-import { Dispatch, SetStateAction } from "react"
+import dayjs from 'dayjs';
+import { RecordInterface } from '../Record.types';
+import { Button } from '@/components/ui';
+import { Edit, Search, Trash2 } from 'lucide-react';
+import { Dispatch, SetStateAction } from 'react';
 
 type RecordTableType = {
-  originalRecords: RecordInterface[],
-  setOpenEditModal: Dispatch<SetStateAction<RecordInterface>>,
-  setOpenDeleteModal: Dispatch<SetStateAction<RecordInterface>>,
-}
+  showingRecords: RecordInterface[];
+  setOpenEditModal: Dispatch<SetStateAction<RecordInterface>>;
+  setOpenDeleteModal: Dispatch<SetStateAction<RecordInterface>>;
+};
 
-const RecordTable = ({ originalRecords, setOpenEditModal, setOpenDeleteModal } : RecordTableType ) => {
+type PaginationType = {
+  startIndex: number;
+  recordsPerPage: number;
+  currentPage: number;
+  setCurrentPage: Dispatch<SetStateAction<number>>;
+  totalPages: number;
+};
+
+const RecordTable = ({
+  showingRecords,
+  setOpenEditModal,
+  setOpenDeleteModal,
+  startIndex,
+  recordsPerPage,
+  currentPage,
+  setCurrentPage,
+  totalPages,
+}: RecordTableType & PaginationType) => {
+  const prevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const nextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
   return (
     <section id="record_table">
       <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200">
@@ -43,8 +68,8 @@ const RecordTable = ({ originalRecords, setOpenEditModal, setOpenDeleteModal } :
             </thead>
 
             <tbody className="divide-y divide-gray-200">
-              {originalRecords.length > 0 ? (
-                originalRecords.map((record, index) => (
+              {showingRecords.length > 0 ? (
+                showingRecords.map((record, index) => (
                   <tr
                     key={index}
                     className="hover:bg-green-50 transition-colors duration-150"
@@ -150,9 +175,50 @@ const RecordTable = ({ originalRecords, setOpenEditModal, setOpenDeleteModal } :
         </div>
       </div>
 
+      <div className="flex flex-col sm:flex-row justify-between items-center bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200 px-4 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-0">
+        <div className="text-xs sm:text-sm text-gray-600 font-medium text-center sm:text-left">
+          Showing{' '}
+          <span className="font-bold text-gray-900">{startIndex + 1}</span> to{' '}
+          <span className="font-bold text-gray-900">
+            {Math.min(startIndex + recordsPerPage, showingRecords.length)}
+          </span>{' '}
+          of{' '}
+          <span className="font-bold text-gray-900">
+            {showingRecords.length}
+          </span>{' '}
+          records
+        </div>
 
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={prevPage}
+            disabled={currentPage === 1}
+            className="px-3 sm:px-4 py-2 border-2 border-gray-300 rounded-lg font-semibold hover:bg-green-50 hover:border-green-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
+          >
+            ← <span className="hidden sm:inline">Previous</span>
+          </Button>
+
+          <div className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 bg-green-100 border-2 border-green-300 rounded-lg">
+            <span className="text-xs sm:text-sm font-bold text-green-800">
+              {currentPage} / {totalPages || 1}
+            </span>
+          </div>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={nextPage}
+            disabled={currentPage === totalPages || totalPages === 0}
+            className="px-3 sm:px-4 py-2 border-2 border-gray-300 rounded-lg font-semibold hover:bg-green-50 hover:border-green-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
+          >
+            <span className="hidden sm:inline">Next</span> →
+          </Button>
+        </div>
+      </div>
     </section>
-  )
-}
+  );
+};
 
-export default RecordTable
+export default RecordTable;
