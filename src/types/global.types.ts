@@ -25,6 +25,7 @@ export interface ProductInterface {
 export interface MaterialInterface {
   _id: string;
   name: string;
+  image?: ImageInterface;
   description: string;
   pointsPerKg: number;
   createdAt: string;
