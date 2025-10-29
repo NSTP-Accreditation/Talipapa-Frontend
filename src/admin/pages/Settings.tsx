@@ -365,20 +365,9 @@ const Settings: React.FC = () => {
         <Modal
           isOpen={isAddAdminModalOpen}
           onClose={closeAddAdminModal}
-          title={
-            <div className="w-full">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-white/20 rounded-lg">
-                  <Users className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl lg:text-2xl font-bold">Add New Admin</h3>
-              </div>
-              <p className="text-sm lg:text-base text-white/90">
-                Create a new administrator account with specific roles and
-                permissions
-              </p>
-            </div>
-          }
+          title="Add New Admin"
+          subtitle="Create a new administrator account with specific roles and permissions"
+          icon={<Users className="w-6 h-6 text-white" />}
         >
           <form onSubmit={handleAddAdmin} className="flex flex-col flex-1">
             <div className="space-y-6 overflow-y-auto flex-1">

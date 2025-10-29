@@ -5,6 +5,8 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: React.ReactNode;
+  subtitle?: React.ReactNode;
+  icon?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
   ariaLabel?: string;
@@ -14,6 +16,8 @@ const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   title,
+  subtitle,
+  icon,
   children,
   className = '',
   ariaLabel,
@@ -113,9 +117,21 @@ const Modal: React.FC<ModalProps> = ({
 
             <div className="relative flex items-center justify-between">
               <div className="flex items-center gap-2 sm:gap-4">
-                {/* allow callers to supply icon + title markup as the `title` prop */}
-                <div className="text-lg sm:text-xl font-bold leading-tight">
-                  {title}
+                {icon ? (
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 sm:ring-4 ring-white/30 shadow-lg">
+                    {icon}
+                  </div>
+                ) : null}
+
+                <div>
+                  <div className="text-lg sm:text-xl font-bold leading-tight">
+                    {title}
+                  </div>
+                  {subtitle ? (
+                    <div className="text-green-100 text-xs sm:text-sm font-medium mt-0.5">
+                      {subtitle}
+                    </div>
+                  ) : null}
                 </div>
               </div>
 
