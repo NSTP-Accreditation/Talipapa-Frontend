@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
-import { useToast } from '../../hooks/useToast';
-import {
-  BarChart3,
-} from 'lucide-react';
-import { useLoadingState } from '../../hooks/useLoadingState';
-import ResponsiveSkeleton from '../../components/ResponsiveSkeleton';
+import { useToast } from '../../../hooks/useToast';
+import { BarChart3 } from 'lucide-react';
+import { useLoadingState } from '../../../hooks/useLoadingState';
+import ResponsiveSkeleton from '../../../components/ResponsiveSkeleton';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import DashboardStatCards from './DashboardStatCards';
@@ -52,7 +50,6 @@ const Dashboard: React.FC = () => {
 
         {/* Achievements */}
         <DashboardAchievements />
-
       </div>
     </main>
   );
