@@ -27,6 +27,7 @@ const AddEditProductModal = memo(
     const authFetch = useAuthFetch();
 
     const [productFormData, setProductFormData] = useState({
+      _id: '',
       name: '',
       description: '',
       category: '',
@@ -40,6 +41,7 @@ const AddEditProductModal = memo(
     useEffect(() => {
       if (mode === 'Edit' && productToEdit) {
         setProductFormData({
+          _id: productToEdit._id,
           name: productToEdit.name,
           description: productToEdit.description,
           category: productToEdit.category,
@@ -51,6 +53,7 @@ const AddEditProductModal = memo(
         });
       } else {
         setProductFormData({
+          _id: '',
           name: '',
           description: '',
           category: '',
@@ -72,7 +75,7 @@ const AddEditProductModal = memo(
         image: {
           url: url,
         },
-        imageFile: file
+        imageFile: file,
       }));
     };
 
@@ -115,11 +118,7 @@ const AddEditProductModal = memo(
       return true;
     };
 
-    const handleAddProduct = async () => {
-      if (!validateProductForm()) {
-        return;
-      }
-
+    const buildProductFormData = (): FormData => {
       const formData = new FormData();
       formData.append('name', productFormData.name.trim());
       formData.append('description', productFormData.description.trim());
@@ -131,9 +130,22 @@ const AddEditProductModal = memo(
         productFormData.requiredPoints.toString()
       );
 
-      if (productFormData.imageFile && productFormData.imageFile instanceof File) {
+      if (
+        productFormData.imageFile &&
+        productFormData.imageFile instanceof File
+      ) {
         formData.append('image', productFormData.imageFile);
       }
+
+      return formData;
+    };
+
+    const handleAddProduct = async (): Promise<void> => {
+      if (!validateProductForm()) {
+        return;
+      }
+
+      const formData = buildProductFormData();
 
       try {
         const response = await authFetch('/products', {
@@ -147,7 +159,24 @@ const AddEditProductModal = memo(
       }
     };
 
-    const handleUpdateProduct = () => {};
+    const handleUpdateProduct = async (): Promise<void> => {
+      if (!validateProductForm()) {
+        return;
+      }
+
+      const formData = buildProductFormData();
+      try {
+        const response = await authFetch(`/products/${productFormData._id}`, {
+          method: 'PATCH',
+          body: formData,
+        });
+
+        await refetchProduct();
+        success(response.message || 'Product updated', { title: 'Success' });
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
 
     return (
       showProductModal &&
