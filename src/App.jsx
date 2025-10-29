@@ -20,11 +20,13 @@ const EarnPointsLogs = lazy(
   () => import('@/admin/pages/earn-points/EarnPoints')
 );
 const SwapLogs = lazy(() => import('@/admin/pages/swap-item/SwapItem'));
-const Guidelines = lazy(() => import('@/admin/pages/Guidelines'));
+const Guidelines = lazy(() => import('@/admin/pages/guidelines/Guidelines'));
 const CarouselEditor = lazy(() => import('@/admin/pages/CarouselEditor'));
 const News = lazy(() => import('@/admin/pages/NewsEvents'));
 const AboutUsAdmin = lazy(() => import('@/admin/pages/AboutUs'));
-const Achievements = lazy(() => import('@/admin/pages/Achievements'));
+const Achievements = lazy(
+  () => import('@/admin/pages/achievements/Achievements')
+);
 const AdminLogin = lazy(() => import('@/admin/auth/AdminLogin'));
 const Inventory = lazy(() => import('@/admin/pages/Inventory'));
 const FarmInventory = lazy(() => import('@/admin/pages/FarmInventory'));
