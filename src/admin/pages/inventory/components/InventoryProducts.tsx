@@ -1,27 +1,38 @@
 import ImageWithFallback from '@/components/ImageWithFallback';
-import ResponsiveSkeleton from '@/components/ResponsiveSkeleton';
 import { Button, Card, CardContent, Input } from '@/components/ui';
 import { ProductInterface } from '@/types/global.types';
-import { CheckCircle2, Edit, Package, Plus, Tag, Trash2, X } from 'lucide-react';
-import { Dispatch, memo, SetStateAction, useState } from 'react';
+import {
+  Edit,
+  Package,
+  Plus,
+  Tag,
+  Trash2,
+  X,
+} from 'lucide-react';
+import { useState } from 'react';
 import AddEditProductModal from './AddEditProductModal';
+import DeleteProductMaterialModal from './DeleteProductModal';
 
 type InventoryProductsProps = {
   filteredProducts: ProductInterface[];
   productsData: ProductInterface[];
   productsDataError: string | null;
-  refetchProduct: () => Promise<ProductInterface[]>
+  refetchProduct: () => Promise<ProductInterface[]>;
 };
 
 const InventoryProducts = ({
   filteredProducts,
   productsData,
   productsDataError,
-  refetchProduct
+  refetchProduct,
 }: InventoryProductsProps) => {
   const [showProductModal, setShowProductModal] = useState<boolean>(false);
   const [mode, setMode] = useState<'Add' | 'Edit'>('Add');
-  const [productToEdit, setProductToEdit] = useState<ProductInterface | null>(null)
+  const [productToEdit, setProductToEdit] = useState<ProductInterface | null>(
+    null
+  );
+
+  const [productToDelete, setProductToDelete] = useState<ProductInterface | null>(null);
 
   if (productsDataError && !productsData) {
     return <p>Failed to fetch products data.</p>;
@@ -30,8 +41,8 @@ const InventoryProducts = ({
   const handleEditProduct = (product: ProductInterface) => {
     setShowProductModal(true);
     setMode('Edit');
-    setProductToEdit(product)
-  }
+    setProductToEdit(product);
+  };
 
   if (!productsData) return null;
 
@@ -56,7 +67,7 @@ const InventoryProducts = ({
             <Button
               onClick={() => {
                 setShowProductModal(true);
-                setMode("Add");
+                setMode('Add');
                 setProductToEdit(null);
               }}
               className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
@@ -116,7 +127,9 @@ const InventoryProducts = ({
                           {product.category && (
                             <div className="text-[10px] sm:text-xs font-semibold text-green-700 bg-green-50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded flex items-center gap-1">
                               <Tag className="w-2.5 h-2.5 sm:w-3 sm:h-3 flex-shrink-0" />
-                              <span className="break-words">{product.category}</span>
+                              <span className="break-words">
+                                {product.category}
+                              </span>
                             </div>
                           )}
                           <div className="text-[10px] sm:text-xs font-semibold text-green-700 bg-green-50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
@@ -141,7 +154,7 @@ const InventoryProducts = ({
                       <Button
                         variant="destructive"
                         size="sm"
-                        // onClick={() => handleDeleteClick(p, 'product')}
+                        onClick={() => setProductToDelete(product)}
                         className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:shadow-lg transition-all duration-200"
                       >
                         <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -154,7 +167,7 @@ const InventoryProducts = ({
           </CardContent>
         </Card>
       </section>
-      
+
       {/* Add/Edit Product Modal */}
       <AddEditProductModal
         showProductModal={showProductModal}
@@ -163,8 +176,15 @@ const InventoryProducts = ({
         productToEdit={productToEdit}
         refetchProduct={refetchProduct}
       />
-    
-      
+
+      {/* Delete Product Modal */}
+      <DeleteProductMaterialModal 
+        itemToDelete={productToDelete}
+        setItemToDelete={setProductToDelete}
+        onClose={() => setProductToDelete(null)}
+        refetch={refetchProduct}
+        type='Product'
+      />
     </>
   );
 };
