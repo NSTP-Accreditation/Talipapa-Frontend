@@ -1,10 +1,11 @@
 import useFetchData from '@/admin/hooks/useFetchData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
-import { ProductInteface } from '@/types/global.types';
+import { ProductInterface } from '@/types/global.types';
 import { TrendingUp } from 'lucide-react';
 
 const TotalProductStocksCard = () => {
-  const { data: products, loading: loadingProducts } = useFetchData<ProductInteface[]>('/products');
+  const { data: products, loading: loadingProducts } =
+    useFetchData<ProductInterface[]>('/products');
 
   return (
     <Card className="border-2 border-[#1b4c2e]/20 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg sm:rounded-xl overflow-hidden">

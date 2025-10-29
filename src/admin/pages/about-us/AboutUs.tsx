@@ -2,10 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useToast } from '@/hooks/useToast';
 import { SquarePen, Save, Home } from 'lucide-react';
-import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
-import useFetchData from '../hooks/useFetchData';
-import { useAuthFetch } from '../hooks/useAuthFetch';
-import OfficialsPanel from '../components/OfficialsPanel';
+import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
+import useFetchData from '../../hooks/useFetchData';
+import { useAuthFetch } from '../../hooks/useAuthFetch';
+import OfficialsPanel from '../../components/OfficialsPanel';
 
 interface ContentModalProps {
   isOpen: boolean;
