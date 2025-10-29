@@ -19,7 +19,8 @@ import {
   Phone,
   User,
 } from 'lucide-react';
-import { createPortal } from 'react-dom';
+import Modal from '@/components/ui/Modal';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 import { useToast } from '@/hooks/useToast';
 import {
   Card,
@@ -87,7 +88,7 @@ const Settings: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  const modalRef = React.useRef<HTMLElement | null>(null);
+  // modalRef removed; using shared Modal component instead
 
   useEffect(() => {
     if (adminsData && !loadingAdmins && !errorAdmins) {
@@ -310,48 +311,7 @@ const Settings: React.FC = () => {
     }
   };
 
-  // Focus trap for modals
-  useEffect(() => {
-    if (!isAddAdminModalOpen) return;
-    const el = modalRef.current as HTMLElement | null;
-    const focusableSelector =
-      'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-    const nodes = el
-      ? (Array.from(el.querySelectorAll(focusableSelector)) as HTMLElement[])
-      : [];
-    const prevActive = document.activeElement as HTMLElement | null;
-    if (nodes.length) nodes[0].focus();
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeAddAdminModal();
-      }
-      if (e.key === 'Tab') {
-        if (nodes.length === 0) {
-          e.preventDefault();
-          return;
-        }
-        const idx = nodes.indexOf(document.activeElement as HTMLElement);
-        if (e.shiftKey) {
-          if (idx === 0) {
-            nodes[nodes.length - 1].focus();
-            e.preventDefault();
-          }
-        } else {
-          if (idx === nodes.length - 1) {
-            nodes[0].focus();
-            e.preventDefault();
-          }
-        }
-      }
-    };
-
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      prevActive?.focus?.();
-    };
-  }, [isAddAdminModalOpen]);
+  // Modal focus-trap/ESC logic is provided by the shared Modal component
 
   if (isLoading) {
     return <SettingsPageSkeleton />;
@@ -378,397 +338,325 @@ const Settings: React.FC = () => {
         </div>
 
         {/* Delete Admin Modal */}
-        {isDeleteAdminOpen &&
-          createPortal(
-            <div
-              className="fixed inset-0 z-[1005] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-              role="dialog"
-              aria-modal="true"
-              onClick={(e) => {
-                if (e.target === e.currentTarget) closeDeleteAdminModal();
-              }}
-            >
-              <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden animate-slideUp">
-                <div className="p-6 bg-gradient-to-r from-red-500 to-red-600">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white/20 rounded-lg">
-                      <AlertCircle className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold text-white">
-                      Delete Admin Account
-                    </h3>
+        <ConfirmModal
+          isOpen={isDeleteAdminOpen}
+          title={
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white/20 rounded-lg">
+                <AlertCircle className="w-6 h-6 text-white" />
+              </div>
+              <span>Delete Admin Account</span>
+            </div>
+          }
+          description={
+            <p className="text-gray-700 text-base leading-relaxed">
+              Are you sure you want to delete this admin account? This action
+              cannot be undone and will permanently remove all associated data.
+            </p>
+          }
+          onClose={closeDeleteAdminModal}
+          onConfirm={confirmDeleteAdmin}
+          loading={isDeletingAdmin}
+          confirmLabel="Delete Account"
+          cancelLabel="Cancel"
+        />
+
+        {/* Add Admin Modal */}
+        <Modal
+          isOpen={isAddAdminModalOpen}
+          onClose={closeAddAdminModal}
+          title={
+            <div className="w-full">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-white/20 rounded-lg">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl lg:text-2xl font-bold">Add New Admin</h3>
+              </div>
+              <p className="text-sm lg:text-base text-white/90">
+                Create a new administrator account with specific roles and
+                permissions
+              </p>
+            </div>
+          }
+        >
+          <form onSubmit={handleAddAdmin} className="flex flex-col flex-1">
+            <div className="space-y-6 overflow-y-auto flex-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Username */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                    <User className="w-4 h-4 text-green-600" />
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter full name"
+                    maxLength={80}
+                    value={newAdmin.username}
+                    onChange={(e) => {
+                      setNewAdmin({ ...newAdmin, username: e.target.value });
+                      if (formErrors.username) {
+                        setFormErrors({ ...formErrors, username: '' });
+                      }
+                    }}
+                    className={`w-full px-4 py-3 text-base border ${
+                      formErrors.username ? 'border-red-500' : 'border-gray-300'
+                    } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
+                  />
+                  {formErrors.username && (
+                    <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {formErrors.username}
+                    </p>
+                  )}
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Create secure password"
+                      value={newAdmin.password}
+                      maxLength={128}
+                      onChange={(e) => {
+                        setNewAdmin({ ...newAdmin, password: e.target.value });
+                        if (formErrors.password) {
+                          setFormErrors({ ...formErrors, password: '' });
+                        }
+                      }}
+                      className={`w-full px-4 py-3 pr-12 text-base border ${
+                        formErrors.password
+                          ? 'border-red-500'
+                          : 'border-gray-300'
+                      } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
+                    />
+
+                    {newAdmin.password &&
+                      newAdmin.password.trim().length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-600 hover:text-gray-900"
+                          aria-label={
+                            showPassword ? 'Hide password' : 'Show password'
+                          }
+                        >
+                          {showPassword ? (
+                            <EyeOff className="w-5 h-5" />
+                          ) : (
+                            <Eye className="w-5 h-5" />
+                          )}
+                        </button>
+                      )}
                   </div>
+                  {formErrors.password && (
+                    <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {formErrors.password}
+                    </p>
+                  )}
                 </div>
-                <div className="p-6">
-                  <p className="text-gray-700 text-base leading-relaxed">
-                    Are you sure you want to delete this admin account? This
-                    action cannot be undone and will permanently remove all
-                    associated data.
-                  </p>
+
+                {/* Confirm Password (full width) */}
+                <div className="md:col-span-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                    Confirm Your Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      placeholder="Enter your password to confirm"
+                      value={confirmPassword}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        if (formErrors.confirmPassword) {
+                          setFormErrors({ ...formErrors, confirmPassword: '' });
+                        }
+                      }}
+                      className={`w-full px-4 py-3 pr-12 text-base border ${
+                        formErrors.confirmPassword
+                          ? 'border-red-500'
+                          : 'border-gray-300'
+                      } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
+                    />
+
+                    {confirmPassword && confirmPassword.trim().length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-600 hover:text-gray-900"
+                        aria-label={
+                          showConfirmPassword
+                            ? 'Hide password'
+                            : 'Show password'
+                        }
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className="w-5 h-5" />
+                        ) : (
+                          <Eye className="w-5 h-5" />
+                        )}
+                      </button>
+                    )}
+                  </div>
+                  {formErrors.confirmPassword && (
+                    <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {formErrors.confirmPassword}
+                    </p>
+                  )}
                 </div>
-                <div className="p-6 bg-gray-50 border-t border-gray-200 flex items-center justify-end gap-3">
+
+                {/* Contact Number */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                    <Phone className="w-4 h-4 text-green-600" />
+                    Contact Number
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="09XXXXXXXXX"
+                    value={newAdmin.contactNumber}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '');
+                      setNewAdmin({ ...newAdmin, contactNumber: value });
+                      if (formErrors.contactNumber) {
+                        setFormErrors({ ...formErrors, contactNumber: '' });
+                      }
+                    }}
+                    maxLength={11}
+                    className={`w-full px-4 py-3 text-base border ${
+                      formErrors.contactNumber
+                        ? 'border-red-500'
+                        : 'border-gray-300'
+                    } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
+                  />
+                  {formErrors.contactNumber && (
+                    <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {formErrors.contactNumber}
+                    </p>
+                  )}
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                    <Mail className="w-4 h-4 text-green-600" />
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="admin@example.com"
+                    maxLength={254}
+                    value={newAdmin.email}
+                    onChange={(e) => {
+                      setNewAdmin({ ...newAdmin, email: e.target.value });
+                      if (formErrors.email) {
+                        setFormErrors({ ...formErrors, email: '' });
+                      }
+                    }}
+                    className={`w-full px-4 py-3 text-base border ${
+                      formErrors.email ? 'border-red-500' : 'border-gray-300'
+                    } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
+                  />
+                  {formErrors.email && (
+                    <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {formErrors.email}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-6 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div className="flex-1 w-full">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
+                    <Shield className="w-4 h-4 text-green-600" />
+                    Assign Roles
+                  </label>
+                  <div className="flex flex-wrap gap-3">
+                    {['SuperAdmin', 'Admin'].map((roleOption) => (
+                      <label
+                        key={roleOption}
+                        className="flex items-center gap-2 cursor-pointer group"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={newAdmin.roles.includes(roleOption)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setNewAdmin({
+                                ...newAdmin,
+                                roles: [...newAdmin.roles, roleOption],
+                              });
+                            } else {
+                              setNewAdmin({
+                                ...newAdmin,
+                                roles: newAdmin.roles.filter(
+                                  (r) => r !== roleOption
+                                ),
+                              });
+                            }
+                            if (formErrors.roles)
+                              setFormErrors({ ...formErrors, roles: '' });
+                          }}
+                          className="w-5 h-5 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2 cursor-pointer"
+                        />
+                        <span className="text-base text-gray-700 font-medium group-hover:text-green-600 transition-colors">
+                          {roleOption}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  {formErrors.roles && (
+                    <p className="text-red-600 text-sm mt-2 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {formErrors.roles}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-3 w-full lg:w-auto">
                   <button
-                    onClick={closeDeleteAdminModal}
-                    disabled={isDeletingAdmin}
-                    className="px-5 py-2.5 rounded-lg bg-white border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-all disabled:opacity-50"
+                    type="button"
+                    onClick={closeAddAdminModal}
+                    disabled={isAddingAdmin}
+                    className="flex-1 lg:flex-initial px-6 py-3 rounded-lg bg-white border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-all disabled:opacity-50"
                   >
                     Cancel
                   </button>
                   <button
-                    onClick={confirmDeleteAdmin}
-                    disabled={isDeletingAdmin}
-                    className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold shadow-sm hover:from-red-700 hover:to-red-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    type="submit"
+                    disabled={isAddingAdmin}
+                    className="flex-1 lg:flex-initial px-6 py-3 rounded-lg bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold shadow-sm hover:from-green-700 hover:to-green-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
-                    {isDeletingAdmin ? (
+                    {isAddingAdmin ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Deleting...
+                        Adding...
                       </>
                     ) : (
                       <>
-                        <Trash className="w-4 h-4" />
-                        Delete Account
+                        <Plus className="w-4 h-4" />
+                        Add Admin
                       </>
                     )}
                   </button>
                 </div>
               </div>
-            </div>,
-            document.body
-          )}
-
-        {/* Add Admin Modal */}
-        {isAddAdminModalOpen &&
-          createPortal(
-            <div
-              className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
-              role="dialog"
-              aria-modal="true"
-              onClick={(e) => {
-                if (e.target === e.currentTarget) closeAddAdminModal();
-              }}
-            >
-              <form
-                ref={modalRef as any}
-                onSubmit={handleAddAdmin}
-                className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[95vh] flex flex-col animate-slideUp"
-              >
-                <div className="relative p-6 lg:p-8 bg-gradient-to-br from-green-500 via-green-600 to-green-700 text-white">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 bg-white/20 rounded-lg">
-                      <Users className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="text-xl lg:text-2xl font-bold">
-                      Add New Admin
-                    </h3>
-                  </div>
-                  <p className="text-sm lg:text-base text-white/90">
-                    Create a new administrator account with specific roles and
-                    permissions
-                  </p>
-                  <button
-                    type="button"
-                    aria-label="Close"
-                    onClick={closeAddAdminModal}
-                    className="absolute right-4 top-4 p-2 rounded-lg hover:bg-white/10 transition-colors"
-                  >
-                    <X className="w-5 h-5 text-white" />
-                  </button>
-                </div>
-
-                <div className="p-6 lg:p-8 space-y-6 overflow-y-auto flex-1 bg-gradient-to-br from-gray-50 to-white">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Username */}
-                    <div>
-                      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-                        <User className="w-4 h-4 text-green-600" />
-                        Username
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Enter full name"
-                        maxLength={80}
-                        value={newAdmin.username}
-                        onChange={(e) => {
-                          setNewAdmin({
-                            ...newAdmin,
-                            username: e.target.value,
-                          });
-                          if (formErrors.username) {
-                            setFormErrors({ ...formErrors, username: '' });
-                          }
-                        }}
-                        className={`w-full px-4 py-3 text-base border ${
-                          formErrors.username
-                            ? 'border-red-500'
-                            : 'border-gray-300'
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
-                      />
-                      {formErrors.username && (
-                        <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3" />
-                          {formErrors.username}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Password */}
-                    <div>
-                      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-                        Password
-                      </label>
-                      <div className="relative">
-                        <input
-                          type={showPassword ? 'text' : 'password'}
-                          placeholder="Create secure password"
-                          value={newAdmin.password}
-                          maxLength={128}
-                          onChange={(e) => {
-                            setNewAdmin({
-                              ...newAdmin,
-                              password: e.target.value,
-                            });
-                            if (formErrors.password) {
-                              setFormErrors({ ...formErrors, password: '' });
-                            }
-                          }}
-                          className={`w-full px-4 py-3 pr-12 text-base border ${
-                            formErrors.password
-                              ? 'border-red-500'
-                              : 'border-gray-300'
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
-                        />
-
-                        {newAdmin.password &&
-                          newAdmin.password.trim().length > 0 && (
-                            <button
-                              type="button"
-                              onClick={() => setShowPassword(!showPassword)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-600 hover:text-gray-900"
-                              aria-label={
-                                showPassword ? 'Hide password' : 'Show password'
-                              }
-                            >
-                              {showPassword ? (
-                                <EyeOff className="w-5 h-5" />
-                              ) : (
-                                <Eye className="w-5 h-5" />
-                              )}
-                            </button>
-                          )}
-                      </div>
-                      {formErrors.password && (
-                        <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3" />
-                          {formErrors.password}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Confirm Password (full width) */}
-                    <div className="md:col-span-2">
-                      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-                        Confirm Your Password
-                      </label>
-                      <div className="relative">
-                        <input
-                          type={showConfirmPassword ? 'text' : 'password'}
-                          placeholder="Enter your password to confirm"
-                          value={confirmPassword}
-                          onChange={(e) => {
-                            setConfirmPassword(e.target.value);
-                            if (formErrors.confirmPassword) {
-                              setFormErrors({
-                                ...formErrors,
-                                confirmPassword: '',
-                              });
-                            }
-                          }}
-                          className={`w-full px-4 py-3 pr-12 text-base border ${
-                            formErrors.confirmPassword
-                              ? 'border-red-500'
-                              : 'border-gray-300'
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
-                        />
-
-                        {confirmPassword &&
-                          confirmPassword.trim().length > 0 && (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setShowConfirmPassword(!showConfirmPassword)
-                              }
-                              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-600 hover:text-gray-900"
-                              aria-label={
-                                showConfirmPassword
-                                  ? 'Hide password'
-                                  : 'Show password'
-                              }
-                            >
-                              {showConfirmPassword ? (
-                                <EyeOff className="w-5 h-5" />
-                              ) : (
-                                <Eye className="w-5 h-5" />
-                              )}
-                            </button>
-                          )}
-                      </div>
-                      {formErrors.confirmPassword && (
-                        <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3" />
-                          {formErrors.confirmPassword}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Contact Number */}
-                    <div>
-                      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-                        <Phone className="w-4 h-4 text-green-600" />
-                        Contact Number
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="09XXXXXXXXX"
-                        value={newAdmin.contactNumber}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, '');
-                          setNewAdmin({ ...newAdmin, contactNumber: value });
-                          if (formErrors.contactNumber) {
-                            setFormErrors({ ...formErrors, contactNumber: '' });
-                          }
-                        }}
-                        maxLength={11}
-                        className={`w-full px-4 py-3 text-base border ${
-                          formErrors.contactNumber
-                            ? 'border-red-500'
-                            : 'border-gray-300'
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
-                      />
-                      {formErrors.contactNumber && (
-                        <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3" />
-                          {formErrors.contactNumber}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Email */}
-                    <div>
-                      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-                        <Mail className="w-4 h-4 text-green-600" />
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        placeholder="admin@example.com"
-                        maxLength={254}
-                        value={newAdmin.email}
-                        onChange={(e) => {
-                          setNewAdmin({ ...newAdmin, email: e.target.value });
-                          if (formErrors.email) {
-                            setFormErrors({ ...formErrors, email: '' });
-                          }
-                        }}
-                        className={`w-full px-4 py-3 text-base border ${
-                          formErrors.email
-                            ? 'border-red-500'
-                            : 'border-gray-300'
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
-                      />
-                      {formErrors.email && (
-                        <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3" />
-                          {formErrors.email}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-6 lg:p-8 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white">
-                  <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-                    <div className="flex-1 w-full">
-                      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
-                        <Shield className="w-4 h-4 text-green-600" />
-                        Assign Roles
-                      </label>
-                      <div className="flex flex-wrap gap-3">
-                        {['SuperAdmin', 'Admin'].map((roleOption) => (
-                          <label
-                            key={roleOption}
-                            className="flex items-center gap-2 cursor-pointer group"
-                          >
-                            <input
-                              type="checkbox"
-                              checked={newAdmin.roles.includes(roleOption)}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setNewAdmin({
-                                    ...newAdmin,
-                                    roles: [...newAdmin.roles, roleOption],
-                                  });
-                                } else {
-                                  setNewAdmin({
-                                    ...newAdmin,
-                                    roles: newAdmin.roles.filter(
-                                      (r) => r !== roleOption
-                                    ),
-                                  });
-                                }
-                                if (formErrors.roles) {
-                                  setFormErrors({ ...formErrors, roles: '' });
-                                }
-                              }}
-                              className="w-5 h-5 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2 cursor-pointer"
-                            />
-                            <span className="text-base text-gray-700 font-medium group-hover:text-green-600 transition-colors">
-                              {roleOption}
-                            </span>
-                          </label>
-                        ))}
-                      </div>
-                      {formErrors.roles && (
-                        <p className="text-red-600 text-sm mt-2 flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3" />
-                          {formErrors.roles}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-3 w-full lg:w-auto">
-                      <button
-                        type="button"
-                        onClick={closeAddAdminModal}
-                        disabled={isAddingAdmin}
-                        className="flex-1 lg:flex-initial px-6 py-3 rounded-lg bg-white border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-all disabled:opacity-50"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        disabled={isAddingAdmin}
-                        className="flex-1 lg:flex-initial px-6 py-3 rounded-lg bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold shadow-sm hover:from-green-700 hover:to-green-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                      >
-                        {isAddingAdmin ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                            Adding...
-                          </>
-                        ) : (
-                          <>
-                            <Plus className="w-4 h-4" />
-                            Add Admin
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>,
-            document.body
-          )}
+            </div>
+          </form>
+        </Modal>
 
         {/* Barangay Information */}
         <Card className="shadow-md border border-gray-200 overflow-hidden">

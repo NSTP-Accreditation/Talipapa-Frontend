@@ -80,7 +80,9 @@ const ResidentRecords: React.FC = () => {
   const [records, setRecords] = useState<any[]>([]); // Explicitly type as array
   const authFetch = useAuthFetch();
   const { user } = useAuth();
-  const { data, loading, error, refetch } = useFetchData('/records?type=resident');
+  const { data, loading, error, refetch } = useFetchData(
+    '/records?type=resident'
+  );
   const { success, error: showError } = useToast();
 
   const debouncedSearch = useCallback(
@@ -1121,7 +1123,10 @@ const ResidentRecords: React.FC = () => {
                           type="text"
                           value={newResident.suffix}
                           onChange={(e) =>
-                            setNewResident((s) => ({ ...s, suffix: e.target.value }))
+                            setNewResident((s) => ({
+                              ...s,
+                              suffix: e.target.value,
+                            }))
                           }
                           className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                           placeholder="Suffix (optional)"
@@ -1203,7 +1208,17 @@ const ResidentRecords: React.FC = () => {
                         <span>Gender</span>
                       </div>
                       <div className="relative">
-                        <select required value={newResident.gender} onChange={(e) => setNewResident((s) => ({ ...s, gender: e.target.value }))} className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base">
+                        <select
+                          required
+                          value={newResident.gender}
+                          onChange={(e) =>
+                            setNewResident((s) => ({
+                              ...s,
+                              gender: e.target.value,
+                            }))
+                          }
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base"
+                        >
                           <option value="">Select</option>
                           <option value="Male">Male</option>
                           <option value="Female">Female</option>
@@ -1529,7 +1544,12 @@ const ResidentRecords: React.FC = () => {
                         <input
                           type="text"
                           value={editingResident.suffix}
-                          onChange={(e) => setEditingResident((s: any) => ({ ...s, suffix: e.target.value }))}
+                          onChange={(e) =>
+                            setEditingResident((s: any) => ({
+                              ...s,
+                              suffix: e.target.value,
+                            }))
+                          }
                           className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                           placeholder="Suffix (optional)"
                         />
@@ -1587,7 +1607,17 @@ const ResidentRecords: React.FC = () => {
                         <span>Gender</span>
                       </div>
                       <div className="relative">
-                        <select required value={editingResident.gender} onChange={(e) => setEditingResident((s: any) => ({ ...s, gender: e.target.value }))} className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base">
+                        <select
+                          required
+                          value={editingResident.gender}
+                          onChange={(e) =>
+                            setEditingResident((s: any) => ({
+                              ...s,
+                              gender: e.target.value,
+                            }))
+                          }
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base"
+                        >
                           <option value="">Select</option>
                           <option value="Male">Male</option>
                           <option value="Female">Female</option>
