@@ -38,6 +38,9 @@ const MapDropdown: React.FC<MapDropdownProps> = ({
   selectedFarm,
   onSelectFarm,
 }) => {
+  // defensive: some hooks may return null before data arrives
+  const farmsList = Array.isArray(farms) ? farms : [];
+
   return (
     <Card className="rounded-2xl shadow-2xl border-2 border-gray-200">
       {/* HEADER */}
@@ -67,14 +70,14 @@ const MapDropdown: React.FC<MapDropdownProps> = ({
           <select
             value={selectedFarm?._id || ''}
             onChange={(e) => {
-              const selected = farms.find((f) => f._id === e.target.value);
+              const selected = farmsList.find((f) => f._id === e.target.value);
               onSelectFarm(selected || null);
             }}
             className="w-full px-3 py-2 md:px-4 md:py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium bg-white text-sm md:text-base"
           >
             <option value="">— Select a farm —</option>
-            {farms.map((farm) => (
-              <option key={farm._id} value={farm._id}>
+            {farmsList.map((farm) => (
+              <option key={farm._id || farm.name} value={farm._id || ''}>
                 {farm.name} — {farm.farmType}
               </option>
             ))}

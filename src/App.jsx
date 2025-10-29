@@ -31,7 +31,7 @@ const AdminLogin = lazy(() => import('@/admin/auth/AdminLogin'));
 const Inventory = lazy(() => import('@/admin/pages/Inventory'));
 const FarmInventory = lazy(() => import('@/admin/pages/FarmInventory'));
 const SwapItem = lazy(() => import('@/admin/pages/swap-item/SwapItem'));
-const GreenPages = lazy(() => import('@/admin/pages/GreenPages'));
+const GreenPages = lazy(() => import('@/admin/pages/green-pages/GreenPages'));
 const Records = lazy(() => import('@/admin/pages/records/Records'));
 const NonResidentRecords = lazy(
   () => import('@/admin/pages/NonResidentRecords')
