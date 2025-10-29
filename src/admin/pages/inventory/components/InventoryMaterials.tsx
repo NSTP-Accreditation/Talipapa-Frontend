@@ -4,6 +4,8 @@ import { MaterialInterface } from '@/types/global.types';
 import { Box, Edit, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import AddEditMaterialModal from './AddEditMaterialModal';
+import DeleterecordModal from '../../records/components/DeleterecordModal';
+import DeleteProductMaterialModal from './DeleteProductModal';
 
 type InventoryMaterialsProps = {
   filteredMaterials: MaterialInterface[];
@@ -29,6 +31,8 @@ const InventoryMaterials = ({
     useState<MaterialInterface | null>(null);
   if (!materialsData) return null;
 
+  const [materialToDelete, setMaterialToDelete] = useState<MaterialInterface | null>(null);
+  
 
   const handleEditMaterial = (material: MaterialInterface) => {
       setShowMaterialModal(true);
@@ -128,7 +132,7 @@ const InventoryMaterials = ({
                       <Button
                         variant="destructive"
                         size="sm"
-                        // onClick={() => handleDeleteClick(m, 'material')}
+                        onClick={() => setMaterialToDelete(material)}
                         className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:shadow-lg transition-all duration-200"
                       >
                         <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -149,6 +153,14 @@ const InventoryMaterials = ({
         materialtoEdit={materialToEdit}
         mode={mode}
         refetchMaterial={refetchMaterial}
+      />
+
+      <DeleteProductMaterialModal 
+        itemToDelete={materialToDelete}
+        setItemToDelete={setMaterialToDelete}
+        onClose={() => setMaterialToDelete(null)}
+        refetch={refetchMaterial}
+        type='Material'
       />
     </>
   );
