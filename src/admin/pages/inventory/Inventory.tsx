@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InventoryHeader from './components/InventoryHeader';
 import useFetchData from '@/admin/hooks/useFetchData';
 import { MaterialInterface, ProductInterface } from '@/types/global.types';
@@ -22,7 +22,20 @@ const Inventory = () => {
     refetch: refetchMaterials,
   } = useFetchData<MaterialInterface[]>('/materials');
 
-  const [search, setSearch] = useState('');
+  // Variables
+  const [filteredProducts, setFilteredProducts] = useState<ProductInterface[]>([]);
+  const [filteredMaterials, setFilteredMaterials] = useState<MaterialInterface[]>([]);
+  
+  useEffect(() => {
+    if(productsData && !productsDataLoading && !productsDataErr) {
+      setFilteredProducts(productsData)
+    }
+
+    if(materialsData && !materialsDataLoading && !materialsDataErr) {
+      setFilteredMaterials(materialsData)
+    }
+    
+  }, [productsData, productsDataLoading, productsDataErr, materialsData, materialsDataLoading, materialsDataErr])
 
   if (productsDataLoading || materialsDataLoading) {
     return <ResponsiveSkeleton page="inventory" />;
@@ -31,7 +44,12 @@ const Inventory = () => {
   return (
     <main className="p-5 grid gap-6">
       {/* Inventory Header */}
-      <InventoryHeader search={search} setSearch={setSearch} />
+      <InventoryHeader 
+        productsData={productsData}
+        materialsData={materialsData}
+        setFilteredProducts={setFilteredProducts}
+        setFilteredMaterials={setFilteredMaterials}
+      />
 
       {/* Inventory Cards */}
       <InventoryCards
@@ -41,12 +59,14 @@ const Inventory = () => {
 
       {/* Products Container */}
       <InventoryProducts
+        filteredProducts={filteredProducts}
         productsData={productsData}
         productsDataError={productsDataErr}
       />
 
       {/* Materials Container */}
       <InventoryMaterials 
+        filteredMaterials={filteredMaterials}
         materialsData={materialsData}
         materialsDataError={materialsDataErr}
       />

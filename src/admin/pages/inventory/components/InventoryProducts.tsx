@@ -6,11 +6,12 @@ import { Edit, Package, Plus, Tag, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 type InventoryProductsProps = {
+  filteredProducts: ProductInterface[],
   productsData: ProductInterface[];
   productsDataError: string | null
 };
 
-const InventoryProducts = ({ productsData, productsDataError } : InventoryProductsProps ) => {
+const InventoryProducts = ({ filteredProducts, productsData, productsDataError } : InventoryProductsProps ) => {
   const [showProductModal, setShowProductModal] = useState<boolean>(false);
 
   if(productsDataError && !productsData) {
@@ -20,7 +21,7 @@ const InventoryProducts = ({ productsData, productsDataError } : InventoryProduc
   if(!productsData) return null;
 
   return (
-    <div className="space-y-4 lg:space-y-5">
+    <section className="space-y-4 lg:space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
@@ -28,7 +29,7 @@ const InventoryProducts = ({ productsData, productsDataError } : InventoryProduc
             Products
           </h2>
           <p className="text-xs sm:text-sm text-gray-500 mt-1 ml-3 sm:ml-4">
-            Showing {productsData.length} of {productsData.length} products
+            Showing {filteredProducts.length} of {productsData.length} products
           </p>
         </div>
 
@@ -48,7 +49,7 @@ const InventoryProducts = ({ productsData, productsDataError } : InventoryProduc
       <Card className="border-none shadow-xl overflow-hidden">
         <CardContent className="p-0">
           <div className="divide-y divide-gray-100">
-            {productsData.length === 0 ? (
+            {filteredProducts.length === 0 ? (
               <div className="text-center py-16">
                 <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gray-100 flex items-center justify-center">
                   <Package className="w-10 h-10 text-gray-400" />
@@ -59,7 +60,7 @@ const InventoryProducts = ({ productsData, productsDataError } : InventoryProduc
                 </p>
               </div>
             ) : (
-              productsData.map((p, idx) => (
+              filteredProducts.map((p, idx) => (
                 <div
                   key={p._id}
                   className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 lg:p-6 hover:bg-gradient-to-r hover:from-green-50/50 hover:to-transparent transition-all duration-200 group gap-3 sm:gap-4"
@@ -137,7 +138,7 @@ const InventoryProducts = ({ productsData, productsDataError } : InventoryProduc
           </div>
         </CardContent>
       </Card>
-    </div>
+    </section>
   );
 };
 

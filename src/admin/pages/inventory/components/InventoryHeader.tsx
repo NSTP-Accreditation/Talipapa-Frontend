@@ -1,13 +1,74 @@
 import { Input } from '@/components/ui';
+import { MaterialInterface, ProductInterface } from '@/types/global.types';
+import { debounce, DebouncedFunc } from 'lodash';
 import { Package, Search, X } from 'lucide-react';
-import React, { Dispatch, SetStateAction } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 type InventoryHeaderProps = {
-  search: string,
-  setSearch: Dispatch<SetStateAction<string>>
+  productsData: ProductInterface[];
+  materialsData: MaterialInterface[];
+  setFilteredProducts: Dispatch<SetStateAction<ProductInterface[]>>;
+  setFilteredMaterials: Dispatch<SetStateAction<MaterialInterface[]>>;
 }
 
-const InventoryHeader = ({ search, setSearch } :  InventoryHeaderProps) => {
+const InventoryHeader = ({ 
+  productsData = [], 
+  materialsData = [], 
+  setFilteredProducts, 
+  setFilteredMaterials 
+}: InventoryHeaderProps) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  // Initialize with null
+  const debouncedSearchRef = useRef<DebouncedFunc<(query: string) => void> | null>(null);
+  
+  useEffect(() => {
+    // Assign the debounced function
+    debouncedSearchRef.current = debounce((query: string) => {
+      const normalizedQuery = query.trim().toLowerCase();
+      
+      if (!normalizedQuery) {
+        setFilteredProducts(productsData);
+        setFilteredMaterials(materialsData);
+        return;
+      }
+      
+      const filteredProducts = productsData.filter(product => 
+        product.name?.toLowerCase().includes(normalizedQuery)
+      );
+      
+      const filteredMaterials = materialsData.filter(material => 
+        material.name?.toLowerCase().includes(normalizedQuery)
+      );
+      
+      setFilteredProducts(filteredProducts);
+      setFilteredMaterials(filteredMaterials);
+    }, 300);
+
+    return () => {
+      debouncedSearchRef.current?.cancel();
+    };
+  }, [productsData, materialsData, setFilteredProducts, setFilteredMaterials]);
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    debouncedSearchRef.current?.(value);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm('');
+    setFilteredProducts(productsData);
+    setFilteredMaterials(materialsData);
+  };
+
   return (
     <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-6">
       <div className="flex-shrink-0">
@@ -31,13 +92,13 @@ const InventoryHeader = ({ search, setSearch } :  InventoryHeaderProps) => {
         </div>
         <Input
           placeholder="Search inventory..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={searchTerm}
+          onChange={handleInputChange}
           className="pl-10 sm:pl-12 pr-9 sm:pr-10 py-2.5 sm:py-3 w-full border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 text-[13px] sm:text-base bg-white"
         />
-        {search && (
+        {searchTerm && (
           <button
-            onClick={() => setSearch('')}
+            onClick={handleClearSearch}
             className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
           >
             <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />

@@ -28,7 +28,7 @@ const useFetchData = <T = any>(
 
     try {
       setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       setError(null);
       const result = await authFetch<T>(fetchUrl, options);
       setData(result as T);

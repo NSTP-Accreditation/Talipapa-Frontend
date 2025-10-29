@@ -5,17 +5,22 @@ import { Box, Edit, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 type InventoryMaterialsProps = {
+  filteredMaterials: MaterialInterface[],
   materialsData: MaterialInterface[];
   materialsDataError: string | null;
 };
 
-const InventoryMaterials = ({ materialsData }: InventoryMaterialsProps) => {
+const InventoryMaterials = ({ filteredMaterials, materialsData, materialsDataError }: InventoryMaterialsProps) => {
   const [showMaterialModal, setShowMaterialModal] = useState<boolean>(false);
+
+  if(!materialsData && materialsDataError) {
+    return <p>Failed to fetch materials data!</p>;
+  }
 
   if (!materialsData) return null;
 
   return (
-    <div className="space-y-4 lg:space-y-5">
+    <section className="space-y-4 lg:space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
@@ -23,7 +28,7 @@ const InventoryMaterials = ({ materialsData }: InventoryMaterialsProps) => {
             Materials
           </h2>
           <p className="text-xs sm:text-sm text-gray-500 mt-1 ml-3 sm:ml-4">
-            Showing {materialsData.length} of {materialsData.length} materials
+            Showing {filteredMaterials.length} of {materialsData.length} materials
           </p>
         </div>
         <Button
@@ -39,7 +44,7 @@ const InventoryMaterials = ({ materialsData }: InventoryMaterialsProps) => {
       <Card className="border-none shadow-xl overflow-hidden">
         <CardContent className="p-0">
           <div className="divide-y divide-gray-100">
-            {materialsData.length === 0 ? (
+            {filteredMaterials.length === 0 ? (
               <div className="text-center py-16">
                 <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gray-100 flex items-center justify-center">
                   <Box className="w-10 h-10 text-gray-400" />
@@ -50,7 +55,7 @@ const InventoryMaterials = ({ materialsData }: InventoryMaterialsProps) => {
                 </p>
               </div>
             ) : (
-              materialsData.map((material, idx) => (
+              filteredMaterials.map((material, idx) => (
                 <div
                   key={material._id}
                   className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 lg:p-6 hover:bg-gradient-to-r hover:from-emerald-50/50 hover:to-transparent transition-all duration-200 group gap-3 sm:gap-4"
@@ -113,7 +118,7 @@ const InventoryMaterials = ({ materialsData }: InventoryMaterialsProps) => {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </section>
   );
 };
 
