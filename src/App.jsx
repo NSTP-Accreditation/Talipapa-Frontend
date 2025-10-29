@@ -39,7 +39,9 @@ const NonResidentRecords = lazy(
 const EstablishmentRecords = lazy(
   () => import('@/admin/pages/EstablishmentRecords')
 );
-const TalipapaNatin = lazy(() => import('@/admin/pages/TalipapaNatin'));
+const TalipapaNatin = lazy(
+  () => import('@/admin/pages/talipapanatin/TalipapaNatin')
+);
 
 // USER PAGE EXPORT HERE - Lazy loaded
 const Home = lazy(() => import('@/users/page/Home'));
