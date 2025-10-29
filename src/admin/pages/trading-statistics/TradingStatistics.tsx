@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import TradingStatisticsHeader from './components/TradingStatisticsHeader';
 import {
   LogInterface,
-  ProductInteface,
+  ProductInterface,
   RecordInterface,
 } from '@/types/global.types';
 import { PaginationInterface } from '@/types/pagination';
