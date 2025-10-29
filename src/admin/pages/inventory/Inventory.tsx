@@ -5,6 +5,7 @@ import { MaterialInterface, ProductInterface } from '@/types/global.types';
 import InventoryCards from './components/InventoryCards';
 import InventoryProducts from './components/InventoryProducts';
 import ResponsiveSkeleton from '@/components/ResponsiveSkeleton';
+import InventoryMaterials from './components/InventoryMaterials';
 
 const Inventory = () => {
   // FETCH NEEDED DATA
@@ -45,6 +46,11 @@ const Inventory = () => {
       />
 
       {/* Materials Container */}
+      <InventoryMaterials 
+        materialsData={materialsData}
+        materialsDataError={materialsDataErr}
+      />
+
     </main>
   );
 };
