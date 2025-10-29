@@ -1097,21 +1097,29 @@ export const InventoryPageSkeleton: React.FC = () => {
       </div>
 
       {/* Inventory Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <div
             key={i}
-            className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-200"
-          >
-            <div className="flex justify-between items-start mb-4">
-              <Skeleton className="h-12 w-12 rounded-xl" />
-              <Skeleton className="h-6 w-16 rounded-full" />
+            className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-200 flex gap-5 items-center"
+          > 
+            <Skeleton className='h-20 w-20 rounded-xl'/>
+
+            <div className='grid gap-2 grow'>
+              <Skeleton className="h-8 w-20 rounded-sm" />
+              <Skeleton className="h-8 grow rounded-sm" />
+
+              <div className='flex gap-2'>
+                <Skeleton className="h-5 w-14 rounded-sm" />
+                <Skeleton className="h-5 w-10 rounded-sm" />
+                <Skeleton className="h-5 w-10 rounded-sm" />
+              </div>
             </div>
-            <Skeleton className="h-6 w-32 mb-2" />
-            <Skeleton className="h-4 w-full mb-4" />
-            <div className="flex gap-2">
-              <Skeleton className="h-9 flex-1 rounded-lg" />
-              <Skeleton className="h-9 w-20 rounded-lg" />
+
+            <div className='flex gap-5'>
+              <Skeleton className='h-10 w-14 rounded-xl'/>
+              <Skeleton className='h-10 w-10 rounded-xl'/>
+              <Skeleton className='h-10 w-10 rounded-xl'/>
             </div>
           </div>
         ))}

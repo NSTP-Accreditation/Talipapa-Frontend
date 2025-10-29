@@ -146,7 +146,7 @@ const InventoryMaterials = ({
         </Card>
       </section>
 
-      {/* Add Edit Material */}
+      {/* Add/Edit Material Modal*/}
       <AddEditMaterialModal
         showMaterialModal={showMaterialModal}
         setShowMaterialModal={setShowMaterialModal}
@@ -155,6 +155,7 @@ const InventoryMaterials = ({
         refetchMaterial={refetchMaterial}
       />
 
+      {/* Delete Material Modal */}
       <DeleteProductMaterialModal 
         itemToDelete={materialToDelete}
         setItemToDelete={setMaterialToDelete}

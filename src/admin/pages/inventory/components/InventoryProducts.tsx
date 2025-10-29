@@ -132,7 +132,7 @@ const InventoryProducts = ({
                               </span>
                             </div>
                           )}
-                          <div className="text-[10px] sm:text-xs font-semibold text-green-700 bg-green-50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
+                          <div className={`text-[10px] sm:text-xs font-semibold  px-1.5 sm:px-2 py-0.5 sm:py-1 rounded ${product.stocks === 0 ? 'bg-red-100' : product.stocks <= 5 ? 'bg-yellow-100' : 'bg-green-50 text-green-700' }`}>
                             Stock: {product.stocks}
                           </div>
                         </div>
