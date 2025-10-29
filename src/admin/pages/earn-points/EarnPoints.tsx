@@ -2,14 +2,17 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { sanitizeName, validateName } from '@/utils/validation';
 import { Recycle, CheckCircle2 } from 'lucide-react';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
-import { useLoadingState } from '../../../hooks/useLoadingState';
 import { useToast } from '@/hooks/useToast';
 import { FormTablePageSkeleton } from '../../../components/LoadingSkeletons';
 import useFetchData from '../../hooks/useFetchData';
 import { MaterialInterface } from '@/types/global.types';
 
 export default function App() {
-  const { data: materialsData, loading, error } = useFetchData<MaterialInterface[]>('/materials');
+  const {
+    data: materialsData,
+    loading,
+    error,
+  } = useFetchData<MaterialInterface[]>('/materials');
 
   const [recordIdRest, setRecordIdRest] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');

@@ -4,7 +4,6 @@ import {
   BarChart3,
   X,
   MapPin,
-  Phone,
   Users as UsersIcon,
   Sprout,
   HopOff,
