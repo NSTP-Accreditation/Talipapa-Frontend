@@ -137,6 +137,25 @@ const AddEditMaterialModal = memo(
       }
     };
 
+    const handleUpdateProduct = async (): Promise<void> => {
+      if (!validateMaterialForm()) {
+        return;
+      }
+
+      const formData = buildProductFormData();
+      try {
+        const response = await authFetch(`/materials/${materialtoEdit._id}`, {
+          method: 'PATCH',
+          body: formData,
+        });
+
+        await refetchMaterial();
+        success(response.message || 'Product updated', { title: 'Success' });
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
     return (
       showMaterialModal &&
       createPortal(
@@ -317,7 +336,7 @@ const AddEditMaterialModal = memo(
                 </Button>
                 {mode === 'Edit' ? (
                   <Button
-                    // onClick={handleUpdateProduct}
+                    onClick={handleUpdateProduct}
                     className="flex-1 sm:flex-none px-5 sm:px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-xl shadow-lg text-sm"
                   >
                     <PenSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 inline" />{' '}
