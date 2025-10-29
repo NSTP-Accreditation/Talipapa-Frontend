@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { RecordInterface } from '../Record.types';
+import { RecordInterface } from '@/types/global.types';
 import { Button } from '@/components/ui';
 import { Edit, Search, Trash2 } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';

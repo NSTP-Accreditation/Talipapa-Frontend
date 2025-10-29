@@ -1,7 +1,7 @@
 import { Input } from '@/components/ui';
 import { Search } from 'lucide-react';
 import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
-import { RecordInterface } from '../Record.types';
+import { RecordInterface } from '@/types/global.types';
 import { debounce } from 'lodash';
 
 type RecordFilterProps = {

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui';
 import { Download, UserRoundPen } from 'lucide-react';
-import { RecordInterface } from '../Record.types';
+import { RecordInterface } from '@/types/global.types';
 import { useToast } from '@/hooks/useToast';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';

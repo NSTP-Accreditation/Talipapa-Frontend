@@ -3,7 +3,7 @@ import { useToast } from '@/hooks/useToast';
 import { Award, Calendar, MapPin, Phone, User, X } from 'lucide-react';
 import React, { Dispatch, FormEvent, SetStateAction, useState } from 'react'
 import { createPortal } from 'react-dom';
-import { RecordInterface } from '../Record.types';
+import { RecordInterface } from '@/types/global.types';
 import { validateAddress } from '@/utils/validation';
 
 type AddRecordModalType = {

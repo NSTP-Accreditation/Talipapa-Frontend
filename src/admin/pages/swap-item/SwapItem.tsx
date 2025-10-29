@@ -1,48 +1,29 @@
-import { useCallback, useMemo, useState } from 'react';
-import { formatName, formatPoints } from '@/utils/formatter';
-import { useAuthFetch } from '../hooks/useAuthFetch';
+import { useCallback, useState } from 'react';
+import { useAuthFetch } from '../../hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
 import { sanitizeName, validateName } from '@/utils/validation';
-import FloatingLabelInput from '../components/FloatingLabelInput';
+import FloatingLabelInput from '../../components/FloatingLabelInput';
 import {
   Spinner,
   InlineLoader,
-  FormTablePageSkeleton,
 } from '@/components/LoadingSkeletons';
-import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
+import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { ArrowLeftRight, Search } from 'lucide-react';
-import { ImageInt } from '../components/OfficialsPanel';
-
-interface Product {
-  _id: string;
-  name: string;
-  description: string;
-  image: ImageInt;
-  requiredPoints: number;
-}
-
-interface RecordData {
-  _id: string;
-  lastName: string;
-  address: string;
-  contact_number: string;
-  points: number;
-}
+import RecordInformation from './components/RecordInformation';
+import Availableproducts from './components/AvailableProducts';
+import { ProductInterface, RecordInterface } from '@/types/global.types';
 
 const SwapItem = () => {
   // Add loading state with 1 second display
-  const { isLoading: pageLoading } = useLoadingState(1000);
-
   const [redeemInProgress, setRedeemInProgress] = useState(false);
   const [searchingRecord, setSearchingRecord] = useState(false);
   // Store only the editable part (suffix) of the Record ID, fixed prefix is 'BT-'
   const [recordIdRest, setRecordIdRest] = useState('');
   const [lastName, setLastName] = useState('');
   const [lastNameError, setLastNameError] = useState('');
-  const [isLastNameValid, setIsLastNameValid] = useState(false);
-  const [recordData, setRecordData] = useState<RecordData | null>(null);
-  const [availableProducts, setAvailableProducts] = useState<Product[]>([]);
+  const [recordData, setRecordData] = useState<RecordInterface | null>(null);
+  const [availableProducts, setAvailableProducts] = useState<ProductInterface[]>([]);
   const [quantityInputs, setQuantityInputs] = useState<Record<string, number>>(
     {}
   );
@@ -78,7 +59,7 @@ const SwapItem = () => {
   };
 
   const filterAvailableProducts = useCallback(
-    (products: Product[], record: RecordData | null) => {
+    (products: ProductInterface[], record: RecordInterface | null) => {
       if (!record) return [];
       const filtered = products.filter(
         (product) => product.requiredPoints <= record.points
@@ -89,7 +70,7 @@ const SwapItem = () => {
     []
   );
 
-  const findProducts = async (recordOverride?: RecordData) => {
+  const findProducts = async (recordOverride?: RecordInterface) => {
     try {
       const products = await authFetch('/products');
       const recordToUse = recordOverride || recordData;
@@ -98,10 +79,6 @@ const SwapItem = () => {
       console.error('Error fetching products:', error);
       setRecordData(null);
     }
-  };
-
-  const confirmRecord = async () => {
-    await findProducts();
   };
 
   const handleQuantityInput = (productId: string, value: string) => {
@@ -113,7 +90,7 @@ const SwapItem = () => {
     }));
   };
 
-  const handleRedeem = async (product: Product) => {
+  const handleRedeem = async (product: ProductInterface) => {
     if (redeemInProgress || !recordData) return;
 
     setRedeemInProgress(true);
@@ -176,11 +153,6 @@ const SwapItem = () => {
     }
   };
 
-  // Show loading skeleton while loading
-  if (pageLoading) {
-    return <ResponsiveSkeleton page="formtable" />;
-  }
-
   return (
     <main className="flex flex-col gap-4 sm:gap-8 p-4 sm:p-8">
       {/* Header Section */}
@@ -230,7 +202,6 @@ const SwapItem = () => {
                 setLastName(filtered);
                 // live-validate
                 const { valid, message } = validateName(filtered, true);
-                setIsLastNameValid(valid);
                 setLastNameError(valid ? '' : message || 'Invalid Last Name');
               }}
               required
@@ -273,11 +244,11 @@ const SwapItem = () => {
             {recordData && (
               <RecordInformation
                 recordData={recordData}
-                onConfirmRecord={confirmRecord}
+                findProducts={findProducts}
               />
             )}
 
-            <AvailableProductsSection
+            <Availableproducts
               availableProducts={availableProducts}
               quantityInputs={quantityInputs}
               onQuantityInput={handleQuantityInput}
@@ -288,179 +259,6 @@ const SwapItem = () => {
         )}
       </div>
     </main>
-  );
-};
-
-interface RecordInformationProps {
-  recordData: RecordData;
-  onConfirmRecord: () => void;
-}
-
-const RecordInformation = ({
-  recordData,
-  onConfirmRecord,
-}: RecordInformationProps) => {
-  return (
-    <div className="flex flex-col gap-4 sm:gap-8 w-full lg:max-w-md">
-      <div
-        className="p-6 sm:p-10 bg-white rounded-lg shadow-md"
-        style={{ color: '#1a4d2e' }}
-      >
-        <h1 className="font-bold text-xl sm:text-3xl mb-4 sm:mb-8">
-          Record Information
-        </h1>
-
-        <div className="flex flex-col gap-2 sm:gap-4 text-sm sm:text-lg">
-          <p className="break-words">
-            <span className="font-semibold">Record ID:</span>{' '}
-            <span>{recordData._id}</span>
-          </p>
-          <p className="break-words">
-            <span className="font-semibold">Name:</span>{' '}
-            <span>{formatName(recordData)}</span>
-          </p>
-          <p className="break-words">
-            <span className="font-semibold">Address:</span>{' '}
-            <span>{recordData.address}</span>
-          </p>
-          <p className="break-words">
-            <span className="font-semibold">Contact:</span>{' '}
-            <span>{recordData.contact_number}</span>
-          </p>
-          <p className="text-xl sm:text-3xl font-bold mt-2 sm:mt-4">
-            <span className="font-semibold">Points:</span>{' '}
-            <span>{formatPoints(recordData.points)}</span>
-          </p>
-        </div>
-      </div>
-
-      <button
-        className="py-3 sm:py-4 px-4 sm:px-6 text-base sm:text-lg font-semibold text-white rounded-lg shadow-md hover:opacity-80 transition-opacity duration-300"
-        style={{ backgroundColor: '#1a4d2e' }}
-        onClick={onConfirmRecord}
-      >
-        Confirm Record
-      </button>
-    </div>
-  );
-};
-
-interface AvailableProductsSectionProps {
-  availableProducts: Product[];
-  quantityInputs: Record<string, number>;
-  onQuantityInput: (productId: string, value: string) => void;
-  onRedeem: (product: Product) => void;
-  redeemInProgress: boolean;
-}
-
-const AvailableProductsSection = ({
-  availableProducts,
-  quantityInputs,
-  onQuantityInput,
-  onRedeem,
-  redeemInProgress,
-}: AvailableProductsSectionProps) => {
-  if (availableProducts.length === 0) {
-    return null;
-  }
-
-  return (
-    <div
-      className="grow bg-white shadow-md p-4 sm:p-10 rounded-lg"
-      style={{ color: '#1a4d2e' }}
-    >
-      <h1 className="font-bold text-xl sm:text-3xl mb-4 sm:mb-8">
-        Available Products based on points from record:
-      </h1>
-
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
-        {availableProducts.map((product) => (
-          <ProductCard
-            key={product._id}
-            product={product}
-            quantity={quantityInputs[product._id] || 0}
-            onQuantityInput={onQuantityInput}
-            onRedeem={onRedeem}
-            redeemInProgress={redeemInProgress}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-interface ProductCardProps {
-  product: Product;
-  quantity: number;
-  onQuantityInput: (productId: string, value: string) => void;
-  onRedeem: (product: Product) => void;
-  redeemInProgress: boolean;
-}
-
-const ProductCard = ({
-  product,
-  quantity,
-  onQuantityInput,
-  onRedeem,
-  redeemInProgress,
-}: ProductCardProps) => {
-  return (
-    <div
-      className="px-4 sm:px-6 py-4 sm:py-6 rounded-lg text-white shadow-md"
-      style={{ backgroundColor: '#1a4d2e' }}
-    >
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 mb-3 sm:mb-5">
-        <div
-          className="shrink-0 p-2 sm:p-3 rounded-lg grid place-items-center max-h-24 sm:max-h-32 mx-auto sm:mx-0"
-          style={{ backgroundColor: '#F6F6F6' }}
-        >
-          <img
-            src={product.image?.url || '/placeholder.png'}
-            alt={product.name}
-            className="h-16 w-20 sm:h-20 sm:w-24 object-contain rounded"
-          />
-        </div>
-
-        <div className="flex flex-col justify-start gap-1 sm:gap-2 grow text-center sm:text-left">
-          <h1 className="font-bold text-lg sm:text-xl">{product.name}</h1>
-          <p className="text-sm sm:text-base opacity-90">
-            {product.description}
-          </p>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3 sm:gap-4 text-sm sm:text-base">
-        <label
-          htmlFor={`quantity-${product._id}`}
-          className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 font-semibold"
-        >
-          <span>Quantity:</span>
-          <input
-            id={`quantity-${product._id}`}
-            type="number"
-            placeholder="0"
-            min="0"
-            className="w-full sm:w-20 px-2 py-1 placeholder:text-center bg-white/10 border-2 border-white rounded text-center outline-none"
-            value={quantity || ''}
-            onChange={(e) => onQuantityInput(product._id, e.target.value)}
-          />
-        </label>
-
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 text-base sm:text-lg">
-          <p className="font-bold text-center sm:text-left">
-            {product.requiredPoints} points
-          </p>
-          <button
-            className="font-semibold py-2 px-4 sm:px-6 rounded-lg bg-white shadow-md hover:opacity-80 transition-opacity duration-300 text-sm sm:text-base"
-            style={{ color: '#1a4d2e' }}
-            onClick={() => onRedeem(product)}
-            disabled={redeemInProgress}
-          >
-            Redeem
-          </button>
-        </div>
-      </div>
-    </div>
   );
 };
 

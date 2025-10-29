@@ -11,8 +11,8 @@ export interface RecordInterface {
   updatedAt: string
 }
 
-export interface ProductInteface {
-  id: string;
+export interface ProductInterface {
+  _id: string;
   name: string;
   image?: ImageInterface;
   category?: string;

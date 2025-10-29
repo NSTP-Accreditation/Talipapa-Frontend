@@ -1,7 +1,7 @@
 import { Award, Calendar, Edit, MapPin, Phone, User, X } from 'lucide-react';
-import React, { Dispatch, FormEvent, SetStateAction, useState } from 'react'
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react'
 import { createPortal } from 'react-dom';
-import { RecordInterface } from '../Record.types';
+import { RecordInterface } from '@/types/global.types';
 import { useToast } from '@/hooks/useToast';
 import { validateAddress } from '@/utils/validation';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';

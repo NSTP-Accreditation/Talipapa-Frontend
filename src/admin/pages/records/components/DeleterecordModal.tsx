@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom';
-import { RecordInterface } from '../Record.types';
+import { RecordInterface } from '@/types/global.types';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Trash2, X } from 'lucide-react';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
