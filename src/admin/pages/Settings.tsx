@@ -1,7 +1,6 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import {
   Building,
-  Palette,
   Users,
   Cog,
   File as FIleLogo,
@@ -291,6 +290,8 @@ const Settings: React.FC = () => {
 
     payload.roles = newRoles;
 
+    console.log(payload);
+    
     try {
       setIsAddingAdmin(true);
       await authFetch('/auth/signup', {

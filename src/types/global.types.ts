@@ -1,0 +1,54 @@
+export interface RecordInterface {
+  _id: string
+  firstName: string
+  middleName?: string
+  lastName: string
+  age: string
+  address: string
+  contact_number: string
+  points: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ProductInterface {
+  _id: string;
+  name: string;
+  image?: ImageInterface;
+  category?: string;
+  subCategory?: string;
+  description?: string;
+  stocks?: number;
+  requiredPoints?: number;
+}
+
+export interface MaterialInterface {
+  _id: string;
+  name: string;
+  description: string;
+  pointsPerKg: number;
+  createdAt: string;
+}
+
+export interface ImageInterface {
+  key: string;
+  mimetype: string;
+  originalName: string;
+  size: number;
+  url: string
+}
+
+
+export interface LogInterface {
+  _id: string;
+  action: string;
+  title: string;
+  description: string;
+  category: string;
+  performedBy?: any;
+  details?: any;
+  targetType?: string;
+  targetId?: string;
+  targetName?: string;
+  created_at: string;
+}

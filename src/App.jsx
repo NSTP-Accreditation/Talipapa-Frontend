@@ -1,5 +1,5 @@
 // import React from 'react';
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SuspenseWrapper from '@/components/SuspenseWrapper';
 import { FullPageSpinner } from '@/components/LoadingSkeletons';
@@ -11,11 +11,15 @@ import { AuthProvider } from './contexts/AuthContext';
 // ADMIN EXPORT HERE - Lazy loaded for better performance
 const AdminLayout = lazy(() => import('@/admin/layout/AdminLayout'));
 const Dashboard = lazy(() => import('@/admin/pages/Dashboard'));
-const TradingStatistics = lazy(() => import('@/admin/pages/TradingStatistics'));
+const TradingStatistics = lazy(
+  () => import('@/admin/pages/trading-statistics/TradingStatistics')
+);
 const Settings = lazy(() => import('@/admin/pages/Settings'));
 const ActivityLogs = lazy(() => import('@/admin/pages/ActivityLogs'));
-const EarnPointsLogs = lazy(() => import('@/admin/pages/EarnPoints'));
-const SwapLogs = lazy(() => import('@/admin/pages/SwapItem'));
+const EarnPointsLogs = lazy(
+  () => import('@/admin/pages/earn-points/EarnPoints')
+);
+const SwapLogs = lazy(() => import('@/admin/pages/swap-item/SwapItem'));
 const Guidelines = lazy(() => import('@/admin/pages/Guidelines'));
 const CarouselEditor = lazy(() => import('@/admin/pages/CarouselEditor'));
 const News = lazy(() => import('@/admin/pages/NewsEvents'));
@@ -24,11 +28,15 @@ const Achievements = lazy(() => import('@/admin/pages/Achievements'));
 const AdminLogin = lazy(() => import('@/admin/auth/AdminLogin'));
 const Inventory = lazy(() => import('@/admin/pages/Inventory'));
 const FarmInventory = lazy(() => import('@/admin/pages/FarmInventory'));
-const SwapItem = lazy(() => import('@/admin/pages/SwapItem'));
+const SwapItem = lazy(() => import('@/admin/pages/swap-item/SwapItem'));
 const GreenPages = lazy(() => import('@/admin/pages/GreenPages'));
-const Records = lazy(() => import('@/admin/pages/Records'));
-const NonResidentRecords = lazy(() => import('@/admin/pages/NonResidentRecords'));
-const EstablishmentRecords = lazy(() => import('@/admin/pages/EstablishmentRecords'));
+const Records = lazy(() => import('@/admin/pages/records/Records'));
+const NonResidentRecords = lazy(
+  () => import('@/admin/pages/NonResidentRecords')
+);
+const EstablishmentRecords = lazy(
+  () => import('@/admin/pages/EstablishmentRecords')
+);
 const TalipapaNatin = lazy(() => import('@/admin/pages/TalipapaNatin'));
 
 // USER PAGE EXPORT HERE - Lazy loaded
@@ -130,8 +138,14 @@ function App() {
                 <Route path="settings" element={<Settings />} />
                 {/* Records Route */}
                 <Route path="records" element={<Records />} />
-                <Route path="records/non-resident" element={<NonResidentRecords />} />
-                <Route path="records/establishment" element={<EstablishmentRecords />} />
+                <Route
+                  path="records/non-resident"
+                  element={<NonResidentRecords />}
+                />
+                <Route
+                  path="records/establishment"
+                  element={<EstablishmentRecords />}
+                />
 
                 {/* 404 for unknown admin routes */}
                 <Route path="*" element={<NotFound />} />
