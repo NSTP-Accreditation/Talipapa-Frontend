@@ -26,7 +26,7 @@ const News = lazy(() => import('@/admin/pages/NewsEvents'));
 const AboutUsAdmin = lazy(() => import('@/admin/pages/AboutUs'));
 const Achievements = lazy(() => import('@/admin/pages/Achievements'));
 const AdminLogin = lazy(() => import('@/admin/auth/AdminLogin'));
-const Inventory = lazy(() => import('@/admin/pages/Inventory'));
+const Inventory = lazy(() => import('@/admin/pages/inventory/Inventory'));
 const FarmInventory = lazy(() => import('@/admin/pages/FarmInventory'));
 const SwapItem = lazy(() => import('@/admin/pages/swap-item/SwapItem'));
 const GreenPages = lazy(() => import('@/admin/pages/GreenPages'));

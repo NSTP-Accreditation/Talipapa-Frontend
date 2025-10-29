@@ -18,10 +18,9 @@ import {
   Tag,
   CheckCircle2,
 } from 'lucide-react';
-import { PageLoadingSkeleton } from '@/components/LoadingSkeletons';
 import ResponsiveSkeleton from '@/components/ResponsiveSkeleton';
-import useFetchData from '../hooks/useFetchData';
-import { useAuthFetch } from '../hooks/useAuthFetch';
+import useFetchData from '@/admin/hooks/useFetchData';
+import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 
 interface Product {
   id: string;
@@ -1126,7 +1125,6 @@ const Inventory: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 p-3 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
       {/* Success toasts are rendered by the global ToastProvider */}
-
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-6">
         <div className="flex-shrink-0">
           <div className="flex items-center gap-3 sm:gap-4 mb-2">
