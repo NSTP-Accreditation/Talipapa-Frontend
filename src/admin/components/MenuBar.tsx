@@ -22,6 +22,7 @@ import {
   Recycle,
   Sprout,
   RotateCwSquare,
+  Building,
 } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 
@@ -61,8 +62,25 @@ const MenuBar: React.FC<MenuBarProps> = ({
     },
     {
       icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />,
-      label: 'Resident Records',
+      label: 'Records',
       href: APP_ROUTES.ADMIN.RESOURCES,
+      submenu: [
+        {
+          icon: <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
+          label: 'Resident',
+          href: APP_ROUTES.ADMIN.RESOURCES,
+        },
+        {
+          icon: <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
+          label: 'Non Resident',
+          href: APP_ROUTES.ADMIN.RESOURCES + '/non-resident',
+        },
+        {
+          icon: <Building className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
+          label: 'Establishment',
+          href: APP_ROUTES.ADMIN.RESOURCES + '/establishment',
+        },
+      ],
     },
     {
       icon: <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />,

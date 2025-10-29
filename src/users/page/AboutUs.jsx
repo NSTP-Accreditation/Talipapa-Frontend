@@ -62,14 +62,14 @@ const BarangayOfficials = () => {
   return (
     <div className="mb-8 sm:mb-12 md:mb-16 lg:mb-24">
       {/* Header Section */}
-      <div className="text-center mb-8 sm:mb-12">
+        <div className="text-center mb-8 sm:mb-12">
         <div className="inline-block p-3 sm:p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-full mb-4 sm:mb-6 shadow-lg">
           <span className="text-3xl sm:text-5xl">👥</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-3 sm:mb-4">
+        <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-3 sm:mb-4 leading-normal">
           Barangay Officials
         </h2>
-        <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto px-4">
+        <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto px-4 leading-normal">
           Meet the dedicated leaders serving our community with passion and
           integrity
         </p>
@@ -104,7 +104,7 @@ const BarangayOfficials = () => {
                 </div>
 
                 {/* Name */}
-                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 leading-tight text-center group-hover:text-green-700 transition-colors">
+                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 leading-normal text-center group-hover:text-green-700 transition-colors">
                   {official.name}
                 </h3>
 
@@ -145,7 +145,7 @@ const BarangayOfficials = () => {
                 </div>
 
                 {/* Name */}
-                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 leading-tight text-center group-hover:text-green-700 transition-colors">
+                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 leading-normal text-center group-hover:text-green-700 transition-colors">
                   {official.name}
                 </h3>
 
@@ -186,7 +186,7 @@ const BarangayOfficials = () => {
                 </div>
 
                 {/* Name */}
-                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 leading-tight text-center group-hover:text-green-700 transition-colors">
+                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 leading-normal text-center group-hover:text-green-700 transition-colors">
                   {official.name}
                 </h3>
 
@@ -218,14 +218,14 @@ const BarangayMap = () => {
   return (
     <div className="mt-8 sm:mt-12 md:mt-16 lg:mt-24">
       {/* Header Section */}
-      <div className="text-center mb-8 sm:mb-12">
+        <div className="text-center mb-8 sm:mb-12">
         <div className="inline-block p-3 sm:p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-full mb-4 sm:mb-6 shadow-lg">
           <span className="text-3xl sm:text-5xl">📍</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-3 sm:mb-4">
+        <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-3 sm:mb-4 leading-normal">
           Find Our Barangay
         </h2>
-        <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto px-4">
+        <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto px-4 leading-normal">
           Visit us at our office or explore our location on the map below
         </p>
       </div>

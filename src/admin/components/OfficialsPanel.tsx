@@ -212,7 +212,7 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
                 <option value="Barangay Treasurer">Barangay Treasurer</option>
                 <option value="Barangay Secretary">Barangay Secretary</option>
                 <option value="Kagawad">Kagawad</option>
-                <option value="SK Member">SK Member</option>
+                <option value="SK Chairperson">SK Chairperson</option>
               </select>
             </div>
 
@@ -430,7 +430,7 @@ export default function OfficialsPanel() {
       }
     }
 
-    // Limits for Kagawad and SK Member (max 7 each)
+    // Limits for Kagawad and SK Chairperson (max 7 each)
     if (newPosition === 'Kagawad') {
       const existingCount = countRole('Kagawad');
       // If creating, existingCount must be < 7; if editing and not changing position, allow
@@ -455,10 +455,10 @@ export default function OfficialsPanel() {
       }
     }
 
-    if (newPosition === 'SK Member') {
-      const existingCount = countRole('SK Member');
-      if (isCreating && existingCount >= 7) {
-        toast.error('You can only have up to 7 SK Members.', {
+    if (newPosition === 'SK Chairperson') {
+      const existingCount = countRole('SK Chairperson');
+      if (isCreating && existingCount >= 1) {
+        toast.error('You can only have up to 1 SK Chairperson.', {
           title: 'Validation',
         });
         setIsSaving(false);
@@ -467,10 +467,10 @@ export default function OfficialsPanel() {
       if (
         !isCreating &&
         editingOfficial &&
-        editingOfficial.position !== 'SK Member' &&
-        existingCount >= 7
+        editingOfficial.position !== 'SK Chairperson' &&
+        existingCount >= 1
       ) {
-        toast.error('You can only have up to 7 SK Members.', {
+        toast.error('You can only have up to 1 SK Chairperson.', {
           title: 'Validation',
         });
         setIsSaving(false);

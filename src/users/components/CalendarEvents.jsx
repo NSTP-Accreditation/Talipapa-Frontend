@@ -32,7 +32,7 @@ const EventCard = ({ event }) => {
 
       <div className="relative z-10">
         <div className="flex flex-col sm:flex-row justify-between items-start mb-4 sm:mb-6 gap-3 sm:gap-0">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-800 flex-1 sm:pr-4 group-hover:text-green-700 transition-colors">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-800 flex-1 sm:pr-4 group-hover:text-green-700 transition-colors leading-normal">
             {event?.title}
           </h3>
           <span
@@ -64,11 +64,11 @@ const EventCard = ({ event }) => {
               className="mr-2 sm:mr-3 text-red-600 flex-shrink-0"
               size={16}
             />
-            <span className="line-clamp-2">{event?.location}</span>
+            <span className="line-clamp-2 leading-normal pb-0.5">{event?.location}</span>
           </div>
         </div>
 
-        <p className="text-gray-700 text-sm sm:text-base leading-relaxed line-clamp-3 sm:line-clamp-none">
+        <p className="text-gray-700 text-sm sm:text-base leading-relaxed line-clamp-3 sm:line-clamp-none pb-1">
           {event?.description}
         </p>
       </div>
@@ -94,7 +94,7 @@ export default function CalendarEvents() {
           <div className="inline-block p-3 sm:p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full mb-4 sm:mb-6 shadow-lg">
             <span className="text-3xl sm:text-4xl md:text-5xl">📅</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-700 to-blue-900 bg-clip-text text-transparent mb-4 sm:mb-6 px-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-700 to-blue-900 bg-clip-text text-transparent mb-4 sm:mb-6 px-4 leading-normal">
             Upcoming Events
           </h2>
           <p className="text-gray-600 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto px-4">
