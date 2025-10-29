@@ -70,6 +70,7 @@ const Inventory = () => {
         filteredMaterials={filteredMaterials}
         materialsData={materialsData}
         materialsDataError={materialsDataErr}
+        refetchMaterial={refetchMaterials}
       />
 
     </main>

@@ -111,10 +111,6 @@ const AddEditProductModal = memo(
         });
         return false;
       }
-      // if (!productFormData.image) {
-      //   showError('Please enter valid stocks', { title: 'Validation' });
-      //   return false;
-      // }
       return true;
     };
 
