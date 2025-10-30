@@ -1,17 +1,20 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
-import { Mail, Phone, Plus, Shield, Trash, Users } from "lucide-react";
-import { Admin } from "../Settings.types";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import { Mail, Phone, Plus, Shield, Trash, Users } from 'lucide-react';
+import { Admin } from '../Settings.types';
 
 type AdminSectionProps = {
-  adminData: Admin[] | null,
-  loadingAdmins: boolean,
-  errorAdmins: string | null,
-  openAddAdminModal: React.Dispatch<React.SetStateAction<boolean>>,
-}
+  adminData: Admin[] | null;
+  openAddAdminModal: React.Dispatch<React.SetStateAction<boolean>>;
+  openDeleteAdminModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setAdminToDelete: React.Dispatch<React.SetStateAction<Admin>>;
+};
 
-const AdminSection = ({ adminData, loadingAdmins, errorAdmins, openAddAdminModal } : AdminSectionProps ) => {
-
-
+const AdminSection = ({
+  adminData,
+  openAddAdminModal,
+  openDeleteAdminModal,
+  setAdminToDelete,
+}: AdminSectionProps) => {
   return (
     <Card className="shadow-md border border-gray-200 overflow-hidden">
       <CardHeader className="pb-6 bg-gradient-to-r from-green-50 to-white border-b border-gray-200 flex items-center justify-between gap-4">
@@ -76,7 +79,10 @@ const AdminSection = ({ adminData, loadingAdmins, errorAdmins, openAddAdminModal
                     ))}
                   </div>
                   <button
-                    // onClick={() => handleDeleteAdmin(admin._id)}
+                    onClick={() => {
+                      openDeleteAdminModal(true);
+                      setAdminToDelete(admin);
+                    }}
                     className="w-10 h-10 flex items-center justify-center text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all shadow-sm border border-red-200 hover:border-red-600 flex-shrink-0"
                     title="Delete admin account"
                   >
