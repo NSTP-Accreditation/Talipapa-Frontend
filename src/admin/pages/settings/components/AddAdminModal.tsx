@@ -67,7 +67,7 @@ const AddAdminModal = ({ isAddAdminModalOpen, closeAddAdminModal, refetchAdmin }
       e.preventDefault();
   
       if (validateForm()) {
-        error('Please fix the form errors', { title: 'Validation Error' });
+        error(validateForm(), { title: 'Validation Error' });
         return;
       }
   
@@ -96,10 +96,11 @@ const AddAdminModal = ({ isAddAdminModalOpen, closeAddAdminModal, refetchAdmin }
         });
         refetchAdmin();
         closeAddAdminModal();
-      } catch (error: any) {
-        error(error?.message || 'Failed to create admin account', {
+      } catch (err: any) {
+        error(err?.message || 'Failed to create admin account', {
           title: 'Error',
         });
+      } finally {
         setIsAddingAdmin(false);
       }
     };
