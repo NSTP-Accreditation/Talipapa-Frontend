@@ -29,7 +29,7 @@ const FarmInventoryCards = ({ farmItemsData } : FarmInventoryCardsProps ) => {
   }, [farmItemsData]);
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-2 sm:gap-3 lg:gap-4">
       <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer flex place-content-center">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-emerald-600" />
         <CardContent className="p-3 sm:p-4 lg:p-5">
@@ -94,7 +94,7 @@ const FarmInventoryCards = ({ farmItemsData } : FarmInventoryCardsProps ) => {
         </CardContent>
       </Card>
 
-      <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer flex place-content-center col-span-2 lg:col-span-2">
+      <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer flex place-content-center lg:col-span-2">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-600" />
         <CardContent className="p-3 sm:p-4 lg:p-5">
           <div className="flex items-start justify-between gap-2">

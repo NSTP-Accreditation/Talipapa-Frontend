@@ -32,7 +32,10 @@ const FarmInventory = () => {
   return (
     <main className="p-5 grid gap-6">
       {/* Header and Search bar */}
-      <FarmInventoryHeader />
+      <FarmInventoryHeader
+        farmItemsData={farmItemsData}
+        setFilteredFarmItems={setFilteredFarmItems}
+      />
 
       {/* Cards */}
       <FarmInventoryCards farmItemsData={farmItemsData} />

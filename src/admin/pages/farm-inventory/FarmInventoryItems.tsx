@@ -29,7 +29,7 @@ const FarmInventoryItems = ({
             Farm Items
           </h2>
           <p className="text-xs sm:text-sm text-gray-500 mt-1 ml-3 sm:ml-4">
-            Showing {farmItemsData?.length} of {farmItemsData?.length} items
+            Showing {filteredFarmItems?.length} of {farmItemsData?.length} items
           </p>
         </div>
         <Button

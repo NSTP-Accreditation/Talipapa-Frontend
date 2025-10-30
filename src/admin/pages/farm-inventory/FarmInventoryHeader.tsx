@@ -1,7 +1,49 @@
 import { Input } from '@/components/ui';
+import { FarmItemInterface } from '@/types/global.types';
+import { debounce, DebouncedFunc } from 'lodash';
 import { Search, Sprout } from 'lucide-react';
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
-const FarmInventoryHeader = () => {
+type FarmInventoryHeaderProps = {
+  farmItemsData: FarmItemInterface[],
+  setFilteredFarmItems: Dispatch<SetStateAction<FarmItemInterface[]>>
+}
+
+const FarmInventoryHeader = ({ farmItemsData, setFilteredFarmItems } : FarmInventoryHeaderProps ) => {
+
+  const [searchTerm, setSearchTerm] = useState('');
+    
+    // Initialize with null
+    const debouncedSearchRef = useRef<DebouncedFunc<(query: string) => void> | null>(null);
+    
+    useEffect(() => {
+      // Assign the debounced function
+      debouncedSearchRef.current = debounce((query: string) => {
+        const normalizedQuery = query.trim().toLowerCase();
+        
+        if (!normalizedQuery) {
+          setFilteredFarmItems(farmItemsData);
+          return;
+        }
+        
+        const filteredFarmItems = farmItemsData.filter(item => 
+          item.name?.toLowerCase().includes(normalizedQuery)
+        );
+        
+        setFilteredFarmItems(filteredFarmItems);
+      }, 300);
+  
+      return () => {
+        debouncedSearchRef.current?.cancel();
+      };
+    }, [farmItemsData, setFilteredFarmItems]);
+  
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setSearchTerm(value);
+      debouncedSearchRef.current?.(value);
+    };
+
   return (
     <header className='grid gap-5'>
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4 lg:gap-6">
@@ -27,8 +69,8 @@ const FarmInventoryHeader = () => {
         </div>
         <Input
           placeholder="Search farm inventory..."
-          // value={search}
-          // onChange={(e) => setSearch(e.target.value)}
+          value={searchTerm}
+          onChange={handleInputChange}
           className="pl-9 sm:pl-11 pr-3 sm:pr-4 py-2 sm:py-2.5 lg:py-3 h-auto text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl sm:rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 bg-white"
         />
       </div>
