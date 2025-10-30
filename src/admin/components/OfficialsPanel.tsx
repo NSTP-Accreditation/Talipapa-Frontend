@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Save, SquarePen, Plus, Trash2, AlertCircle } from 'lucide-react';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 import useFetchData from '../hooks/useFetchData';
 import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
@@ -262,85 +263,7 @@ interface DeleteModalProps {
   onConfirm: () => void;
 }
 
-const DeleteModal: React.FC<DeleteModalProps> = ({
-  official,
-  isOpen,
-  onClose,
-  onConfirm,
-}) => {
-  if (!isOpen || !official) return null;
-
-  return createPortal(
-    <div
-      className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="w-full max-w-xl bg-white rounded-lg sm:rounded-xl shadow-xl overflow-hidden">
-        <div className="p-4 sm:p-6">
-          <div className="flex items-start gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
-              <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-base sm:text-lg font-bold text-gray-900">
-                Delete Official
-              </h3>
-              <p className="text-xs sm:text-sm text-gray-700 mt-1">
-                Are you sure you want to delete "{official.name}" (
-                {official.position})?
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-4 sm:mt-6 grid grid-cols-1 gap-3 sm:gap-4">
-            <div className="space-y-2">
-              {official.bio && (
-                <p className="text-xs sm:text-sm text-gray-700">
-                  <span className="font-semibold text-gray-900">Bio:</span>{' '}
-                  {official.bio}
-                </p>
-              )}
-            </div>
-
-            <div className="bg-gradient-to-r from-red-50 to-red-50 border-2 border-red-200 rounded-lg sm:rounded-xl p-2 sm:p-3">
-              <div className="flex items-start gap-2 sm:gap-3">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-red-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs sm:text-sm text-red-700 font-semibold leading-relaxed">
-                    Warning: This will permanently remove this official from the
-                    system.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-5 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-          <button
-            onClick={onClose}
-            className="px-3 py-2 sm:px-4 sm:py-2 md:px-6 md:py-3 border-2 border-gray-300 bg-white text-gray-700 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all order-2 sm:order-1"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            className="flex items-center justify-center gap-1 sm:gap-2 px-4 py-2 sm:px-5 sm:py-2 md:px-8 md:py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold hover:from-red-700 hover:to-red-800 transition-all hover:-translate-y-0.5 shadow-lg hover:shadow-xl order-1 sm:order-2"
-          >
-            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-            Delete Official
-          </button>
-        </div>
-      </div>
-    </div>,
-    document.body
-  );
-};
+// Using shared ConfirmModal for delete confirmations
 
 export default function OfficialsPanel() {
   const { data, loading, error, refetch } =
@@ -656,15 +579,42 @@ export default function OfficialsPanel() {
         isEditing={!!editingOfficial}
       />
 
-      {/* Delete Modal */}
-      <DeleteModal
-        official={deletingOfficial}
+      {/* Delete Modal (shared) */}
+      <ConfirmModal
         isOpen={isDeleteModalOpen}
+        title={
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <AlertCircle className="w-6 h-6 text-white" />
+            </div>
+            <span>Delete Official</span>
+          </div>
+        }
+        description={
+          <div>
+            <p className="text-gray-700 text-sm">
+              Are you sure you want to delete "{deletingOfficial?.name}" ({' '}
+              {deletingOfficial?.position})?
+            </p>
+            {deletingOfficial?.bio && (
+              <p className="text-xs text-gray-600 mt-2">
+                {deletingOfficial.bio}
+              </p>
+            )}
+            <p className="text-sm text-red-700 font-semibold mt-3">
+              Warning: This will permanently remove this official from the
+              system.
+            </p>
+          </div>
+        }
         onClose={() => {
           setIsDeleteModalOpen(false);
           setDeletingOfficial(null);
         }}
         onConfirm={confirmDeleteOfficial}
+        loading={isSaving}
+        confirmLabel="Delete Official"
+        cancelLabel="Cancel"
       />
     </div>
   );

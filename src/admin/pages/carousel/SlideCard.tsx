@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 import {
   ArrowUp,
   ArrowDown,
@@ -25,6 +26,19 @@ const SlideCard: React.FC<SlideCardProps> = ({
   onEdit,
   onDelete,
 }) => {
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleConfirmDelete = async () => {
+    if (!slide._id) return;
+    try {
+      setIsDeleting(true);
+      await onDelete(slide._id);
+    } finally {
+      setIsDeleting(false);
+      setIsConfirmOpen(false);
+    }
+  };
   return (
     <div className="group bg-white rounded-xl overflow-hidden border-2 border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
       <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
@@ -98,13 +112,30 @@ const SlideCard: React.FC<SlideCardProps> = ({
           >
             <SquarePen size={14} /> Edit
           </button>
-          <button
-            onClick={() => onDelete(slide._id)}
-            className="flex items-center justify-center gap-1 px-2 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-semibold"
-            title="Delete"
-          >
-            <Trash2 size={14} /> Delete
-          </button>
+          <>
+            <button
+              onClick={() => setIsConfirmOpen(true)}
+              className="flex items-center justify-center gap-1 px-2 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-semibold"
+              title="Delete"
+            >
+              <Trash2 size={14} /> Delete
+            </button>
+            <ConfirmModal
+              isOpen={isConfirmOpen}
+              title={`Delete slide "${slide.title}"?`}
+              description={
+                <span>
+                  Are you sure you want to delete this slide? This action cannot
+                  be undone.
+                </span>
+              }
+              confirmLabel="Delete"
+              cancelLabel="Cancel"
+              loading={isDeleting}
+              onClose={() => setIsConfirmOpen(false)}
+              onConfirm={handleConfirmDelete}
+            />
+          </>
         </div>
       </div>
     </div>

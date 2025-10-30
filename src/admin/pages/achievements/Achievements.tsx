@@ -7,6 +7,7 @@ import { useAuthFetch } from '../../hooks/useAuthFetch';
 import useFetchData from '../../hooks/useFetchData';
 import AchievementCard from './components/AchievementCard';
 import AchievementModal from './components/AchievementModal';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 
 /* ---------- utilities ---------- */
 const readFileAsDataURL = (file: File) =>
@@ -245,44 +246,21 @@ export default function Achievements() {
         />
       )}
 
-      {isDeleteModalOpen &&
-        createPortal(
-          <div
-            className="fixed inset-0 z-[1005] flex items-center justify-center bg-black/60 p-4"
-            role="dialog"
-            aria-modal="true"
-            onClick={(e) => {
-              if (e.target === e.currentTarget) closeDeleteModal();
-            }}
-          >
-            <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden">
-              <div className="p-6 border-b">
-                <h3 className="text-lg font-bold text-gray-900">
-                  Delete Achievement
-                </h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  This action cannot be undone. Are you sure you want to delete
-                  this achievement?
-                </p>
-              </div>
-              <div className="p-4 flex items-center justify-end gap-3 bg-gray-50">
-                <button
-                  onClick={closeDeleteModal}
-                  className="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={confirmDeleteAchievement}
-                  className={`px-4 py-2 rounded-lg bg-red-600 text-white font-semibold shadow-sm hover:bg-red-700 ${isDeleting ? 'opacity-70 pointer-events-none' : ''}`}
-                >
-                  {isDeleting ? 'Deleting...' : 'Delete'}
-                </button>
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        title="Delete Achievement"
+        description={
+          <p className="text-gray-700 text-base leading-relaxed">
+            This action cannot be undone. Are you sure you want to delete this
+            achievement?
+          </p>
+        }
+        onClose={closeDeleteModal}
+        onConfirm={confirmDeleteAchievement}
+        loading={isDeleting}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+      />
     </div>
   );
 }

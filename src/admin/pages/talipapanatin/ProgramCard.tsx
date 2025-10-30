@@ -107,13 +107,47 @@ export default function ProgramCard({
           {program.createdAt &&
             new Date(program.createdAt).toLocaleDateString()}
         </div>
-        <button
-          onClick={() => onEdit && onEdit(program)}
-          className="text-xs font-semibold text-[#1b4c2e] hover:text-[#2d5a3d] flex items-center gap-1 hover:underline transition-colors"
-        >
-          <Edit2 className="w-3 h-3" />
-          Edit
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onEdit && onEdit(program)}
+            className="p-2 sm:p-2.5 bg-white hover:bg-blue-50 text-blue-600 border-2 border-blue-300 hover:border-blue-500 rounded-lg sm:rounded-xl transition-all hover:shadow-md"
+            title="Edit Program"
+          >
+            <svg
+              className="w-3 h-3 sm:w-4 sm:h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+              />
+            </svg>
+          </button>
+
+          <button
+            onClick={() => onDelete && onDelete(program._id)}
+            className="p-2 sm:p-2.5 bg-white hover:bg-red-50 text-red-600 border-2 border-red-300 hover:border-red-500 rounded-lg sm:rounded-xl transition-all hover:shadow-md"
+            title="Delete Program"
+          >
+            <svg
+              className="w-3 h-3 sm:w-4 sm:h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   );

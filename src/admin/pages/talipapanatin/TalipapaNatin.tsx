@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 import { createPortal } from 'react-dom';
 import {
   Save,
@@ -70,6 +71,8 @@ export default function TalipapaNatin() {
   });
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState<ProgramItem | null>(null);
+  const [isDeletingProgram, setIsDeletingProgram] = useState(false);
 
   // Filter programs
   const filteredPrograms = programs?.filter((program) => {
@@ -107,25 +110,30 @@ export default function TalipapaNatin() {
   };
 
   const handleDeleteProgram = async (id: string) => {
-    const program = programs.find((p) => p._id === id);
-    if (
-      program &&
-      confirm(`Are you sure you want to delete "${program.title}"?`)
-    ) {
-      try {
-        const res = await authFetch(`/talipapanatin/${id}`, {
-          method: 'DELETE',
-        });
+    const program = programs.find((p) => p._id === id) || null;
+    // open confirm modal with program details
+    setDeleteTarget(program);
+  };
 
-        setHasUnsavedChanges(true);
-        success(res.message, { title: 'Deleted' });
-        refetchPrograms();
-      } catch (error) {
-        console.error('Error deleting program:', error);
-        showError('Error deleting program. Please try again.', {
-          title: 'Delete failed',
-        });
-      }
+  const confirmDeleteProgram = async () => {
+    if (!deleteTarget) return;
+    setIsDeletingProgram(true);
+    try {
+      const res = await authFetch(`/talipapanatin/${deleteTarget._id}`, {
+        method: 'DELETE',
+      });
+
+      setHasUnsavedChanges(true);
+      success(res.message, { title: 'Deleted' });
+      refetchPrograms();
+      setDeleteTarget(null);
+    } catch (error) {
+      console.error('Error deleting program:', error);
+      showError('Error deleting program. Please try again.', {
+        title: 'Delete failed',
+      });
+    } finally {
+      setIsDeletingProgram(false);
     }
   };
 
@@ -385,6 +393,25 @@ export default function TalipapaNatin() {
         saveEdit={saveEdit}
         editingProgram={editingProgram}
         categories={categories}
+      />
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        title={deleteTarget ? `Delete "${deleteTarget.title}"?` : undefined}
+        description={
+          deleteTarget ? (
+            <div>
+              <p className="text-sm text-gray-700">
+                Are you sure you want to delete{' '}
+                <strong className="font-semibold">{deleteTarget.title}</strong>?
+              </p>
+            </div>
+          ) : undefined
+        }
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        loading={isDeletingProgram}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={confirmDeleteProgram}
       />
     </div>
   );

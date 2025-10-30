@@ -64,8 +64,6 @@ const CarouselEditor: React.FC = () => {
 
   const deleteSlide = async (id?: string) => {
     if (!id) return;
-    // keep the browser confirm to match previous behaviour
-    if (!confirm('Delete this slide?')) return;
     try {
       await authFetch(`/carousel/${id}`, { method: 'DELETE' });
       success('Slide deleted successfully!', { title: 'Deleted' });

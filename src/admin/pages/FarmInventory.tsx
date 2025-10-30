@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 import { useToast } from '@/hooks/useToast';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -62,68 +63,7 @@ const ImageWithFallback: React.FC<{
   );
 };
 
-// Delete Confirmation Modal
-const DeleteModal: React.FC<{
-  open: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  itemName: string;
-}> = ({ open, onClose, onConfirm, itemName }) => {
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
-
-  if (!open) return null;
-
-  return createPortal(
-    <div className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 z-[10] animate-in zoom-in-95 duration-200">
-        <div className="p-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 bg-red-100 rounded-full">
-              <AlertTriangle className="w-6 h-6 text-red-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-gray-900">
-                Delete Farm Item?
-              </h3>
-              <p className="text-sm text-gray-500 mt-1">
-                This action cannot be undone
-              </p>
-            </div>
-          </div>
-
-          <p className="text-gray-600 mb-6">
-            Are you sure you want to delete{' '}
-            <span className="font-bold text-gray-900">"{itemName}"</span>?
-          </p>
-          <div className="flex gap-3 justify-end">
-            <Button
-              variant="outline"
-              onClick={onClose}
-              className="px-6 py-2 rounded-xl"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={onConfirm}
-              className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl"
-            >
-              Delete
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>,
-    document.body
-  );
-};
+// (replaced by shared ConfirmModal for consistency)
 
 // Farm Item Modal
 const FarmItemModal: React.FC<{
@@ -507,6 +447,8 @@ const FarmInventory: React.FC = () => {
     item: null,
   });
 
+  const [isDeletingFarmItem, setIsDeletingFarmItem] = useState(false);
+
   const [itemFormData, setItemFormData] = useState({
     name: '',
     description: '',
@@ -668,13 +610,19 @@ const FarmInventory: React.FC = () => {
   async function confirmDelete() {
     if (!deleteModal.item) return;
 
-    await authFetch(`/farm-inventory/${deleteModal.item.id}`, {
-      method: 'DELETE',
-    });
-    await refetchFarmItems();
-    success('Farm item deleted successfully!', { title: 'Deleted' });
-
-    setDeleteModal({ open: false, item: null });
+    setIsDeletingFarmItem(true);
+    try {
+      await authFetch(`/farm-inventory/${deleteModal.item.id}`, {
+        method: 'DELETE',
+      });
+      await refetchFarmItems();
+      success('Farm item deleted successfully!', { title: 'Deleted' });
+      setDeleteModal({ open: false, item: null });
+    } catch (err) {
+      console.error('Delete failed', err);
+    } finally {
+      setIsDeletingFarmItem(false);
+    }
   }
 
   const lowStockCount = farmItems.filter(
@@ -970,11 +918,21 @@ const FarmInventory: React.FC = () => {
         onSubmit={handleAddItem}
       />
 
-      <DeleteModal
-        open={deleteModal.open}
+      <ConfirmModal
+        isOpen={deleteModal.open}
+        title="Delete Farm Item?"
+        description={
+          <p className="text-gray-700 text-base leading-relaxed">
+            Are you sure you want to delete{' '}
+            <span className="font-bold">"{deleteModal.item?.name}"</span>? This
+            action cannot be undone.
+          </p>
+        }
         onClose={() => setDeleteModal({ open: false, item: null })}
         onConfirm={confirmDelete}
-        itemName={deleteModal.item?.name || ''}
+        loading={isDeletingFarmItem}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
       />
     </div>
   );

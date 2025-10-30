@@ -10,6 +10,7 @@ import GuidelinesFilters from './components/GuidelinesFilters';
 import GuidelinesList from './components/GuidelinesList';
 import EmptyState from './components/EmptyState';
 import DeleteModal from './components/DeleteModal';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 import { Guideline } from './types';
 
 const Guidelines: React.FC = () => {
@@ -73,6 +74,7 @@ const Guidelines: React.FC = () => {
     new Set()
   );
   const [showBulkActions, setShowBulkActions] = useState(false);
+  const [isBulkConfirmOpen, setIsBulkConfirmOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [filterDifficulty, setFilterDifficulty] = useState('');
@@ -148,28 +150,19 @@ const Guidelines: React.FC = () => {
 
   const handleBulkDelete = () => {
     if (selectedGuidelines.size === 0) return;
+    // open a shared ConfirmModal for bulk delete
+    setIsBulkConfirmOpen(true);
+  };
 
+  const confirmBulkDelete = () => {
     const count = selectedGuidelines.size;
-    const guidelineTitles = guidelines
-      .filter((g) => selectedGuidelines.has(g.id))
-      .map((g) => g.title)
-      .join(', ');
-
-    if (
-      confirm(
-        `Are you sure you want to delete ${count} guideline${count > 1 ? 's' : ''}?\n\n${guidelineTitles}`
-      )
-    ) {
-      setGuidelines(guidelines.filter((g) => !selectedGuidelines.has(g.id)));
-      setSelectedGuidelines(new Set());
-      setShowBulkActions(false);
-      success(
-        `Successfully deleted ${count} guideline${count > 1 ? 's' : ''}.`,
-        {
-          title: 'Deleted',
-        }
-      );
-    }
+    setGuidelines(guidelines.filter((g) => !selectedGuidelines.has(g.id)));
+    setSelectedGuidelines(new Set());
+    setShowBulkActions(false);
+    setIsBulkConfirmOpen(false);
+    success(`Successfully deleted ${count} guideline${count > 1 ? 's' : ''}.`, {
+      title: 'Deleted',
+    });
   };
 
   const handleAddGuideline = () => {
@@ -353,6 +346,21 @@ const Guidelines: React.FC = () => {
         isOpen={isDeleteModalOpen}
         onClose={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
+      />
+
+      <ConfirmModal
+        isOpen={isBulkConfirmOpen}
+        title="Delete selected guidelines?"
+        description={
+          <p className="text-gray-700 text-base leading-relaxed">
+            Are you sure you want to delete the selected guideline(s)? This
+            action cannot be undone.
+          </p>
+        }
+        onClose={() => setIsBulkConfirmOpen(false)}
+        onConfirm={confirmBulkDelete}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
       />
     </div>
   );
