@@ -34,10 +34,10 @@ const SwapItem = lazy(() => import('@/admin/pages/swap-item/SwapItem'));
 const GreenPages = lazy(() => import('@/admin/pages/green-pages/GreenPages'));
 const Records = lazy(() => import('@/admin/pages/records/Records'));
 const NonResidentRecords = lazy(
-  () => import('@/admin/pages/NonResidentRecords')
+  () => import('@/admin/pages/records/NonResidentRecords')
 );
 const EstablishmentRecords = lazy(
-  () => import('@/admin/pages/EstablishmentRecords')
+  () => import('@/admin/pages/records/EstablishmentRecords')
 );
 const TalipapaNatin = lazy(
   () => import('@/admin/pages/talipapanatin/TalipapaNatin')
