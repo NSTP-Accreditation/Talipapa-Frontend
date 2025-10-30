@@ -31,6 +31,21 @@ export interface MaterialInterface {
   createdAt: string;
 }
 
+export interface FarmItemInterface {
+  _id: string;
+  name: string;
+  description: string;
+  mainCategory: "Agricultural";
+  subCategory: "Vegetables" | "Herbal Plants" | "Fruits" | "Seedlings" | "Trees";
+  stocks: number;
+  unit: "kg" | "pieces" | "bundles" | "sacks" | "pots";
+  image: ImageInterface;
+  farmOrigin?: string;
+  lastRestocked?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface ImageInterface {
   key: string;
   mimetype: string;

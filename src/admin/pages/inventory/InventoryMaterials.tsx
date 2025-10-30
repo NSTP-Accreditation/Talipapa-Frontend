@@ -3,9 +3,9 @@ import { Button, Card, CardContent } from '@/components/ui';
 import { MaterialInterface } from '@/types/global.types';
 import { Box, Edit, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import AddEditMaterialModal from './AddEditMaterialModal';
-import DeleterecordModal from '../../records/components/DeleterecordModal';
-import DeleteProductMaterialModal from './DeleteProductModal';
+import AddEditMaterialModal from './components/AddEditMaterialModal';
+import DeleterecordModal from '../records/components/DeleterecordModal';
+import DeleteProductMaterialModal from './components/DeleteProductModal';
 
 type InventoryMaterialsProps = {
   filteredMaterials: MaterialInterface[];

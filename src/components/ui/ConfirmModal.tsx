@@ -30,7 +30,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
       ariaLabel={typeof title === 'string' ? title : undefined}
     >
       <div className="space-y-4">
-        {description && <p className="text-gray-700">{description}</p>}
+        {description && <div className="text-gray-700">{description}</div>}
         <div className="flex items-center justify-end gap-3 pt-4">
           <button
             onClick={onClose}
