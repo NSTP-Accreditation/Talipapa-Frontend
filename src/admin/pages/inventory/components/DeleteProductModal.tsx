@@ -53,16 +53,21 @@ const DeleteProductMaterialModal = ({
     }
   };
 
+  const descriptionNode = (
+    <div>
+      <p className="text-gray-700 text-base leading-relaxed">
+        Are you sure you want to delete{' '}
+        <span className="font-bold">"{itemToDelete.name}"</span>?
+      </p>
+      <p className="text-xs text-red-700 mt-2">This action cannot be undone.</p>
+    </div>
+  );
+
   return (
     <ConfirmModal
       isOpen={!!itemToDelete}
       title={`Delete ${type === 'Product' ? 'Product' : 'Material'}?`}
-      description={
-        <p className="text-gray-700 text-base leading-relaxed">
-          Are you sure you want to delete{' '}
-          <span className="font-bold">"{itemToDelete.name}"</span>?
-        </p>
-      }
+      description={descriptionNode}
       onClose={onClose}
       onConfirm={confirmDelete}
       confirmLabel="Delete"

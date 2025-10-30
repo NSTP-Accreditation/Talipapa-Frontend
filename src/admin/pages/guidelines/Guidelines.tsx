@@ -75,6 +75,7 @@ const Guidelines: React.FC = () => {
   );
   const [showBulkActions, setShowBulkActions] = useState(false);
   const [isBulkConfirmOpen, setIsBulkConfirmOpen] = useState(false);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [filterDifficulty, setFilterDifficulty] = useState('');
@@ -154,15 +155,44 @@ const Guidelines: React.FC = () => {
     setIsBulkConfirmOpen(true);
   };
 
-  const confirmBulkDelete = () => {
-    const count = selectedGuidelines.size;
-    setGuidelines(guidelines.filter((g) => !selectedGuidelines.has(g.id)));
-    setSelectedGuidelines(new Set());
-    setShowBulkActions(false);
-    setIsBulkConfirmOpen(false);
-    success(`Successfully deleted ${count} guideline${count > 1 ? 's' : ''}.`, {
-      title: 'Deleted',
-    });
+  const confirmBulkDelete = async () => {
+    if (selectedGuidelines.size === 0) return;
+
+    const ids = Array.from(selectedGuidelines.values());
+    setIsBulkDeleting(true);
+
+    try {
+      // Call DELETE for each selected guideline. If your backend supports a
+      // batch delete endpoint, replace this with a single call.
+      await Promise.all(
+        ids.map((id) =>
+          authFetch(`/guidelines/${id}`, {
+            method: 'DELETE',
+          })
+        )
+      );
+
+      // Refresh server data
+      await refetchGuidelines();
+
+      setSelectedGuidelines(new Set());
+      setShowBulkActions(false);
+      setIsBulkConfirmOpen(false);
+
+      const count = ids.length;
+      success(
+        `Successfully deleted ${count} guideline${count > 1 ? 's' : ''}.`,
+        {
+          title: 'Deleted',
+        }
+      );
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : 'Failed to delete guidelines';
+      showError(msg, { title: 'Delete failed' });
+    } finally {
+      setIsBulkDeleting(false);
+    }
   };
 
   const handleAddGuideline = () => {
@@ -359,6 +389,7 @@ const Guidelines: React.FC = () => {
         }
         onClose={() => setIsBulkConfirmOpen(false)}
         onConfirm={confirmBulkDelete}
+        loading={isBulkDeleting}
         confirmLabel="Delete"
         cancelLabel="Cancel"
       />

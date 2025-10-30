@@ -605,6 +605,9 @@ export default function OfficialsPanel() {
               Warning: This will permanently remove this official from the
               system.
             </p>
+            <p className="text-xs text-red-700 mt-2">
+              This action cannot be undone.
+            </p>
           </div>
         }
         onClose={() => {

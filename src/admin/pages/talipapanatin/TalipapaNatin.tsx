@@ -404,6 +404,9 @@ export default function TalipapaNatin() {
                 Are you sure you want to delete{' '}
                 <strong className="font-semibold">{deleteTarget.title}</strong>?
               </p>
+              <p className="text-xs text-red-700 mt-2">
+                This action cannot be undone.
+              </p>
             </div>
           ) : undefined
         }

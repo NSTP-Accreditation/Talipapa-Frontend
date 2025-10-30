@@ -55,6 +55,9 @@ const DeleterecordModal = ({
             Warning: This will permanently delete all data associated with this
             resident.
           </p>
+          <p className="text-xs text-red-700 mt-2">
+            This action cannot be undone.
+          </p>
         </div>
       }
       confirmLabel="Delete"

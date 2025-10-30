@@ -251,8 +251,8 @@ export default function Achievements() {
         title="Delete Achievement"
         description={
           <p className="text-gray-700 text-base leading-relaxed">
-            This action cannot be undone. Are you sure you want to delete this
-            achievement?
+            Are you sure you want to delete this achievement? This action cannot
+            be undone.
           </p>
         }
         onClose={closeDeleteModal}

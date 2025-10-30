@@ -124,10 +124,10 @@ const SlideCard: React.FC<SlideCardProps> = ({
               isOpen={isConfirmOpen}
               title={`Delete slide "${slide.title}"?`}
               description={
-                <span>
-                  Are you sure you want to delete this slide? This action cannot
-                  be undone.
-                </span>
+                <p className="text-gray-700 text-base leading-relaxed">
+                  Are you sure you want to delete <strong>{slide.title}</strong>
+                  ? This action cannot be undone.
+                </p>
               }
               confirmLabel="Delete"
               cancelLabel="Cancel"

@@ -30,6 +30,9 @@ const DeleteModal: React.FC<Props> = ({
           <p className="text-xs text-gray-600">
             Steps: {guideline.steps.length}
           </p>
+          <p className="text-xs text-red-700 mt-2">
+            This action cannot be undone.
+          </p>
         </div>
       }
       confirmLabel="Delete"
