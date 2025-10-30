@@ -15,7 +15,7 @@ const TradingStatistics = lazy(
   () => import('@/admin/pages/trading-statistics/TradingStatistics')
 );
 const Settings = lazy(() => import('@/admin/pages/Settings'));
-const ActivityLogs = lazy(() => import('@/admin/pages/ActivityLogs'));
+const ActivityLogs = lazy(() => import('@/admin/pages/activity-logs/ActivityLogs'));
 const EarnPointsLogs = lazy(
   () => import('@/admin/pages/earn-points/EarnPoints')
 );

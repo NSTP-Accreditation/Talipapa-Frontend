@@ -53,3 +53,15 @@ export interface LogInterface {
   targetName?: string;
   created_at: string;
 }
+
+
+export interface LogsApiResponse {
+  success: boolean;
+  count: number;
+  total: number;
+  currentPage: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  data: LogInterface[];
+}
