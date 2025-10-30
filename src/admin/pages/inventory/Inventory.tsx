@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import InventoryHeader from './components/InventoryHeader';
+import InventoryHeader from './InventoryHeader';
 import useFetchData from '@/admin/hooks/useFetchData';
 import { MaterialInterface, ProductInterface } from '@/types/global.types';
 import InventoryCards from './components/InventoryCards';
-import InventoryProducts from './components/InventoryProducts';
+import InventoryProducts from './InventoryProducts';
 import ResponsiveSkeleton from '@/components/ResponsiveSkeleton';
-import InventoryMaterials from './components/InventoryMaterials';
+import InventoryMaterials from './InventoryMaterials';
 
 const Inventory = () => {
   // FETCH NEEDED DATA

@@ -10,8 +10,8 @@ import {
   X,
 } from 'lucide-react';
 import { useState } from 'react';
-import AddEditProductModal from './AddEditProductModal';
-import DeleteProductMaterialModal from './DeleteProductModal';
+import AddEditProductModal from './components/AddEditProductModal';
+import DeleteProductMaterialModal from './components/DeleteProductModal';
 
 type InventoryProductsProps = {
   filteredProducts: ProductInterface[];
