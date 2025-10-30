@@ -1,35 +1,13 @@
-import React, { FormEvent, useEffect, useState } from 'react';
-import {
-  Users,
-  Plus,
-  Trash,
-  Eye,
-  EyeOff,
-  AlertCircle,
-  Shield,
-  Mail,
-  Phone,
-  User,
-} from 'lucide-react';
-import Modal from '@/components/ui/Modal';
-import ConfirmModal from '@/components/ui/ConfirmModal';
-import { useToast } from '@/hooks/useToast';
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardTitle,
-} from '../../components/ui/card';
-import { useLoadingState } from '../../hooks/useLoadingState';
-import { SettingsPageSkeleton } from '../../components/LoadingSkeletons';
-import useFetchData from '../hooks/useFetchData';
-import { useAuthFetch } from '../hooks/useAuthFetch';
-import SettingsHeader from './settings/components/SettingsHeader';
-import BrngyInfoSection from './settings/components/BrgyInfoSection';
-import { Admin } from './settings/Settings.types';
-import AdminSection from './settings/components/AdminSection';
-import AddAdminModal from './settings/components/AddAdminModal';
-import DeleteAdminModal from './settings/components/DeleteAdminModal';
+import { useState } from 'react';
+import { useLoadingState } from '../../../hooks/useLoadingState';
+import { SettingsPageSkeleton } from '../../../components/LoadingSkeletons';
+import useFetchData from '../../hooks/useFetchData';
+import SettingsHeader from './components/SettingsHeader';
+import BrngyInfoSection from './components/BrgyInfoSection';
+import { Admin } from './Settings.types';
+import AdminSection from './components/AdminSection';
+import AddAdminModal from './components/AddAdminModal';
+import DeleteAdminModal from './components/DeleteAdminModal';
 
 const Settings: React.FC = () => {
   const { isLoading } = useLoadingState(1000);
