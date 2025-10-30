@@ -422,17 +422,40 @@ const FarmInventory: React.FC = () => {
   }, []);
 
   const farmItems: FarmItem[] = useMemo(() => {
-    if (farmItemsData && !farmItemsDataLoading && !farmItemsDataErr) {
-      return farmItemsData?.map((item) => {
-        const { _id, image, ...rest } = item;
-        return {
-          ...rest,
-          id: _id,
-          image: image?.url || image,
-        };
-      });
+    if (!farmItemsData || farmItemsDataLoading || farmItemsDataErr) {
+      return [];
     }
-    return [];
+
+    // Normalize different possible API shapes to an array of items
+    let itemsArray: any[] = [];
+    if (Array.isArray(farmItemsData)) {
+      itemsArray = farmItemsData;
+    } else if (Array.isArray((farmItemsData as any).items)) {
+      itemsArray = (farmItemsData as any).items;
+    } else if (Array.isArray((farmItemsData as any).data)) {
+      itemsArray = (farmItemsData as any).data;
+    } else if (Array.isArray((farmItemsData as any).results)) {
+      itemsArray = (farmItemsData as any).results;
+    } else {
+      // If it's an object with numeric keys, try to extract values
+      try {
+        const values = Object.values(farmItemsData).filter((v) =>
+          Array.isArray(v)
+        );
+        if (values.length > 0) itemsArray = values[0] as any[];
+      } catch (e) {
+        itemsArray = [];
+      }
+    }
+
+    return itemsArray.map((item: any) => {
+      const { _id, image, ...rest } = item || {};
+      return {
+        ...rest,
+        id: _id,
+        image: image?.url || image,
+      } as FarmItem;
+    });
   }, [farmItemsData, farmItemsDataLoading, farmItemsDataErr]);
 
   const [search, setSearch] = useState('');
