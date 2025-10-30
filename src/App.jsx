@@ -14,7 +14,7 @@ const Dashboard = lazy(() => import('@/admin/pages/dashboard/Dashboard'));
 const TradingStatistics = lazy(
   () => import('@/admin/pages/trading-statistics/TradingStatistics')
 );
-const Settings = lazy(() => import('@/admin/pages/Settings'));
+const Settings = lazy(() => import('@/admin/pages/settings/Settings'));
 const ActivityLogs = lazy(
   () => import('@/admin/pages/activity-logs/ActivityLogs')
 );
