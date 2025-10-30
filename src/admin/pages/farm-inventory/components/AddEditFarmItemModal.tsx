@@ -20,7 +20,7 @@ interface AddEditFarmItemModalProps {
   onClose: () => void;
   mode: 'Add' | 'Edit';
   itemToUpdateOrDelete: FarmItemInterface;
-  refetchFarmItems: (fetchUrl?: string) => Promise<any>
+  refetchFarmItems: (fetchUrl?: string) => Promise<any>;
 }
 
 const AddEditFarmItemModal = ({
@@ -28,7 +28,7 @@ const AddEditFarmItemModal = ({
   onClose,
   mode,
   itemToUpdateOrDelete,
-  refetchFarmItems
+  refetchFarmItems,
 }: AddEditFarmItemModalProps) => {
   const { success, error: showError } = useToast();
   const authFetch = useAuthFetch();
@@ -92,7 +92,7 @@ const AddEditFarmItemModal = ({
       showError('Please select a unit', { title: 'Validation' });
       return false;
     }
-    if(mode === "Add") {
+    if (mode === 'Add') {
       if (!itemFormData.imageFile && !itemFormData.image) {
         showError('Please upload an item image', { title: 'Validation' });
         return false;
@@ -103,14 +103,14 @@ const AddEditFarmItemModal = ({
 
   const buildFarmItemFormData = (): FormData => {
     const formData = new FormData();
-    
+
     formData.append('name', itemFormData.name.trim());
     formData.append('description', itemFormData.description.trim());
     formData.append('subCategory', itemFormData.subCategory.trim());
     formData.append('stocks', itemFormData.stocks.toString());
     formData.append('unit', itemFormData.unit.trim());
-    
-    if (itemFormData.farmOrigin.trim()) {
+
+    if (itemFormData.farmOrigin?.trim()) {
       formData.append('farmOrigin', itemFormData.farmOrigin.trim());
     }
 
@@ -125,7 +125,13 @@ const AddEditFarmItemModal = ({
     const file = e.target.files?.[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
-    setItemFormData((prev: any) => ({ ...prev, image: url, imageFile: file }));
+    setItemFormData((prev) => ({ 
+      ...prev, 
+      image: {
+        url
+      }, 
+      imageFile: file 
+    }));
   };
 
   const getSubcategoryIcon = (subCategory: string) => {
@@ -147,7 +153,7 @@ const AddEditFarmItemModal = ({
   };
 
   const handleAddItem = async () => {
-    if(!validateFarmItemForm()) {
+    if (!validateFarmItemForm()) {
       return;
     }
 
@@ -155,17 +161,39 @@ const AddEditFarmItemModal = ({
 
     try {
       const response = await authFetch('/farm-inventory', {
-          method: 'POST',
-          body: formData,
-        });
-        await refetchFarmItems();
-        success(response.message || 'Farm item created', { title: 'Success' });
-        onClose();
+        method: 'POST',
+        body: formData,
+      });
+      await refetchFarmItems();
+      success(response.message || 'Farm item created', { title: 'Success' });
+      onClose();
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
+  const handleUpdateItem = async () => {
+    if (!validateFarmItemForm()) {
+      return;
+    }
+
+    const formData = buildFarmItemFormData();
+
+    try {
+      const response = await authFetch(
+        `/farm-inventory/${itemToUpdateOrDelete._id}`,
+        {
+          method: 'PATCH',
+          body: formData,
+        }
+      );
+      await refetchFarmItems();
+      success(response.message || 'Farm item updated', { title: 'Success' });
+      onClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return createPortal(
     <div className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md animate-in fade-in duration-300">
@@ -208,14 +236,18 @@ const AddEditFarmItemModal = ({
             {/* Left Column - Form Fields */}
             <div className="space-y-4 sm:space-y-5">
               <div>
-                <label className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 flex items-center gap-2">
+                <label
+                  htmlFor="name"
+                  className="text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2 flex items-center gap-2"
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>
                   Item Name <span className="text-red-500">*</span>
                 </label>
                 <Input
+                  id="name"
                   value={itemFormData.name}
                   onChange={(e) =>
-                    setItemFormData((prev: any) => ({
+                    setItemFormData((prev) => ({
                       ...prev,
                       name: e.target.value,
                     }))
@@ -232,7 +264,7 @@ const AddEditFarmItemModal = ({
                 <textarea
                   value={itemFormData.description}
                   onChange={(e) =>
-                    setItemFormData((prev: any) => ({
+                    setItemFormData((prev) => ({
                       ...prev,
                       description: e.target.value,
                     }))
@@ -254,7 +286,7 @@ const AddEditFarmItemModal = ({
                 <select
                   value={itemFormData.subCategory}
                   onChange={(e) =>
-                    setItemFormData((prev: any) => ({
+                    setItemFormData((prev) => ({
                       ...prev,
                       subCategory: e.target.value,
                     }))
@@ -276,13 +308,14 @@ const AddEditFarmItemModal = ({
                 </label>
                 <Input
                   type="number"
-                  value={itemFormData.stocks}
-                  onChange={(e) =>
-                    setItemFormData((prev: any) => ({
+                  value={itemFormData.stocks ?? 0}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setItemFormData((prev) => ({
                       ...prev,
-                      stocks: e.target.value,
-                    }))
-                  }
+                      stocks: value === '' ? 0 : Number(value),
+                    }));
+                  }}
                   placeholder="0"
                   min="0"
                   className="h-10 sm:h-11 text-sm sm:text-base border-2 border-gray-200 focus:border-green-500 rounded-xl px-3 sm:px-4"
@@ -313,7 +346,7 @@ const AddEditFarmItemModal = ({
                   <select
                     value={itemFormData.unit}
                     onChange={(e) =>
-                      setItemFormData((prev: any) => ({
+                      setItemFormData((prev) => ({
                         ...prev,
                         unit: e.target.value,
                       }))
@@ -336,7 +369,7 @@ const AddEditFarmItemModal = ({
                 <Input
                   value={itemFormData.farmOrigin}
                   onChange={(e) =>
-                    setItemFormData((prev: any) => ({
+                    setItemFormData((prev) => ({
                       ...prev,
                       farmOrigin: e.target.value,
                     }))
@@ -368,7 +401,7 @@ const AddEditFarmItemModal = ({
                 {itemFormData.image ? (
                   <>
                     <ImageWithFallback
-                      src={itemFormData.image}
+                      src={itemFormData.image.url}
                       alt={itemFormData.name || 'preview'}
                       className="w-full h-full object-contain"
                     />
@@ -406,7 +439,7 @@ const AddEditFarmItemModal = ({
             </Button>
             {mode === 'Edit' ? (
               <Button
-                // onClick={handleAddItem}
+                onClick={handleUpdateItem}
                 className="flex-1 sm:flex-none px-5 sm:px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white rounded-xl shadow-lg text-sm"
               >
                 <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 inline" />{' '}

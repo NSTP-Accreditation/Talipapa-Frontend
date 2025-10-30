@@ -2,17 +2,24 @@ import ImageWithFallback from '@/components/ImageWithFallback';
 import { Button, Card, CardContent } from '@/components/ui';
 import { FarmItemInterface } from '@/types/global.types';
 import { AlertTriangle, Edit, Plus, Sprout, Trash2 } from 'lucide-react';
+import { Dispatch, SetStateAction } from 'react';
 
 type FarmInventoryItemsProps = {
   filteredFarmItems: FarmItemInterface[];
   farmItemsData: FarmItemInterface[];
-  onAddItem: () => void
+  onAddItem: () => void;
+  onUpdateItem: (item: FarmItemInterface) => void;
 };
 
-const FarmInventoryItems = ({ filteredFarmItems, farmItemsData, onAddItem }: FarmInventoryItemsProps) => {
+const FarmInventoryItems = ({
+  filteredFarmItems,
+  farmItemsData,
+  onAddItem,
+  onUpdateItem
+}: FarmInventoryItemsProps) => {
 
   return (
-    <section className='space-y-6'>
+    <section className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
@@ -94,7 +101,7 @@ const FarmInventoryItems = ({ filteredFarmItems, farmItemsData, onAddItem }: Far
                     <Button
                       variant="outline"
                       size="sm"
-                      // onClick={() => handleEditItem(item)}
+                      onClick={() => onUpdateItem(item)}
                       className="flex-1 sm:flex-none px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-all duration-200"
                     >
                       <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -102,7 +109,7 @@ const FarmInventoryItems = ({ filteredFarmItems, farmItemsData, onAddItem }: Far
                     <Button
                       variant="destructive"
                       size="sm"
-                      // onClick={() => handleDeleteClick(item)}
+                      // onClick={() => setItemToUpdateOrDelete(item)}
                       className="flex-1 sm:flex-none px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:shadow-lg transition-all duration-200"
                     >
                       <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />

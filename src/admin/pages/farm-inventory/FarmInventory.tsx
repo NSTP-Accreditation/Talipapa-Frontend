@@ -39,9 +39,15 @@ const FarmInventory = () => {
         farmItemsData={farmItemsData}
         filteredFarmItems={filteredFarmItems}
         onAddItem={() => {
-          setShowAddEditFarmItemModal(true);
           setMode("Add");
+          setShowAddEditFarmItemModal(true);
         }}
+        onUpdateItem={(item) => {
+          setItemToUpdateOrDelete(item);
+          setMode("Edit");
+          setShowAddEditFarmItemModal(true);
+        }}
+        // setItemToUpdateOrDelete={setItemToUpdateOrDelete}
       />
 
       {/* Add/Edit Farm Items */}
