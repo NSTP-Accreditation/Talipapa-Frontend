@@ -29,7 +29,7 @@ const Achievements = lazy(
 );
 const AdminLogin = lazy(() => import('@/admin/auth/AdminLogin'));
 const Inventory = lazy(() => import('@/admin/pages/inventory/Inventory'));
-const FarmInventory = lazy(() => import('@/admin/pages/FarmInventory'));
+const FarmInventory = lazy(() => import('@/admin/pages/farm-inventory/FarmInventory'));
 const SwapItem = lazy(() => import('@/admin/pages/swap-item/SwapItem'));
 const GreenPages = lazy(() => import('@/admin/pages/green-pages/GreenPages'));
 const Records = lazy(() => import('@/admin/pages/records/Records'));
