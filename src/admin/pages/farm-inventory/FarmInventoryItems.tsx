@@ -9,13 +9,15 @@ type FarmInventoryItemsProps = {
   farmItemsData: FarmItemInterface[];
   onAddItem: () => void;
   onUpdateItem: (item: FarmItemInterface) => void;
+  onDeleteItem: (item: FarmItemInterface) => void;
 };
 
 const FarmInventoryItems = ({
   filteredFarmItems,
   farmItemsData,
   onAddItem,
-  onUpdateItem
+  onUpdateItem,
+  onDeleteItem
 }: FarmInventoryItemsProps) => {
 
   return (
@@ -109,7 +111,7 @@ const FarmInventoryItems = ({
                     <Button
                       variant="destructive"
                       size="sm"
-                      // onClick={() => setItemToUpdateOrDelete(item)}
+                      onClick={() => onDeleteItem(item)}
                       className="flex-1 sm:flex-none px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:shadow-lg transition-all duration-200"
                     >
                       <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />

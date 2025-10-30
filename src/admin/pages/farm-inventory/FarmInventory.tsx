@@ -5,6 +5,7 @@ import FarmInventoryItems from './FarmInventoryItems';
 import { useEffect, useState } from 'react';
 import AddEditFarmItemModal from './components/AddEditFarmItemModal';
 import { FarmItemInterface } from '@/types/global.types';
+import DeleteFarmItemModal from './components/DeleteFarmItemModal';
 
 const FarmInventory = () => {
   // fetch Data
@@ -16,6 +17,7 @@ const FarmInventory = () => {
   } = useFetchData('/farm-inventory');
 
   const [showAddEditFarmItemModal, setShowAddEditFarmItemModal] = useState<boolean>(false);
+  const [showDeleteFarmItemModal, setShowDeleteFarmItemModal] = useState<boolean>(false);
   const [mode,setMode] = useState<"Add" | "Edit">("Add");
   const [itemToUpdateOrDelete, setItemToUpdateOrDelete] = useState<FarmItemInterface>(null);
 
@@ -47,7 +49,10 @@ const FarmInventory = () => {
           setMode("Edit");
           setShowAddEditFarmItemModal(true);
         }}
-        // setItemToUpdateOrDelete={setItemToUpdateOrDelete}
+        onDeleteItem={(item) => {
+          setItemToUpdateOrDelete(item);
+          setShowDeleteFarmItemModal(true);
+        }}
       />
 
       {/* Add/Edit Farm Items */}
@@ -57,6 +62,14 @@ const FarmInventory = () => {
         mode={mode}
         itemToUpdateOrDelete={itemToUpdateOrDelete}
         refetchFarmItems={refetchFarmItems}
+      />
+
+      {/* Delete Farm Item */}
+      <DeleteFarmItemModal 
+        isOpen={showDeleteFarmItemModal}
+        itemToDelete={itemToUpdateOrDelete}
+        onClose={() => setItemToUpdateOrDelete(null)}
+        refetch={refetchFarmItems}        
       />
 
     </main>
