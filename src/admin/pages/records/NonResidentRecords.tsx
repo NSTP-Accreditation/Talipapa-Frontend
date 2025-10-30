@@ -46,12 +46,13 @@ const NonResidentRecords: React.FC = () => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const hoverCloseTimeout = useRef<number | null>(null);
 
+  // Order the filter keys similarly to the main records table where applicable
   const sortKeys = [
-    { key: 'createdAt', label: 'Date' },
     { key: '_id', label: 'Record ID' },
-    { key: 'points', label: 'Points' },
-    { key: 'age', label: 'Age' },
     { key: 'name', label: 'Name' },
+    { key: 'age', label: 'Age' },
+    { key: 'points', label: 'Points' },
+    { key: 'createdAt', label: 'Created At' },
   ];
 
   const [selectedKey, setSelectedKey] = useState<string>(sortKeys[0].key);

@@ -26,12 +26,13 @@ const RecordFilter = ({
 }: RecordFilterProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   // single list of sort keys (unique). Clicking same key toggles asc/desc.
+  // Match the RecordTable column order: Record ID, Name, Age, Points, Created At
   const sortKeys = [
-    { key: 'createdAt', label: 'Date' },
     { key: '_id', label: 'Record ID' },
-    { key: 'points', label: 'Points' },
-    { key: 'age', label: 'Age' },
     { key: 'name', label: 'Name' },
+    { key: 'age', label: 'Age' },
+    { key: 'points', label: 'Points' },
+    { key: 'createdAt', label: 'Created At' },
   ];
 
   const [selectedKey, setSelectedKey] = useState<string>(sortKeys[0].key);
