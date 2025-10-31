@@ -27,7 +27,7 @@ const AddEditMaterialModal = memo(
     setShowMaterialModal,
     mode,
     materialtoEdit,
-    refetchMaterial
+    refetchMaterial,
   }: AddEditMaterialModalProps) => {
     const { success, error: showError } = useToast();
     const authFetch = useAuthFetch();
@@ -108,7 +108,9 @@ const AddEditMaterialModal = memo(
       const paste = e.clipboardData.getData('text');
       if (!/^[0-9]*\.?[0-9]*$/.test(paste)) {
         e.preventDefault();
-        showError('Pasted value must be a valid number', { title: 'Validation' });
+        showError('Pasted value must be a valid number', {
+          title: 'Validation',
+        });
       }
     };
 
@@ -142,10 +144,7 @@ const AddEditMaterialModal = memo(
       const formData = new FormData();
       formData.append('name', materialFormData.name.trim());
       formData.append('description', materialFormData.description.trim());
-      formData.append(
-        'pointsPerKg',
-        materialFormData.pointsPerKg.toString()
-      );
+      formData.append('pointsPerKg', materialFormData.pointsPerKg.toString());
 
       if (
         materialFormData.imageFile &&
