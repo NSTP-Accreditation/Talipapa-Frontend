@@ -1,5 +1,5 @@
 import { Award, Calendar, Edit, MapPin, Phone, User, X } from 'lucide-react';
-import { Dispatch, FormEvent, SetStateAction, useState } from 'react'
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { RecordInterface } from '@/types/global.types';
 import { useToast } from '@/hooks/useToast';
@@ -7,12 +7,18 @@ import { validateAddress } from '@/utils/validation';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 
 type EditRecordModalType = {
-  editRecord: RecordInterface | null,
-  setEditRecord: Dispatch<SetStateAction<RecordInterface | null>>,
-  refetchRecords: (fetchUrl?: string) => Promise<RecordInterface[]>
-}
+  editRecord: RecordInterface | null;
+  setEditRecord: Dispatch<SetStateAction<RecordInterface | null>>;
+  refetchRecords: (fetchUrl?: string) => Promise<RecordInterface[]>;
+  setOriginalRecords?: Dispatch<SetStateAction<RecordInterface[]>>;
+};
 
-const EditRecordModal = ({ editRecord, setEditRecord, refetchRecords }: EditRecordModalType) => {
+const EditRecordModal = ({
+  editRecord,
+  setEditRecord,
+  refetchRecords,
+  setOriginalRecords,
+}: EditRecordModalType) => {
   const authFetch = useAuthFetch();
   const { success, error: showError } = useToast();
 
@@ -28,8 +34,14 @@ const EditRecordModal = ({ editRecord, setEditRecord, refetchRecords }: EditReco
     setIsUpdating(true);
 
     // Validate required fields
-    if (!editRecord.firstName || !editRecord.lastName || !editRecord.middleName) {
-      showError('First name, last name, and middle name are required.', { title: 'Validation' });
+    if (
+      !editRecord.firstName ||
+      !editRecord.lastName ||
+      !editRecord.middleName
+    ) {
+      showError('First name, last name, and middle name are required.', {
+        title: 'Validation',
+      });
       setIsUpdating(false);
       return;
     }
@@ -50,18 +62,75 @@ const EditRecordModal = ({ editRecord, setEditRecord, refetchRecords }: EditReco
     }
 
     try {
+      // Build payload explicitly and OMIT `points` to avoid server-side additive behavior
       const payload = {
-        ...editRecord,
+        _id: editRecord._id,
+        firstName: editRecord.firstName,
+        lastName: editRecord.lastName,
+        middleName: editRecord.middleName,
         age: ageNum,
-        contact_number: editRecord.contact_number ? `09${editRecord.contact_number}` : ''
-      };
+        address: editRecord.address,
+        contact_number: editRecord.contact_number
+          ? `09${editRecord.contact_number}`
+          : '',
+        createdAt: editRecord.createdAt,
+        updatedAt: editRecord.updatedAt,
+      } as any;
 
+      // payload prepared for update
       await authFetch(`/records/${editRecord._id}`, {
         method: 'PATCH',
         body: JSON.stringify(payload),
       });
 
-      await refetchRecords();
+      // Immediately apply optimistic update to local records to reflect changes in UI
+      if (setOriginalRecords) {
+        setOriginalRecords((prev) =>
+          prev.map((r) =>
+            r._id === payload._id
+              ? {
+                  ...r,
+                  firstName: payload.firstName,
+                  lastName: payload.lastName,
+                  middleName: payload.middleName,
+                  age: String(payload.age),
+                  address: payload.address,
+                  // preserve points locally (don't change here)
+                  contact_number: payload.contact_number,
+                  updatedAt: payload.updatedAt || r.updatedAt,
+                }
+              : r
+          )
+        );
+      }
+
+      // refetch records and check server state
+      const refreshed = await refetchRecords();
+
+      // If server didn't return the updated lastName for this record, re-apply optimistic update
+      if (setOriginalRecords && refreshed) {
+        const found =
+          Array.isArray(refreshed) &&
+          refreshed.find((r: any) => r._id === payload._id);
+        if (!found || found.lastName !== payload.lastName) {
+          setOriginalRecords((prev) =>
+            prev.map((r) =>
+              r._id === payload._id
+                ? {
+                    ...r,
+                    firstName: payload.firstName,
+                    lastName: payload.lastName,
+                    middleName: payload.middleName,
+                    age: String(payload.age),
+                    address: payload.address,
+                    contact_number: payload.contact_number,
+                    updatedAt: payload.updatedAt || r.updatedAt,
+                  }
+                : r
+            )
+          );
+        }
+      }
       setEditRecord(null);
       success(`Record Updated! ID: ${editRecord._id}`, {
         title: 'Record Updated',
@@ -145,7 +214,13 @@ const EditRecordModal = ({ editRecord, setEditRecord, refetchRecords }: EditReco
                     required
                     type="text"
                     value={editRecord.firstName}
-                    onChange={(e) => setEditRecord(prev => prev ? { ...prev, firstName: e.target.value } : null)}
+                    onChange={(e) =>
+                      setEditRecord(
+                        editRecord
+                          ? { ...editRecord, firstName: e.target.value }
+                          : null
+                      )
+                    }
                     className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                     placeholder="Enter first name"
                   />
@@ -163,7 +238,13 @@ const EditRecordModal = ({ editRecord, setEditRecord, refetchRecords }: EditReco
                     required
                     type="text"
                     value={editRecord.lastName}
-                    onChange={(e) => setEditRecord(prev => prev ? { ...prev, lastName: e.target.value } : null)}
+                    onChange={(e) =>
+                      setEditRecord(
+                        editRecord
+                          ? { ...editRecord, lastName: e.target.value }
+                          : null
+                      )
+                    }
                     className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                     placeholder="Enter last name"
                   />
@@ -181,7 +262,13 @@ const EditRecordModal = ({ editRecord, setEditRecord, refetchRecords }: EditReco
                     required
                     type="text"
                     value={editRecord.middleName}
-                    onChange={(e) => setEditRecord(prev => prev ? { ...prev, middleName: e.target.value } : null)}
+                    onChange={(e) =>
+                      setEditRecord(
+                        editRecord
+                          ? { ...editRecord, middleName: e.target.value }
+                          : null
+                      )
+                    }
                     className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                     placeholder="If none put None"
                   />
@@ -218,7 +305,9 @@ const EditRecordModal = ({ editRecord, setEditRecord, refetchRecords }: EditReco
                   onChange={(e) => {
                     const digitsOnly = e.target.value.replace(/\D/g, '');
                     const limited = digitsOnly.slice(0, 3);
-                    setEditRecord(prev => prev ? { ...prev, age: limited } : null);
+                    setEditRecord(
+                      editRecord ? { ...editRecord, age: limited } : null
+                    );
                   }}
                   className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                   placeholder="0"
@@ -240,15 +329,20 @@ const EditRecordModal = ({ editRecord, setEditRecord, refetchRecords }: EditReco
                     onChange={(e) => {
                       const digitsOnly = e.target.value.replace(/\D/g, '');
                       const limited = digitsOnly.slice(0, 9);
-                      setEditRecord(prev => prev ? { ...prev, contact_number: limited } : null);
+                      setEditRecord(
+                        editRecord
+                          ? { ...editRecord, contact_number: limited }
+                          : null
+                      );
                     }}
                     className="w-full pl-10 sm:pl-14 border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                     placeholder="9XXXXXXXX"
                   />
                 </div>
                 <div className="text-xs text-gray-500 mt-1 sm:mt-2">
-                  Contact will be saved as <span className="font-medium">09XXXXXXXXX</span>. Only
-                  numbers allowed. Total digits including prefix will be 11.
+                  Contact will be saved as{' '}
+                  <span className="font-medium">09XXXXXXXXX</span>. Only numbers
+                  allowed. Total digits including prefix will be 11.
                 </div>
               </label>
             </div>
@@ -274,12 +368,19 @@ const EditRecordModal = ({ editRecord, setEditRecord, refetchRecords }: EditReco
               <textarea
                 rows={3}
                 value={editRecord.address}
-                onChange={(e) => setEditRecord(prev => prev ? { ...prev, address: e.target.value } : null)}
+                onChange={(e) =>
+                  setEditRecord(
+                    editRecord
+                      ? { ...editRecord, address: e.target.value }
+                      : null
+                  )
+                }
                 className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none text-sm sm:text-base"
                 placeholder="Enter complete address..."
               />
               <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
-                Provide full house number, street, barangay/purok, city or municipality.
+                Provide full house number, street, barangay/purok, city or
+                municipality.
               </p>
             </label>
           </div>
@@ -335,7 +436,7 @@ const EditRecordModal = ({ editRecord, setEditRecord, refetchRecords }: EditReco
       </form>
     </div>,
     document.body
-  )
-}
+  );
+};
 
-export default EditRecordModal
+export default EditRecordModal;

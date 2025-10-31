@@ -27,7 +27,7 @@ const AddEditMaterialModal = memo(
     setShowMaterialModal,
     mode,
     materialtoEdit,
-    refetchMaterial
+    refetchMaterial,
   }: AddEditMaterialModalProps) => {
     const { success, error: showError } = useToast();
     const authFetch = useAuthFetch();
@@ -75,6 +75,45 @@ const AddEditMaterialModal = memo(
       }));
     };
 
+    const handlePointsKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const allowedKeys = [
+        'Backspace',
+        'ArrowLeft',
+        'ArrowRight',
+        'Delete',
+        'Tab',
+        'Home',
+        'End',
+      ];
+      if (allowedKeys.includes(e.key)) return;
+      if (e.ctrlKey || e.metaKey) return; // allow copy/paste/select all
+
+      // allow digits and single dot
+      if (!/^[0-9.]$/.test(e.key)) {
+        e.preventDefault();
+        showError('Only numbers and decimal point are allowed', {
+          title: 'Validation',
+        });
+        return;
+      }
+
+      // prevent entering multiple dots
+      const current = String(materialFormData.pointsPerKg ?? '');
+      if (e.key === '.' && current.includes('.')) {
+        e.preventDefault();
+      }
+    };
+
+    const handlePointsPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+      const paste = e.clipboardData.getData('text');
+      if (!/^[0-9]*\.?[0-9]*$/.test(paste)) {
+        e.preventDefault();
+        showError('Pasted value must be a valid number', {
+          title: 'Validation',
+        });
+      }
+    };
+
     const validateMaterialForm = (): boolean => {
       if (!materialFormData.name.trim()) {
         showError('Please enter a material name', { title: 'Validation' });
@@ -86,9 +125,12 @@ const AddEditMaterialModal = memo(
         });
         return false;
       }
+      // ensure pointsPerKg is provided and a valid non-negative number
+      const pointsVal = Number(materialFormData.pointsPerKg);
       if (
-        materialFormData.pointsPerKg < 0 ||
-        isNaN(materialFormData.pointsPerKg)
+        String(materialFormData.pointsPerKg).trim() === '' ||
+        isNaN(pointsVal) ||
+        pointsVal < 0
       ) {
         showError('Please enter valid required points', {
           title: 'Validation',
@@ -102,10 +144,7 @@ const AddEditMaterialModal = memo(
       const formData = new FormData();
       formData.append('name', materialFormData.name.trim());
       formData.append('description', materialFormData.description.trim());
-      formData.append(
-        'pointsPerKg',
-        materialFormData.pointsPerKg.toString()
-      );
+      formData.append('pointsPerKg', materialFormData.pointsPerKg.toString());
 
       if (
         materialFormData.imageFile &&
@@ -245,12 +284,32 @@ const AddEditMaterialModal = memo(
                     <Input
                       type="number"
                       value={materialFormData.pointsPerKg}
-                      onChange={(e) =>
-                        setMaterialFormData((prev: any) => ({
-                          ...prev,
-                          pointsPerKg: e.target.value,
-                        }))
-                      }
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        // allow empty input while typing
+                        if (val === '') {
+                          setMaterialFormData((prev: any) => ({
+                            ...prev,
+                            pointsPerKg: '',
+                          }));
+                          return;
+                        }
+
+                        const numeric = Number(val);
+                        if (!isNaN(numeric)) {
+                          setMaterialFormData((prev: any) => ({
+                            ...prev,
+                            pointsPerKg: numeric,
+                          }));
+                        } else {
+                          // don't accept invalid values — notify user
+                          showError('Only numeric values allowed for points', {
+                            title: 'Validation',
+                          });
+                        }
+                      }}
+                      onKeyDown={handlePointsKeyDown}
+                      onPaste={handlePointsPaste}
                       placeholder="0"
                       min="0"
                       step="0.01"
