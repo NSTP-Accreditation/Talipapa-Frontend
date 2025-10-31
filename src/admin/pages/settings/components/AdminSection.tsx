@@ -64,11 +64,92 @@ const AdminSection = ({
                 </div>
                 <div className="flex items-center justify-between lg:justify-end gap-3 flex-shrink-0">
                   <div className="flex flex-wrap gap-2">
-                    {admin.rolesKeys.map((role) => (
+                    {(function deriveRoles() {
+                      const anyAdmin = admin as any;
+
+                      // 1) Prefer rolesKeys if provided (array of labels)
+                      if (
+                        Array.isArray(admin.rolesKeys) &&
+                        admin.rolesKeys.length
+                      ) {
+                        return admin.rolesKeys as string[];
+                      }
+
+                      // 2) If `roles` is an array, assume it's labels
+                      if (
+                        Array.isArray(anyAdmin.roles) &&
+                        anyAdmin.roles.length
+                      ) {
+                        return anyAdmin.roles as string[];
+                      }
+
+                      // 3) If `roles` is an object, try to derive labels from keys/values
+                      if (
+                        anyAdmin.roles &&
+                        typeof anyAdmin.roles === 'object'
+                      ) {
+                        const roleKeys = Object.keys(anyAdmin.roles);
+
+                        const superId = String(
+                          import.meta.env.VITE_SUPERADMIN ?? ''
+                        );
+                        const adminId = String(
+                          import.meta.env.VITE_ADMIN ?? ''
+                        );
+
+                        return roleKeys.map((k) => {
+                          const keyLower = String(k).toLowerCase();
+                          // If the key already looks like a human label (case-insensitive)
+                          if (keyLower === 'superadmin') return 'SuperAdmin';
+                          if (keyLower === 'admin') return 'Admin';
+
+                          // If the key matches the numeric id for roles
+                          if (k === superId) return 'SuperAdmin';
+                          if (k === adminId) return 'Admin';
+
+                          // Check the value for a label or id
+                          const v = anyAdmin.roles[k];
+                          const vStr = String(v).toLowerCase();
+                          if (vStr === 'superadmin') return 'SuperAdmin';
+                          if (vStr === 'admin') return 'Admin';
+                          if (String(v) === superId) return 'SuperAdmin';
+                          if (String(v) === adminId) return 'Admin';
+
+                          // Fallback to the raw key (preserve original casing)
+                          return k;
+                        });
+                      }
+
+                      // No roles found from API shapes — try a small heuristic:
+                      // if the username contains "super" (case-insensitive),
+                      // assume this is a SuperAdmin. This covers cases where
+                      // the backend didn't populate role keys for some users.
+                      const username = String(
+                        anyAdmin.username || ''
+                      ).toLowerCase();
+                      if (
+                        !Array.isArray(admin.rolesKeys) ||
+                        !admin.rolesKeys.length
+                      ) {
+                        if (
+                          !anyAdmin.roles ||
+                          (Array.isArray(anyAdmin.roles) &&
+                            !anyAdmin.roles.length) ||
+                          (typeof anyAdmin.roles === 'object' &&
+                            Object.keys(anyAdmin.roles).length === 0)
+                        ) {
+                          if (username.includes('super')) {
+                            return ['SuperAdmin'];
+                          }
+                        }
+                      }
+
+                      return [] as string[];
+                    })().map((role) => (
                       <span
                         key={role}
                         className={`px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm flex items-center gap-1 ${
-                          role === 'SuperAdmin'
+                          String(role).toLowerCase() === 'superadmin'
                             ? 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300'
                             : 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300'
                         }`}
