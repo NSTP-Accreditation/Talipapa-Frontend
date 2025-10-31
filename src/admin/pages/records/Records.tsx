@@ -19,7 +19,24 @@ const Records = () => {
 
   useEffect(() => {
     if (recordsData && !recordsLoading && !recordsError) {
-      setOriginalRecords(recordsData);
+      // Merge server data with local originalRecords to preserve local edits
+      setOriginalRecords((prev) => {
+        // if no local prev, just use server data
+        if (!prev || prev.length === 0) return recordsData as RecordInterface[];
+
+        // map server records and prefer local lastName when it differs (local edit)
+        const merged = (recordsData as RecordInterface[]).map((serverRec) => {
+          const local = prev.find((p) => p._id === serverRec._id);
+          if (!local) return serverRec;
+          // preserve local lastName if it differs from server
+          if (local.lastName && local.lastName !== serverRec.lastName) {
+            return { ...serverRec, lastName: local.lastName };
+          }
+          return serverRec;
+        });
+
+        return merged;
+      });
     }
   }, [recordsData, recordsLoading, recordsError]);
 
@@ -36,14 +53,17 @@ const Records = () => {
   // State for modals
   const [openAddRecordModal, setOpenAddRecordModal] = useState(false);
   const [editRecord, setEditRecord] = useState<RecordInterface | null>(null);
-  const [deleteRecord, setDeleteRecord] = useState<RecordInterface | null>(null);
+  const [deleteRecord, setDeleteRecord] = useState<RecordInterface | null>(
+    null
+  );
 
   return (
     <main className="md:p-5">
       {/* Record Header */}
-      <RecordHeader 
+      <RecordHeader
         setOpenAddRecordModal={setOpenAddRecordModal}
-        recordsData={recordsData} />
+        recordsData={recordsData}
+      />
 
       {/* Enhanced Search Bar */}
       <RecordFilter
@@ -67,20 +87,21 @@ const Records = () => {
 
       {/* MODALS */}
       {/* ADD MODAL */}
-      <AddRecordModal 
+      <AddRecordModal
         openAddRecordModal={openAddRecordModal}
         setOpenAddRecordModal={setOpenAddRecordModal}
         refetchRecords={refetchRecords}
       />
 
       {/* EDIT MODAL */}
-      <EditRecordModal 
+      <EditRecordModal
         editRecord={editRecord}
         setEditRecord={setEditRecord}
+        setOriginalRecords={setOriginalRecords}
         refetchRecords={refetchRecords}
       />
 
-      <DeleterecordModal 
+      <DeleterecordModal
         deleteRecord={deleteRecord}
         setDeleteRecord={setDeleteRecord}
         refetchRecords={refetchRecords}

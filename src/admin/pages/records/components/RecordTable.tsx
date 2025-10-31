@@ -37,7 +37,7 @@ const RecordTable = ({
   };
 
   return (
-    <section id="record_table" className='grid gap-5'>
+    <section id="record_table" className="grid gap-5">
       <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200 overflow-x-auto">
         <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-green-200 scrollbar-track-green-50">
           <table className="w-full text-xs sm:text-sm min-w-[700px]">
@@ -71,7 +71,7 @@ const RecordTable = ({
               {showingRecords.length > 0 ? (
                 showingRecords.map((record, index) => (
                   <tr
-                    key={index}
+                    key={record?._id || index}
                     className="hover:bg-green-50 transition-colors duration-150"
                   >
                     <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
@@ -113,7 +113,9 @@ const RecordTable = ({
                               {record?.address}
                             </span>
                           </>
-                        ) : <p>No Address Provided</p>}
+                        ) : (
+                          <p>No Address Provided</p>
+                        )}
                       </div>
                     </td>
                     <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
@@ -134,7 +136,12 @@ const RecordTable = ({
                     <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <Button
-                          onClick={() => setEditRecord({...record, contact_number: record.contact_number.slice(2)})}
+                          onClick={() =>
+                            setEditRecord({
+                              ...record,
+                              contact_number: record.contact_number.slice(2),
+                            })
+                          }
                           className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
                         >
                           <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
