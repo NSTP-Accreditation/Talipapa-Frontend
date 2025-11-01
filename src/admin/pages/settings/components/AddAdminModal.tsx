@@ -1,16 +1,32 @@
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 import Modal from '@/components/ui/Modal';
 import { useToast } from '@/hooks/useToast';
-import { AlertCircle, Eye, EyeOff, Mail, Phone, Plus, Shield, User, Users } from 'lucide-react';
+import {
+  AlertCircle,
+  Eye,
+  EyeOff,
+  Mail,
+  Phone,
+  Plus,
+  Shield,
+  User,
+  Users,
+} from 'lucide-react';
 import React, { FormEvent, useState } from 'react';
 
 type AddAdminModalProps = {
   isAddAdminModalOpen: boolean;
   closeAddAdminModal: () => void;
-  refetchAdmin: () => void
+  refetchAdmin: () => void;
+  adminData: any[] | null;
 };
 
-const AddAdminModal = ({ isAddAdminModalOpen, closeAddAdminModal, refetchAdmin }: AddAdminModalProps) => {
+const AddAdminModal = ({
+  isAddAdminModalOpen,
+  closeAddAdminModal,
+  refetchAdmin,
+  adminData,
+}: AddAdminModalProps) => {
   const { success, error } = useToast();
   const authFetch = useAuthFetch();
 
@@ -27,7 +43,7 @@ const AddAdminModal = ({ isAddAdminModalOpen, closeAddAdminModal, refetchAdmin }
     roles: [] as string[],
   });
 
-  const validateForm = () : string  => {
+  const validateForm = (): string => {
     if (!newAdmin.username.trim()) {
       return 'Username is required';
     }
@@ -61,56 +77,89 @@ const AddAdminModal = ({ isAddAdminModalOpen, closeAddAdminModal, refetchAdmin }
       return 'At least one role is required';
     }
 
+    // Check role limits
+    if (adminData) {
+      const superAdminCount = adminData.filter((admin: any) => {
+        const rolesKeys = admin.rolesKeys || [];
+        return rolesKeys.some(
+          (role: string) => String(role).toLowerCase() === 'superadmin'
+        );
+      }).length;
+
+      const adminCount = adminData.filter((admin: any) => {
+        const rolesKeys = admin.rolesKeys || [];
+        return rolesKeys.some(
+          (role: string) => String(role).toLowerCase() === 'admin'
+        );
+      }).length;
+
+      if (newAdmin.roles.includes('SuperAdmin') && superAdminCount >= 2) {
+        return 'Maximum of 2 SuperAdmin accounts allowed. Please remove an existing SuperAdmin first.';
+      }
+
+      if (newAdmin.roles.includes('Admin') && adminCount >= 2) {
+        return 'Maximum of 2 Admin accounts allowed. Please remove an existing Admin first.';
+      }
+    }
+
+    return '';
   };
 
   const handleAddAdmin = async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-  
-      if (validateForm()) {
-        error(validateForm(), { title: 'Validation Error' });
-        return;
-      }
-  
-      const payload = { ...newAdmin, roles: {} };
-      const newRoles: { SuperAdmin?: number; Admin?: number } = {};
-  
-      if (newAdmin.roles.includes('SuperAdmin')) {
-        newRoles.SuperAdmin = Number(import.meta.env.VITE_SUPERADMIN);
-      }
-  
-      if (newAdmin.roles.includes('Admin')) {
-        newRoles.Admin = Number(import.meta.env.VITE_ADMIN);
-      }
-  
-      payload.roles = newRoles;
-  
-      try {
-        setIsAddingAdmin(true);
-        await authFetch('/auth/signup', {
-          method: 'POST',
-          body: JSON.stringify({ ...payload }),
-        });
-  
-        success('New admin account created successfully', {
-          title: 'Success',
-        });
-        refetchAdmin();
-        closeAddAdminModal();
-      } catch (err: any) {
-        error(err?.message || 'Failed to create admin account', {
-          title: 'Error',
-        });
-      } finally {
-        setIsAddingAdmin(false);
-      }
-    };
+    e.preventDefault();
+
+    const validationError = validateForm();
+    if (validationError) {
+      error(validationError, { title: 'Validation Error' });
+      return;
+    }
+
+    const payload = { ...newAdmin, roles: {} };
+    const newRoles: { SuperAdmin?: number; Admin?: number; Staff?: number } =
+      {};
+
+    if (newAdmin.roles.includes('SuperAdmin')) {
+      newRoles.SuperAdmin = Number(import.meta.env.VITE_SUPERADMIN);
+    }
+
+    if (newAdmin.roles.includes('Admin')) {
+      newRoles.Admin = Number(import.meta.env.VITE_ADMIN);
+    }
+
+    if (newAdmin.roles.includes('Staff')) {
+      newRoles.Staff = Number(import.meta.env.VITE_STAFF || 3);
+    }
+
+    payload.roles = newRoles;
+
+    try {
+      setIsAddingAdmin(true);
+      await authFetch('/auth/signup', {
+        method: 'POST',
+        body: JSON.stringify({ ...payload }),
+      });
+
+      success('New admin account created successfully', {
+        title: 'Success',
+      });
+      refetchAdmin();
+      closeAddAdminModal();
+    } catch (err: any) {
+      error(err?.message || 'Failed to create admin account', {
+        title: 'Error',
+      });
+    } finally {
+      setIsAddingAdmin(false);
+    }
+  };
 
   const handleInputChange = (field: keyof typeof newAdmin, value: string) => {
-    setNewAdmin(prev => ({
+    setNewAdmin((prev) => ({
       ...prev,
-      [field]: field === 'password' || field === 'confirmPassword' 
-        ? value
-        : value.trim()
+      [field]:
+        field === 'password' || field === 'confirmPassword'
+          ? value
+          : value.trim(),
     }));
   };
 
@@ -137,7 +186,7 @@ const AddAdminModal = ({ isAddAdminModalOpen, closeAddAdminModal, refetchAdmin }
                 placeholder="Enter full name"
                 maxLength={80}
                 value={newAdmin.username}
-                onChange={(e) => handleInputChange("username", e.target.value)}
+                onChange={(e) => handleInputChange('username', e.target.value)}
                 className={`w-full px-4 py-3 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
               />
             </div>
@@ -154,7 +203,9 @@ const AddAdminModal = ({ isAddAdminModalOpen, closeAddAdminModal, refetchAdmin }
                   placeholder="Create secure password"
                   value={newAdmin.password}
                   maxLength={128}
-                  onChange={(e) =>  handleInputChange("password", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('password', e.target.value)
+                  }
                   className={`w-full px-4 py-3 pr-12 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
                 />
 
@@ -188,7 +239,9 @@ const AddAdminModal = ({ isAddAdminModalOpen, closeAddAdminModal, refetchAdmin }
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Enter your password to confirm"
                   value={newAdmin.confirmPassword}
-                  onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('confirmPassword', e.target.value)
+                  }
                   className={`w-full px-4 py-3 pr-12 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
                 />
 
@@ -227,7 +280,7 @@ const AddAdminModal = ({ isAddAdminModalOpen, closeAddAdminModal, refetchAdmin }
                 value={newAdmin.contactNumber}
                 onChange={(e) => {
                   const value = e.target.value.replace(/\D/g, '');
-                  handleInputChange("contactNumber", value)
+                  handleInputChange('contactNumber', value);
                 }}
                 maxLength={11}
                 className={`w-full px-4 py-3 text-base border  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
@@ -245,7 +298,7 @@ const AddAdminModal = ({ isAddAdminModalOpen, closeAddAdminModal, refetchAdmin }
                 placeholder="admin@example.com"
                 maxLength={254}
                 value={newAdmin.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
+                onChange={(e) => handleInputChange('email', e.target.value)}
                 className={`w-full px-4 py-3 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all`}
               />
             </div>
@@ -259,26 +312,40 @@ const AddAdminModal = ({ isAddAdminModalOpen, closeAddAdminModal, refetchAdmin }
                 <Shield className="w-4 h-4 text-green-600" />
                 Assign Roles
               </label>
+
+              {/* Role limits info */}
+              <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-xs text-blue-800">
+                  <strong>Role Limits:</strong> SuperAdmin (max 2), Admin (max
+                  2), Staff (unlimited, view-only access)
+                </p>
+              </div>
+
               <div className="flex flex-wrap gap-3">
-                {['SuperAdmin', 'Admin'].map((roleOption) => (
+                {[
+                  { name: 'SuperAdmin', description: 'Full system access' },
+                  { name: 'Admin', description: 'Administrative access' },
+                  { name: 'Staff', description: 'View-only access' },
+                ].map((roleOption) => (
                   <label
-                    key={roleOption}
+                    key={roleOption.name}
                     className="flex items-center gap-2 cursor-pointer group"
+                    title={roleOption.description}
                   >
                     <input
                       type="checkbox"
-                      checked={newAdmin.roles.includes(roleOption)}
+                      checked={newAdmin.roles.includes(roleOption.name)}
                       onChange={(e) => {
                         if (e.target.checked) {
                           setNewAdmin({
                             ...newAdmin,
-                            roles: [...newAdmin.roles, roleOption],
+                            roles: [...newAdmin.roles, roleOption.name],
                           });
                         } else {
                           setNewAdmin({
                             ...newAdmin,
                             roles: newAdmin.roles.filter(
-                              (r) => r !== roleOption
+                              (r) => r !== roleOption.name
                             ),
                           });
                         }
@@ -286,7 +353,7 @@ const AddAdminModal = ({ isAddAdminModalOpen, closeAddAdminModal, refetchAdmin }
                       className="w-5 h-5 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2 cursor-pointer"
                     />
                     <span className="text-base text-gray-700 font-medium group-hover:text-green-600 transition-colors">
-                      {roleOption}
+                      {roleOption.name}
                     </span>
                   </label>
                 ))}

@@ -2,6 +2,7 @@ import { Button } from '@/components/ui';
 import { Download, UserRoundPen } from 'lucide-react';
 import { RecordInterface } from '@/types/global.types';
 import { useToast } from '@/hooks/useToast';
+import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import dayjs from 'dayjs';
@@ -16,12 +17,26 @@ const RecordHeader = ({
   recordsData,
   setOpenAddRecordModal,
 }: RecordHeaderProps) => {
-  const { error: showError } = useToast();
+  const { error: showError, success: showSuccess } = useToast();
+  const authFetch = useAuthFetch();
 
   const handleExportToExcel = async () => {
     if (!recordsData || recordsData.length === 0) {
       showError('No records available to export.', { title: 'Export' });
       return;
+    }
+
+    // Fetch Excel protection password from settings
+    let password = 'BarangayTalipapa2024'; // Default fallback
+    try {
+      const settingsResponse = await authFetch(
+        `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`
+      );
+      if (settingsResponse?.excelProtectionPassword) {
+        password = settingsResponse.excelProtectionPassword;
+      }
+    } catch (err) {
+      console.warn('Failed to fetch Excel password, using default:', err);
     }
 
     // --- Create Workbook & Sheets ---
@@ -536,16 +551,12 @@ const RecordHeader = ({
       pivotTables: false,
     };
 
-    // Protect each sheet with a password
-    const password = 'BarangayTalipapa2024'; // You can change this or make it configurable
-
+    // Protect each sheet with the configured password
     await coverSheet.protect(password, protectionOptions);
     await summarySheet.protect(password, protectionOptions);
     await recordsSheet.protect(password, protectionOptions);
     await statisticsSheet.protect(password, protectionOptions);
-    await rawDataSheet.protect(password, protectionOptions);
-
-    // --- EXPORT FILE ---
+    await rawDataSheet.protect(password, protectionOptions); // --- EXPORT FILE ---
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -553,6 +564,10 @@ const RecordHeader = ({
 
     const filename = `Barangay_Talipapa_Resident_Report_${dayjs().format('YYYY-MM-DD_HHmm')}.xlsx`;
     saveAs(blob, filename);
+
+    showSuccess('Excel report exported successfully with protection enabled!', {
+      title: 'Export Complete',
+    });
   };
 
   return (

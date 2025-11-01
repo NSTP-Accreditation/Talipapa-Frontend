@@ -97,24 +97,31 @@ const AdminSection = ({
                         const adminId = String(
                           import.meta.env.VITE_ADMIN ?? ''
                         );
+                        const staffId = String(
+                          import.meta.env.VITE_STAFF ?? '3'
+                        );
 
                         return roleKeys.map((k) => {
                           const keyLower = String(k).toLowerCase();
                           // If the key already looks like a human label (case-insensitive)
                           if (keyLower === 'superadmin') return 'SuperAdmin';
                           if (keyLower === 'admin') return 'Admin';
+                          if (keyLower === 'staff') return 'Staff';
 
                           // If the key matches the numeric id for roles
                           if (k === superId) return 'SuperAdmin';
                           if (k === adminId) return 'Admin';
+                          if (k === staffId) return 'Staff';
 
                           // Check the value for a label or id
                           const v = anyAdmin.roles[k];
                           const vStr = String(v).toLowerCase();
                           if (vStr === 'superadmin') return 'SuperAdmin';
                           if (vStr === 'admin') return 'Admin';
+                          if (vStr === 'staff') return 'Staff';
                           if (String(v) === superId) return 'SuperAdmin';
                           if (String(v) === adminId) return 'Admin';
+                          if (String(v) === staffId) return 'Staff';
 
                           // Fallback to the raw key (preserve original casing)
                           return k;
@@ -146,19 +153,34 @@ const AdminSection = ({
                       }
 
                       return [] as string[];
-                    })().map((role) => (
-                      <span
-                        key={role}
-                        className={`px-2 py-1 rounded-full text-[10px] sm:text-xs font-semibold shadow-sm flex items-center gap-1 ${
-                          String(role).toLowerCase() === 'superadmin'
-                            ? 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300'
-                            : 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300'
-                        }`}
-                      >
-                        <Shield className="w-3 h-3" />
-                        {role}
-                      </span>
-                    ))}
+                    })().map((role) => {
+                      const roleLower = String(role).toLowerCase();
+                      let colorClass = '';
+
+                      if (roleLower === 'superadmin') {
+                        colorClass =
+                          'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300';
+                      } else if (roleLower === 'admin') {
+                        colorClass =
+                          'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300';
+                      } else if (roleLower === 'staff') {
+                        colorClass =
+                          'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300';
+                      } else {
+                        colorClass =
+                          'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 border border-purple-300';
+                      }
+
+                      return (
+                        <span
+                          key={role}
+                          className={`px-2 py-1 rounded-full text-[10px] sm:text-xs font-semibold shadow-sm flex items-center gap-1 ${colorClass}`}
+                        >
+                          <Shield className="w-3 h-3" />
+                          {role}
+                        </span>
+                      );
+                    })}
                   </div>
                   <button
                     onClick={() => {

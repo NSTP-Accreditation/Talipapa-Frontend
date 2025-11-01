@@ -4,6 +4,7 @@ import { SettingsPageSkeleton } from '../../../components/LoadingSkeletons';
 import useFetchData from '../../hooks/useFetchData';
 import SettingsHeader from './components/SettingsHeader';
 import BrngyInfoSection from './components/BrgyInfoSection';
+import ExcelPasswordSection from './components/ExcelPasswordSection';
 import { Admin } from './Settings.types';
 import AdminSection from './components/AdminSection';
 import AddAdminModal from './components/AddAdminModal';
@@ -22,8 +23,9 @@ const Settings: React.FC = () => {
   // Modal states
   const [isDeleteAdminOpen, setIsDeleteAdminOpen] = useState<boolean>(false);
   const [adminToDelete, setAdminToDelete] = useState<Admin | null>(null);
-  const [isAddAdminModalOpen, setIsAddAdminModalOpen] = useState<boolean>(false);
-  
+  const [isAddAdminModalOpen, setIsAddAdminModalOpen] =
+    useState<boolean>(false);
+
   if (isLoading || loadingAdmins) {
     return <SettingsPageSkeleton />;
   }
@@ -37,8 +39,11 @@ const Settings: React.FC = () => {
         {/* Barangay Information */}
         <BrngyInfoSection />
 
+        {/* Excel Report Protection */}
+        <ExcelPasswordSection />
+
         {/* Admin Accounts */}
-        <AdminSection 
+        <AdminSection
           adminData={adminsData}
           openAddAdminModal={setIsAddAdminModalOpen}
           openDeleteAdminModal={setIsDeleteAdminOpen}
@@ -50,10 +55,11 @@ const Settings: React.FC = () => {
           isAddAdminModalOpen={isAddAdminModalOpen}
           closeAddAdminModal={() => setIsAddAdminModalOpen(false)}
           refetchAdmin={refetchAdmins}
+          adminData={adminsData}
         />
 
         {/* Delete Admin Modal */}
-        <DeleteAdminModal 
+        <DeleteAdminModal
           adminToDelete={adminToDelete}
           isDeleteAdminOpen={isDeleteAdminOpen}
           closeDeleteAdminModal={() => {
@@ -62,7 +68,6 @@ const Settings: React.FC = () => {
           }}
           refetchAdmins={refetchAdmins}
         />
-
       </div>
     </div>
   );
