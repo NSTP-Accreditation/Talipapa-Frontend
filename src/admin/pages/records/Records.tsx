@@ -20,6 +20,8 @@ const Records = () => {
     '/records?residentStatus=resident'
   );
 
+  console.log(recordsData);
+  
   useEffect(() => {
     if (recordsData && !recordsLoading && !recordsError) {
       // Merge server data with local originalRecords to preserve local edits

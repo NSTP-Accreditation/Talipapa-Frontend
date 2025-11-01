@@ -142,7 +142,7 @@ const RecordFilter = ({
 
       try {
         const result = await refetchRecords(
-          `${import.meta.env.VITE_API_URL}/records/search?query=${encodeURIComponent(query)}`
+          `${import.meta.env.VITE_API_URL}/records/search?query=${encodeURIComponent(query)}&residentStatus=resident`
         );
         setOriginalRecords(result);
       } catch {
