@@ -78,6 +78,10 @@ const EditRecordModal = ({
           : '',
         createdAt: editRecord.createdAt,
         updatedAt: editRecord.updatedAt,
+        isResident:
+          (editRecord as any).isResident !== undefined
+            ? (editRecord as any).isResident
+            : true,
       } as any;
 
       // payload prepared for update

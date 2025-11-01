@@ -75,6 +75,8 @@ const AddRecordModal = ({
         contact_number: newRecord.contact_number
           ? `09${newRecord.contact_number}`
           : '',
+        isResident: true,
+        type: 'resident',
       };
 
       const data = await authFetch('/records', {
