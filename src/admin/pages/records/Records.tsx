@@ -15,7 +15,7 @@ const Records = () => {
     loading: recordsLoading,
     error: recordsError,
     refetch: refetchRecords,
-  } = useFetchData<RecordInterface[] | null>('/records');
+  } = useFetchData<RecordInterface[] | null>('/records?residentStatus=resident');
 
   useEffect(() => {
     if (recordsData && !recordsLoading && !recordsError) {
