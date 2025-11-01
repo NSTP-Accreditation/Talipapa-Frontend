@@ -17,6 +17,8 @@ const Records = () => {
     refetch: refetchRecords,
   } = useFetchData<RecordInterface[] | null>('/records?residentStatus=resident');
 
+  console.log(recordsData);
+  
   useEffect(() => {
     if (recordsData && !recordsLoading && !recordsError) {
       // Merge server data with local originalRecords to preserve local edits

@@ -22,36 +22,34 @@ import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 const EstablishmentRecords: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const { data, loading, refetch } = useFetchData(
-    '/records?type=establishment'
+    '/establishment'
   );
+
   const authFetch = useAuthFetch();
   const { success, error: showError } = useToast();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [form, setForm] = useState({
-    business_name: '',
-    business_type: '',
-    contact_number: '',
+    name: '',
+    type: '',
+    contactNumber: '',
     address: '',
-    owner_name: '',
+    ownerName: '',
   });
 
   // Ensure we only show establishment records even if backend returns mixed data
   const records: any[] = Array.isArray(data)
-    ? (data as any[]).filter(
-        (r: any) =>
-          (r.type || r.record_type || '').toLowerCase() === 'establishment'
-      )
+    ? data
     : [];
 
   const openAddModal = () => {
     setForm({
-      business_name: '',
-      business_type: '',
-      contact_number: '',
+      name: '',
+      type: '',
+      contactNumber: '',
       address: '',
-      owner_name: '',
+      ownerName: '',
     });
     setIsAddModalOpen(true);
   };
@@ -66,10 +64,10 @@ const EstablishmentRecords: React.FC = () => {
 
     // Validate required fields
     if (
-      !form.business_name.trim() ||
-      !form.business_type.trim() ||
-      !form.owner_name.trim() ||
-      !form.contact_number.trim() ||
+      !form.name.trim() ||
+      !form.type.trim() ||
+      !form.ownerName.trim() ||
+      !form.contactNumber.trim() ||
       !form.address.trim()
     ) {
       showError('Please fill all required fields.', { title: 'Validation' });
@@ -80,10 +78,9 @@ const EstablishmentRecords: React.FC = () => {
     try {
       const payload = {
         ...form,
-        type: 'establishment',
-        contact_number: form.contact_number ? `09${form.contact_number}` : '',
+        contactNumber: form.contactNumber ? `09${form.contactNumber}` : '',
       };
-      await authFetch('/records', {
+      await authFetch('/establishment', {
         method: 'POST',
         body: JSON.stringify(payload),
       });
@@ -91,7 +88,7 @@ const EstablishmentRecords: React.FC = () => {
       setIsAddModalOpen(false);
       refetch && refetch();
     } catch (err: any) {
-      showError(err?.message || 'Failed to create record');
+      showError(err?.message || 'Failed to create establishment record');
     } finally {
       setIsCreating(false);
     }
@@ -209,23 +206,23 @@ const EstablishmentRecords: React.FC = () => {
                       <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                         <div className="flex items-center gap-2 sm:gap-3">
                           <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-md">
-                            {(r.business_name || r.name || '').charAt(0)}
+                            {(r.name || r.name || '').charAt(0)}
                           </div>
                           <span className="text-xs sm:text-sm font-semibold text-gray-900">
                             {r.name ||
-                              r.business_name ||
+                              r.name ||
                               `${r.firstName || ''} ${r.lastName || ''}`}
                           </span>
                         </div>
                       </td>
                       <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                         <span className="text-xs sm:text-sm font-semibold text-gray-900">
-                          {r.business_type || '-'}
+                          {r.type || '-'}
                         </span>
                       </td>
                       <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                         <span className="text-xs sm:text-sm text-gray-700 font-medium">
-                          {r.contact_number || '-'}
+                          {r.contactNumber || '-'}
                         </span>
                       </td>
                       <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
@@ -332,11 +329,11 @@ const EstablishmentRecords: React.FC = () => {
                         <input
                           required
                           type="text"
-                          value={form.business_name}
+                          value={form.name}
                           onChange={(e) =>
                             setForm((s) => ({
                               ...s,
-                              business_name: e.target.value,
+                              name: e.target.value,
                             }))
                           }
                           className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
@@ -354,11 +351,11 @@ const EstablishmentRecords: React.FC = () => {
                         <input
                           required
                           type="text"
-                          value={form.business_type}
+                          value={form.type}
                           onChange={(e) =>
                             setForm((s) => ({
                               ...s,
-                              business_type: e.target.value,
+                              type: e.target.value,
                             }))
                           }
                           className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
@@ -377,11 +374,11 @@ const EstablishmentRecords: React.FC = () => {
                       <input
                         required
                         type="text"
-                        value={form.owner_name}
+                        value={form.ownerName}
                         onChange={(e) =>
                           setForm((s) => ({
                             ...s,
-                            owner_name: e.target.value,
+                            ownerName: e.target.value,
                           }))
                         }
                         className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
@@ -416,11 +413,11 @@ const EstablishmentRecords: React.FC = () => {
                       <input
                         required
                         type="text"
-                        value={form.contact_number}
+                        value={form.contactNumber}
                         onChange={(e) => {
                           const digitsOnly = e.target.value.replace(/\D/g, '');
                           const limited = digitsOnly.slice(0, 9);
-                          setForm((s) => ({ ...s, contact_number: limited }));
+                          setForm((s) => ({ ...s, contactNumber: limited }));
                         }}
                         className="w-full pl-10 sm:pl-14 border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                         placeholder="9XXXXXXXX"
