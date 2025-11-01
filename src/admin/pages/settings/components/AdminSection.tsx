@@ -17,46 +17,47 @@ const AdminSection = ({
 }: AdminSectionProps) => {
   return (
     <Card className="shadow-md border border-gray-200 overflow-hidden">
-      <CardHeader className="pb-6 bg-gradient-to-r from-green-50 to-white border-b border-gray-200 flex items-center justify-between gap-4">
-        <CardTitle className="text-xl lg:text-2xl font-bold text-gray-900 flex items-center gap-3">
+      <CardHeader className="pb-4 sm:pb-6 bg-gradient-to-r from-green-50 to-white border-b border-gray-200 flex items-center justify-between gap-3 sm:gap-4">
+        <CardTitle className="text-base sm:text-xl lg:text-2xl font-bold text-gray-900 flex items-center gap-3">
           <div className="p-2 rounded-lg bg-green-100">
-            <Users className="w-6 h-6 text-green-600" />
+            <Users className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
           </div>
           Admin Accounts
         </CardTitle>
         <div className="ml-4 flex-shrink-0">
           <button
             onClick={() => openAddAdminModal(true)}
-            className="px-5 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-sm flex items-center gap-2"
+            className="px-3 sm:px-5 py-2 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-sm flex items-center gap-2 text-sm sm:text-base"
           >
-            <Plus className="w-5 h-5" />
-            Add New Admin
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Add New Admin</span>
+            <span className="sm:hidden">Add</span>
           </button>
         </div>
       </CardHeader>
-      <CardContent className="p-6 lg:p-8">
+      <CardContent className="p-4 sm:p-6 lg:p-8">
         {adminData && adminData.length > 0 ? (
           <div className="space-y-4">
             {adminData.map((admin) => (
               <div
                 key={admin._id}
-                className="flex flex-col lg:flex-row lg:items-center justify-between p-5 lg:p-6 bg-gradient-to-r from-white to-gray-50 border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all gap-4"
+                className="flex flex-col lg:flex-row lg:items-center justify-between p-3 sm:p-5 lg:p-6 bg-gradient-to-r from-white to-gray-50 border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all gap-3 sm:gap-4"
               >
                 <div className="flex items-center gap-4 lg:gap-6 flex-1 min-w-0">
-                  <div className="w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ring-4 ring-green-100">
-                    <span className="text-white font-bold text-xl lg:text-2xl">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ring-4 ring-green-100">
+                    <span className="text-white font-bold text-lg sm:text-xl lg:text-2xl">
                       {admin.username.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-base lg:text-lg text-gray-900 truncate">
+                    <h4 className="font-bold text-sm sm:text-base lg:text-lg text-gray-900 truncate">
                       {admin.username}
                     </h4>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 mt-1">
                       <Mail className="w-4 h-4 flex-shrink-0" />
                       <span className="truncate">{admin.email}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 mt-1">
                       <Phone className="w-4 h-4 flex-shrink-0" />
                       <span>{admin.contactNumber}</span>
                     </div>
@@ -148,7 +149,7 @@ const AdminSection = ({
                     })().map((role) => (
                       <span
                         key={role}
-                        className={`px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm flex items-center gap-1 ${
+                        className={`px-2 py-1 rounded-full text-[10px] sm:text-xs font-semibold shadow-sm flex items-center gap-1 ${
                           String(role).toLowerCase() === 'superadmin'
                             ? 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300'
                             : 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300'
@@ -164,7 +165,7 @@ const AdminSection = ({
                       openDeleteAdminModal(true);
                       setAdminToDelete(admin);
                     }}
-                    className="w-10 h-10 flex items-center justify-center text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all shadow-sm border border-red-200 hover:border-red-600 flex-shrink-0"
+                    className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all shadow-sm border border-red-200 hover:border-red-600 flex-shrink-0"
                     title="Delete admin account"
                   >
                     <Trash className="w-4 h-4" />
