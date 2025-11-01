@@ -159,6 +159,7 @@ const NonResidentRecords: React.FC = () => {
       const payload = {
         ...form,
         type: 'non-resident',
+        isResident: false,
         contact_number: form.contact_number ? `09${form.contact_number}` : '',
       };
       const res = await authFetch('/records', {
