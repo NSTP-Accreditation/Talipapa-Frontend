@@ -158,47 +158,88 @@ const GreenPages: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">
-          <Card className="rounded-2xl shadow-2xl border-2 border-gray-200">
-            <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 border-b-2 border-green-500 pb-3">
-              <CardTitle className="text-lg font-bold text-white">
-                Map
+          <Card className="rounded-2xl shadow-2xl border-2 border-gray-200 overflow-hidden hover:shadow-3xl transition-shadow duration-300">
+            <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 border-b-2 border-green-500 pb-4">
+              <CardTitle className="text-lg sm:text-xl font-bold text-white flex items-center gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                    />
+                  </svg>
+                </div>
+                <span>Interactive Farm Map</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div style={{ height: 320 }}>
+            <CardContent className="p-0 bg-gradient-to-br from-gray-50 to-white">
+              <div style={{ height: 380 }} className="relative">
                 <LeafletMap
                   farmsData={farmsData}
                   selectedFarm={farmData}
                   onSelectFarm={(f: any) => setFarmData(f)}
                 />
               </div>
+              {farmData && (
+                <div className="p-4 border-t-2 border-gray-200 bg-white">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span className="text-sm font-semibold text-gray-700">
+                      Selected: {farmData.name}
+                    </span>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
 
         <div className="lg:col-span-2">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 p-2 mb-6 flex flex-wrap items-center gap-2">
             <button
               onClick={() => setActiveTab('mapDropdown')}
-              className={`px-3 py-2 rounded ${activeTab === 'mapDropdown' ? 'bg-green-600 text-white' : 'bg-white'}`}
+              className={`flex-1 min-w-[100px] px-4 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
+                activeTab === 'mapDropdown'
+                  ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105'
+                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
+              }`}
             >
               Map
             </button>
             <button
               onClick={() => setActiveTab('profile')}
-              className={`px-3 py-2 rounded ${activeTab === 'profile' ? 'bg-green-600 text-white' : 'bg-white'}`}
+              className={`flex-1 min-w-[100px] px-4 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
+                activeTab === 'profile'
+                  ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105'
+                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
+              }`}
             >
               Profile
             </button>
             <button
               onClick={() => setActiveTab('skillMap')}
-              className={`px-3 py-2 rounded ${activeTab === 'skillMap' ? 'bg-green-600 text-white' : 'bg-white'}`}
+              className={`flex-1 min-w-[100px] px-4 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
+                activeTab === 'skillMap'
+                  ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105'
+                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
+              }`}
             >
               Skills
             </button>
             <button
               onClick={() => setActiveTab('statistics')}
-              className={`px-3 py-2 rounded ${activeTab === 'statistics' ? 'bg-green-600 text-white' : 'bg-white'}`}
+              className={`flex-1 min-w-[100px] px-4 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
+                activeTab === 'statistics'
+                  ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105'
+                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
+              }`}
             >
               Statistics
             </button>

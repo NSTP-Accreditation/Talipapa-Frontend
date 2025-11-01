@@ -113,18 +113,18 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
             staffDirectory.map((staff) => (
               <Card
                 key={staff._id ?? staff.name}
-                className="p-2 sm:p-3 md:p-4 lg:p-5 bg-white border-2 border-gray-200 hover:border-green-400 hover:shadow-xl transition-all duration-300 rounded-xl sm:rounded-2xl group"
+                className="p-3 sm:p-4 md:p-5 bg-gradient-to-br from-white to-gray-50 border-2 border-gray-200 hover:border-green-400 hover:shadow-2xl transition-all duration-300 rounded-xl sm:rounded-2xl group"
               >
-                <div className="space-y-1.5 sm:space-y-2 md:space-y-2.5">
-                  <div className="flex items-center gap-2 sm:gap-3 pb-1.5 sm:pb-2 border-b border-gray-100">
-                    <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-11 lg:h-11 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm md:text-base">
-                      {staff.name.charAt(0)}
+                <div className="space-y-2 sm:space-y-3">
+                  <div className="flex items-center gap-3 pb-2 sm:pb-3 border-b-2 border-gray-100 group-hover:border-green-100">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-xl sm:rounded-2xl flex items-center justify-center text-white font-bold text-base sm:text-lg md:text-xl shadow-md group-hover:scale-110 transition-transform">
+                      {staff.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs sm:text-sm md:text-base lg:text-lg font-bold text-gray-900 truncate">
+                      <p className="text-sm sm:text-base md:text-lg font-bold text-gray-900 truncate">
                         {staff.name}
                       </p>
-                      <p className="text-xs sm:text-sm text-green-600 font-semibold">
+                      <p className="text-xs sm:text-sm text-green-600 font-semibold truncate">
                         {Array.isArray(staff.position) &&
                         staff.position.length > 0
                           ? staff.position.map((p) => p.label).join(', ')
@@ -132,50 +132,81 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
                       </p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
-                    <div className="bg-gray-50 p-1.5 sm:p-2 md:p-2.5 rounded-lg">
-                      <p className="text-xs text-gray-600 font-semibold">Age</p>
-                      <p className="text-xs sm:text-sm md:text-base font-bold text-gray-900">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                    <div className="bg-white/80 backdrop-blur-sm p-2 sm:p-2.5 md:p-3 rounded-lg border border-gray-200 hover:border-green-300 transition-colors">
+                      <p className="text-xs text-gray-600 font-semibold mb-1">
+                        Age
+                      </p>
+                      <p className="text-sm sm:text-base font-bold text-gray-900">
                         {staff.age ?? '—'}
                       </p>
                     </div>
-                    <div className="bg-gray-50 p-1.5 sm:p-2 md:p-2.5 rounded-lg">
-                      <p className="text-xs text-gray-600 font-semibold">
+                    <div className="bg-white/80 backdrop-blur-sm p-2 sm:p-2.5 md:p-3 rounded-lg border border-gray-200 hover:border-green-300 transition-colors">
+                      <p className="text-xs text-gray-600 font-semibold mb-1">
                         Gender
                       </p>
-                      <p className="text-xs sm:text-sm md:text-base font-bold text-gray-900">
+                      <p className="text-sm sm:text-base font-bold text-gray-900">
                         {staff.gender ?? '—'}
                       </p>
                     </div>
                   </div>
-                  <div className="bg-blue-50 p-1.5 sm:p-2 md:p-2.5 rounded-lg">
-                    <p className="text-xs text-gray-600 font-semibold">Email</p>
-                    <p className="text-xs sm:text-sm md:text-base font-bold text-gray-900 break-all">
+                  <div className="bg-blue-50/80 backdrop-blur-sm p-2 sm:p-2.5 md:p-3 rounded-lg border border-blue-200 hover:border-blue-300 transition-colors">
+                    <p className="text-xs text-gray-600 font-semibold mb-1 flex items-center gap-1">
+                      <svg
+                        className="w-3 h-3"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                      Email
+                    </p>
+                    <p className="text-xs sm:text-sm font-bold text-gray-900 break-all">
                       {!staff.email_address
                         ? 'No Email Provided'
                         : staff.email_address}
                     </p>
                   </div>
-                  <div className="bg-green-50 p-1.5 sm:p-2 md:p-2.5 rounded-lg">
-                    <p className="text-xs text-gray-600 font-semibold">
+                  <div className="bg-green-50/80 backdrop-blur-sm p-2 sm:p-2.5 md:p-3 rounded-lg border border-green-200 hover:border-green-300 transition-colors">
+                    <p className="text-xs text-gray-600 font-semibold mb-1 flex items-center gap-1">
+                      <svg
+                        className="w-3 h-3"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                        />
+                      </svg>
                       Contact Number
                     </p>
-                    <p className="text-xs sm:text-sm md:text-base font-bold text-gray-900">
+                    <p className="text-xs sm:text-sm font-bold text-gray-900">
                       {formatContact(staff.contact_number) ||
                         'No Contact Provided'}
                     </p>
                   </div>
 
                   {staff.skills && staff.skills.length > 0 && (
-                    <div className="pt-1.5 sm:pt-2">
-                      <p className="text-xs text-gray-600 font-semibold mb-1.5 sm:mb-2">
+                    <div className="pt-2 border-t border-gray-100">
+                      <p className="text-xs text-gray-600 font-semibold mb-2 flex items-center gap-1">
+                        <Leaf className="w-3 h-3 text-green-600" />
                         Skills
                       </p>
-                      <div className="flex flex-wrap gap-1 sm:gap-2">
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
                         {staff.skills.map((s) => (
                           <span
                             key={s._id ?? s.name}
-                            className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md bg-green-100 text-green-800 text-xs font-semibold"
+                            className="px-2 sm:px-2.5 py-1 rounded-lg bg-gradient-to-r from-green-100 to-green-200 text-green-800 text-xs font-bold border border-green-300 hover:shadow-sm transition-shadow"
                           >
                             {s.short ?? s.name}
                           </span>
