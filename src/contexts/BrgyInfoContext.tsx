@@ -1,6 +1,14 @@
-import { useAuthFetch } from "@/admin/hooks/useAuthFetch";
 import useFetchData from "@/admin/hooks/useFetchData";
+import { ImageInterface } from "@/types/global.types";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+
+interface CarouselInterface {
+  title: string,
+  subTitle: string,
+  link: string,
+  order: number,
+  image: ImageInterface
+}
 
 export interface PageContentInterface {
   _id?: string;
@@ -16,6 +24,7 @@ export interface PageContentInterface {
     size: number;
     mimetype: string;
   };
+  carousel: CarouselInterface[];
   createdAt?: Date;
   updatedAt?: Date;
 }

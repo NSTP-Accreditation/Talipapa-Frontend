@@ -8,9 +8,12 @@ import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
 import SlideModal from './SlideModal';
 import SlideCard from './SlideCard';
 import type { Slide } from './types';
+import { useBrgyInfo } from '@/contexts/BrgyInfoContext';
 
 const CarouselEditor: React.FC = () => {
-  const { data: slidesData, loading, refetch } = useFetchData('/carousel');
+  const { pageContent, loading: infoLoading , error: infoError, refetch } = useBrgyInfo(); 
+  console.log(pageContent)
+  
   const authFetch = useAuthFetch();
   const { success, error } = useToast();
   const { isLoading } = useLoadingState(300);
@@ -20,10 +23,10 @@ const CarouselEditor: React.FC = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   useEffect(() => {
-    if (slidesData && slidesData.items) {
-      setSlides(slidesData.items);
+    if (pageContent && pageContent.carousel) {
+      setSlides(pageContent.carousel);
     }
-  }, [slidesData]);
+  }, [pageContent]);
 
   const handleSaveSlide = async (slide: Slide, imageFile: File | null) => {
     try {
@@ -35,11 +38,11 @@ const CarouselEditor: React.FC = () => {
       if (imageFile) formData.append('image', imageFile);
 
       const isCreating = !slide._id;
-      let url = '/carousel';
+      let url = `/pagecontent/${pageContent._id}/carousel`;
       let method = 'POST';
 
       if (!isCreating) {
-        url = `/carousel/${slide._id}`;
+        url = `/pagecontent/${pageContent._id}/carousel/${slide._id}`;
         method = 'PATCH';
       }
 
@@ -65,7 +68,7 @@ const CarouselEditor: React.FC = () => {
   const deleteSlide = async (id?: string) => {
     if (!id) return;
     try {
-      await authFetch(`/carousel/${id}`, { method: 'DELETE' });
+      await authFetch(`/pagecontent/${pageContent._id}/carousel/${id}`, { method: 'DELETE' });
       success('Slide deleted successfully!', { title: 'Deleted' });
       refetch();
     } catch (e) {
@@ -93,7 +96,7 @@ const CarouselEditor: React.FC = () => {
     try {
       await Promise.all(
         newSlides.map((s) =>
-          authFetch(`/carousel/${s._id}`, {
+          authFetch(`/pagecontent/${pageContent._id}/carousel}`, {
             method: 'PATCH',
             body: JSON.stringify({ order: s.order }),
           })
@@ -106,7 +109,7 @@ const CarouselEditor: React.FC = () => {
     }
   };
 
-  if (loading || isLoading) {
+  if (infoLoading || isLoading) {
     return <ResponsiveSkeleton page="carousel" />;
   }
 
