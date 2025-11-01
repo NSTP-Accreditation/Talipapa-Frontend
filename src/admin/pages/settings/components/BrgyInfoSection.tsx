@@ -6,7 +6,7 @@ import { AlertCircle, Building, Check, Pencil, Upload, X } from 'lucide-react';
 import { useState } from 'react';
 
 const BrngyInfoSection = () => {
-  const { pageContent, loading, error: brgyInfoError } = useBrgyInfo();
+  const { pageContent, loading, error: brgyInfoError, refetch } = useBrgyInfo();
 
   const authFetch = useAuthFetch();
   const { success, error } = useToast();
@@ -40,8 +40,9 @@ const BrngyInfoSection = () => {
       });
       success('Barangay name updated successfully', { title: 'Success' });
       setEditingBarangay(false);
-    } catch (error) {
-      console.error(error);
+      refetch();
+    } catch (err) {
+      console.error(err);
       error('Failed to update barangay name', { title: 'Error' });
     } finally {
       setIsSavingBarangay(false);

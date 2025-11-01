@@ -21,7 +21,7 @@ import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 
 const NonResidentRecords: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const { data, loading, refetch } = useFetchData('/records?type=non-resident');
+  const { data, loading, refetch } = useFetchData('/records?residentStatus=non-resident');
   const authFetch = useAuthFetch();
   const { success, error: showError } = useToast();
 
@@ -40,10 +40,7 @@ const NonResidentRecords: React.FC = () => {
 
   // Ensure we only show non-resident records even if backend returns mixed data
   const records: any[] = Array.isArray(data)
-    ? (data as any[]).filter(
-        (r: any) =>
-          (r.type || r.record_type || '').toLowerCase() === 'non-resident'
-      )
+    ? data
     : [];
 
   // sorting dropdown state and modes (unique keys). clicking same key toggles asc/desc.
