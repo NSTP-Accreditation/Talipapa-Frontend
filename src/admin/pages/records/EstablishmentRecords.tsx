@@ -7,6 +7,7 @@ import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
 import { createPortal } from 'react-dom';
+import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 
 const EstablishmentRecords: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -361,22 +362,23 @@ const EstablishmentRecords: React.FC = () => {
                     </label>
                   </div>
 
-                  <label className="block group">
+                  <div className="block group">
                     <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
                       <span className="text-red-500">*</span>
                       <span>Address</span>
                     </div>
-                    <textarea
+                    <AddressAutocomplete
                       required
                       value={form.address}
-                      onChange={(e) =>
-                        setForm((s) => ({ ...s, address: e.target.value }))
+                      onChange={(value) =>
+                        setForm((s) => ({ ...s, address: value }))
                       }
-                      rows={3}
-                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base resize-none"
                       placeholder="Enter complete address..."
+                      className="border-2 border-gray-300"
+                      maxLength={200}
+                      countryCode="ph"
                     />
-                  </label>
+                  </div>
                 </div>
               </div>
 

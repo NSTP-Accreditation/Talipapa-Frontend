@@ -5,6 +5,7 @@ import { RecordInterface } from '@/types/global.types';
 import { useToast } from '@/hooks/useToast';
 import { validateAddress } from '@/utils/validation';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
+import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 
 type EditRecordModalType = {
   editRecord: RecordInterface | null;
@@ -360,29 +361,25 @@ const EditRecordModal = ({
               <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
             </div>
 
-            <label className="block group">
-              <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
-                <span>Address</span>
-              </div>
-              <textarea
-                rows={3}
+            <div className="block group">
+              <AddressAutocomplete
                 value={editRecord.address}
-                onChange={(e) =>
+                onChange={(value) =>
                   setEditRecord(
-                    editRecord
-                      ? { ...editRecord, address: e.target.value }
-                      : null
+                    editRecord ? { ...editRecord, address: value } : null
                   )
                 }
-                className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none text-sm sm:text-base"
                 placeholder="Enter complete address..."
+                label="Address"
+                className="border-2 border-gray-300 hover:border-gray-400"
+                maxLength={200}
+                countryCode="ph"
               />
               <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
-                Provide full house number, street, barangay/purok, city or
-                municipality.
+                Start typing to see address suggestions. Provide full house
+                number, street, barangay/purok, city or municipality.
               </p>
-            </label>
+            </div>
           </div>
         </div>
 

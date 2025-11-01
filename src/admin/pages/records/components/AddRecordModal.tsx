@@ -1,18 +1,23 @@
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
 import { Award, Calendar, MapPin, Phone, User, X } from 'lucide-react';
-import React, { Dispatch, FormEvent, SetStateAction, useState } from 'react'
+import React, { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { RecordInterface } from '@/types/global.types';
 import { validateAddress } from '@/utils/validation';
+import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 
 type AddRecordModalType = {
-  openAddRecordModal: boolean,
-  setOpenAddRecordModal: Dispatch<SetStateAction<boolean>>,
-  refetchRecords: () => Promise<RecordInterface[]>
-}
+  openAddRecordModal: boolean;
+  setOpenAddRecordModal: Dispatch<SetStateAction<boolean>>;
+  refetchRecords: () => Promise<RecordInterface[]>;
+};
 
-const AddRecordModal = ({ openAddRecordModal, setOpenAddRecordModal, refetchRecords } : AddRecordModalType) => {
+const AddRecordModal = ({
+  openAddRecordModal,
+  setOpenAddRecordModal,
+  refetchRecords,
+}: AddRecordModalType) => {
   const authFetch = useAuthFetch();
 
   const [isCreating, setIsCreating] = useState(false);
@@ -39,7 +44,9 @@ const AddRecordModal = ({ openAddRecordModal, setOpenAddRecordModal, refetchReco
 
     // Validate required fields
     if (!newRecord.firstName || !newRecord.lastName || !newRecord.middleName) {
-      showError('First name, last name, and middle name are required.', { title: 'Validation' });
+      showError('First name, last name, and middle name are required.', {
+        title: 'Validation',
+      });
       setIsCreating(false);
       return;
     }
@@ -63,7 +70,9 @@ const AddRecordModal = ({ openAddRecordModal, setOpenAddRecordModal, refetchReco
       const payload = {
         ...newRecord,
         age: ageNum,
-        contact_number: newRecord.contact_number ? `09${newRecord.contact_number}` : ''
+        contact_number: newRecord.contact_number
+          ? `09${newRecord.contact_number}`
+          : '',
       };
 
       const data = await authFetch('/records', {
@@ -87,7 +96,9 @@ const AddRecordModal = ({ openAddRecordModal, setOpenAddRecordModal, refetchReco
       });
     } catch (error) {
       console.log(error);
-      showError('Failed to create record. Please try again.', { title: 'Error' });
+      showError('Failed to create record. Please try again.', {
+        title: 'Error',
+      });
     } finally {
       setIsCreating(false);
     }
@@ -161,13 +172,18 @@ const AddRecordModal = ({ openAddRecordModal, setOpenAddRecordModal, refetchReco
                     required
                     type="text"
                     value={newRecord.firstName}
-                    onChange={(e) => setNewRecord(prev => ({ ...prev, firstName: e.target.value}))}
+                    onChange={(e) =>
+                      setNewRecord((prev) => ({
+                        ...prev,
+                        firstName: e.target.value,
+                      }))
+                    }
                     className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                     placeholder="Enter first name"
                   />
                 </div>
               </label>
-              
+
               <label className="block group">
                 <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
                   <span className="text-red-500">*</span>
@@ -178,13 +194,18 @@ const AddRecordModal = ({ openAddRecordModal, setOpenAddRecordModal, refetchReco
                     required
                     type="text"
                     value={newRecord.lastName}
-                    onChange={(e) => setNewRecord(prev => ({ ...prev, lastName: e.target.value}))}
+                    onChange={(e) =>
+                      setNewRecord((prev) => ({
+                        ...prev,
+                        lastName: e.target.value,
+                      }))
+                    }
                     className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                     placeholder="Enter last name"
                   />
                 </div>
               </label>
-              
+
               <label className="block group">
                 <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
                   <span className="text-red-500">*</span>
@@ -195,7 +216,12 @@ const AddRecordModal = ({ openAddRecordModal, setOpenAddRecordModal, refetchReco
                     required
                     type="text"
                     value={newRecord.middleName}
-                    onChange={(e) => setNewRecord(prev => ({ ...prev, middleName: e.target.value}))}
+                    onChange={(e) =>
+                      setNewRecord((prev) => ({
+                        ...prev,
+                        middleName: e.target.value,
+                      }))
+                    }
                     className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                     placeholder="If none put None"
                   />
@@ -232,7 +258,7 @@ const AddRecordModal = ({ openAddRecordModal, setOpenAddRecordModal, refetchReco
                   onChange={(e) => {
                     const digitsOnly = e.target.value.replace(/\D/g, '');
                     const limited = digitsOnly.slice(0, 3);
-                    setNewRecord(prev => ({ ...prev, age: limited }));
+                    setNewRecord((prev) => ({ ...prev, age: limited }));
                   }}
                   className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                   placeholder="0"
@@ -254,15 +280,19 @@ const AddRecordModal = ({ openAddRecordModal, setOpenAddRecordModal, refetchReco
                     onChange={(e) => {
                       const digitsOnly = e.target.value.replace(/\D/g, '');
                       const limited = digitsOnly.slice(0, 9);
-                      setNewRecord(prev => ({ ...prev, contact_number: limited }));
+                      setNewRecord((prev) => ({
+                        ...prev,
+                        contact_number: limited,
+                      }));
                     }}
                     className="w-full pl-10 sm:pl-14 border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                     placeholder="9XXXXXXXX"
                   />
                 </div>
                 <div className="text-xs text-gray-500 mt-1 sm:mt-2">
-                  Contact will be saved as <span className="font-medium">09XXXXXXXXX</span>. Only
-                  numbers allowed. Total digits including prefix will be 11.
+                  Contact will be saved as{' '}
+                  <span className="font-medium">09XXXXXXXXX</span>. Only numbers
+                  allowed. Total digits including prefix will be 11.
                 </div>
               </label>
             </div>
@@ -280,22 +310,23 @@ const AddRecordModal = ({ openAddRecordModal, setOpenAddRecordModal, refetchReco
               <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
             </div>
 
-            <label className="block group">
-              <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
-                <span>Address</span>
-              </div>
-              <textarea
-                rows={3}
+            <div className="block group">
+              <AddressAutocomplete
                 value={newRecord.address}
-                onChange={(e) => setNewRecord(prev => ({ ...prev, address: e.target.value}))}
-                className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none text-sm sm:text-base"
+                onChange={(value) =>
+                  setNewRecord((prev) => ({ ...prev, address: value }))
+                }
                 placeholder="Enter complete address..."
+                label="Address"
+                className="border-2 border-gray-300 hover:border-gray-400"
+                maxLength={200}
+                countryCode="ph"
               />
               <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
-                Provide full house number, street, barangay/purok, city or municipality.
+                Start typing to see address suggestions. Provide full house
+                number, street, barangay/purok, city or municipality.
               </p>
-            </label>
+            </div>
           </div>
 
           {/* Info Note */}
@@ -306,7 +337,7 @@ const AddRecordModal = ({ openAddRecordModal, setOpenAddRecordModal, refetchReco
             <div className="flex-1">
               <p className="text-xs sm:text-sm text-green-800 font-medium">
                 <span className="font-bold">Note:</span> Fields marked with{' '}
-                <span className="text-red-500 font-bold">*</span> are required. 
+                <span className="text-red-500 font-bold">*</span> are required.
                 Please ensure all information is accurate before submitting.
               </p>
             </div>
@@ -363,7 +394,7 @@ const AddRecordModal = ({ openAddRecordModal, setOpenAddRecordModal, refetchReco
       </form>
     </div>,
     document.body
-  )
-}
+  );
+};
 
-export default AddRecordModal
+export default AddRecordModal;

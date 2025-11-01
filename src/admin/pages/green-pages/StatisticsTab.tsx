@@ -19,6 +19,7 @@ import {
   CardContent,
   CardTitle,
 } from '../../../components/ui/card';
+import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 import {
   BarChart,
   Bar,
@@ -463,14 +464,16 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                       <MapPin className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
                       Address <span className="text-red-500">*</span>
                     </label>
-                    <Input
+                    <AddressAutocomplete
                       required
                       value={newFarm.address}
-                      onChange={(e) =>
-                        setNewFarm({ ...newFarm, address: e.target.value })
+                      onChange={(value) =>
+                        setNewFarm({ ...newFarm, address: value })
                       }
                       placeholder="Address"
-                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl hover:border-gray-400 text-sm sm:text-base"
+                      maxLength={200}
+                      countryCode="ph"
                     />
                   </div>
 
