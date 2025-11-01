@@ -467,19 +467,19 @@ export const AdminAboutUsSkeleton: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
         <div>
-          <Skeleton className="h-10 w-56 mb-2" />
+          <Skeleton className="h-12 w-64 mb-3" />
           <Skeleton className="h-5 w-80" />
         </div>
         <div className="flex gap-3">
-          <Skeleton className="h-11 w-36 rounded-xl" />
           <Skeleton className="h-11 w-40 rounded-xl" />
+          <Skeleton className="h-11 w-32 rounded-xl" />
         </div>
       </div>
 
       {/* Content Grid - Info, History, Mission/Vision */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div className="lg:col-span-2 space-y-4">
-          <div className="bg-white p-6 rounded-2xl shadow-md border-2 border-gray-200">
+          <div className="bg-white p-8 rounded-2xl shadow-md border-2 border-gray-200">
             <div className="flex items-center gap-3 mb-4">
               <Skeleton className="h-12 w-12 rounded-xl" />
               <Skeleton className="h-7 w-48" />
@@ -553,7 +553,7 @@ export const AdminAboutUsSkeleton: React.FC = () => {
 
         {/* Rows */}
         <div className="space-y-3">
-          {[1, 2, 3, 4, 5].map((i) => (
+          {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="grid grid-cols-5 gap-4 items-center py-3">
               <Skeleton className="h-10 w-10 rounded-full" />
               <Skeleton className="h-4 w-40" />
@@ -563,6 +563,51 @@ export const AdminAboutUsSkeleton: React.FC = () => {
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  );
+};
+
+// Mobile compact skeleton for Admin About Us
+export const MobileAdminAboutUsSkeleton: React.FC = () => {
+  return (
+    <div className="min-h-screen p-3 bg-gradient-to-br from-gray-50 to-green-50">
+      <Skeleton className="h-12 w-40 mb-3" />
+      <Skeleton className="h-5 w-64 mb-4" />
+
+      {/* Info block */}
+      <div className="bg-white p-3 rounded-xl shadow-sm mb-3">
+        <Skeleton className="h-4 w-3/4 mb-2" />
+        <Skeleton className="h-3 w-full" />
+      </div>
+
+      {/* Mission / Vision stacked */}
+      <div className="space-y-3 mb-3">
+        <div className="bg-white p-3 rounded-lg shadow-sm">
+          <Skeleton className="h-5 w-32 mb-2" />
+          <Skeleton className="h-3 w-full" />
+        </div>
+        <div className="bg-white p-3 rounded-lg shadow-sm">
+          <Skeleton className="h-5 w-32 mb-2" />
+          <Skeleton className="h-3 w-full" />
+        </div>
+      </div>
+
+      {/* Officials list compact */}
+      <div className="space-y-2">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm"
+          >
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <div className="flex-1">
+              <Skeleton className="h-4 w-3/4 mb-1" />
+              <Skeleton className="h-3 w-1/2" />
+            </div>
+            <Skeleton className="h-8 w-20 rounded-lg" />
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -1601,6 +1646,9 @@ export const MobileSkeleton: React.FC<{ page?: string }> = ({ page }) => {
     case 'records':
     case 'earnpoints':
       return <MobileFormTableSkeleton />;
+    case 'aboutus-admin':
+    case 'about-us-admin':
+      return <MobileAdminAboutUsSkeleton />;
     default:
       // generic compact skeleton
       return (
