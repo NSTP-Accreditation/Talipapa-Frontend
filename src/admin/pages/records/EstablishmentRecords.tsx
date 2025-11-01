@@ -2,7 +2,6 @@ import React, { useState, FormEvent } from 'react';
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import {
-  Download,
   Search,
   UserRoundPen,
   Package,
@@ -13,6 +12,7 @@ import {
   Building2,
   Trash,
 } from 'lucide-react';
+import ExcelExportButton from '@/components/ui/ExcelExportButton';
 import useFetchData from '../../hooks/useFetchData';
 import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
@@ -137,16 +137,10 @@ const EstablishmentRecords: React.FC = () => {
                   <span>Add Establishment</span>
                 </Button>
 
-                <Button
-                  onClick={() => {
-                    // export action placeholder
-                  }}
-                  className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold shadow-md hover:shadow-xl transition-all hover:scale-105 min-h-[44px]"
-                >
-                  <Download className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="hidden sm:inline">Export Excel Report</span>
-                  <span className="sm:hidden">Export</span>
-                </Button>
+                <ExcelExportButton
+                  records={records || []}
+                  recordType="establishment"
+                />
               </div>
             </div>
           </div>
