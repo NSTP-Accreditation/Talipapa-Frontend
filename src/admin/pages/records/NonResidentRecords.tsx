@@ -424,6 +424,15 @@ const NonResidentRecords: React.FC = () => {
                 )}
               </div>
             </div>
+            {searchTerm && (
+              <div className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600">
+                Found{' '}
+                <span className="font-semibold text-green-600">
+                  {originalRecords.length}
+                </span>{' '}
+                matching records
+              </div>
+            )}
           </div>
 
           {/* Table (resident table component to keep behavior consistent) */}
@@ -443,15 +452,6 @@ const NonResidentRecords: React.FC = () => {
           )}
         </div>
       </div>
-      {searchTerm && (
-        <div className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600 px-4 sm:px-6">
-          Found{' '}
-          <span className="font-semibold text-green-600">
-            {originalRecords.length}
-          </span>{' '}
-          matching records
-        </div>
-      )}
 
       {isAddModalOpen &&
         createPortal(
