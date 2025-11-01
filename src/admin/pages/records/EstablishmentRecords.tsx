@@ -11,6 +11,7 @@ import {
   Phone,
   MapPin,
   Building2,
+  Trash,
 } from 'lucide-react';
 import useFetchData from '../../hooks/useFetchData';
 import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
@@ -231,14 +232,14 @@ const EstablishmentRecords: React.FC = () => {
                             onClick={() => setEditItem(r)}
                             className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
                           >
-                            <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <UserRoundPen className="w-3 h-3 sm:w-4 sm:h-4" />
                             <span className="hidden sm:inline">Edit</span>
                           </Button>
                           <Button
                             onClick={() => setDeleteItem(r)}
                             className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
                           >
-                            <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <Trash className="w-3 h-3 sm:w-4 sm:h-4" />
                             <span className="hidden sm:inline">Delete</span>
                           </Button>
                         </div>
