@@ -51,46 +51,48 @@ const ActivityLogs = () => {
   }
 
   return (
-    <div className="p-5">
-      <ActivityHeader 
-        title="Activity Log" 
-        description="List of Recent Activities" 
-      />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-6 sm:space-y-8">
+        <ActivityHeader
+          title="Activity Log"
+          description="List of Recent Activities"
+        />
 
-      <FiltersSection
-        search={search}
-        category={category}
-        sort={sort}
-        categories={categories}
-        onSearchChange={handleSearchChange}
-        onCategoryChange={handleCategoryChange}
-        onSortToggle={handleSortToggle}
-        onRefresh={refetch}
-      />
+        <FiltersSection
+          search={search}
+          category={category}
+          sort={sort}
+          categories={categories}
+          onSearchChange={handleSearchChange}
+          onCategoryChange={handleCategoryChange}
+          onSortToggle={handleSortToggle}
+          onRefresh={refetch}
+        />
 
-      {/* Mobile Card View */}
-      <div className="block md:hidden space-y-3">
-        {logs.length > 0 ? (
-          logs.map((log) => <LogsCard key={log._id} log={log} />)
-        ) : (
-          <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6 text-center text-gray-400 text-sm">
-            No activity logs found.
-          </div>
-        )}
+        {/* Mobile Card View */}
+        <div className="block md:hidden space-y-3">
+          {logs.length > 0 ? (
+            logs.map((log) => <LogsCard key={log._id} log={log} />)
+          ) : (
+            <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6 text-center text-gray-400 text-sm">
+              No activity logs found.
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Table View */}
+        <LogsCardTable logs={logs} />
+
+        {/* Pagination */}
+        <LogPagination
+          currentPage={data?.currentPage ?? 1}
+          totalPages={data?.totalPages ?? 1}
+          hasPrevPage={data?.hasPrevPage ?? false}
+          hasNextPage={data?.hasNextPage ?? false}
+          onPrevPage={handlePrevPage}
+          onNextPage={handleNextPage}
+        />
       </div>
-
-      {/* Desktop Table View */}
-      <LogsCardTable logs={logs} />
-
-      {/* Pagination */}
-      <LogPagination
-        currentPage={data?.currentPage ?? 1}
-        totalPages={data?.totalPages ?? 1}
-        hasPrevPage={data?.hasPrevPage ?? false}
-        hasNextPage={data?.hasNextPage ?? false}
-        onPrevPage={handlePrevPage}
-        onNextPage={handleNextPage}
-      />
     </div>
   );
 };

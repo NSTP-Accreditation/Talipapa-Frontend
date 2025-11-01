@@ -17,15 +17,15 @@ export const LogPagination = ({
   hasNextPage,
   onPrevPage,
   onNextPage,
-} : PaginationProps ) => {
+}: PaginationProps) => {
   return (
     <div className="flex justify-center items-center gap-2 sm:gap-3 mt-4 sm:mt-6">
       <button
         onClick={onPrevPage}
         disabled={!hasPrevPage}
-        className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl font-bold flex items-center gap-1 text-xs sm:text-sm min-h-[40px] ${
+        className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl font-bold flex items-center gap-1 text-xs sm:text-sm min-h-[40px] shadow-lg transition-all ${
           hasPrevPage
-            ? 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800'
+            ? 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 hover:shadow-xl'
             : 'bg-gray-200 text-gray-500 cursor-not-allowed'
         }`}
       >
@@ -33,16 +33,16 @@ export const LogPagination = ({
         <span>Prev</span>
       </button>
 
-      <span className="px-3 py-2 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-green-50 text-green-900 font-bold text-xs sm:text-sm min-h-[40px] flex items-center">
+      <span className="px-3 py-2 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-green-50 to-green-100 text-green-900 font-bold text-xs sm:text-sm min-h-[40px] flex items-center border-2 border-green-200">
         {currentPage} / {totalPages}
       </span>
 
       <button
         onClick={onNextPage}
         disabled={!hasNextPage}
-        className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl font-bold flex items-center gap-1 text-xs sm:text-sm min-h-[40px] ${
+        className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl font-bold flex items-center gap-1 text-xs sm:text-sm min-h-[40px] shadow-lg transition-all ${
           hasNextPage
-            ? 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800'
+            ? 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 hover:shadow-xl'
             : 'bg-gray-200 text-gray-500 cursor-not-allowed'
         }`}
       >

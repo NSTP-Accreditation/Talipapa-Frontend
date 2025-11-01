@@ -135,16 +135,16 @@ const RecordFilter = ({
   };
 
   return (
-    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200 p-4 sm:p-6 mb-4 sm:mb-8">
+    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
       <div className="flex items-center gap-3 w-full">
         <div className="relative flex-1 w-full">
           <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
           </div>
           <Input
             type="text"
             placeholder="Search by Record ID or Name..."
-            className="w-full rounded-xl border-2 border-gray-300 py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
+            className="w-full rounded-xl border-2 border-gray-300 py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base bg-gradient-to-r from-white to-gray-50"
             value={searchTerm}
             onChange={handleInputChange}
           />
@@ -172,22 +172,22 @@ const RecordFilter = ({
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="flex items-center gap-2 px-3 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl text-sm sm:text-base text-gray-700 hover:bg-gray-50 transition w-36 justify-between"
+            className="flex items-center gap-2 px-3 py-2.5 sm:py-3 border-2 border-green-200 rounded-xl text-sm sm:text-base text-gray-700 hover:bg-green-50 transition w-36 justify-between bg-gradient-to-r from-white to-green-50/30 shadow-sm hover:shadow-md"
             title={`Sort: ${currentMode.label} ${currentMode.order === 'asc' ? 'ascending' : 'descending'}`}
           >
             <div className="flex items-center gap-2">
-              <ListFilter className="w-4 h-4 text-gray-600" />
-              <span className="hidden sm:inline truncate">
+              <ListFilter className="w-4 h-4 text-green-600" />
+              <span className="hidden sm:inline truncate font-semibold">
                 {currentMode.label}
               </span>
             </div>
-            <span className="text-xs">
+            <span className="text-xs text-green-600 font-bold">
               {currentMode.order === 'asc' ? '▲' : '▼'}
             </span>
           </button>
 
           {open && (
-            <div className="absolute right-0 mt-1 w-36 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-50 text-sm">
+            <div className="absolute right-0 mt-1 w-36 bg-white border-2 border-green-200 rounded-lg shadow-xl py-1 z-50 text-sm">
               {sortKeys.map((m) => (
                 <button
                   key={m.key}
@@ -200,10 +200,12 @@ const RecordFilter = ({
                     }
                     // do NOT close on select — keeps menu open per request
                   }}
-                  className={`w-full text-left px-2 py-1.5 text-gray-700 hover:bg-gray-50 flex items-center justify-between ${selectedKey === m.key ? 'bg-green-50' : ''}`}
+                  className={`w-full text-left px-2 py-1.5 text-gray-700 hover:bg-green-50 flex items-center justify-between transition-colors ${selectedKey === m.key ? 'bg-green-100 font-semibold' : ''}`}
                 >
                   <span className="truncate">{m.label}</span>
-                  <span className="text-xs text-gray-500">
+                  <span
+                    className={`text-xs ${selectedKey === m.key ? 'text-green-600 font-bold' : 'text-gray-400'}`}
+                  >
                     {selectedKey === m.key
                       ? order === 'asc'
                         ? '▲'

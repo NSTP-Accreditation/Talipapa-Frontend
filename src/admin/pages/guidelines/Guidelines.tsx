@@ -302,97 +302,110 @@ const Guidelines: React.FC = () => {
   if (pageLoading) return <FormTablePageSkeleton />;
 
   return (
-    <div className="p-3 sm:p-4 md:p-6 lg:p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
-      {/* Page header (restored to earlier larger style) */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
-        <div>
-          <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <BookOpen className="w-10 h-10 text-green-600" />
-            Guidelines
-          </h1>
-          <p className="text-md text-gray-700 mt-3 font-medium">
-            Step-by-step guides and barangay service instructions
-            <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-              {guidelines.length} {guidelines.length === 1 ? 'Guide' : 'Guides'}
-            </span>
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-6 sm:space-y-8">
+        {/* Page Header */}
+        <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+          {/* Decorative background pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-600 rounded-full -ml-24 -mb-24"></div>
+          </div>
 
-        <div className="flex items-center gap-2">
-          {showBulkActions && (
-            <button
-              onClick={handleBulkDelete}
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition"
-            >
-              <Trash2 className="w-4 h-4" />
-              Delete Selected ({selectedGuidelines.size})
-            </button>
-          )}
-
-          <button
-            onClick={handleAddGuideline}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
-          >
-            <Plus size={20} />
-            Add Guideline
-          </button>
+          <div className="relative p-5 sm:p-6 lg:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+              <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-green-500 via-green-600 to-green-700 shadow-lg ring-4 ring-green-100 animate-pulse-slow">
+                <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
+              </div>
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                  Guidelines
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600 font-medium">
+                  Step-by-step guides and barangay service instructions
+                  <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
+                    {guidelines.length}{' '}
+                    {guidelines.length === 1 ? 'Guide' : 'Guides'}
+                  </span>
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                {showBulkActions && (
+                  <button
+                    onClick={handleBulkDelete}
+                    className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-semibold"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete ({selectedGuidelines.size})
+                  </button>
+                )}
+                <button
+                  onClick={handleAddGuideline}
+                  className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg sm:rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all"
+                >
+                  <Plus size={20} />
+                  Add Guideline
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+        <GuidelinesFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filterCategory={filterCategory}
+          setFilterCategory={setFilterCategory}
+          filterDifficulty={filterDifficulty}
+          setFilterDifficulty={setFilterDifficulty}
+          categories={categories}
+          difficulties={difficulties}
+        />
+
+        {filteredGuidelines.length > 0 ? (
+          <GuidelinesList
+            guidelines={filteredGuidelines}
+            selectedGuidelines={selectedGuidelines}
+            onSelect={handleSelectGuideline}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        ) : (
+          <EmptyState
+            onAdd={handleAddGuideline}
+            searchActive={!!(searchTerm || filterCategory || filterDifficulty)}
+          />
+        )}
+
+        <GuidelineEditModal
+          guideline={editingGuideline}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSave={handleSaveGuideline}
+        />
+
+        <DeleteModal
+          guideline={deletingGuideline}
+          isOpen={isDeleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          onConfirm={handleConfirmDelete}
+        />
+
+        <ConfirmModal
+          isOpen={isBulkConfirmOpen}
+          title="Delete selected guidelines?"
+          description={
+            <p className="text-gray-700 text-base leading-relaxed">
+              Are you sure you want to delete the selected guideline(s)? This
+              action cannot be undone.
+            </p>
+          }
+          onClose={() => setIsBulkConfirmOpen(false)}
+          onConfirm={confirmBulkDelete}
+          loading={isBulkDeleting}
+          confirmLabel="Delete"
+          cancelLabel="Cancel"
+        />
       </div>
-      <GuidelinesFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        filterCategory={filterCategory}
-        setFilterCategory={setFilterCategory}
-        filterDifficulty={filterDifficulty}
-        setFilterDifficulty={setFilterDifficulty}
-        categories={categories}
-        difficulties={difficulties}
-      />
-
-      {filteredGuidelines.length > 0 ? (
-        <GuidelinesList
-          guidelines={filteredGuidelines}
-          selectedGuidelines={selectedGuidelines}
-          onSelect={handleSelectGuideline}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
-      ) : (
-        <EmptyState
-          onAdd={handleAddGuideline}
-          searchActive={!!(searchTerm || filterCategory || filterDifficulty)}
-        />
-      )}
-
-      <GuidelineEditModal
-        guideline={editingGuideline}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onSave={handleSaveGuideline}
-      />
-
-      <DeleteModal
-        guideline={deletingGuideline}
-        isOpen={isDeleteModalOpen}
-        onClose={handleCloseDeleteModal}
-        onConfirm={handleConfirmDelete}
-      />
-
-      <ConfirmModal
-        isOpen={isBulkConfirmOpen}
-        title="Delete selected guidelines?"
-        description={
-          <p className="text-gray-700 text-base leading-relaxed">
-            Are you sure you want to delete the selected guideline(s)? This
-            action cannot be undone.
-          </p>
-        }
-        onClose={() => setIsBulkConfirmOpen(false)}
-        onConfirm={confirmBulkDelete}
-        loading={isBulkDeleting}
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
-      />
     </div>
   );
 };

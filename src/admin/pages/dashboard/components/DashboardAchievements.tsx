@@ -9,18 +9,27 @@ interface Achievements {
 }
 
 const DashboardAchievements = () => {
+  const {
+    data: achievementsData,
+    loading: achievementsLoading,
+    error: achievementsErr,
+    refetch,
+  } = useFetchData<Achievements[]>(`/achievements`);
 
-  const { data: achievementsData, loading: achievementsLoading, error: achievementsErr, refetch } = useFetchData<Achievements[]>(`/achievements`);
-
-  if(!achievementsData) return null;
+  if (!achievementsData) return null;
 
   return (
-    <Card className="border border-green-200 shadow-md hover:shadow-lg transition-shadow bg-white rounded-xl overflow-hidden">
-      <CardHeader className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 pb-2 sm:pb-3 flex flex-row items-center gap-2 border-b border-gray-200">
-        <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
-        <CardTitle className="text-sm sm:text-base lg:text-lg font-bold text-gray-800">
-          Achievements
+    <Card className="shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
+      <CardHeader className="pb-4 sm:pb-6 bg-gradient-to-r from-green-50 to-white border-b-2 border-green-100">
+        <CardTitle className="text-base sm:text-xl lg:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+          <div className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-green-500 to-green-600 shadow-md">
+            <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          </div>
+          <span>Achievements</span>
         </CardTitle>
+        <p className="text-xs sm:text-sm text-gray-600 mt-2 ml-11 sm:ml-14">
+          Barangay milestones and accomplishments
+        </p>
       </CardHeader>
       <CardContent className="p-0">
         {/* Mobile Card Layout */}
@@ -49,14 +58,14 @@ const DashboardAchievements = () => {
         <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-xs sm:text-sm">
             <thead>
-              <tr className="bg-green-50">
-                <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-left text-gray-700">
+              <tr className="bg-gradient-to-r from-green-50 to-green-100">
+                <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-left text-gray-800">
                   Title
                 </th>
-                <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-left text-gray-700">
+                <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-left text-gray-800">
                   Description
                 </th>
-                <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-center text-gray-700">
+                <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-center text-gray-800">
                   Date
                 </th>
               </tr>
@@ -65,7 +74,7 @@ const DashboardAchievements = () => {
               {achievementsData.map((achievement, index) => (
                 <tr
                   key={index}
-                  className="border-b border-gray-200 last:border-0"
+                  className="border-b border-gray-200 last:border-0 hover:bg-green-50/50 transition-colors"
                 >
                   <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-semibold text-gray-900">
                     {achievement.title}
@@ -73,7 +82,7 @@ const DashboardAchievements = () => {
                   <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 text-gray-700 font-medium">
                     {achievement.description}
                   </td>
-                  <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 text-center">
+                  <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 text-center text-gray-600 font-medium">
                     {achievement.createdAt}
                   </td>
                 </tr>

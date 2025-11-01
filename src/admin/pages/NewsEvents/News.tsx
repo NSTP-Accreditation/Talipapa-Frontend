@@ -137,49 +137,63 @@ const News: React.FC = () => {
   };
 
   return (
-    <div className="p-2 sm:p-6 md:p-8 space-y-3 sm:space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2.5 sm:gap-4 mb-3 sm:mb-8">
-        <div>
-          <h1 className="text-xl sm:text-4xl font-bold text-gray-900 flex items-center gap-1.5 sm:gap-3">
-            <CalendarIcon className="w-5 h-5 sm:w-10 sm:h-10 text-green-600" />
-            <span className="leading-tight">Calendar Events & News</span>
-          </h1>
-          <p className="text-xs sm:text-lg text-gray-700 mt-1.5 sm:mt-3 font-medium">
-            Manage barangay calendar events, announcements and news
-            <span className="ml-2 sm:ml-3 px-2 sm:px-3 py-0.5 sm:py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
-              {events.length} {events.length === 1 ? 'Event' : 'Events'}
-            </span>
-          </p>
-        </div>
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="px-3 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-1.5 sm:gap-2 justify-center sm:justify-start"
-        >
-          <svg
-            className="w-4 h-4 sm:w-5 sm:h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
-          <span className="whitespace-nowrap">Add New Event</span>
-        </button>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-6 sm:space-y-8">
+        {/* Page Header */}
+        <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+          {/* Decorative background pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-600 rounded-full -ml-24 -mb-24"></div>
+          </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:gap-6">
-        <Card className="border-2 border-gray-200 shadow-lg">
-          <CardHeader className="bg-gradient-to-r from-green-50 to-white border-b-2 border-green-100">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base sm:text-2xl font-bold text-gray-900 flex items-center gap-1.5 sm:gap-2">
+          <div className="relative p-5 sm:p-6 lg:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
+              <div className="flex items-start sm:items-center gap-4 sm:gap-6">
+                <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-green-500 via-green-600 to-green-700 shadow-lg ring-4 ring-green-100 animate-pulse-slow">
+                  <CalendarIcon className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                    Calendar Events & News
+                  </h1>
+                  <p className="text-sm sm:text-base text-gray-600 font-medium">
+                    Manage barangay calendar events, announcements and news
+                    <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
+                      {events.length} {events.length === 1 ? 'Event' : 'Events'}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsAddModalOpen(true)}
+                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex items-center gap-2 whitespace-nowrap"
+              >
                 <svg
-                  className="w-4 h-4 sm:w-6 sm:h-6 text-green-600"
+                  className="w-4 h-4 sm:w-5 sm:h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                <span>Add New Event</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <Card className="rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-green-50 to-white border-b border-gray-200 p-4 sm:p-6">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg sm:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+                <svg
+                  className="w-5 h-5 sm:w-6 sm:h-6 text-green-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -202,8 +216,8 @@ const News: React.FC = () => {
               )}
             </div>
           </CardHeader>
-          <CardContent className="p-2.5 sm:p-6">
-            <div className="space-y-2.5 sm:space-y-5">
+          <CardContent className="p-4 sm:p-6">
+            <div className="space-y-4 sm:space-y-5">
               {events.length > 0 ? (
                 events
                   .sort(
@@ -214,7 +228,7 @@ const News: React.FC = () => {
                   .map((event, index) => (
                     <div
                       key={event.id}
-                      className={`relative p-2.5 sm:p-6 border-l-4 rounded-lg sm:rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${getCategoryColor(
+                      className={`relative p-4 sm:p-6 border-l-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 ${getCategoryColor(
                         event.category
                       )} group`}
                     >
@@ -324,7 +338,7 @@ const News: React.FC = () => {
                         <div className="flex flex-col gap-1.5 sm:gap-2 flex-shrink-0">
                           <button
                             onClick={() => setEditingEvent(event)}
-                            className="p-2 sm:p-2.5 bg-white hover:bg-blue-50 text-blue-600 border-2 border-blue-300 hover:border-blue-500 rounded-lg sm:rounded-xl transition-all hover:shadow-md"
+                            className="p-2 sm:p-2.5 bg-white hover:bg-green-50 text-green-600 border-2 border-green-300 hover:border-green-500 rounded-lg sm:rounded-xl transition-all hover:shadow-md"
                             title="Edit Event"
                           >
                             <svg
@@ -412,24 +426,24 @@ const News: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+
+        <EventModal
+          event={editingEvent}
+          isOpen={!!editingEvent || isAddModalOpen}
+          onClose={() => {
+            setEditingEvent(null);
+            setIsAddModalOpen(false);
+          }}
+          onSave={handleSaveEvent}
+        />
+
+        <DeleteModal
+          event={deletingEvent}
+          isOpen={!!deletingEvent}
+          onClose={() => setDeletingEvent(null)}
+          onConfirm={handleDeleteEvent}
+        />
       </div>
-
-      <EventModal
-        event={editingEvent}
-        isOpen={!!editingEvent || isAddModalOpen}
-        onClose={() => {
-          setEditingEvent(null);
-          setIsAddModalOpen(false);
-        }}
-        onSave={handleSaveEvent}
-      />
-
-      <DeleteModal
-        event={deletingEvent}
-        isOpen={!!deletingEvent}
-        onClose={() => setDeletingEvent(null)}
-        onConfirm={handleDeleteEvent}
-      />
     </div>
   );
 };

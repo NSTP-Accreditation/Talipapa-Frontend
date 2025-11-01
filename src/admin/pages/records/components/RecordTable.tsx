@@ -202,15 +202,15 @@ const RecordTable = ({
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between items-center bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200 px-4 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-0">
+      <div className="flex flex-col sm:flex-row justify-between items-center bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 px-4 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-0 hover:shadow-xl transition-shadow">
         <div className="text-xs sm:text-sm text-gray-600 font-medium text-center sm:text-left">
           Showing{' '}
-          <span className="font-bold text-gray-900">{startIndex + 1}</span> to{' '}
-          <span className="font-bold text-gray-900">
+          <span className="font-bold text-green-600">{startIndex + 1}</span> to{' '}
+          <span className="font-bold text-green-600">
             {Math.min(startIndex + recordsPerPage, showingRecords.length)}
           </span>{' '}
           of{' '}
-          <span className="font-bold text-gray-900">
+          <span className="font-bold text-green-600">
             {showingRecords.length}
           </span>{' '}
           records
@@ -222,12 +222,12 @@ const RecordTable = ({
             size="sm"
             onClick={prevPage}
             disabled={currentPage === 1}
-            className="px-3 sm:px-4 py-2 border-2 border-gray-300 rounded-lg font-semibold hover:bg-green-50 hover:border-green-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
+            className="px-3 sm:px-4 py-2 border-2 border-green-200 rounded-lg font-semibold hover:bg-green-50 hover:border-green-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm bg-white"
           >
             ← <span className="hidden sm:inline">Previous</span>
           </Button>
 
-          <div className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 bg-green-100 border-2 border-green-300 rounded-lg">
+          <div className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-green-100 to-green-200 border-2 border-green-300 rounded-lg shadow-sm">
             <span className="text-xs sm:text-sm font-bold text-green-800">
               {currentPage} / {totalPages || 1}
             </span>
@@ -238,7 +238,7 @@ const RecordTable = ({
             size="sm"
             onClick={nextPage}
             disabled={currentPage === totalPages || totalPages === 0}
-            className="px-3 sm:px-4 py-2 border-2 border-gray-300 rounded-lg font-semibold hover:bg-green-50 hover:border-green-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
+            className="px-3 sm:px-4 py-2 border-2 border-green-200 rounded-lg font-semibold hover:bg-green-50 hover:border-green-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm bg-white"
           >
             <span className="hidden sm:inline">Next</span> →
           </Button>

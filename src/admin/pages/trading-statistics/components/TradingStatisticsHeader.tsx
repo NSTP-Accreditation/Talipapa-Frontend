@@ -378,35 +378,48 @@ const TradingStatisticsHeader = ({
 
   return (
     <>
-      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1b4c2e] flex items-center gap-2 sm:gap-3">
-            <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-[#1b4c2e]" />
-            Trading Statistics
-          </h1>
-          <p className="text-sm sm:text-base md:text-lg text-gray-600 mt-1 sm:mt-2 font-medium">
-            Overview of recent trading activity and metrics
-          </p>
+      <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+        {/* Decorative background pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full -mr-32 -mt-32"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-600 rounded-full -ml-24 -mb-24"></div>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3">
-          <button
-            onClick={() => setShowDatePicker(true)}
-            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3 rounded-lg sm:rounded-xl flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-          >
-            <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden xs:inline">Date Report</span>
-            <span className="xs:hidden">Date</span>
-          </button>
-          <button
-            onClick={downloadPDFReport}
-            className="bg-gradient-to-r from-[#1b4c2e] to-[#2d6b47] hover:from-[#2d6b47] hover:to-[#1b4c2e] text-white px-3 py-2 sm:px-4 sm:py-2.5 md:px-6 md:py-3 rounded-lg sm:rounded-xl flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[#1b4c2e] focus:ring-offset-2"
-          >
-            <Download className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="hidden xs:inline">Full Report</span>
-            <span className="xs:hidden">PDF</span>
-          </button>
+
+        <div className="relative p-5 sm:p-6 lg:p-8">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 sm:gap-6">
+            <div className="flex items-center gap-4 sm:gap-6 flex-1">
+              <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-green-500 via-green-600 to-green-700 shadow-lg ring-4 ring-green-100 animate-pulse-slow">
+                <BarChart3 className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
+              </div>
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                  Trading Statistics
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600 font-medium">
+                  Overview of recent trading activity and metrics
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full lg:w-auto">
+              <button
+                onClick={() => setShowDatePicker(true)}
+                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base font-bold shadow-md hover:shadow-xl transition-all min-h-[44px]"
+              >
+                <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Date Report</span>
+              </button>
+              <button
+                onClick={downloadPDFReport}
+                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base font-bold shadow-md hover:shadow-xl transition-all hover:scale-105 min-h-[44px]"
+              >
+                <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Full Report</span>
+              </button>
+            </div>
+          </div>
         </div>
-      </header>
+      </div>
 
       {/* Date Picker Modal */}
       {showDatePicker &&
@@ -414,7 +427,7 @@ const TradingStatisticsHeader = ({
           <div className="fixed inset-0 z-[1005] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in duration-200">
               {/* Header */}
-              <div className="bg-gradient-to-r from-[#1b4c2e] to-[#2d6b47] px-6 py-4 flex justify-between items-center">
+              <div className="bg-gradient-to-r from-green-500 via-green-600 to-green-700 px-6 py-4 flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <Calendar className="w-6 h-6 text-white" />
                   <h2 className="text-xl font-bold text-white">
@@ -440,7 +453,7 @@ const TradingStatisticsHeader = ({
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
                     max={dayjs().format('YYYY-MM-DD')}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1b4c2e] focus:border-transparent transition-all text-base"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-base"
                   />
                   <p className="mt-2 text-xs text-gray-500">
                     Select a date to generate a detailed trading report
@@ -487,7 +500,7 @@ const TradingStatisticsHeader = ({
                 <button
                   onClick={downloadSpecificDateReport}
                   disabled={isGenerating}
-                  className="px-6 py-2 bg-gradient-to-r from-[#1b4c2e] to-[#2d6b47] hover:from-[#2d6b47] hover:to-[#1b4c2e] text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="px-6 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                   {isGenerating ? (
                     <>

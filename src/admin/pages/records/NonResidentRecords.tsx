@@ -179,257 +179,279 @@ const NonResidentRecords: React.FC = () => {
 
   return (
     <>
-      <div className="p-3 sm:p-6 md:p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen space-y-4 sm:space-y-8">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-4 sm:mb-8">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-              <UserRoundPen className="w-7 h-7 sm:w-10 sm:h-10 text-green-600" />
-              Non Resident Records
-            </h1>
-            <p className="text-xs sm:text-base text-gray-700 font-medium">
-              List of non-resident records
-              <span className="ml-2 sm:ml-3 px-2 sm:px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
-                {records.length} {records.length === 1 ? 'Record' : 'Records'}
-              </span>
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
-            <Button
-              onClick={openAddModal}
-              className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm flex items-center justify-center gap-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
-            >
-              + Add Non-Resident
-            </Button>
-
-            <Button
-              onClick={() => {
-                // export action placeholder
-              }}
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
-            >
-              <Download className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="hidden sm:inline">Export Excel Report</span>
-              <span className="sm:hidden">Export</span>
-            </Button>
-          </div>
-        </div>
-
-        {/* Search */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200 p-4 sm:p-6 mb-4 sm:mb-8">
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1 w-full">
-              <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                <Search className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
-              </div>
-              <Input
-                type="text"
-                placeholder="Search by Record ID or Name..."
-                className="w-full rounded-xl border-2 border-gray-300 py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
-                value={searchTerm}
-                onChange={(e: any) => setSearchTerm(e.target.value)}
-              />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+        <div className="space-y-4 sm:space-y-6">
+          {/* Header */}
+          <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+            {/* Decorative background pattern */}
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full -mr-32 -mt-32"></div>
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-600 rounded-full -ml-24 -mb-24"></div>
             </div>
 
-            <div
-              className="relative"
-              ref={menuRef}
-              onMouseEnter={() => {
-                if (hoverCloseTimeout.current) {
-                  window.clearTimeout(hoverCloseTimeout.current);
-                  hoverCloseTimeout.current = null;
-                }
-                setMenuOpen(true);
-              }}
-              onMouseLeave={() => {
-                hoverCloseTimeout.current = window.setTimeout(() => {
-                  setMenuOpen(false);
-                  hoverCloseTimeout.current = null;
-                }, 150);
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => setMenuOpen((v) => !v)}
-                className="flex items-center gap-2 px-3 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl text-sm sm:text-base text-gray-700 hover:bg-gray-50 transition w-36 justify-between"
-                title={`Sort: ${currentMode.label} ${currentMode.order === 'asc' ? 'ascending' : 'descending'}`}
-              >
-                <div className="flex items-center gap-2">
-                  <ListFilter className="w-4 h-4 text-gray-600" />
-                  <span className="hidden sm:inline truncate">
-                    {currentMode.label}
-                  </span>
-                </div>
-                <span className="text-xs">
-                  {currentMode.order === 'asc' ? '▲' : '▼'}
-                </span>
-              </button>
-
-              {menuOpen && (
-                <div className="absolute right-0 mt-1 w-36 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-50 text-sm">
-                  {sortKeys.map((m) => (
-                    <button
-                      key={m.key}
-                      onClick={() => {
-                        if (selectedKey === m.key)
-                          setOrder((o) => (o === 'asc' ? 'desc' : 'asc'));
-                        else {
-                          setSelectedKey(m.key);
-                          setOrder('asc');
-                        }
-                        // keep menu open after selection per request
-                      }}
-                      className={`w-full text-left px-2 py-1.5 text-gray-700 hover:bg-gray-50 flex items-center justify-between ${selectedKey === m.key ? 'bg-green-50' : ''}`}
-                    >
-                      <span className="truncate">{m.label}</span>
-                      <span className="text-xs text-gray-500">
-                        {selectedKey === m.key
-                          ? order === 'asc'
-                            ? '▲'
-                            : '▼'
-                          : '—'}
+            <div className="relative p-5 sm:p-6 lg:p-8">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 sm:gap-6">
+                <div className="flex items-center gap-4 sm:gap-6 flex-1">
+                  <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-green-500 via-green-600 to-green-700 shadow-lg ring-4 ring-green-100 animate-pulse-slow">
+                    <UserRoundPen className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                      Non-Resident Records
+                    </h1>
+                    <p className="text-sm sm:text-base text-gray-600 font-medium flex items-center flex-wrap gap-2">
+                      <span>Manage non-resident information</span>
+                      <span className="px-2 sm:px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
+                        {records.length}{' '}
+                        {records.length === 1 ? 'Record' : 'Records'}
                       </span>
-                    </button>
-                  ))}
+                    </p>
+                  </div>
                 </div>
-              )}
+
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full lg:w-auto">
+                  <Button
+                    onClick={openAddModal}
+                    className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 rounded-xl font-bold shadow-md hover:shadow-xl transition-all min-h-[44px]"
+                  >
+                    <span className="text-lg sm:text-xl">+</span>
+                    <span>Add Non-Resident</span>
+                  </Button>
+
+                  <Button
+                    onClick={() => {
+                      // export action placeholder
+                    }}
+                    className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold shadow-md hover:shadow-xl transition-all hover:scale-105 min-h-[44px]"
+                  >
+                    <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline">
+                      Export Excel Report
+                    </span>
+                    <span className="sm:hidden">Export</span>
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Simple listing */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200">
-          <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-green-200 scrollbar-track-green-50">
-            <table className="w-full text-xs sm:text-sm min-w-[1000px]">
-              <thead className="bg-gradient-to-r from-green-50 to-green-100 border-b-2 border-green-200">
-                <tr>
-                  <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                    Record ID
-                  </th>
-                  <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                    Type
-                  </th>
-                  <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                    Contact
-                  </th>
-                  <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                    Address
-                  </th>
-                  <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                    Gender
-                  </th>
-                  <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                    Created At
-                  </th>
-                  <th className="px-2 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
+          {/* Search */}
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
+            <div className="flex items-center gap-3">
+              <div className="relative flex-1 w-full">
+                <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <Search className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
+                </div>
+                <Input
+                  type="text"
+                  placeholder="Search by Record ID or Name..."
+                  className="w-full rounded-xl border-2 border-gray-300 py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base bg-gradient-to-r from-white to-gray-50"
+                  value={searchTerm}
+                  onChange={(e: any) => setSearchTerm(e.target.value)}
+                />
+              </div>
 
-              <tbody className="divide-y divide-gray-200">
-                {records.length > 0 ? (
-                  records.map((r: any, index: number) => (
-                    <tr
-                      key={r._id || index}
-                      className="hover:bg-green-50 transition-colors duration-150"
-                    >
-                      <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                        <span className="text-xs sm:text-sm font-bold text-green-700 bg-green-100 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-green-200">
-                          {r.record_id || r._id}
+              <div
+                className="relative"
+                ref={menuRef}
+                onMouseEnter={() => {
+                  if (hoverCloseTimeout.current) {
+                    window.clearTimeout(hoverCloseTimeout.current);
+                    hoverCloseTimeout.current = null;
+                  }
+                  setMenuOpen(true);
+                }}
+                onMouseLeave={() => {
+                  hoverCloseTimeout.current = window.setTimeout(() => {
+                    setMenuOpen(false);
+                    hoverCloseTimeout.current = null;
+                  }, 150);
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setMenuOpen((v) => !v)}
+                  className="flex items-center gap-2 px-3 py-2.5 sm:py-3 border-2 border-green-200 rounded-xl text-sm sm:text-base text-gray-700 hover:bg-green-50 transition w-36 justify-between bg-gradient-to-r from-white to-green-50/30 shadow-sm hover:shadow-md"
+                  title={`Sort: ${currentMode.label} ${currentMode.order === 'asc' ? 'ascending' : 'descending'}`}
+                >
+                  <div className="flex items-center gap-2">
+                    <ListFilter className="w-4 h-4 text-green-600" />
+                    <span className="hidden sm:inline truncate font-semibold">
+                      {currentMode.label}
+                    </span>
+                  </div>
+                  <span className="text-xs text-green-600 font-bold">
+                    {currentMode.order === 'asc' ? '▲' : '▼'}
+                  </span>
+                </button>
+
+                {menuOpen && (
+                  <div className="absolute right-0 mt-1 w-36 bg-white border-2 border-green-200 rounded-lg shadow-xl py-1 z-50 text-sm">
+                    {sortKeys.map((m) => (
+                      <button
+                        key={m.key}
+                        onClick={() => {
+                          if (selectedKey === m.key)
+                            setOrder((o) => (o === 'asc' ? 'desc' : 'asc'));
+                          else {
+                            setSelectedKey(m.key);
+                            setOrder('asc');
+                          }
+                          // keep menu open after selection per request
+                        }}
+                        className={`w-full text-left px-2 py-1.5 text-gray-700 hover:bg-green-50 flex items-center justify-between transition-colors ${selectedKey === m.key ? 'bg-green-100 font-semibold' : ''}`}
+                      >
+                        <span className="truncate">{m.label}</span>
+                        <span
+                          className={`text-xs ${selectedKey === m.key ? 'text-green-600 font-bold' : 'text-gray-400'}`}
+                        >
+                          {selectedKey === m.key
+                            ? order === 'asc'
+                              ? '▲'
+                              : '▼'
+                            : '—'}
                         </span>
-                      </td>
-                      <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-md">
-                            {(
-                              r.firstName ||
-                              r.first_name ||
-                              r.first ||
-                              ''
-                            ).charAt(0)}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Simple listing */}
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200">
+            <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-green-200 scrollbar-track-green-50">
+              <table className="w-full text-xs sm:text-sm min-w-[1000px]">
+                <thead className="bg-gradient-to-r from-green-50 to-green-100 border-b-2 border-green-200">
+                  <tr>
+                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
+                      Record ID
+                    </th>
+                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
+                      Type
+                    </th>
+                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
+                      Contact
+                    </th>
+                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
+                      Address
+                    </th>
+                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
+                      Gender
+                    </th>
+                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
+                      Created At
+                    </th>
+                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody className="divide-y divide-gray-200">
+                  {records.length > 0 ? (
+                    records.map((r: any, index: number) => (
+                      <tr
+                        key={r._id || index}
+                        className="hover:bg-green-50 transition-colors duration-150"
+                      >
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                          <span className="text-xs sm:text-sm font-bold text-green-700 bg-green-100 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-green-200">
+                            {r.record_id || r._id}
+                          </span>
+                        </td>
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-md">
+                              {(
+                                r.firstName ||
+                                r.first_name ||
+                                r.first ||
+                                ''
+                              ).charAt(0)}
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-xs sm:text-sm font-semibold text-gray-900">
+                                {`${r.firstName || r.first_name || r.first || ''} ${r.middleName || r.middle_name || ''} ${r.lastName || r.last_name || r.last || ''}`}
+                                {(r.suffix || r.name_suffix) && (
+                                  <span className="ml-1 text-gray-600">
+                                    {r.suffix || r.name_suffix}
+                                  </span>
+                                )}
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex flex-col">
-                            <span className="text-xs sm:text-sm font-semibold text-gray-900">
-                              {`${r.firstName || r.first_name || r.first || ''} ${r.middleName || r.middle_name || ''} ${r.lastName || r.last_name || r.last || ''}`}
-                              {(r.suffix || r.name_suffix) && (
-                                <span className="ml-1 text-gray-600">
-                                  {r.suffix || r.name_suffix}
-                                </span>
-                              )}
-                            </span>
+                        </td>
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                          <span className="text-xs sm:text-sm font-semibold text-gray-900">
+                            Non-Resident
+                          </span>
+                        </td>
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                          <span className="text-xs sm:text-sm text-gray-700 font-medium">
+                            {r.contact_number || '-'}
+                          </span>
+                        </td>
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 max-w-[200px]">
+                          <span className="text-xs sm:text-sm text-gray-700 font-medium line-clamp-2">
+                            {r.address || '-'}
+                          </span>
+                        </td>
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                          <span className="text-xs sm:text-sm text-gray-700 font-medium capitalize">
+                            {r.gender || '-'}
+                          </span>
+                        </td>
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                          <span className="text-xs sm:text-sm text-gray-700 font-medium">
+                            {r.createdAt || r.created_at
+                              ? new Date(
+                                  r.createdAt || r.created_at
+                                ).toLocaleDateString()
+                              : '-'}
+                          </span>
+                        </td>
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                          <div className="flex items-center justify-center gap-2">
+                            <Button className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all">
+                              <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                              <span className="hidden sm:inline">Edit</span>
+                            </Button>
+                            <Button className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all">
+                              <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                              <span className="hidden sm:inline">Delete</span>
+                            </Button>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                        <span className="text-xs sm:text-sm font-semibold text-gray-900">
-                          Non-Resident
-                        </span>
-                      </td>
-                      <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                        <span className="text-xs sm:text-sm text-gray-700 font-medium">
-                          {r.contact_number || '-'}
-                        </span>
-                      </td>
-                      <td className="px-2 sm:px-6 py-3 sm:py-4 max-w-[200px]">
-                        <span className="text-xs sm:text-sm text-gray-700 font-medium line-clamp-2">
-                          {r.address || '-'}
-                        </span>
-                      </td>
-                      <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                        <span className="text-xs sm:text-sm text-gray-700 font-medium capitalize">
-                          {r.gender || '-'}
-                        </span>
-                      </td>
-                      <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                        <span className="text-xs sm:text-sm text-gray-700 font-medium">
-                          {r.createdAt || r.created_at
-                            ? new Date(
-                                r.createdAt || r.created_at
-                              ).toLocaleDateString()
-                            : '-'}
-                        </span>
-                      </td>
-                      <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                        <div className="flex items-center justify-center gap-2">
-                          <Button className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all">
-                            <User className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="hidden sm:inline">Edit</span>
-                          </Button>
-                          <Button className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all">
-                            <X className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="hidden sm:inline">Delete</span>
-                          </Button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={8}
+                        className="px-2 sm:px-6 py-8 sm:py-12 text-center"
+                      >
+                        <div className="flex flex-col items-center gap-2 sm:gap-3">
+                          <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                            <Search className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
+                          </div>
+                          <p className="text-gray-500 font-medium text-sm sm:text-base">
+                            No records found.
+                          </p>
+                          <p className="text-xs sm:text-sm text-gray-400">
+                            Try adjusting your search criteria
+                          </p>
                         </div>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={8}
-                      className="px-2 sm:px-6 py-8 sm:py-12 text-center"
-                    >
-                      <div className="flex flex-col items-center gap-2 sm:gap-3">
-                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gray-100 flex items-center justify-center">
-                          <Search className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
-                        </div>
-                        <p className="text-gray-500 font-medium text-sm sm:text-base">
-                          No records found.
-                        </p>
-                        <p className="text-xs sm:text-sm text-gray-400">
-                          Try adjusting your search criteria
-                        </p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

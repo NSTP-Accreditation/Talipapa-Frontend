@@ -3,10 +3,7 @@ import { useAuthFetch } from '../../hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
 import { sanitizeName, validateName } from '@/utils/validation';
 import FloatingLabelInput from '../../components/FloatingLabelInput';
-import {
-  Spinner,
-  InlineLoader,
-} from '@/components/LoadingSkeletons';
+import { Spinner, InlineLoader } from '@/components/LoadingSkeletons';
 import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { ArrowLeftRight, Search } from 'lucide-react';
@@ -23,7 +20,9 @@ const SwapItem = () => {
   const [lastName, setLastName] = useState('');
   const [lastNameError, setLastNameError] = useState('');
   const [recordData, setRecordData] = useState<RecordInterface | null>(null);
-  const [availableProducts, setAvailableProducts] = useState<ProductInterface[]>([]);
+  const [availableProducts, setAvailableProducts] = useState<
+    ProductInterface[]
+  >([]);
   const [quantityInputs, setQuantityInputs] = useState<Record<string, number>>(
     {}
   );
@@ -154,111 +153,119 @@ const SwapItem = () => {
   };
 
   return (
-    <main className="flex flex-col gap-4 sm:gap-8 p-4 sm:p-8">
-      {/* Header Section */}
-      <div>
-        <div className="flex items-center gap-2 sm:gap-3">
-          <ArrowLeftRight className="w-6 h-6 sm:w-10 sm:h-10 text-green-600" />
-          <h1 className="font-bold text-2xl sm:text-4xl tracking-wide text-gray-900">
-            Trade Points
-          </h1>
-        </div>
-        <div className="mt-2 sm:mt-3">
-          <p className="text-sm sm:text-lg" style={{ color: '#838383' }}>
-            Exchange accumulated points for community products and rewards
-          </p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-6 sm:space-y-8">
+        {/* Header Section */}
+        <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+          {/* Decorative background pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-600 rounded-full -ml-24 -mb-24"></div>
+          </div>
 
-      {/* Search Form */}
-      <form onSubmit={handleFindRecord}>
-        <div className="bg-white rounded-xl shadow-md p-4 sm:p-8">
-          <h5
-            className="text-base sm:text-lg font-semibold mb-4 sm:mb-6"
-            style={{ color: '#1a4d2e' }}
-          >
-            Find Resident Record
-          </h5>
-          <div className="flex flex-col sm:flex-row items-stretch gap-3 sm:gap-5 w-full">
-            {/* Record ID with BT- prefix using FloatingLabelInput */}
-            <FloatingLabelInput
-              label="Record ID"
-              value={recordIdRest}
-              onChange={(e) => {
-                const digitsOnly = e.target.value.replace(/\D/g, '');
-                const limited = digitsOnly.slice(0, 4);
-                setRecordIdRest(limited);
-              }}
-              required
-              prefix="BT-"
-              inputClassName="placeholder:text-gray-400"
-            />
-
-            <FloatingLabelInput
-              label="Last Name"
-              value={lastName}
-              onChange={(e) => {
-                const filtered = sanitizeName(e.target.value);
-                setLastName(filtered);
-                // live-validate
-                const { valid, message } = validateName(filtered, true);
-                setLastNameError(valid ? '' : message || 'Invalid Last Name');
-              }}
-              required
-            />
-            {lastNameError ? (
-              <p className="text-xs sm:text-sm text-red-600 mt-1">
-                {lastNameError}
-              </p>
-            ) : null}
-
-            <button
-              className="text-sm sm:text-lg font-semibold text-white px-6 sm:px-10 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              style={{ backgroundColor: '#1a4d2e' }}
-              type="submit"
-              disabled={searchingRecord}
-            >
-              {searchingRecord ? (
-                <>
-                  <Spinner size="sm" color="#ffffff" />
-                  <span className="text-sm sm:text-base">Searching...</span>
-                </>
-              ) : (
-                <>
-                  <Search className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="text-sm sm:text-base">Find Record</span>
-                </>
-              )}
-            </button>
+          <div className="relative p-5 sm:p-6 lg:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+              <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-green-500 via-green-600 to-green-700 shadow-lg ring-4 ring-green-100 animate-pulse-slow">
+                <ArrowLeftRight className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
+              </div>
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                  Trade Points
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600 font-medium">
+                  Exchange accumulated points for community products and rewards
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-      </form>
 
-      {/* Content Section */}
-      <div className="flex flex-col lg:flex-row gap-4 sm:gap-8">
-        {searchingRecord ? (
-          <InlineLoader text="Searching for record..." />
-        ) : null}
-        {!searchingRecord && (
-          <>
-            {recordData && (
-              <RecordInformation
-                recordData={recordData}
-                findProducts={findProducts}
+        {/* Search Form */}
+        <form onSubmit={handleFindRecord}>
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-8">
+            <h5 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-green-700">
+              Find Resident Record
+            </h5>
+            <div className="flex flex-col sm:flex-row items-stretch gap-3 sm:gap-5 w-full">
+              {/* Record ID with BT- prefix using FloatingLabelInput */}
+              <FloatingLabelInput
+                label="Record ID"
+                value={recordIdRest}
+                onChange={(e) => {
+                  const digitsOnly = e.target.value.replace(/\D/g, '');
+                  const limited = digitsOnly.slice(0, 4);
+                  setRecordIdRest(limited);
+                }}
+                required
+                prefix="BT-"
+                inputClassName="placeholder:text-gray-400"
               />
-            )}
 
-            <Availableproducts
-              availableProducts={availableProducts}
-              quantityInputs={quantityInputs}
-              onQuantityInput={handleQuantityInput}
-              onRedeem={handleRedeem}
-              redeemInProgress={redeemInProgress}
-            />
-          </>
-        )}
+              <FloatingLabelInput
+                label="Last Name"
+                value={lastName}
+                onChange={(e) => {
+                  const filtered = sanitizeName(e.target.value);
+                  setLastName(filtered);
+                  // live-validate
+                  const { valid, message } = validateName(filtered, true);
+                  setLastNameError(valid ? '' : message || 'Invalid Last Name');
+                }}
+                required
+              />
+              {lastNameError ? (
+                <p className="text-xs sm:text-sm text-red-600 mt-1">
+                  {lastNameError}
+                </p>
+              ) : null}
+
+              <button
+                className="text-sm sm:text-lg font-semibold text-white px-6 sm:px-10 py-2 rounded-lg bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                type="submit"
+                disabled={searchingRecord}
+              >
+                {searchingRecord ? (
+                  <>
+                    <Spinner size="sm" color="#ffffff" />
+                    <span className="text-sm sm:text-base">Searching...</span>
+                  </>
+                ) : (
+                  <>
+                    <Search className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="text-sm sm:text-base">Find Record</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </form>
+
+        {/* Content Section */}
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-8">
+          {searchingRecord ? (
+            <InlineLoader text="Searching for record..." />
+          ) : null}
+          {!searchingRecord && (
+            <>
+              {recordData && (
+                <RecordInformation
+                  recordData={recordData}
+                  findProducts={findProducts}
+                />
+              )}
+
+              <Availableproducts
+                availableProducts={availableProducts}
+                quantityInputs={quantityInputs}
+                onQuantityInput={handleQuantityInput}
+                onRedeem={handleRedeem}
+                redeemInProgress={redeemInProgress}
+              />
+            </>
+          )}
+        </div>
       </div>
-    </main>
+    </div>
   );
 };
 

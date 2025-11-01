@@ -280,57 +280,61 @@ export default function TalipapaNatin() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
-      {/* Header */}
-      <div className="sticky top-0 z-[50] bg-white/80 backdrop-blur-lg border-b border-slate-200/50 shadow-sm">
-        <div className="px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#1b4c2e] to-[#2d5a3d] flex items-center justify-center shadow-lg">
-                <Leaf className="w-6 h-6 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-6 sm:space-y-8">
+        {/* Page Header */}
+        <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+          {/* Decorative background pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-600 rounded-full -ml-24 -mb-24"></div>
+          </div>
+
+          <div className="relative p-5 sm:p-6 lg:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+              <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-green-500 via-green-600 to-green-700 shadow-lg ring-4 ring-green-100 animate-pulse-slow">
+                <Leaf className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
               </div>
-              <div>
-                <h1 className="text-2xl lg:text-3xl font-bold text-slate-900">
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                   TalipapaNatin Program
                 </h1>
-                <p className="text-sm text-slate-600 font-medium">
+                <p className="text-sm sm:text-base text-gray-600 font-medium">
                   "May Buhay sa Basura ng Barangay" - Community Sustainability
                   Programs
                 </p>
               </div>
             </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              {hasUnsavedChanges && (
-                <button
-                  onClick={handleSaveAll}
-                  className="px-4 py-2 bg-gradient-to-r from-[#1b4c2e] to-[#2d5a3d] hover:from-[#2d5a3d] hover:to-[#1b4c2e] text-white rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2 text-sm font-semibold"
-                >
-                  <Save className="w-4 h-4" />
-                  Save All
-                </button>
-              )}
-
-              <button
-                onClick={handleAddProgram}
-                className="px-4 py-2 bg-gradient-to-r from-[#1b4c2e] to-[#2d5a3d] hover:from-[#2d5a3d] hover:to-[#1b4c2e] text-white rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2 text-sm font-semibold"
-              >
-                <Plus className="w-4 h-4" />
-                Add Program
-              </button>
-            </div>
           </div>
         </div>
-      </div>
 
-      <div className="px-4 sm:px-6 lg:px-8 py-6">
-        <SearchBar query={searchQuery} onChange={setSearchQuery} />
-        <div className="mb-6">
-          <div className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm font-medium inline-block">
+        {/* Action Buttons Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-white rounded-xl shadow-md border border-gray-200 p-4">
+          <div className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm font-medium">
             {filteredPrograms?.length} program
             {filteredPrograms?.length !== 1 ? 's' : ''}
           </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {hasUnsavedChanges && (
+              <button
+                onClick={handleSaveAll}
+                className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2 text-sm font-semibold"
+              >
+                <Save className="w-4 h-4" />
+                Save All
+              </button>
+            )}
+            <button
+              onClick={handleAddProgram}
+              className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2 text-sm font-semibold"
+            >
+              <Plus className="w-4 h-4" />
+              Add Program
+            </button>
+          </div>
         </div>
+
+        <SearchBar query={searchQuery} onChange={setSearchQuery} />
 
         {/* Programs Display */}
         {filteredPrograms?.length === 0 ? (
@@ -349,7 +353,7 @@ export default function TalipapaNatin() {
             {programs.length === 0 && (
               <button
                 onClick={handleAddProgram}
-                className="px-6 py-3 bg-gradient-to-r from-[#1b4c2e] to-[#2d5a3d] hover:from-[#2d5a3d] hover:to-[#1b4c2e] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+                className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
                 Add Your First Program
@@ -374,7 +378,7 @@ export default function TalipapaNatin() {
       {/* Floating Add Button (Mobile) */}
       <button
         onClick={handleAddProgram}
-        className="fixed right-6 bottom-6 sm:hidden w-14 h-14 rounded-full bg-gradient-to-br from-[#1b4c2e] to-[#2d5a3d] hover:from-[#2d5a3d] hover:to-[#1b4c2e] text-white shadow-2xl hover:shadow-xl transition-all hover:scale-110 flex items-center justify-center z-[40]"
+        className="fixed right-6 bottom-6 sm:hidden w-14 h-14 rounded-full bg-gradient-to-br from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-2xl hover:shadow-xl transition-all hover:scale-110 flex items-center justify-center z-[40]"
         aria-label="Add Program"
       >
         <Plus className="w-6 h-6" />
