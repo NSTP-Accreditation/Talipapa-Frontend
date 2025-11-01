@@ -176,18 +176,29 @@ const MenuBar: React.FC<MenuBarProps> = ({
     );
   };
 
+  const isMobileViewport = () => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return window.matchMedia('(max-width: 639px)').matches;
+    } catch (err) {
+      return window.innerWidth <= 640;
+    }
+  };
+
   const handleItemClick = (item: MenuItem) => {
     if (item.submenu) {
       toggleExpanded(item.label);
     } else if (item.onClick) {
       item.onClick();
+      if (onClose && isMobileViewport()) onClose();
     } else if (item.href) {
       navigate(item.href);
+      if (onClose && isMobileViewport()) onClose();
     }
   };
 
   const handleLogout = () => {
-    logout(); 
+    logout();
   };
 
   return (
@@ -280,7 +291,10 @@ const MenuBar: React.FC<MenuBarProps> = ({
                         />
                       )}
                       <button
-                        onClick={() => navigate(subItem.href!)}
+                        onClick={() => {
+                          navigate(subItem.href!);
+                          if (onClose && isMobileViewport()) onClose();
+                        }}
                         className={cn(
                           'w-full flex items-center space-x-2.5 sm:space-x-3 pr-3 py-2.5 sm:pr-4 sm:py-3 text-left transition-all duration-300 ease-in-out text-sm sm:text-base rounded-xl',
                           'hover:shadow-md hover:bg-white/15 hover:text-white hover:font-semibold',
