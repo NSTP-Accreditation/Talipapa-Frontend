@@ -18,18 +18,20 @@ import { useAuthFetch } from '../../hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
 import { createPortal } from 'react-dom';
 import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
+import EditEstablishmentModal from './components/EditEstablishmentModal';
+import DeleteEstablishmentModal from './components/DeleteEstablishmentModal';
 
 const EstablishmentRecords: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const { data, loading, refetch } = useFetchData(
-    '/establishment'
-  );
+  const { data, loading, refetch } = useFetchData('/establishment');
 
   const authFetch = useAuthFetch();
   const { success, error: showError } = useToast();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [editItem, setEditItem] = useState<any | null>(null);
+  const [deleteItem, setDeleteItem] = useState<any | null>(null);
   const [form, setForm] = useState({
     name: '',
     type: '',
@@ -39,9 +41,7 @@ const EstablishmentRecords: React.FC = () => {
   });
 
   // Ensure we only show establishment records even if backend returns mixed data
-  const records: any[] = Array.isArray(data)
-    ? data
-    : [];
+  const records: any[] = Array.isArray(data) ? data : [];
 
   const openAddModal = () => {
     setForm({
@@ -227,11 +227,17 @@ const EstablishmentRecords: React.FC = () => {
                       </td>
                       <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                         <div className="flex items-center justify-center gap-2">
-                          <Button className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all">
+                          <Button
+                            onClick={() => setEditItem(r)}
+                            className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
+                          >
                             <User className="w-3 h-3 sm:w-4 sm:h-4" />
                             <span className="hidden sm:inline">Edit</span>
                           </Button>
-                          <Button className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all">
+                          <Button
+                            onClick={() => setDeleteItem(r)}
+                            className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
+                          >
                             <X className="w-3 h-3 sm:w-4 sm:h-4" />
                             <span className="hidden sm:inline">Delete</span>
                           </Button>
@@ -524,10 +530,27 @@ const EstablishmentRecords: React.FC = () => {
                   )}
                 </button>
               </div>
+              {/* modals moved outside of the Add modal portal so they open from action buttons */}
             </form>
           </div>,
           document.body
         )}
+      {/* Edit / Delete modals should render at top-level so action buttons can open them */}
+      {editItem && (
+        <EditEstablishmentModal
+          editItem={editItem}
+          setEditItem={setEditItem}
+          refetchRecords={refetch}
+        />
+      )}
+
+      {deleteItem && (
+        <DeleteEstablishmentModal
+          deleteItem={deleteItem}
+          setDeleteItem={setDeleteItem}
+          refetchRecords={refetch}
+        />
+      )}
     </div>
   );
 };
