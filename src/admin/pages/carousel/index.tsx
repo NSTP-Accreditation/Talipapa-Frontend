@@ -11,9 +11,13 @@ import type { Slide } from './types';
 import { useBrgyInfo } from '@/contexts/BrgyInfoContext';
 
 const CarouselEditor: React.FC = () => {
-  const { pageContent, loading: infoLoading , error: infoError, refetch } = useBrgyInfo(); 
-  console.log(pageContent)
-  
+  const {
+    pageContent,
+    loading: infoLoading,
+    error: infoError,
+    refetch,
+  } = useBrgyInfo();
+
   const authFetch = useAuthFetch();
   const { success, error } = useToast();
   const { isLoading } = useLoadingState(300);
@@ -21,6 +25,7 @@ const CarouselEditor: React.FC = () => {
   const [slides, setSlides] = useState<Slide[]>([]);
   const [editingSlide, setEditingSlide] = useState<Slide | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (pageContent && pageContent.carousel) {
@@ -32,7 +37,7 @@ const CarouselEditor: React.FC = () => {
     try {
       const formData = new FormData();
       formData.append('title', slide.title);
-      if (slide.subtitle) formData.append('subtitle', slide.subtitle);
+      if (slide.subTitle) formData.append('subTitle', slide.subTitle);
       if (slide.link) formData.append('link', slide.link);
       formData.append('order', String(slide.order || 0));
       if (imageFile) formData.append('image', imageFile);
@@ -57,7 +62,13 @@ const CarouselEditor: React.FC = () => {
           : 'Slide updated successfully!',
         { title: 'Success' }
       );
-      refetch();
+      // show saving indicator while refetching shared page content
+      try {
+        setIsSaving(true);
+        await refetch();
+      } finally {
+        setIsSaving(false);
+      }
       setEditingSlide(null);
       setIsAddModalOpen(false);
     } catch (e) {
@@ -68,9 +79,16 @@ const CarouselEditor: React.FC = () => {
   const deleteSlide = async (id?: string) => {
     if (!id) return;
     try {
-      await authFetch(`/pagecontent/${pageContent._id}/carousel/${id}`, { method: 'DELETE' });
+      await authFetch(`/pagecontent/${pageContent._id}/carousel/${id}`, {
+        method: 'DELETE',
+      });
       success('Slide deleted successfully!', { title: 'Deleted' });
-      refetch();
+      try {
+        setIsSaving(true);
+        await refetch();
+      } finally {
+        setIsSaving(false);
+      }
     } catch (e) {
       error((e as Error).message || 'Failed to delete slide', {
         title: 'Error',
@@ -94,18 +112,25 @@ const CarouselEditor: React.FC = () => {
     setSlides(newSlides);
 
     try {
+      setIsSaving(true);
       await Promise.all(
         newSlides.map((s) =>
-          authFetch(`/pagecontent/${pageContent._id}/carousel}`, {
+          authFetch(`/pagecontent/${pageContent._id}/carousel/${s._id}`, {
             method: 'PATCH',
             body: JSON.stringify({ order: s.order }),
           })
         )
       );
       success('Slide order updated!', { title: 'Success' });
+      // refresh shared content
+      await refetch();
     } catch (e) {
       error('Failed to update slide order', { title: 'Error' });
-      refetch();
+      try {
+        await refetch();
+      } catch {}
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -134,12 +159,20 @@ const CarouselEditor: React.FC = () => {
                   <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                     Carousel Editor
                   </h1>
-                  <p className="text-sm sm:text-base text-gray-600 font-medium">
-                    Manage carousel slides shown on the Home page
+                  <div className="flex items-center gap-3">
+                    <p className="text-sm sm:text-base text-gray-600 font-medium">
+                      Manage carousel slides shown on the Home page
+                    </p>
                     <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
                       {slides.length} {slides.length === 1 ? 'Slide' : 'Slides'}
                     </span>
-                  </p>
+                    {isSaving && (
+                      <span className="ml-2 inline-flex items-center gap-2 px-3 py-1 bg-yellow-50 text-yellow-800 rounded-full text-xs font-semibold">
+                        <span className="w-2 h-2 rounded-full border-2 border-yellow-800 border-t-transparent animate-spin inline-block" />
+                        Saving...
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
               <button

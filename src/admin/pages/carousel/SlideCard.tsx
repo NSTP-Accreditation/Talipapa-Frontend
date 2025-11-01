@@ -66,9 +66,9 @@ const SlideCard: React.FC<SlideCardProps> = ({
           {slide.title}
         </h3>
 
-        {slide.subtitle && (
+        {slide.subTitle && (
           <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-2">
-            {slide.subtitle}
+            {slide.subTitle}
           </p>
         )}
 

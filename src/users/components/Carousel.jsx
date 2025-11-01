@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useBrgyInfo } from '@/contexts/BrgyInfoContext';
 
 const fallbackSlides = [
   {
@@ -18,9 +19,25 @@ export default function Carousel() {
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef(null);
+  const { pageContent } = useBrgyInfo();
 
-  // Fetch slides from API (falls back to bundled slides)
+  // Prefer pageContent from context (admin edits update this). If not available, fall back to fetching /carousel
   useEffect(() => {
+    if (
+      pageContent &&
+      Array.isArray(pageContent.carousel) &&
+      pageContent.carousel.length > 0
+    ) {
+      const mapped = pageContent.carousel.map((s) => ({
+        image: s.image?.url || s.image || '',
+        title: s.title || s.title || '',
+        subtitle: s.subtitle || (s.subTitle ?? '') || '',
+      }));
+      setSlides(mapped);
+      return; // don't run the fetch fallback
+    }
+
+    // fallback: fetch from public API endpoint
     const base = import.meta.env.VITE_API_URL || '';
     const url = `${base}/carousel`;
 
@@ -29,7 +46,6 @@ export default function Carousel() {
       .then((res) => res.json())
       .then((data) => {
         if (cancelled) return;
-        // backend used in admin returns { items: Slide[] }
         const items = data?.items || data || [];
         if (Array.isArray(items) && items.length > 0) {
           const mapped = items.map((s) => ({
@@ -47,7 +63,8 @@ export default function Carousel() {
     return () => {
       cancelled = true;
     };
-  }, []);
+    // depend on pageContent so changes propagate
+  }, [pageContent]);
 
   const nextSlide = (manual = false) => {
     setCurrent((c) => (c + 1) % slides.length);

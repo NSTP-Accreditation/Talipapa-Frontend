@@ -35,7 +35,7 @@ const SlideModal: React.FC<SlideModalProps> = ({
   const [formData, setFormData] = useState<Slide>({
     _id: slide?._id || '',
     title: slide?.title || '',
-    subtitle: slide?.subtitle || '',
+    subTitle: slide?.subTitle || '',
     image: slide?.image || undefined,
     link: slide?.link || '',
     order: slide?.order || 0,
@@ -50,7 +50,7 @@ const SlideModal: React.FC<SlideModalProps> = ({
       setFormData({
         _id: slide._id || '',
         title: slide.title || '',
-        subtitle: slide.subtitle || '',
+        subTitle: slide.subTitle || '',
         image: slide.image || undefined,
         link: slide.link || '',
         order: slide.order || 0,
@@ -61,7 +61,7 @@ const SlideModal: React.FC<SlideModalProps> = ({
       setFormData({
         _id: '',
         title: '',
-        subtitle: '',
+        subTitle: '',
         image: undefined,
         link: '',
         order: 0,
@@ -177,12 +177,12 @@ const SlideModal: React.FC<SlideModalProps> = ({
               </div>
               <input
                 type="text"
-                value={formData.subtitle || ''}
+                value={formData.subTitle || ''}
                 onChange={(e) =>
-                  setFormData({ ...formData, subtitle: e.target.value })
+                  setFormData({ ...formData, subTitle: e.target.value })
                 }
                 className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
-                placeholder="Enter subtitle (optional)..."
+                placeholder="Enter subTitle (optional)..."
               />
             </label>
 
