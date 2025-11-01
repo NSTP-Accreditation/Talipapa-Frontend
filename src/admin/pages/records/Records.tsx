@@ -7,6 +7,7 @@ import RecordFilter from './components/RecordFilter';
 import RecordHeader from './components/RecordHeader';
 import RecordTable from './components/RecordTable';
 import { useEffect, useState } from 'react';
+import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
 
 const Records = () => {
   const [originalRecords, setOriginalRecords] = useState<RecordInterface[]>([]);
@@ -15,7 +16,9 @@ const Records = () => {
     loading: recordsLoading,
     error: recordsError,
     refetch: refetchRecords,
-  } = useFetchData<RecordInterface[] | null>('/records?residentStatus=resident');
+  } = useFetchData<RecordInterface[] | null>(
+    '/records?residentStatus=resident'
+  );
 
   useEffect(() => {
     if (recordsData && !recordsLoading && !recordsError) {
@@ -50,6 +53,8 @@ const Records = () => {
     startIndex + recordsPerPage
   );
 
+  const [searchLoading, setSearchLoading] = useState(false);
+
   // State for modals
   const [openAddRecordModal, setOpenAddRecordModal] = useState(false);
   const [editRecord, setEditRecord] = useState<RecordInterface | null>(null);
@@ -72,19 +77,24 @@ const Records = () => {
           recordsData={recordsData}
           setOriginalRecords={setOriginalRecords}
           refetchRecords={refetchRecords}
+          setSearchLoading={setSearchLoading}
         />
 
-        {/* Record Table */}
-        <RecordTable
-          showingRecords={showingRecords}
-          setEditRecord={setEditRecord}
-          setDeleteRecord={setDeleteRecord}
-          startIndex={startIndex}
-          recordsPerPage={recordsPerPage}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          totalPages={totalPages}
-        />
+        {/* Record Table (show skeleton while server search is running) */}
+        {recordsLoading || searchLoading ? (
+          <ResponsiveSkeleton page="records" />
+        ) : (
+          <RecordTable
+            showingRecords={showingRecords}
+            setEditRecord={setEditRecord}
+            setDeleteRecord={setDeleteRecord}
+            startIndex={startIndex}
+            recordsPerPage={recordsPerPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+          />
+        )}
 
         {/* MODALS */}
         {/* ADD MODAL */}

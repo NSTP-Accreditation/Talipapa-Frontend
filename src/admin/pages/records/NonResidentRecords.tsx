@@ -18,15 +18,22 @@ import { useAuthFetch } from '../../hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
 import { createPortal } from 'react-dom';
 import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
+import { debounce } from 'lodash';
+import EditRecordModal from './components/EditRecordModal';
+import DeleterecordModal from './components/DeleterecordModal';
+import RecordTable from './components/RecordTable';
 
 const NonResidentRecords: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const { data, loading, refetch } = useFetchData('/records?residentStatus=non-resident');
+  const { data, loading, refetch } = useFetchData(
+    '/records?residentStatus=non-resident'
+  );
   const authFetch = useAuthFetch();
   const { success, error: showError } = useToast();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [originalRecords, setOriginalRecords] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [form, setForm] = useState({
     firstName: '',
     middleName: '',
@@ -39,14 +46,15 @@ const NonResidentRecords: React.FC = () => {
   });
 
   // Ensure we only show non-resident records even if backend returns mixed data
-  const records: any[] = Array.isArray(data)
-    ? data
-    : [];
+  const records: any[] = Array.isArray(data) ? data : [];
 
   // sorting dropdown state and modes (unique keys). clicking same key toggles asc/desc.
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const hoverCloseTimeout = useRef<number | null>(null);
+  // edit/delete modal state to mirror resident Records behavior
+  const [editRecord, setEditRecord] = useState<any | null>(null);
+  const [deleteRecord, setDeleteRecord] = useState<any | null>(null);
 
   // Order the filter keys similarly to the main records table where applicable
   const sortKeys = [
@@ -59,6 +67,10 @@ const NonResidentRecords: React.FC = () => {
 
   const [selectedKey, setSelectedKey] = useState<string>(sortKeys[0].key);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+
+  // search term state (wired to input)
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchLoading, setSearchLoading] = useState(false);
 
   useEffect(() => {
     const onDoc = (e: MouseEvent) => {
@@ -73,6 +85,73 @@ const NonResidentRecords: React.FC = () => {
     key: selectedKey,
     label: sortKeys.find((s) => s.key === selectedKey)?.label || 'Sort',
     order,
+  };
+
+  const loadingTimerRef = useRef<number | null>(null);
+  const loadingShownRef = useRef(false);
+
+  const debouncedSearch = React.useCallback(
+    debounce(async (query: string) => {
+      // start a short timer before showing the loading skeleton to avoid
+      // flicker on quick responses while the user types
+      if (setSearchLoading) {
+        if (loadingTimerRef.current)
+          window.clearTimeout(loadingTimerRef.current);
+        loadingShownRef.current = false;
+        loadingTimerRef.current = window.setTimeout(() => {
+          loadingShownRef.current = true;
+          setSearchLoading(true);
+        }, 250) as unknown as number;
+      }
+
+      if (!query) {
+        try {
+          await (refetch && refetch());
+        } finally {
+          if (loadingTimerRef.current)
+            window.clearTimeout(loadingTimerRef.current);
+          if (loadingShownRef.current)
+            setSearchLoading && setSearchLoading(false);
+          loadingTimerRef.current = null;
+          loadingShownRef.current = false;
+        }
+        return;
+      }
+
+      try {
+        const result = await refetch(
+          `${import.meta.env.VITE_API_URL}/records/search?query=${encodeURIComponent(
+            query
+          )}&residentStatus=non-resident`
+        );
+        setOriginalRecords(result || []);
+      } catch {
+        setOriginalRecords([]);
+      } finally {
+        if (loadingTimerRef.current)
+          window.clearTimeout(loadingTimerRef.current);
+        if (loadingShownRef.current)
+          setSearchLoading && setSearchLoading(false);
+        loadingTimerRef.current = null;
+        loadingShownRef.current = false;
+      }
+    }, 700),
+    [refetch]
+  );
+
+  // cancel debounce on unmount to avoid async updates after unmount
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel && debouncedSearch.cancel();
+      if (loadingTimerRef.current) window.clearTimeout(loadingTimerRef.current);
+    };
+  }, [debouncedSearch]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const v = e.target.value;
+    setSearchTerm(v);
+    debouncedSearch(v);
+    setCurrentPage(1);
   };
 
   const sortRecords = (items: any[]) => {
@@ -118,6 +197,31 @@ const NonResidentRecords: React.FC = () => {
     () => sortRecords(records),
     [records, selectedKey, order]
   );
+
+  useEffect(() => {
+    // keep a local copy similar to resident Records component (use sorted records)
+    // only update local state when the sortedRecords array actually differs
+    const arraysEqual = (a: any[], b: any[]) => {
+      if (a === b) return true;
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+      return true;
+    };
+
+    if (!arraysEqual(originalRecords, sortedRecords)) {
+      setOriginalRecords(sortedRecords);
+      // reset to first page when records change
+      setCurrentPage(1);
+    }
+  }, [sortedRecords, originalRecords]);
+
+  const recordsPerPage = 10;
+  const startIndex = (currentPage - 1) * recordsPerPage;
+  const showingRecords = originalRecords.slice(
+    startIndex,
+    startIndex + recordsPerPage
+  );
+  const totalPages = Math.ceil(originalRecords.length / recordsPerPage);
 
   const openAddModal = () => {
     setForm({
@@ -176,7 +280,9 @@ const NonResidentRecords: React.FC = () => {
     }
   };
 
-  if (loading) return <ResponsiveSkeleton page="records" />;
+  // Do not early-return on initial loading; render skeleton in-table area so
+  // resident/non-resident pages behave similarly (skeleton appears where the
+  // table would be). We'll show skeleton when `loading` or `searchLoading`.
 
   return (
     <>
@@ -248,7 +354,7 @@ const NonResidentRecords: React.FC = () => {
                   placeholder="Search by Record ID or Name..."
                   className="w-full rounded-xl border-2 border-gray-300 py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base bg-gradient-to-r from-white to-gray-50"
                   value={searchTerm}
-                  onChange={(e: any) => setSearchTerm(e.target.value)}
+                  onChange={handleSearchChange}
                 />
               </div>
 
@@ -320,142 +426,32 @@ const NonResidentRecords: React.FC = () => {
             </div>
           </div>
 
-          {/* Simple listing */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200">
-            <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-green-200 scrollbar-track-green-50">
-              <table className="w-full text-xs sm:text-sm min-w-[1000px]">
-                <thead className="bg-gradient-to-r from-green-50 to-green-100 border-b-2 border-green-200">
-                  <tr>
-                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                      Record ID
-                    </th>
-                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                      Type
-                    </th>
-                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                      Contact
-                    </th>
-                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                      Address
-                    </th>
-                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                      Gender
-                    </th>
-                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                      Created At
-                    </th>
-                    <th className="px-2 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody className="divide-y divide-gray-200">
-                  {records.length > 0 ? (
-                    records.map((r: any, index: number) => (
-                      <tr
-                        key={r._id || index}
-                        className="hover:bg-green-50 transition-colors duration-150"
-                      >
-                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                          <span className="text-xs sm:text-sm font-bold text-green-700 bg-green-100 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-green-200">
-                            {r.record_id || r._id}
-                          </span>
-                        </td>
-                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                          <div className="flex items-center gap-2 sm:gap-3">
-                            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-md">
-                              {(
-                                r.firstName ||
-                                r.first_name ||
-                                r.first ||
-                                ''
-                              ).charAt(0)}
-                            </div>
-                            <div className="flex flex-col">
-                              <span className="text-xs sm:text-sm font-semibold text-gray-900">
-                                {`${r.firstName || r.first_name || r.first || ''} ${r.middleName || r.middle_name || ''} ${r.lastName || r.last_name || r.last || ''}`}
-                                {(r.suffix || r.name_suffix) && (
-                                  <span className="ml-1 text-gray-600">
-                                    {r.suffix || r.name_suffix}
-                                  </span>
-                                )}
-                              </span>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                          <span className="text-xs sm:text-sm font-semibold text-gray-900">
-                            Non-Resident
-                          </span>
-                        </td>
-                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                          <span className="text-xs sm:text-sm text-gray-700 font-medium">
-                            {r.contact_number || '-'}
-                          </span>
-                        </td>
-                        <td className="px-2 sm:px-6 py-3 sm:py-4 max-w-[200px]">
-                          <span className="text-xs sm:text-sm text-gray-700 font-medium line-clamp-2">
-                            {r.address || '-'}
-                          </span>
-                        </td>
-                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                          <span className="text-xs sm:text-sm text-gray-700 font-medium capitalize">
-                            {r.gender || '-'}
-                          </span>
-                        </td>
-                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                          <span className="text-xs sm:text-sm text-gray-700 font-medium">
-                            {r.createdAt || r.created_at
-                              ? new Date(
-                                  r.createdAt || r.created_at
-                                ).toLocaleDateString()
-                              : '-'}
-                          </span>
-                        </td>
-                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                          <div className="flex items-center justify-center gap-2">
-                            <Button className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all">
-                              <User className="w-3 h-3 sm:w-4 sm:h-4" />
-                              <span className="hidden sm:inline">Edit</span>
-                            </Button>
-                            <Button className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all">
-                              <X className="w-3 h-3 sm:w-4 sm:h-4" />
-                              <span className="hidden sm:inline">Delete</span>
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan={8}
-                        className="px-2 sm:px-6 py-8 sm:py-12 text-center"
-                      >
-                        <div className="flex flex-col items-center gap-2 sm:gap-3">
-                          <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gray-100 flex items-center justify-center">
-                            <Search className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
-                          </div>
-                          <p className="text-gray-500 font-medium text-sm sm:text-base">
-                            No records found.
-                          </p>
-                          <p className="text-xs sm:text-sm text-gray-400">
-                            Try adjusting your search criteria
-                          </p>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          {/* Table (resident table component to keep behavior consistent) */}
+          {loading || searchLoading ? (
+            <ResponsiveSkeleton page="records" />
+          ) : (
+            <RecordTable
+              showingRecords={showingRecords}
+              setEditRecord={setEditRecord}
+              setDeleteRecord={setDeleteRecord}
+              startIndex={startIndex}
+              recordsPerPage={recordsPerPage}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPages={totalPages}
+            />
+          )}
         </div>
       </div>
+      {searchTerm && (
+        <div className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600 px-4 sm:px-6">
+          Found{' '}
+          <span className="font-semibold text-green-600">
+            {originalRecords.length}
+          </span>{' '}
+          matching records
+        </div>
+      )}
 
       {isAddModalOpen &&
         createPortal(
@@ -780,6 +776,19 @@ const NonResidentRecords: React.FC = () => {
           </div>,
           document.body
         )}
+      {/* EDIT & DELETE MODALS (reuse resident components) */}
+      <EditRecordModal
+        editRecord={editRecord}
+        setEditRecord={setEditRecord}
+        setOriginalRecords={setOriginalRecords}
+        refetchRecords={refetch}
+      />
+
+      <DeleterecordModal
+        deleteRecord={deleteRecord}
+        setDeleteRecord={setDeleteRecord}
+        refetchRecords={refetch}
+      />
     </>
   );
 };

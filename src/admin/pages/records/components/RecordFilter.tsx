@@ -16,6 +16,7 @@ type RecordFilterProps = {
   recordsData: RecordInterface[];
   setOriginalRecords: Dispatch<SetStateAction<RecordInterface[]>>;
   refetchRecords: (fetchUrl?: string) => Promise<RecordInterface[]>;
+  setSearchLoading?: Dispatch<SetStateAction<boolean>>;
 };
 
 const RecordFilter = ({
@@ -23,6 +24,7 @@ const RecordFilter = ({
   recordsData,
   setOriginalRecords,
   refetchRecords,
+  setSearchLoading,
 }: RecordFilterProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   // single list of sort keys (unique). Clicking same key toggles asc/desc.
@@ -45,6 +47,8 @@ const RecordFilter = ({
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const hoverCloseTimeout = useRef<number | null>(null);
+  const loadingTimerRef = useRef<number | null>(null);
+  const loadingShownRef = useRef(false);
 
   useEffect(() => {
     const onDoc = (e: MouseEvent) => {
@@ -110,8 +114,29 @@ const RecordFilter = ({
 
   const debouncedSearch = useCallback(
     debounce(async (query: string) => {
+      // start a short timer before showing the loading skeleton to avoid
+      // flicker on quick responses while the user types
+      if (setSearchLoading) {
+        if (loadingTimerRef.current)
+          window.clearTimeout(loadingTimerRef.current);
+        loadingShownRef.current = false;
+        loadingTimerRef.current = window.setTimeout(() => {
+          loadingShownRef.current = true;
+          setSearchLoading(true);
+        }, 250);
+      }
+
       if (!query) {
-        refetchRecords();
+        try {
+          await refetchRecords();
+        } finally {
+          if (loadingTimerRef.current)
+            window.clearTimeout(loadingTimerRef.current);
+          if (loadingShownRef.current)
+            setSearchLoading && setSearchLoading(false);
+          loadingTimerRef.current = null;
+          loadingShownRef.current = false;
+        }
         return;
       }
 
@@ -122,8 +147,16 @@ const RecordFilter = ({
         setOriginalRecords(result);
       } catch {
         setOriginalRecords([]);
+      } finally {
+        if (loadingTimerRef.current)
+          window.clearTimeout(loadingTimerRef.current);
+        if (loadingShownRef.current)
+          setSearchLoading && setSearchLoading(false);
+        loadingTimerRef.current = null;
+        loadingShownRef.current = false;
       }
     }, 700),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [recordsData]
   );
 
@@ -133,6 +166,13 @@ const RecordFilter = ({
     debouncedSearch(value);
     // setCurrentPage(1);
   };
+
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel && debouncedSearch.cancel();
+      if (loadingTimerRef.current) window.clearTimeout(loadingTimerRef.current);
+    };
+  }, [debouncedSearch]);
 
   return (
     <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
