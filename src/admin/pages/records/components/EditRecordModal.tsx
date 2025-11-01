@@ -69,6 +69,8 @@ const EditRecordModal = ({
         firstName: editRecord.firstName,
         lastName: editRecord.lastName,
         middleName: editRecord.middleName,
+        suffix: (editRecord as any).suffix || '',
+        gender: (editRecord as any).gender || '',
         age: ageNum,
         address: editRecord.address,
         contact_number: editRecord.contact_number
@@ -275,6 +277,28 @@ const EditRecordModal = ({
                   />
                 </div>
               </label>
+
+              {/* Suffix */}
+              <label className="block group">
+                <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                  <span>Suffix</span>
+                </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={(editRecord as any).suffix || ''}
+                    onChange={(e) =>
+                      setEditRecord(
+                        editRecord
+                          ? ({ ...editRecord, suffix: e.target.value } as any)
+                          : null
+                      )
+                    }
+                    className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                    placeholder="Suffix (optional)"
+                  />
+                </div>
+              </label>
             </div>
           </div>
 
@@ -291,6 +315,34 @@ const EditRecordModal = ({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
+              {/* Gender */}
+              <label className="block group">
+                <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                  <span className="text-red-500">*</span>
+                  <span>Gender</span>
+                </div>
+                <div className="relative">
+                  <select
+                    required
+                    value={(editRecord as any).gender || ''}
+                    onChange={(e) =>
+                      setEditRecord(
+                        editRecord
+                          ? ({ ...editRecord, gender: e.target.value } as any)
+                          : null
+                      )
+                    }
+                    className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                  >
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </label>
+
+              {/* Age */}
               <label className="block group">
                 <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
                   <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
