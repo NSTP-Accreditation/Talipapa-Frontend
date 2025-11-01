@@ -205,7 +205,7 @@ const EditRecordModal = ({
               <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-5">
               {/* First Name */}
               <label className="block group">
                 <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
@@ -299,22 +299,7 @@ const EditRecordModal = ({
                   />
                 </div>
               </label>
-            </div>
-          </div>
 
-          {/* Additional Details Section */}
-          <div className="space-y-3 sm:space-y-5">
-            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
-                <Award className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-              </div>
-              <h4 className="text-base sm:text-lg font-bold text-gray-800">
-                Additional Details
-              </h4>
-              <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
               {/* Gender */}
               <label className="block group">
                 <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
@@ -341,7 +326,22 @@ const EditRecordModal = ({
                   </select>
                 </div>
               </label>
+            </div>
+          </div>
 
+          {/* Additional Details Section */}
+          <div className="space-y-3 sm:space-y-5">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                <Award className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+              </div>
+              <h4 className="text-base sm:text-lg font-bold text-gray-800">
+                Additional Details
+              </h4>
+              <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
               {/* Age */}
               <label className="block group">
                 <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">

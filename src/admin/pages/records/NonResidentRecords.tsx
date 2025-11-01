@@ -8,6 +8,8 @@ import {
   User,
   X,
   ListFilter,
+  Phone,
+  MapPin,
 } from 'lucide-react';
 import useFetchData from '../../hooks/useFetchData';
 import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
@@ -136,6 +138,9 @@ const NonResidentRecords: React.FC = () => {
   const handleCreate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isCreating) return;
+
+    setIsCreating(true);
+
     // Basic required-field validation
     if (
       !form.firstName.trim() ||
@@ -146,11 +151,16 @@ const NonResidentRecords: React.FC = () => {
       !form.address.trim()
     ) {
       showError('Please fill all required fields.', { title: 'Validation' });
+      setIsCreating(false);
       return;
     }
-    setIsCreating(true);
+
     try {
-      const payload = { ...form, type: 'non-resident' };
+      const payload = {
+        ...form,
+        type: 'non-resident',
+        contact_number: form.contact_number ? `09${form.contact_number}` : '',
+      };
       const res = await authFetch('/records', {
         method: 'POST',
         body: JSON.stringify(payload),
@@ -449,6 +459,7 @@ const NonResidentRecords: React.FC = () => {
                       <div className="relative">
                         <input
                           required
+                          type="text"
                           value={form.firstName}
                           onChange={(e) =>
                             setForm((s) => ({
@@ -456,29 +467,8 @@ const NonResidentRecords: React.FC = () => {
                               firstName: e.target.value,
                             }))
                           }
-                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base"
-                          placeholder="First name"
-                        />
-                      </div>
-                    </label>
-
-                    <label className="block group">
-                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                        <span className="text-red-500">*</span>
-                        <span>Middle Name</span>
-                      </div>
-                      <div className="relative">
-                        <input
-                          required
-                          value={form.middleName}
-                          onChange={(e) =>
-                            setForm((s) => ({
-                              ...s,
-                              middleName: e.target.value,
-                            }))
-                          }
-                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base"
-                          placeholder="Middle name"
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="Enter first name"
                         />
                       </div>
                     </label>
@@ -491,12 +481,35 @@ const NonResidentRecords: React.FC = () => {
                       <div className="relative">
                         <input
                           required
+                          type="text"
                           value={form.lastName}
                           onChange={(e) =>
                             setForm((s) => ({ ...s, lastName: e.target.value }))
                           }
-                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base"
-                          placeholder="Last name"
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="Enter last name"
+                        />
+                      </div>
+                    </label>
+
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span className="text-red-500">*</span>
+                        <span>Middle Name</span>
+                      </div>
+                      <div className="relative">
+                        <input
+                          required
+                          type="text"
+                          value={form.middleName}
+                          onChange={(e) =>
+                            setForm((s) => ({
+                              ...s,
+                              middleName: e.target.value,
+                            }))
+                          }
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                          placeholder="If none put None"
                         />
                       </div>
                     </label>
@@ -507,78 +520,128 @@ const NonResidentRecords: React.FC = () => {
                       </div>
                       <div className="relative">
                         <input
+                          type="text"
                           value={form.suffix}
                           onChange={(e) =>
                             setForm((s) => ({ ...s, suffix: e.target.value }))
                           }
-                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base"
+                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                           placeholder="Suffix (optional)"
                         />
                       </div>
                     </label>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
-                    <label className="block group">
-                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                        <span className="text-red-500">*</span>
-                        <span>Gender</span>
-                      </div>
-                      <div className="relative">
-                        <select
-                          required
-                          value={form.gender}
-                          onChange={(e) =>
-                            setForm((s) => ({ ...s, gender: e.target.value }))
-                          }
-                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base"
-                        >
-                          <option value="">Select</option>
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                          <option value="Other">Other</option>
-                        </select>
-                      </div>
-                    </label>
+                  <label className="block group">
+                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                      <span className="text-red-500">*</span>
+                      <span>Gender</span>
+                    </div>
+                    <div className="relative">
+                      <select
+                        required
+                        value={form.gender}
+                        onChange={(e) =>
+                          setForm((s) => ({ ...s, gender: e.target.value }))
+                        }
+                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                      >
+                        <option value="">Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </label>
+                </div>
 
-                    <label className="block group">
-                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                        <span className="text-red-500">*</span>
-                        <span>Contact</span>
-                      </div>
-                      <div className="relative">
-                        <input
-                          required
-                          value={form.contact_number}
-                          onChange={(e) =>
-                            setForm((s) => ({
-                              ...s,
-                              contact_number: e.target.value,
-                            }))
-                          }
-                          className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 text-sm sm:text-base"
-                          placeholder="Contact number"
-                        />
-                      </div>
-                    </label>
+                {/* Contact Information Section */}
+                <div className="space-y-3 sm:space-y-5">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                      <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold text-gray-800">
+                      Contact Information
+                    </h4>
+                    <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
+                  </div>
+
+                  <label className="block group">
+                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                      <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                      <span className="text-red-500">*</span>
+                      <span>Contact</span>
+                    </div>
+                    <div className="relative">
+                      <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-700 font-bold text-sm sm:text-base">
+                        09
+                      </span>
+                      <input
+                        required
+                        type="text"
+                        value={form.contact_number}
+                        onChange={(e) => {
+                          const digitsOnly = e.target.value.replace(/\D/g, '');
+                          const limited = digitsOnly.slice(0, 9);
+                          setForm((s) => ({ ...s, contact_number: limited }));
+                        }}
+                        className="w-full pl-10 sm:pl-14 border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                        placeholder="9XXXXXXXX"
+                      />
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1 sm:mt-2">
+                      Contact will be saved as{' '}
+                      <span className="font-medium">09XXXXXXXXX</span>. Only
+                      numbers allowed. Total digits including prefix will be 11.
+                    </div>
+                  </label>
+                </div>
+
+                {/* Address Section */}
+                <div className="space-y-3 sm:space-y-5">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                      <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold text-gray-800">
+                      Location
+                    </h4>
+                    <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent"></div>
                   </div>
 
                   <div className="block group">
-                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                      <span className="text-red-500">*</span>
-                      <span>Address</span>
-                    </div>
                     <AddressAutocomplete
-                      required
                       value={form.address}
                       onChange={(value) =>
                         setForm((s) => ({ ...s, address: value }))
                       }
                       placeholder="Enter complete address..."
-                      className="border-2 border-gray-300"
+                      label="Address"
+                      className="border-2 border-gray-300 hover:border-gray-400"
                       maxLength={200}
                       countryCode="ph"
                     />
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
+                      Start typing to see address suggestions. Provide full
+                      house number, street, barangay/purok, city or
+                      municipality.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Info Note */}
+                <div className="bg-green-50 border-2 border-green-200 rounded-lg sm:rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-white text-xs font-bold">i</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs sm:text-sm text-green-800 font-medium">
+                      <span className="font-bold">Note:</span> Fields marked
+                      with <span className="text-red-500 font-bold">*</span> are
+                      required. Please ensure all information is accurate before
+                      submitting.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -596,7 +659,36 @@ const NonResidentRecords: React.FC = () => {
                   disabled={isCreating}
                   className="px-6 sm:px-10 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm sm:text-base"
                 >
-                  {isCreating ? 'Creating...' : 'Create'}
+                  {isCreating ? (
+                    <>
+                      <svg
+                        className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      <span>Creating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <User className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span>Create Non-Resident</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>
