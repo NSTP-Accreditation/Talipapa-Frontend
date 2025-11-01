@@ -9,6 +9,7 @@ import {
   X,
   ListFilter,
   Phone,
+  Calendar,
   MapPin,
 } from 'lucide-react';
 import useFetchData from '../../hooks/useFetchData';
@@ -32,6 +33,7 @@ const NonResidentRecords: React.FC = () => {
     lastName: '',
     suffix: '',
     gender: '',
+    age: '',
     contact_number: '',
     address: '',
   });
@@ -127,6 +129,7 @@ const NonResidentRecords: React.FC = () => {
       lastName: '',
       suffix: '',
       gender: '',
+      age: '',
       contact_number: '',
       address: '',
     });
@@ -592,27 +595,52 @@ const NonResidentRecords: React.FC = () => {
                     </label>
                   </div>
 
-                  <label className="block group">
-                    <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
-                      <span className="text-red-500">*</span>
-                      <span>Gender</span>
-                    </div>
-                    <div className="relative">
-                      <select
+                  {/* Compact: Gender + Age side-by-side */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <span className="text-red-500">*</span>
+                        <span>Gender</span>
+                      </div>
+                      <div className="relative">
+                        <select
+                          required
+                          value={form.gender}
+                          onChange={(e) =>
+                            setForm((s) => ({ ...s, gender: e.target.value }))
+                          }
+                          className="w-full h-12 sm:h-12 border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                        >
+                          <option value="">Select</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                    </label>
+
+                    <label className="block group">
+                      <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                        <span className="text-red-500">*</span>
+                        <span>Age</span>
+                      </div>
+                      <input
                         required
-                        value={form.gender}
-                        onChange={(e) =>
-                          setForm((s) => ({ ...s, gender: e.target.value }))
-                        }
-                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                      >
-                        <option value="">Select</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                      </select>
-                    </div>
-                  </label>
+                        type="text"
+                        inputMode="numeric"
+                        pattern="\d*"
+                        value={form.age}
+                        onChange={(e) => {
+                          const digitsOnly = e.target.value.replace(/\D/g, '');
+                          const limited = digitsOnly.slice(0, 3);
+                          setForm((s) => ({ ...s, age: limited }));
+                        }}
+                        className="w-full h-12 sm:h-12 border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                        placeholder="0"
+                      />
+                    </label>
+                  </div>
                 </div>
 
                 {/* Contact Information Section */}
