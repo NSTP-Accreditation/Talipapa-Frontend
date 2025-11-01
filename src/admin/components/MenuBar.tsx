@@ -175,19 +175,46 @@ const MenuBar: React.FC<MenuBarProps> = ({
         : [...prev, label]
     );
   };
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  const isMobileViewport = () => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return window.matchMedia('(max-width: 639px)').matches;
+    } catch (err) {
+      return window.innerWidth <= 640;
+    }
+  };
 
   const handleItemClick = (item: MenuItem) => {
     if (item.submenu) {
       toggleExpanded(item.label);
     } else if (item.onClick) {
-      item.onClick();
+      // prevent double taps
+      setIsNavigating(true);
+      try {
+        item.onClick();
+      } finally {
+        if (onClose && isMobileViewport()) onClose();
+        // keep navigating state briefly to avoid double clicks
+        setTimeout(() => setIsNavigating(false), 600);
+      }
     } else if (item.href) {
+      setIsNavigating(true);
       navigate(item.href);
+      if (onClose && isMobileViewport()) onClose();
+      setTimeout(() => setIsNavigating(false), 600);
     }
   };
 
   const handleLogout = () => {
-    logout(); 
+    setIsNavigating(true);
+    try {
+      logout();
+    } finally {
+      if (onClose && isMobileViewport()) onClose();
+      setTimeout(() => setIsNavigating(false), 600);
+    }
   };
 
   return (
@@ -207,7 +234,14 @@ const MenuBar: React.FC<MenuBarProps> = ({
           isOpen ? 'ml-0' : '-ml-[270px] sm:ml-0',
           className
         )}
+        style={{ willChange: 'transform, opacity' }}
       >
+        {/* navigation blocker while navigating to prevent double taps */}
+        {isNavigating && (
+          <div className="absolute inset-0 z-[600] flex items-center justify-center bg-black/10">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-t-transparent border-white/90" />
+          </div>
+        )}
         {/* Header */}
         <div className="px-4 py-4 sm:px-6 sm:py-6 bg-gradient-to-r from-green-950 to-green-900">
           <div className="flex items-center justify-center space-x-2 sm:space-x-3">
@@ -280,7 +314,15 @@ const MenuBar: React.FC<MenuBarProps> = ({
                         />
                       )}
                       <button
-                        onClick={() => navigate(subItem.href!)}
+                        onClick={() => {
+                          setIsNavigating(true);
+                          try {
+                            navigate(subItem.href!);
+                            if (onClose && isMobileViewport()) onClose();
+                          } finally {
+                            setTimeout(() => setIsNavigating(false), 600);
+                          }
+                        }}
                         className={cn(
                           'w-full flex items-center space-x-2.5 sm:space-x-3 pr-3 py-2.5 sm:pr-4 sm:py-3 text-left transition-all duration-300 ease-in-out text-sm sm:text-base rounded-xl',
                           'hover:shadow-md hover:bg-white/15 hover:text-white hover:font-semibold',

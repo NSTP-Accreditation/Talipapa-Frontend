@@ -4,6 +4,7 @@ import { SettingsPageSkeleton } from '../../../components/LoadingSkeletons';
 import useFetchData from '../../hooks/useFetchData';
 import SettingsHeader from './components/SettingsHeader';
 import BrngyInfoSection from './components/BrgyInfoSection';
+import ExcelPasswordSection from './components/ExcelPasswordSection';
 import { Admin } from './Settings.types';
 import AdminSection from './components/AdminSection';
 import AddAdminModal from './components/AddAdminModal';
@@ -22,38 +23,65 @@ const Settings: React.FC = () => {
   // Modal states
   const [isDeleteAdminOpen, setIsDeleteAdminOpen] = useState<boolean>(false);
   const [adminToDelete, setAdminToDelete] = useState<Admin | null>(null);
-  const [isAddAdminModalOpen, setIsAddAdminModalOpen] = useState<boolean>(false);
-  
+  const [isAddAdminModalOpen, setIsAddAdminModalOpen] =
+    useState<boolean>(false);
+
   if (isLoading || loadingAdmins) {
     return <SettingsPageSkeleton />;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-5">
-      <div className="mx-auto space-y-6 lg:space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-6 sm:space-y-8">
         {/* Header */}
         <SettingsHeader />
 
-        {/* Barangay Information */}
-        <BrngyInfoSection />
+        {/* System Configuration Section */}
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex items-center gap-3 px-2">
+            <div className="h-1 w-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full"></div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800">
+              System Configuration
+            </h2>
+            <div className="h-px flex-1 bg-gradient-to-r from-gray-300 to-transparent"></div>
+          </div>
 
-        {/* Admin Accounts */}
-        <AdminSection 
-          adminData={adminsData}
-          openAddAdminModal={setIsAddAdminModalOpen}
-          openDeleteAdminModal={setIsDeleteAdminOpen}
-          setAdminToDelete={setAdminToDelete}
-        />
+          {/* Barangay Information */}
+          <BrngyInfoSection />
+
+          {/* Excel Report Protection */}
+          <ExcelPasswordSection />
+        </div>
+
+        {/* Admin Management Section */}
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex items-center gap-3 px-2">
+            <div className="h-1 w-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full"></div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800">
+              Admin Management
+            </h2>
+            <div className="h-px flex-1 bg-gradient-to-r from-gray-300 to-transparent"></div>
+          </div>
+
+          {/* Admin Accounts */}
+          <AdminSection
+            adminData={adminsData}
+            openAddAdminModal={setIsAddAdminModalOpen}
+            openDeleteAdminModal={setIsDeleteAdminOpen}
+            setAdminToDelete={setAdminToDelete}
+          />
+        </div>
 
         {/* Add Admin Modal */}
         <AddAdminModal
           isAddAdminModalOpen={isAddAdminModalOpen}
           closeAddAdminModal={() => setIsAddAdminModalOpen(false)}
           refetchAdmin={refetchAdmins}
+          adminData={adminsData}
         />
 
         {/* Delete Admin Modal */}
-        <DeleteAdminModal 
+        <DeleteAdminModal
           adminToDelete={adminToDelete}
           isDeleteAdminOpen={isDeleteAdminOpen}
           closeDeleteAdminModal={() => {
@@ -62,7 +90,6 @@ const Settings: React.FC = () => {
           }}
           refetchAdmins={refetchAdmins}
         />
-
       </div>
     </div>
   );

@@ -389,24 +389,19 @@ export const AboutUsPageSkeleton: React.FC = () => {
               <Skeleton className="h-6 w-[600px] mx-auto" />
             </div>
 
-            {/* Officials Cards - Fixed Size 240x240 */}
-            <div className="flex flex-wrap justify-center gap-8">
+            {/* Officials Cards - Responsive grid for desktop */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 justify-items-center">
               {[1, 2, 3, 4, 5, 6, 7].map((i) => (
                 <div
                   key={i}
-                  className="bg-white rounded-2xl p-8 flex flex-col items-center text-center shadow-lg border-2 border-gray-100"
-                  style={{
-                    width: '240px',
-                    height: '240px',
-                    minWidth: '240px',
-                    maxWidth: '240px',
-                    minHeight: '240px',
-                    maxHeight: '240px',
-                  }}
+                  className="bg-white rounded-2xl p-6 flex flex-col items-center text-center shadow-lg border-2 border-gray-100 w-full max-w-[280px] min-h-[240px]"
                 >
-                  <Skeleton className="w-20 h-20 rounded-2xl mb-5" />
-                  <Skeleton className="h-5 w-32 mb-3" />
-                  <Skeleton className="h-4 w-28" />
+                  <Skeleton className="w-24 h-24 rounded-2xl mb-4" />
+                  <Skeleton className="h-5 w-36 mb-3" />
+                  <Skeleton className="h-4 w-32 mb-3" />
+                  <div className="mt-auto w-full">
+                    <Skeleton className="h-8 w-full rounded-lg" />
+                  </div>
                 </div>
               ))}
             </div>
@@ -460,6 +455,159 @@ export const AboutUsPageSkeleton: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+// Admin About Us Skeleton (Admin Side)
+export const AdminAboutUsSkeleton: React.FC = () => {
+  return (
+    <div className="p-4 sm:p-6 md:p-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+        <div>
+          <Skeleton className="h-12 w-64 mb-3" />
+          <Skeleton className="h-5 w-80" />
+        </div>
+        <div className="flex gap-3">
+          <Skeleton className="h-11 w-40 rounded-xl" />
+          <Skeleton className="h-11 w-32 rounded-xl" />
+        </div>
+      </div>
+
+      {/* Content Grid - Info, History, Mission/Vision */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="lg:col-span-2 space-y-4">
+          <div className="bg-white p-8 rounded-2xl shadow-md border-2 border-gray-200">
+            <div className="flex items-center gap-3 mb-4">
+              <Skeleton className="h-12 w-12 rounded-xl" />
+              <Skeleton className="h-7 w-48" />
+            </div>
+            <div className="space-y-3">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white p-6 rounded-2xl shadow-md border-2 border-gray-200">
+              <div className="flex items-center gap-3 mb-4">
+                <Skeleton className="h-10 w-10 rounded-xl" />
+                <Skeleton className="h-6 w-40" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-2xl shadow-md border-2 border-gray-200">
+              <div className="flex items-center gap-3 mb-4">
+                <Skeleton className="h-10 w-10 rounded-xl" />
+                <Skeleton className="h-6 w-40" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar - Quick actions / summary */}
+        <div className="space-y-4">
+          <div className="bg-white p-4 rounded-2xl shadow-md border-2 border-gray-200">
+            <Skeleton className="h-6 w-32 mb-3" />
+            <Skeleton className="h-10 w-full rounded-xl" />
+          </div>
+          <div className="bg-white p-4 rounded-2xl shadow-md border-2 border-gray-200">
+            <Skeleton className="h-6 w-40 mb-3" />
+            <Skeleton className="h-4 w-full mb-2" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
+        </div>
+      </div>
+
+      {/* Officials Admin Panel - table style */}
+      <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <Skeleton className="h-8 w-48 mb-2" />
+            <Skeleton className="h-4 w-64" />
+          </div>
+          <div className="flex gap-3">
+            <Skeleton className="h-10 w-36 rounded-xl" />
+            <Skeleton className="h-10 w-28 rounded-xl" />
+          </div>
+        </div>
+
+        {/* Table header */}
+        <div className="grid grid-cols-5 gap-4 py-3 border-b-2 mb-3">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-16" />
+        </div>
+
+        {/* Rows */}
+        <div className="space-y-3">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="grid grid-cols-5 gap-4 items-center py-3">
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton className="h-4 w-40" />
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-8 w-20 rounded-lg" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Mobile compact skeleton for Admin About Us
+export const MobileAdminAboutUsSkeleton: React.FC = () => {
+  return (
+    <div className="min-h-screen p-3 bg-gradient-to-br from-gray-50 to-green-50">
+      <Skeleton className="h-12 w-40 mb-3" />
+      <Skeleton className="h-5 w-64 mb-4" />
+
+      {/* Info block */}
+      <div className="bg-white p-3 rounded-xl shadow-sm mb-3">
+        <Skeleton className="h-4 w-3/4 mb-2" />
+        <Skeleton className="h-3 w-full" />
+      </div>
+
+      {/* Mission / Vision stacked */}
+      <div className="space-y-3 mb-3">
+        <div className="bg-white p-3 rounded-lg shadow-sm">
+          <Skeleton className="h-5 w-32 mb-2" />
+          <Skeleton className="h-3 w-full" />
+        </div>
+        <div className="bg-white p-3 rounded-lg shadow-sm">
+          <Skeleton className="h-5 w-32 mb-2" />
+          <Skeleton className="h-3 w-full" />
+        </div>
+      </div>
+
+      {/* Officials list compact */}
+      <div className="space-y-2">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="flex items-center gap-3 bg-white p-3 rounded-lg shadow-sm"
+          >
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <div className="flex-1">
+              <Skeleton className="h-4 w-3/4 mb-1" />
+              <Skeleton className="h-3 w-1/2" />
+            </div>
+            <Skeleton className="h-8 w-20 rounded-lg" />
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -1102,24 +1250,24 @@ export const InventoryPageSkeleton: React.FC = () => {
           <div
             key={i}
             className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-200 flex gap-5 items-center"
-          > 
-            <Skeleton className='h-20 w-20 rounded-xl'/>
+          >
+            <Skeleton className="h-20 w-20 rounded-xl" />
 
-            <div className='grid gap-2 grow'>
+            <div className="grid gap-2 grow">
               <Skeleton className="h-8 w-20 rounded-sm" />
               <Skeleton className="h-8 grow rounded-sm" />
 
-              <div className='flex gap-2'>
+              <div className="flex gap-2">
                 <Skeleton className="h-5 w-14 rounded-sm" />
                 <Skeleton className="h-5 w-10 rounded-sm" />
                 <Skeleton className="h-5 w-10 rounded-sm" />
               </div>
             </div>
 
-            <div className='flex gap-5'>
-              <Skeleton className='h-10 w-14 rounded-xl'/>
-              <Skeleton className='h-10 w-10 rounded-xl'/>
-              <Skeleton className='h-10 w-10 rounded-xl'/>
+            <div className="flex gap-5">
+              <Skeleton className="h-10 w-14 rounded-xl" />
+              <Skeleton className="h-10 w-10 rounded-xl" />
+              <Skeleton className="h-10 w-10 rounded-xl" />
             </div>
           </div>
         ))}
@@ -1498,6 +1646,9 @@ export const MobileSkeleton: React.FC<{ page?: string }> = ({ page }) => {
     case 'records':
     case 'earnpoints':
       return <MobileFormTableSkeleton />;
+    case 'aboutus-admin':
+    case 'about-us-admin':
+      return <MobileAdminAboutUsSkeleton />;
     default:
       // generic compact skeleton
       return (

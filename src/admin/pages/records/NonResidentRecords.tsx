@@ -301,7 +301,7 @@ const NonResidentRecords: React.FC = () => {
         {/* Simple listing */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200">
           <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-green-200 scrollbar-track-green-50">
-            <table className="w-full text-xs sm:text-sm min-w-[700px]">
+            <table className="w-full text-xs sm:text-sm min-w-[1000px]">
               <thead className="bg-gradient-to-r from-green-50 to-green-100 border-b-2 border-green-200">
                 <tr>
                   <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
@@ -315,6 +315,15 @@ const NonResidentRecords: React.FC = () => {
                   </th>
                   <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
                     Contact
+                  </th>
+                  <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
+                    Address
+                  </th>
+                  <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
+                    Gender
+                  </th>
+                  <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
+                    Created At
                   </th>
                   <th className="px-2 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
                     Actions
@@ -344,7 +353,16 @@ const NonResidentRecords: React.FC = () => {
                               ''
                             ).charAt(0)}
                           </div>
-                          <span className="text-xs sm:text-sm font-semibold text-gray-900">{`${r.firstName || r.first_name || r.first || ''} ${r.lastName || r.last_name || r.last || ''}`}</span>
+                          <div className="flex flex-col">
+                            <span className="text-xs sm:text-sm font-semibold text-gray-900">
+                              {`${r.firstName || r.first_name || r.first || ''} ${r.middleName || r.middle_name || ''} ${r.lastName || r.last_name || r.last || ''}`}
+                              {(r.suffix || r.name_suffix) && (
+                                <span className="ml-1 text-gray-600">
+                                  {r.suffix || r.name_suffix}
+                                </span>
+                              )}
+                            </span>
+                          </div>
                         </div>
                       </td>
                       <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
@@ -355,6 +373,25 @@ const NonResidentRecords: React.FC = () => {
                       <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                         <span className="text-xs sm:text-sm text-gray-700 font-medium">
                           {r.contact_number || '-'}
+                        </span>
+                      </td>
+                      <td className="px-2 sm:px-6 py-3 sm:py-4 max-w-[200px]">
+                        <span className="text-xs sm:text-sm text-gray-700 font-medium line-clamp-2">
+                          {r.address || '-'}
+                        </span>
+                      </td>
+                      <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                        <span className="text-xs sm:text-sm text-gray-700 font-medium capitalize">
+                          {r.gender || '-'}
+                        </span>
+                      </td>
+                      <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                        <span className="text-xs sm:text-sm text-gray-700 font-medium">
+                          {r.createdAt || r.created_at
+                            ? new Date(
+                                r.createdAt || r.created_at
+                              ).toLocaleDateString()
+                            : '-'}
                         </span>
                       </td>
                       <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
@@ -374,7 +411,7 @@ const NonResidentRecords: React.FC = () => {
                 ) : (
                   <tr>
                     <td
-                      colSpan={5}
+                      colSpan={8}
                       className="px-2 sm:px-6 py-8 sm:py-12 text-center"
                     >
                       <div className="flex flex-col items-center gap-2 sm:gap-3">

@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Save, SquarePen, Plus, Trash2, AlertCircle } from 'lucide-react';
+import {
+  SquarePen,
+  Plus,
+  Trash2,
+  AlertCircle,
+  Users,
+  User,
+  Upload,
+  X,
+} from 'lucide-react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import useFetchData from '../hooks/useFetchData';
-import { FormTablePageSkeleton } from '../../components/LoadingSkeletons';
 import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useAuthFetch } from '../hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
@@ -103,74 +111,80 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-[1003] p-2 sm:p-4">
-      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-hidden">
-        {/* Records-style gradient header */}
-        <div className="relative p-4 sm:p-6 bg-gradient-to-br from-[#1b4c2e] via-[#2d6b42] to-emerald-600 text-white overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 bg-white/10 rounded-full -mr-16 sm:-mr-24 -mt-16 sm:-mt-24"></div>
-          <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-36 sm:h-36 bg-white/10 rounded-full -ml-12 sm:-ml-18 -mb-12 sm:-mb-18"></div>
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-[1003] p-2 sm:p-4 animate-fadeIn">
+      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-3xl max-h-[95vh] overflow-hidden animate-slideUp">
+        {/* Header matching AddRecordModal style */}
+        <div className="relative p-4 sm:p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 sm:w-64 sm:h-64 bg-white/10 rounded-full -mr-16 sm:-mr-32 -mt-16 sm:-mt-32"></div>
+          <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-48 sm:h-48 bg-white/10 rounded-full -ml-12 sm:-ml-24 -mb-12 sm:-mb-24"></div>
 
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-4">
-              <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-xl flex items-center justify-center ring-2 sm:ring-4 ring-white/30 shadow-lg">
-                <span className="text-white text-sm sm:text-lg">👤</span>
+              <div className="w-10 h-10 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center ring-2 sm:ring-4 ring-white/30 shadow-lg">
+                <User className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
               </div>
               <div>
-                <h3 className="text-lg sm:text-2xl font-bold mb-0">
+                <h3 className="text-xl sm:text-3xl font-bold text-white mb-0 sm:mb-1">
                   {isEditing ? 'Edit Official' : 'Add New Official'}
                 </h3>
-                <p className="text-white/80 text-xs sm:text-sm mt-1">
-                  Manage barangay official
+                <p className="text-green-100 text-xs sm:text-sm font-medium">
+                  Manage barangay official information
                 </p>
               </div>
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all hover:rotate-90 duration-300 ring-1 sm:ring-2 ring-white/30 text-lg sm:text-xl"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm flex items-center justify-center transition-all hover:rotate-90 duration-300 ring-1 sm:ring-2 ring-white/30"
               title="Close"
             >
-              ×
+              <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </button>
           </div>
         </div>
 
-        <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(95vh-140px)]">
-          <div className="space-y-3 sm:space-y-4">
+        <div className="p-4 sm:p-8 overflow-y-auto max-h-[calc(95vh-200px)] bg-gradient-to-br from-gray-50 to-white">
+          <div className="space-y-4 sm:space-y-6">
             {/* Image Upload */}
-            <div className="text-center">
-              <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-3 sm:mb-4 rounded-full overflow-hidden bg-gray-200 border-2 sm:border-4 border-[#1b4c2e]">
-                {formData.image ? (
-                  <img
-                    src={
-                      typeof formData.image === 'string'
-                        ? formData.image
-                        : formData.image.url
-                    }
-                    alt="Official"
-                    className="w-full h-full object-cover"
+            <div className="flex flex-col items-center">
+              <div className="relative group">
+                <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 border-4 border-green-500 shadow-xl">
+                  {formData.image ? (
+                    <img
+                      src={
+                        typeof formData.image === 'string'
+                          ? formData.image
+                          : formData.image.url
+                      }
+                      alt="Official"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                      <User className="w-12 h-12 sm:w-16 sm:h-16" />
+                    </div>
+                  )}
+                </div>
+                <label className="absolute bottom-0 right-0 w-10 h-10 sm:w-12 sm:h-12 bg-green-600 hover:bg-green-700 rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-all hover:scale-110">
+                  <Upload className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
                   />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    <span className="text-2xl sm:text-4xl">👤</span>
-                  </div>
-                )}
+                </label>
               </div>
-              <label className="cursor-pointer bg-[#1b4c2e] text-white px-3 py-2 sm:px-4 sm:py-2 rounded-md hover:bg-[#2d6b42] transition-colors inline-block text-sm">
-                Choose Image
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-              </label>
+              <p className="mt-3 text-xs sm:text-sm text-gray-600 font-medium">
+                Click the button to upload photo
+              </p>
             </div>
 
             {/* Name Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                Full Name *
+              <label className="flex items-center gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-2">
+                <span className="text-red-500">*</span>
+                <span>Full Name</span>
               </label>
               <input
                 type="text"
@@ -187,23 +201,23 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
                     showError(message || 'Invalid name');
                   }
                 }}
-                className="w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1b4c2e] focus:border-transparent text-sm sm:text-base"
+                className="w-full p-3 sm:p-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-100 focus:border-green-500 text-sm sm:text-base transition-all"
                 placeholder="Enter full name"
               />
             </div>
 
             {/* Position Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                Position/Title *
+              <label className="flex items-center gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-2">
+                <span className="text-red-500">*</span>
+                <span>Position/Title</span>
               </label>
-              {/* Controlled select with allowed roles */}
               <select
                 value={formData.position || ''}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, position: e.target.value }))
                 }
-                className="w-full p-2 sm:p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1b4c2e] focus:border-transparent bg-white text-sm sm:text-base"
+                className="w-full p-3 sm:p-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-green-100 focus:border-green-500 bg-white text-sm sm:text-base transition-all"
               >
                 <option value="">Select position</option>
                 <option value="Punong Barangay">Punong Barangay</option>
@@ -219,33 +233,33 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
 
             {/* Bio Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                Biography
+              <label className="flex items-center gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-2">
+                <span>Biography (Optional)</span>
               </label>
               <textarea
                 value={formData.bio || ''}
                 onChange={(e) =>
                   setFormData((prev) => ({ ...prev, bio: e.target.value }))
                 }
-                rows={3}
-                className="w-full p-2 sm:p-3 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[#1b4c2e] focus:border-transparent text-sm sm:text-base"
+                rows={4}
+                className="w-full p-3 sm:p-4 border-2 border-gray-200 rounded-xl resize-none focus:outline-none focus:ring-4 focus:ring-green-100 focus:border-green-500 text-sm sm:text-base transition-all"
                 placeholder="Enter biography or description"
               />
             </div>
           </div>
         </div>
 
-        <div className="px-4 py-3 sm:px-6 sm:py-4 bg-gray-50 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
+        <div className="px-4 py-3 sm:px-8 sm:py-4 bg-gray-50 border-t border-gray-200 flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
           <button
             onClick={onClose}
-            className="px-3 py-2 sm:px-4 sm:py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors text-sm order-2 sm:order-1"
+            className="px-4 py-2 sm:px-6 sm:py-3 text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all font-semibold text-sm sm:text-base"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={!formData.name.trim() || !formData.position.trim()}
-            className="px-3 py-2 sm:px-4 sm:py-2 bg-[#1b4c2e] text-white rounded-md hover:bg-[#2d6b42] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm order-1 sm:order-2"
+            className="px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl shadow-lg hover:shadow-xl transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
           >
             {isEditing ? 'Update' : 'Add'} Official
           </button>
@@ -464,54 +478,62 @@ export default function OfficialsPanel() {
   };
 
   return (
-    <div className="bg-white rounded-lg sm:rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-all duration-300">
-      <div className="p-4 sm:p-6">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
-          <h2 className="text-xl sm:text-2xl font-bold text-[#1b4c2e] flex items-center gap-2">
-            <span className="text-lg sm:text-xl">👥</span>
-            <span className="text-sm sm:text-2xl">Barangay Officials</span>
-            <span className="ml-2 sm:ml-3 px-2 py-1 sm:px-3 sm:py-1 bg-[#1b4c2e]/10 text-[#1b4c2e] rounded-full text-xs sm:text-sm font-semibold">
-              {officials.length} Officials
-            </span>
-          </h2>
+    <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
+      <div className="p-5 sm:p-6 lg:p-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-3 sm:gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-md">
+              <Users className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                Barangay Officials
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-600 font-medium mt-0.5">
+                {officials.length}{' '}
+                {officials.length === 1 ? 'Official' : 'Officials'}
+              </p>
+            </div>
+          </div>
           <button
             onClick={handleAddOfficial}
             disabled={isSaving}
-            className="flex items-center justify-center gap-1 sm:gap-2 px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-white bg-gradient-to-r from-[#1b4c2e] to-[#1b4c2e] hover:from-[#2d6b42] hover:to-[#2d6b42] rounded-lg shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 w-full sm:w-auto"
+            className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto text-sm sm:text-base"
           >
-            <Plus size={12} className="sm:w-3.5 sm:h-3.5" />
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
             Add Official
           </button>
         </div>
 
         {officials.length === 0 ? (
-          <div className="text-center py-12 sm:py-16">
-            <div className="w-20 h-20 sm:w-32 sm:h-32 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-              <span className="text-gray-400 text-4xl sm:text-6xl">👥</span>
+          <div className="text-center py-16 sm:py-20">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+              <Users className="text-gray-400 w-12 h-12 sm:w-16 sm:h-16" />
             </div>
-            <h3 className="text-lg sm:text-xl font-semibold text-gray-600 mb-2">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3">
               No Officials Added Yet
             </h3>
-            <p className="text-sm sm:text-base text-gray-500 mb-4 sm:mb-6 px-4">
+            <p className="text-sm sm:text-base text-gray-600 mb-6 px-4 max-w-md mx-auto">
               Start by adding your first official to showcase your leadership
               team.
             </p>
             <button
               onClick={handleAddOfficial}
-              className="bg-[#1b4c2e] text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-[#2d6b42] transition-colors duration-300 font-medium text-sm sm:text-base"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 font-semibold text-sm sm:text-base"
             >
+              <Plus className="w-5 h-5" />
               Add First Official
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {officials.map((official) => (
               <div
                 key={official._id}
-                className="bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200 rounded-lg overflow-hidden hover:border-green-300 transition-all duration-300 hover:shadow-md hover:-translate-y-1 transform group"
+                className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:border-green-400 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
               >
                 {/* Official Image */}
-                <div className="relative h-32 sm:h-48 bg-gradient-to-br from-[#1b4c2e] to-[#2d6b42]">
+                <div className="relative h-40 sm:h-56 bg-gradient-to-br from-green-500 to-green-600">
                   {official.image ? (
                     <img
                       src={
@@ -524,42 +546,40 @@ export default function OfficialsPanel() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <div className="w-16 h-16 sm:w-24 sm:h-24 bg-white/20 rounded-full flex items-center justify-center">
-                        <span className="text-white text-2xl sm:text-4xl">
-                          👤
-                        </span>
+                      <div className="w-20 h-20 sm:w-28 sm:h-28 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                        <User className="text-white w-10 h-10 sm:w-14 sm:h-14" />
                       </div>
                     </div>
                   )}
                   {/* Action Buttons */}
-                  <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex gap-1 sm:gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute top-3 right-3 sm:top-4 sm:right-4 flex gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => handleEditOfficial(official)}
-                      className="bg-white/90 hover:bg-white text-[#1b4c2e] p-1.5 sm:p-2 rounded-full shadow-lg transition-colors hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-200"
+                      className="bg-white hover:bg-gray-50 text-green-600 p-2 sm:p-2.5 rounded-full shadow-lg transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-300"
                       title="Edit Official"
                     >
-                      <SquarePen size={12} className="sm:w-4 sm:h-4" />
+                      <SquarePen className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteOfficial(official._id)}
-                      className="bg-red-500/90 hover:bg-red-500 text-white p-1.5 sm:p-2 rounded-full shadow-lg transition-colors hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-200"
+                      className="bg-red-500 hover:bg-red-600 text-white p-2 sm:p-2.5 rounded-full shadow-lg transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-300"
                       title="Remove Official"
                     >
-                      <Trash2 size={12} className="sm:w-4 sm:h-4" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
 
                 {/* Official Info */}
-                <div className="p-3 sm:p-4">
-                  <h3 className="font-bold text-[#1b4c2e] text-sm sm:text-lg mb-0.5 sm:mb-1 leading-tight">
+                <div className="p-4 sm:p-5">
+                  <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-1 leading-tight">
                     {official.name}
                   </h3>
-                  <p className="text-[#2d6b42] font-medium text-xs sm:text-sm mb-1 sm:mb-2">
+                  <p className="text-green-600 font-semibold text-xs sm:text-sm mb-2 sm:mb-3">
                     {official.position}
                   </p>
                   {official.bio && (
-                    <p className="text-gray-600 text-xs sm:text-sm leading-relaxed line-clamp-2">
+                    <p className="text-gray-600 text-xs sm:text-sm leading-relaxed line-clamp-3">
                       {official.bio}
                     </p>
                   )}

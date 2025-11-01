@@ -40,7 +40,7 @@ const RecordTable = ({
     <section id="record_table" className="grid gap-5">
       <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200 overflow-x-auto">
         <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-green-200 scrollbar-track-green-50">
-          <table className="w-full text-xs sm:text-sm min-w-[700px]">
+          <table className="w-full text-xs sm:text-sm min-w-[900px]">
             <thead className="bg-gradient-to-r from-green-50 to-green-100 border-b-2 border-green-200">
               <tr>
                 <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
@@ -48,6 +48,9 @@ const RecordTable = ({
                 </th>
                 <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
                   Name
+                </th>
+                <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
+                  Gender
                 </th>
                 <th className="px-2 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-green-800 uppercase tracking-wider">
                   Age
@@ -84,10 +87,23 @@ const RecordTable = ({
                         <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-md">
                           {record?.firstName?.charAt(0)}
                         </div>
-                        <span className="text-xs sm:text-sm font-semibold text-gray-900">
-                          {record?.firstName} {record?.lastName}
-                        </span>
+                        <div className="flex flex-col">
+                          <span className="text-xs sm:text-sm font-semibold text-gray-900">
+                            {record?.firstName} {record?.middleName || ''}{' '}
+                            {record?.lastName}
+                            {(record as any)?.suffix && (
+                              <span className="ml-1 text-gray-600">
+                                {(record as any).suffix}
+                              </span>
+                            )}
+                          </span>
+                        </div>
                       </div>
+                    </td>
+                    <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                      <span className="text-xs sm:text-sm text-gray-700 font-medium capitalize">
+                        {(record as any)?.gender || '-'}
+                      </span>
                     </td>
                     <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                       <span
@@ -161,7 +177,7 @@ const RecordTable = ({
               ) : (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={8}
                     className="px-2 sm:px-6 py-8 sm:py-12 text-center"
                   >
                     <div className="flex flex-col items-center gap-2 sm:gap-3">
