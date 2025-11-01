@@ -98,115 +98,127 @@ export default function AboutBarangayEditable() {
   };
 
   return (
-    <div className="p-3 sm:p-4 md:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
-      {/* Enhanced Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6 lg:mb-8">
-        <div className="flex-1">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Home className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
-            </div>
-            About Barangay
-          </h1>
-          <p className="text-sm sm:text-base lg:text-lg text-gray-600 mt-2 sm:mt-3 font-medium">
-            Manage barangay information, history, mission, vision, and officials
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-6 sm:space-y-8">
+        {/* Page Header */}
+        <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+          {/* Decorative background pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-600 rounded-full -ml-24 -mb-24"></div>
+          </div>
 
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 font-semibold text-sm sm:text-base"
-        >
-          <SquarePen className="w-4 h-4 sm:w-5 sm:h-5" />
-          Edit Content
-        </button>
-      </div>
-
-      {/* Content Grid */}
-      <div className="grid grid-cols-1 gap-4 sm:gap-6">
-        {/* Barangay Information */}
-        <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
-          <div className="p-5 sm:p-6 lg:p-8">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-md">
-                <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          <div className="relative p-5 sm:p-6 lg:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+              <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-green-500 via-green-600 to-green-700 shadow-lg ring-4 ring-green-100 animate-pulse-slow">
+                <Home className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                Barangay Information
-              </h2>
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                  About Barangay
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600 font-medium">
+                  Manage barangay information, history, mission, vision, and
+                  officials
+                </p>
+              </div>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all font-semibold text-sm"
+              >
+                <SquarePen className="w-4 h-4 sm:w-5 sm:h-5" />
+                Edit Content
+              </button>
             </div>
-            <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
-              {pageContent?.barangayDescription || 'No information available'}
-            </p>
           </div>
         </div>
 
-        {/* Barangay History */}
-        <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
-          <div className="p-5 sm:p-6 lg:p-8">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-md">
-                <History className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-              </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                Barangay History
-              </h2>
-            </div>
-            <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
-              {pageContent?.barangayHistory || 'No history available'}
-            </p>
-          </div>
-        </div>
-
-        {/* Mission & Vision - Side by Side on larger screens */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          {/* Mission */}
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 gap-4 sm:gap-6">
+          {/* Barangay Information */}
           <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
             <div className="p-5 sm:p-6 lg:p-8">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-md">
-                  <Target className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                  Our Mission
+                  Barangay Information
                 </h2>
               </div>
               <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {pageContent?.mission || 'No mission statement available'}
+                {pageContent?.barangayDescription || 'No information available'}
               </p>
             </div>
           </div>
 
-          {/* Vision */}
+          {/* Barangay History */}
           <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
             <div className="p-5 sm:p-6 lg:p-8">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-md">
-                  <Eye className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  <History className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                  Our Vision
+                  Barangay History
                 </h2>
               </div>
               <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {pageContent?.vision || 'No vision statement available'}
+                {pageContent?.barangayHistory || 'No history available'}
               </p>
             </div>
           </div>
+
+          {/* Mission & Vision - Side by Side on larger screens */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+            {/* Mission */}
+            <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
+              <div className="p-5 sm:p-6 lg:p-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-md">
+                    <Target className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                    Our Mission
+                  </h2>
+                </div>
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
+                  {pageContent?.mission || 'No mission statement available'}
+                </p>
+              </div>
+            </div>
+
+            {/* Vision */}
+            <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
+              <div className="p-5 sm:p-6 lg:p-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-md">
+                    <Eye className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                    Our Vision
+                  </h2>
+                </div>
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-wrap">
+                  {pageContent?.vision || 'No vision statement available'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Barangay Officials */}
+          <OfficialsPanel />
         </div>
 
-        {/* Barangay Officials */}
-        <OfficialsPanel />
+        {/* Centralized Modal */}
+        <ContentModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          pageContent={pageContent!}
+          onSave={handleSave}
+          isSaving={isSaving}
+        />
       </div>
-
-      {/* Centralized Modal */}
-      <ContentModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        pageContent={pageContent!}
-        onSave={handleSave}
-        isSaving={isSaving}
-      />
     </div>
   );
 }

@@ -158,175 +158,189 @@ export default function App() {
   }
 
   return (
-    <div className="p-5 grid gap-5">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 w-full">
-        <div>
-          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
-            <Recycle className="w-6 h-6 sm:w-10 sm:h-10 text-green-600" />
-            Earn Points
-          </h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
-            Accumulate points for residents' recycling records
-          </p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-6 sm:space-y-8">
+        {/* Header */}
+        <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+          {/* Decorative background pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-600 rounded-full -ml-24 -mb-24"></div>
+          </div>
 
-      {/* Full width card form */}
-      <form
-        className="bg-white rounded-2xl border border-gray-200 shadow-lg p-4 sm:p-8 w-full mx-auto"
-        onSubmit={handleConfirm}
-      >
-        {/* Record Info */}
-        <div className="mb-6 sm:mb-8">
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-green-600" />
-            Record Information
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            <div className="block group">
-              <label className="text-sm font-medium text-gray-700 mb-2 block">
-                Record ID
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 select-none font-medium text-sm sm:text-base">
-                  BT-
-                </span>
-                <input
-                  type="text"
-                  value={recordIdRest}
-                  onChange={(e) => {
-                    const digitsOnly = e.target.value.replace(/\D/g, '');
-                    const limited = digitsOnly.slice(0, 4);
-                    setRecordIdRest(limited);
-                  }}
-                  className="w-full pl-10 sm:pl-12 pr-3 py-2.5 border-2 border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
-                  placeholder="0001"
-                  required
-                />
+          <div className="relative p-5 sm:p-6 lg:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+              <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-green-500 via-green-600 to-green-700 shadow-lg ring-4 ring-green-100 animate-pulse-slow">
+                <Recycle className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
               </div>
-              <p className="text-xs text-gray-500 mt-1.5">
-                Format:{' '}
-                <span className="font-medium text-gray-700">BT-0001</span> (4
-                digits only)
-              </p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-2 block">
-                Last Name
-              </label>
-              <input
-                required
-                value={lastName}
-                onChange={(e) => {
-                  const filtered = sanitizeName(e.target.value);
-                  setLastName(filtered);
-                  const res = validateName(filtered, true);
-                  setLastNameError(res.valid ? '' : res.message);
-                  setIsLastNameValid(res.valid);
-                }}
-                onBlur={() => {
-                  const res = validateName(lastName, true);
-                  setLastNameError(res.valid ? '' : res.message);
-                  setIsLastNameValid(res.valid);
-                }}
-                className="w-full px-3 py-2.5 border-2 border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
-                placeholder="Enter last name"
-              />
-              {lastNameError ? (
-                <p className="text-xs sm:text-sm text-red-600 mt-1">
-                  {lastNameError}
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                  Earn Points
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600 font-medium">
+                  Accumulate points for residents' recycling records
                 </p>
-              ) : null}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Materials Section */}
-        <div className="mb-6 sm:mb-8">
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
-            Materials & Weights
-          </h2>
-
-          {/* Table Headers */}
-          <div className="hidden sm:grid grid-cols-12 gap-4 text-sm font-semibold text-gray-600 mb-3 px-2">
-            <div className="col-span-5">Material</div>
-            <div className="col-span-3">Weight (kg)</div>
-            <div className="col-span-2">Points/kg</div>
-            <div className="col-span-2 text-right">Subtotal</div>
+        {/* Full width card form */}
+        <form
+          className="bg-white rounded-2xl border border-gray-200 shadow-lg p-4 sm:p-8 w-full mx-auto"
+          onSubmit={handleConfirm}
+        >
+          {/* Record Info */}
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-green-600" />
+              Record Information
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="block group">
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Record ID
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 select-none font-medium text-sm sm:text-base">
+                    BT-
+                  </span>
+                  <input
+                    type="text"
+                    value={recordIdRest}
+                    onChange={(e) => {
+                      const digitsOnly = e.target.value.replace(/\D/g, '');
+                      const limited = digitsOnly.slice(0, 4);
+                      setRecordIdRest(limited);
+                    }}
+                    className="w-full pl-10 sm:pl-12 pr-3 py-2.5 border-2 border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
+                    placeholder="0001"
+                    required
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1.5">
+                  Format:{' '}
+                  <span className="font-medium text-gray-700">BT-0001</span> (4
+                  digits only)
+                </p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Last Name
+                </label>
+                <input
+                  required
+                  value={lastName}
+                  onChange={(e) => {
+                    const filtered = sanitizeName(e.target.value);
+                    setLastName(filtered);
+                    const res = validateName(filtered, true);
+                    setLastNameError(res.valid ? '' : res.message);
+                    setIsLastNameValid(res.valid);
+                  }}
+                  onBlur={() => {
+                    const res = validateName(lastName, true);
+                    setLastNameError(res.valid ? '' : res.message);
+                    setIsLastNameValid(res.valid);
+                  }}
+                  className="w-full px-3 py-2.5 border-2 border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
+                  placeholder="Enter last name"
+                />
+                {lastNameError ? (
+                  <p className="text-xs sm:text-sm text-red-600 mt-1">
+                    {lastNameError}
+                  </p>
+                ) : null}
+              </div>
+            </div>
           </div>
 
-          {/* Input Rows */}
-          <div className="space-y-3">
-            {materialsData.map((material) => {
-              const weight = parseFloat(weights[material._id]) || 0;
-              const subtotal = weight * material.pointsPerKg;
+          {/* Materials Section */}
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
+              Materials & Weights
+            </h2>
 
-              return (
-                <div
-                  key={material._id}
-                  className="bg-gradient-to-r from-green-50 to-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-md transition-all"
-                >
-                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 items-center">
-                    <div className="sm:col-span-5">
-                      <div className="font-semibold text-gray-800 text-sm sm:text-base">
-                        {material.name}
+            {/* Table Headers */}
+            <div className="hidden sm:grid grid-cols-12 gap-4 text-sm font-semibold text-gray-600 mb-3 px-2">
+              <div className="col-span-5">Material</div>
+              <div className="col-span-3">Weight (kg)</div>
+              <div className="col-span-2">Points/kg</div>
+              <div className="col-span-2 text-right">Subtotal</div>
+            </div>
+
+            {/* Input Rows */}
+            <div className="space-y-3">
+              {materialsData.map((material) => {
+                const weight = parseFloat(weights[material._id]) || 0;
+                const subtotal = weight * material.pointsPerKg;
+
+                return (
+                  <div
+                    key={material._id}
+                    className="bg-gradient-to-r from-green-50 to-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:shadow-md transition-all"
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 items-center">
+                      <div className="sm:col-span-5">
+                        <div className="font-semibold text-gray-800 text-sm sm:text-base">
+                          {material.name}
+                        </div>
+                        <div className="text-xs text-gray-500 sm:hidden mt-1">
+                          {material.pointsPerKg} points/kg
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-500 sm:hidden mt-1">
-                        {material.pointsPerKg} points/kg
+                      <div className="sm:col-span-3">
+                        <div className="relative">
+                          <input
+                            type="text"
+                            inputMode="decimal"
+                            value={weights[material._id] || ''}
+                            onChange={(e) =>
+                              handleWeightChange(material._id, e.target.value)
+                            }
+                            className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
+                            placeholder="0.0"
+                          />
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs sm:text-sm">
+                            kg
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="sm:col-span-3">
-                      <div className="relative">
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          value={weights[material._id] || ''}
-                          onChange={(e) =>
-                            handleWeightChange(material._id, e.target.value)
-                          }
-                          className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
-                          placeholder="0.0"
-                        />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs sm:text-sm">
-                          kg
+                      <div className="hidden sm:block sm:col-span-2 text-gray-600 text-sm">
+                        {material.pointsPerKg}
+                      </div>
+                      <div className="sm:col-span-2 text-right">
+                        <span className="text-green-700 font-semibold text-sm sm:text-base">
+                          {subtotal > 0 ? subtotal.toFixed(2) : '0'} pts
                         </span>
                       </div>
                     </div>
-                    <div className="hidden sm:block sm:col-span-2 text-gray-600 text-sm">
-                      {material.pointsPerKg}
-                    </div>
-                    <div className="sm:col-span-2 text-right">
-                      <span className="text-green-700 font-semibold text-sm sm:text-base">
-                        {subtotal > 0 ? subtotal.toFixed(2) : '0'} pts
-                      </span>
-                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* Footer */}
-        <div className="flex flex-col sm:flex-row justify-between items-center pt-6 border-t-2 border-gray-200 gap-4">
-          <div className="flex items-center gap-3">
-            <span className="text-base sm:text-lg font-semibold text-gray-700">
-              Total Points:
-            </span>
-            <span className="text-2xl sm:text-3xl font-bold text-green-600">
-              {totalPoints.toFixed(2)}
-            </span>
+          {/* Footer */}
+          <div className="flex flex-col sm:flex-row justify-between items-center pt-6 border-t-2 border-gray-200 gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-base sm:text-lg font-semibold text-gray-700">
+                Total Points:
+              </span>
+              <span className="text-2xl sm:text-3xl font-bold text-green-600">
+                {totalPoints.toFixed(2)}
+              </span>
+            </div>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 sm:px-8 py-3 w-full sm:w-auto rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm sm:text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+            >
+              {isSubmitting ? 'Processing...' : 'Confirm & Submit'}
+            </button>
           </div>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="bg-green-600 text-white px-6 sm:px-8 py-3 w-full sm:w-auto rounded-lg shadow-md hover:bg-green-700 hover:shadow-lg hover:-translate-y-0.5 transition-all text-sm sm:text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-          >
-            {isSubmitting ? 'Processing...' : 'Confirm & Submit'}
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }

@@ -56,34 +56,36 @@ export default function TradingStatisticsPage() {
   }
 
   return (
-    <div className="p-5">
-      {/* Enhanced Header */}
-      <TradingStatisticsHeader
-        logsData={logsData}
-        recordsData={recordsData}
-        recordsToday={recordsToday}
-        totalPoints={totalPoints}
-        topList={topList}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-4 sm:space-y-6">
+        {/* Enhanced Header */}
+        <TradingStatisticsHeader
+          logsData={logsData}
+          recordsData={recordsData}
+          recordsToday={recordsToday}
+          totalPoints={totalPoints}
+          topList={topList}
+        />
 
-      <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-[#1b4c2e]/20 shadow-xl hover:shadow-2xl transition-all duration-300">
-        <div className="p-3 sm:p-4 md:p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            {/* Trading Summary Card */}
-            <TradingSummaryCard
-              recordsData={recordsData}
-              recordsToday={recordsData}
-              totalPoints={totalPoints}
-            />
+        <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+              {/* Trading Summary Card */}
+              <TradingSummaryCard
+                recordsData={recordsData}
+                recordsToday={recordsData}
+                totalPoints={totalPoints}
+              />
 
-            {/* Top 5 Points Holders with Record IDs */}
-            <Top5RecordCard topList={topList} topLoading={topLoading} />
+              {/* Top 5 Points Holders with Record IDs */}
+              <Top5RecordCard topList={topList} topLoading={topLoading} />
 
-            {/* Recent Transactions Table */}
-            <RecentTradingTransaction logsData={logsData} />
+              {/* Recent Transactions Table */}
+              <RecentTradingTransaction logsData={logsData} />
 
-            {/* Total Stocks/Products (NEW card) */}
-            <TotalProductStocksCard />
+              {/* Total Stocks/Products (NEW card) */}
+              <TotalProductStocksCard />
+            </div>
           </div>
         </div>
       </div>

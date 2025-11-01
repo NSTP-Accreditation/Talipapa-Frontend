@@ -111,72 +111,89 @@ const CarouselEditor: React.FC = () => {
   }
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 space-y-8 bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
-        <div>
-          <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-            <ImageIcon className="w-10 h-10 text-green-600" />
-            Carousel Editor
-          </h1>
-          <p className="text-md text-gray-700 mt-3 font-medium">
-            Manage carousel slides shown on the Home page
-            <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-              {slides.length} {slides.length === 1 ? 'Slide' : 'Slides'}
-            </span>
-          </p>
-        </div>
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 flex items-center gap-2"
-        >
-          <Plus size={20} />
-          Add New Slide
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {slides.length === 0 ? (
-          <div className="col-span-full text-center py-24">
-            <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-green-100 to-green-100 rounded-3xl shadow-xl mb-6">
-              <ImageIcon className="w-20 h-20 text-green-600" />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-3">
-              No slides yet
-            </h3>
-            <p className="text-gray-600 text-lg mb-6 max-w-md mx-auto">
-              Start building your carousel by adding your first slide
-            </p>
-            <button
-              onClick={() => setIsAddModalOpen(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
-            >
-              <Plus size={20} /> Create First Slide
-            </button>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-6 sm:space-y-8">
+        {/* Page Header */}
+        <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+          {/* Decorative background pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-600 rounded-full -ml-24 -mb-24"></div>
           </div>
-        ) : (
-          slides.map((slide, idx) => (
-            <SlideCard
-              key={slide._id || idx}
-              slide={slide}
-              idx={idx}
-              slidesLength={slides.length}
-              onMove={moveSlide}
-              onEdit={(s) => setEditingSlide(s)}
-              onDelete={deleteSlide}
-            />
-          ))
-        )}
-      </div>
 
-      <SlideModal
-        slide={editingSlide}
-        isOpen={!!editingSlide || isAddModalOpen}
-        onClose={() => {
-          setEditingSlide(null);
-          setIsAddModalOpen(false);
-        }}
-        onSave={handleSaveSlide}
-      />
+          <div className="relative p-5 sm:p-6 lg:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
+              <div className="flex items-start sm:items-center gap-4 sm:gap-6">
+                <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-green-500 via-green-600 to-green-700 shadow-lg ring-4 ring-green-100 animate-pulse-slow">
+                  <ImageIcon className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                    Carousel Editor
+                  </h1>
+                  <p className="text-sm sm:text-base text-gray-600 font-medium">
+                    Manage carousel slides shown on the Home page
+                    <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
+                      {slides.length} {slides.length === 1 ? 'Slide' : 'Slides'}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsAddModalOpen(true)}
+                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex items-center gap-2 whitespace-nowrap"
+              >
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                Add New Slide
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          {slides.length === 0 ? (
+            <div className="col-span-full text-center py-24">
+              <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-green-100 to-green-100 rounded-3xl shadow-xl mb-6">
+                <ImageIcon className="w-20 h-20 text-green-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                No slides yet
+              </h3>
+              <p className="text-gray-600 text-lg mb-6 max-w-md mx-auto">
+                Start building your carousel by adding your first slide
+              </p>
+              <button
+                onClick={() => setIsAddModalOpen(true)}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
+              >
+                <Plus size={20} /> Create First Slide
+              </button>
+            </div>
+          ) : (
+            slides.map((slide, idx) => (
+              <SlideCard
+                key={slide._id || idx}
+                slide={slide}
+                idx={idx}
+                slidesLength={slides.length}
+                onMove={moveSlide}
+                onEdit={(s) => setEditingSlide(s)}
+                onDelete={deleteSlide}
+              />
+            ))
+          )}
+        </div>
+
+        <SlideModal
+          slide={editingSlide}
+          isOpen={!!editingSlide || isAddModalOpen}
+          onClose={() => {
+            setEditingSlide(null);
+            setIsAddModalOpen(false);
+          }}
+          onSave={handleSaveSlide}
+        />
+      </div>
     </div>
   );
 };

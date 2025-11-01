@@ -58,55 +58,57 @@ const Records = () => {
   );
 
   return (
-    <main className="md:p-5">
-      {/* Record Header */}
-      <RecordHeader
-        setOpenAddRecordModal={setOpenAddRecordModal}
-        recordsData={recordsData}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-4 sm:space-y-6">
+        {/* Record Header */}
+        <RecordHeader
+          setOpenAddRecordModal={setOpenAddRecordModal}
+          recordsData={recordsData}
+        />
 
-      {/* Enhanced Search Bar */}
-      <RecordFilter
-        originalRecords={originalRecords}
-        recordsData={recordsData}
-        setOriginalRecords={setOriginalRecords}
-        refetchRecords={refetchRecords}
-      />
+        {/* Enhanced Search Bar */}
+        <RecordFilter
+          originalRecords={originalRecords}
+          recordsData={recordsData}
+          setOriginalRecords={setOriginalRecords}
+          refetchRecords={refetchRecords}
+        />
 
-      {/* Record Table */}
-      <RecordTable
-        showingRecords={showingRecords}
-        setEditRecord={setEditRecord}
-        setDeleteRecord={setDeleteRecord}
-        startIndex={startIndex}
-        recordsPerPage={recordsPerPage}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        totalPages={totalPages}
-      />
+        {/* Record Table */}
+        <RecordTable
+          showingRecords={showingRecords}
+          setEditRecord={setEditRecord}
+          setDeleteRecord={setDeleteRecord}
+          startIndex={startIndex}
+          recordsPerPage={recordsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+        />
 
-      {/* MODALS */}
-      {/* ADD MODAL */}
-      <AddRecordModal
-        openAddRecordModal={openAddRecordModal}
-        setOpenAddRecordModal={setOpenAddRecordModal}
-        refetchRecords={refetchRecords}
-      />
+        {/* MODALS */}
+        {/* ADD MODAL */}
+        <AddRecordModal
+          openAddRecordModal={openAddRecordModal}
+          setOpenAddRecordModal={setOpenAddRecordModal}
+          refetchRecords={refetchRecords}
+        />
 
-      {/* EDIT MODAL */}
-      <EditRecordModal
-        editRecord={editRecord}
-        setEditRecord={setEditRecord}
-        setOriginalRecords={setOriginalRecords}
-        refetchRecords={refetchRecords}
-      />
+        {/* EDIT MODAL */}
+        <EditRecordModal
+          editRecord={editRecord}
+          setEditRecord={setEditRecord}
+          setOriginalRecords={setOriginalRecords}
+          refetchRecords={refetchRecords}
+        />
 
-      <DeleterecordModal
-        deleteRecord={deleteRecord}
-        setDeleteRecord={setDeleteRecord}
-        refetchRecords={refetchRecords}
-      />
-    </main>
+        <DeleterecordModal
+          deleteRecord={deleteRecord}
+          setDeleteRecord={setDeleteRecord}
+          refetchRecords={refetchRecords}
+        />
+      </div>
+    </div>
   );
 };
 

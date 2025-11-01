@@ -23,57 +23,68 @@ const Inventory = () => {
   } = useFetchData<MaterialInterface[]>('/materials');
 
   // Variables
-  const [filteredProducts, setFilteredProducts] = useState<ProductInterface[]>([]);
-  const [filteredMaterials, setFilteredMaterials] = useState<MaterialInterface[]>([]);
-  
+  const [filteredProducts, setFilteredProducts] = useState<ProductInterface[]>(
+    []
+  );
+  const [filteredMaterials, setFilteredMaterials] = useState<
+    MaterialInterface[]
+  >([]);
+
   useEffect(() => {
-    if(productsData && !productsDataLoading && !productsDataErr) {
-      setFilteredProducts(productsData)
+    if (productsData && !productsDataLoading && !productsDataErr) {
+      setFilteredProducts(productsData);
     }
 
-    if(materialsData && !materialsDataLoading && !materialsDataErr) {
-      setFilteredMaterials(materialsData)
+    if (materialsData && !materialsDataLoading && !materialsDataErr) {
+      setFilteredMaterials(materialsData);
     }
-    
-  }, [productsData, productsDataLoading, productsDataErr, materialsData, materialsDataLoading, materialsDataErr])
+  }, [
+    productsData,
+    productsDataLoading,
+    productsDataErr,
+    materialsData,
+    materialsDataLoading,
+    materialsDataErr,
+  ]);
 
   if (productsDataLoading || materialsDataLoading) {
     return <ResponsiveSkeleton page="inventory" />;
   }
 
   return (
-    <main className="p-5 grid gap-6">
-      {/* Inventory Header */}
-      <InventoryHeader 
-        productsData={productsData}
-        materialsData={materialsData}
-        setFilteredProducts={setFilteredProducts}
-        setFilteredMaterials={setFilteredMaterials}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-6 sm:space-y-8">
+        {/* Inventory Header */}
+        <InventoryHeader
+          productsData={productsData}
+          materialsData={materialsData}
+          setFilteredProducts={setFilteredProducts}
+          setFilteredMaterials={setFilteredMaterials}
+        />
 
-      {/* Inventory Cards */}
-      <InventoryCards
-        productsData={productsData}
-        materialsData={materialsData}
-      />
+        {/* Inventory Cards */}
+        <InventoryCards
+          productsData={productsData}
+          materialsData={materialsData}
+        />
 
-      {/* Products Container */}
-      <InventoryProducts
-        filteredProducts={filteredProducts}
-        productsData={productsData}
-        productsDataError={productsDataErr}
-        refetchProduct={refetchProduct}
-      />
+        {/* Products Container */}
+        <InventoryProducts
+          filteredProducts={filteredProducts}
+          productsData={productsData}
+          productsDataError={productsDataErr}
+          refetchProduct={refetchProduct}
+        />
 
-      {/* Materials Container */}
-      <InventoryMaterials 
-        filteredMaterials={filteredMaterials}
-        materialsData={materialsData}
-        materialsDataError={materialsDataErr}
-        refetchMaterial={refetchMaterials}
-      />
-
-    </main>
+        {/* Materials Container */}
+        <InventoryMaterials
+          filteredMaterials={filteredMaterials}
+          materialsData={materialsData}
+          materialsDataError={materialsDataErr}
+          refetchMaterial={refetchMaterials}
+        />
+      </div>
+    </div>
   );
 };
 

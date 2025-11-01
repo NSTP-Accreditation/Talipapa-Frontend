@@ -107,7 +107,7 @@ const SlideCard: React.FC<SlideCardProps> = ({
           </button>
           <button
             onClick={() => onEdit(slide)}
-            className="flex items-center justify-center gap-1 px-2 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-semibold"
+            className="flex items-center justify-center gap-1 px-2 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-semibold"
             title="Edit"
           >
             <SquarePen size={14} /> Edit
@@ -115,7 +115,7 @@ const SlideCard: React.FC<SlideCardProps> = ({
           <>
             <button
               onClick={() => setIsConfirmOpen(true)}
-              className="flex items-center justify-center gap-1 px-2 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-semibold"
+              className="flex items-center justify-center gap-1 px-2 py-2 bg-white hover:bg-red-50 text-red-600 border-2 border-red-300 hover:border-red-500 rounded-lg transition-all text-sm font-semibold"
               title="Delete"
             >
               <Trash2 size={14} /> Delete

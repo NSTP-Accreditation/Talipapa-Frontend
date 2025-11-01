@@ -155,149 +155,189 @@ const GreenPages: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
-          <Card className="rounded-2xl shadow-2xl border-2 border-gray-200 overflow-hidden hover:shadow-3xl transition-shadow duration-300">
-            <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 border-b-2 border-green-500 pb-4">
-              <CardTitle className="text-lg sm:text-xl font-bold text-white flex items-center gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                  <svg
-                    className="w-4 h-4 sm:w-5 sm:h-5 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                    />
-                  </svg>
-                </div>
-                <span>Interactive Farm Map</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 bg-gradient-to-br from-gray-50 to-white">
-              <div style={{ height: 380 }} className="relative">
-                <LeafletMap
-                  farmsData={farmsData}
-                  selectedFarm={farmData}
-                  onSelectFarm={(f: any) => setFarmData(f)}
-                />
-              </div>
-              {farmData && (
-                <div className="p-4 border-t-2 border-gray-200 bg-white">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                    <span className="text-sm font-semibold text-gray-700">
-                      Selected: {farmData.name}
-                    </span>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 p-2 mb-6 flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => setActiveTab('mapDropdown')}
-              className={`flex-1 min-w-[100px] px-4 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
-                activeTab === 'mapDropdown'
-                  ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
-              }`}
-            >
-              Map
-            </button>
-            <button
-              onClick={() => setActiveTab('profile')}
-              className={`flex-1 min-w-[100px] px-4 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
-                activeTab === 'profile'
-                  ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
-              }`}
-            >
-              Profile
-            </button>
-            <button
-              onClick={() => setActiveTab('skillMap')}
-              className={`flex-1 min-w-[100px] px-4 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
-                activeTab === 'skillMap'
-                  ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
-              }`}
-            >
-              Skills
-            </button>
-            <button
-              onClick={() => setActiveTab('statistics')}
-              className={`flex-1 min-w-[100px] px-4 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
-                activeTab === 'statistics'
-                  ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
-              }`}
-            >
-              Statistics
-            </button>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-6 sm:space-y-8">
+        {/* Page Header */}
+        <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+          {/* Decorative background pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-600 rounded-full -ml-24 -mb-24"></div>
           </div>
 
-          {activeTab === 'mapDropdown' && (
-            <MapDropdown
-              farms={farmsData}
-              selectedFarm={farmData}
-              onSelectFarm={(f) => setFarmData(f)}
-            />
-          )}
-
-          {activeTab === 'profile' && (
-            <ProfileTab
-              staffDirectory={Array.isArray(staffData) ? staffData : null}
-              openAddStaffModal={openAddStaffModal}
-            />
-          )}
-
-          {activeTab === 'skillMap' && (
-            <SkillMapTab
-              staffSkills={flatSkills}
-              onSkillClick={handleSkillClick}
-            />
-          )}
-
-          {activeTab === 'statistics' && (
-            <StatisticsTab
-              memberEachFarmData={memberEachFarmData}
-              skillsCountData={skillsCountData}
-              agesInAllFarmData={agesInAllFarmData}
-              refetchFarms={refetchFarms}
-            />
-          )}
+          <div className="relative p-5 sm:p-6 lg:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+              <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-green-500 via-green-600 to-green-700 shadow-lg ring-4 ring-green-100 animate-pulse-slow">
+                <svg
+                  className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                  Green Pages
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600 font-medium">
+                  Interactive farm mapping, staff management, and skills
+                  tracking
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1">
+            <Card className="rounded-2xl shadow-2xl border-2 border-gray-200 overflow-hidden hover:shadow-3xl transition-shadow duration-300">
+              <CardHeader className="bg-gradient-to-r from-green-600 to-green-700 border-b-2 border-green-500 pb-4">
+                <CardTitle className="text-lg sm:text-xl font-bold text-white flex items-center gap-3">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                    <svg
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                      />
+                    </svg>
+                  </div>
+                  <span>Interactive Farm Map</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0 bg-gradient-to-br from-gray-50 to-white">
+                <div style={{ height: 380 }} className="relative">
+                  <LeafletMap
+                    farmsData={farmsData}
+                    selectedFarm={farmData}
+                    onSelectFarm={(f: any) => setFarmData(f)}
+                  />
+                </div>
+                {farmData && (
+                  <div className="p-4 border-t-2 border-gray-200 bg-white">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                      <span className="text-sm font-semibold text-gray-700">
+                        Selected: {farmData.name}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 p-2 mb-6 flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setActiveTab('mapDropdown')}
+                className={`flex-1 min-w-[100px] px-4 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
+                  activeTab === 'mapDropdown'
+                    ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105'
+                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
+                }`}
+              >
+                Map
+              </button>
+              <button
+                onClick={() => setActiveTab('profile')}
+                className={`flex-1 min-w-[100px] px-4 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
+                  activeTab === 'profile'
+                    ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105'
+                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
+                }`}
+              >
+                Profile
+              </button>
+              <button
+                onClick={() => setActiveTab('skillMap')}
+                className={`flex-1 min-w-[100px] px-4 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
+                  activeTab === 'skillMap'
+                    ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105'
+                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
+                }`}
+              >
+                Skills
+              </button>
+              <button
+                onClick={() => setActiveTab('statistics')}
+                className={`flex-1 min-w-[100px] px-4 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
+                  activeTab === 'statistics'
+                    ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg scale-105'
+                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
+                }`}
+              >
+                Statistics
+              </button>
+            </div>
+
+            {activeTab === 'mapDropdown' && (
+              <MapDropdown
+                farms={farmsData}
+                selectedFarm={farmData}
+                onSelectFarm={(f) => setFarmData(f)}
+              />
+            )}
+
+            {activeTab === 'profile' && (
+              <ProfileTab
+                staffDirectory={Array.isArray(staffData) ? staffData : null}
+                openAddStaffModal={openAddStaffModal}
+              />
+            )}
+
+            {activeTab === 'skillMap' && (
+              <SkillMapTab
+                staffSkills={flatSkills}
+                onSkillClick={handleSkillClick}
+              />
+            )}
+
+            {activeTab === 'statistics' && (
+              <StatisticsTab
+                memberEachFarmData={memberEachFarmData}
+                skillsCountData={skillsCountData}
+                agesInAllFarmData={agesInAllFarmData}
+                refetchFarms={refetchFarms}
+              />
+            )}
+          </div>
+        </div>
+
+        <AddStaffModal
+          isOpen={isAddStaffModalOpen}
+          onClose={closeAddStaffModal}
+          onSubmit={handleSubmitStaff}
+          staffForm={staffForm}
+          handleStaffFormChange={handleStaffFormChange}
+          contactRest={contactRest}
+          setContactRest={setContactRest}
+          skillsData={skillsData}
+          farmsData={farmsData}
+          isSubmitting={isSubmitting}
+        />
+
+        <SkillStaffModal
+          isOpen={skillModalOpen}
+          onClose={() => setSkillModalOpen(false)}
+          skillLoading={skillLoading}
+          staffList={skillStaff}
+          formatContact={formatContact}
+        />
       </div>
-
-      <AddStaffModal
-        isOpen={isAddStaffModalOpen}
-        onClose={closeAddStaffModal}
-        onSubmit={handleSubmitStaff}
-        staffForm={staffForm}
-        handleStaffFormChange={handleStaffFormChange}
-        contactRest={contactRest}
-        setContactRest={setContactRest}
-        skillsData={skillsData}
-        farmsData={farmsData}
-        isSubmitting={isSubmitting}
-      />
-
-      <SkillStaffModal
-        isOpen={skillModalOpen}
-        onClose={() => setSkillModalOpen(false)}
-        skillLoading={skillLoading}
-        staffList={skillStaff}
-        formatContact={formatContact}
-      />
     </div>
   );
 };
