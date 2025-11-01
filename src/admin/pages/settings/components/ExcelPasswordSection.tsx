@@ -85,16 +85,19 @@ const ExcelPasswordSection = () => {
   };
 
   return (
-    <Card className="shadow-md border border-gray-200 overflow-hidden">
-      <CardHeader className="pb-4 sm:pb-6 bg-gradient-to-r from-blue-50 to-white border-b border-gray-200">
-        <CardTitle className="text-base sm:text-xl lg:text-2xl font-bold text-gray-900 flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-blue-100">
-            <FileSpreadsheet className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+    <Card className="shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+      <CardHeader className="pb-4 sm:pb-6 bg-gradient-to-r from-green-50 via-green-50/50 to-white border-b-2 border-green-100">
+        <CardTitle className="text-base sm:text-xl lg:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+          <div className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-green-500 to-green-600 shadow-md">
+            <FileSpreadsheet className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
-          Excel Report Protection
+          <span className="line-clamp-1">Excel Report Protection</span>
         </CardTitle>
+        <p className="text-xs sm:text-sm text-gray-600 mt-2 ml-11 sm:ml-14">
+          Set a password to protect exported Excel reports from editing
+        </p>
       </CardHeader>
-      <CardContent className="p-4 sm:p-6 lg:p-8 space-y-6">
+      <CardContent className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 bg-gradient-to-br from-white to-gray-50">
         {/* Information Alert */}
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
           <div className="flex items-start gap-3">
@@ -114,15 +117,20 @@ const ExcelPasswordSection = () => {
         </div>
 
         {/* Password Setting */}
-        <div className="space-y-3">
-          <label className="flex items-center gap-2 text-base font-semibold text-gray-700">
-            <Lock className="w-4 h-4 text-gray-600" />
+        <div className="space-y-3 p-4 sm:p-5 bg-white rounded-xl border-2 border-gray-200 hover:border-green-300 transition-colors">
+          <label className="flex items-center gap-2 text-sm sm:text-base font-bold text-gray-800">
+            <span className="text-green-600">•</span>
             Protection Password
+            {!editingPassword && (
+              <span className="text-xs font-normal text-gray-500">
+                (Click change to update)
+              </span>
+            )}
           </label>
           {loadingPassword ? (
-            <div className="flex items-center gap-2 text-gray-500">
-              <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-              Loading password...
+            <div className="flex items-center gap-2 text-gray-500 py-4">
+              <div className="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+              <span className="text-sm sm:text-base">Loading password...</span>
             </div>
           ) : (
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
@@ -133,37 +141,41 @@ const ExcelPasswordSection = () => {
                       type={showPassword ? 'text' : 'password'}
                       value={excelPassword}
                       onChange={(e) => setExcelPassword(e.target.value)}
-                      className="w-full px-3 py-2 pr-10 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-10 sm:pr-12 text-sm sm:text-base border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all shadow-sm"
                       placeholder="Enter password (min 6 characters)"
                       minLength={6}
+                      autoFocus
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
+                      aria-label={
+                        showPassword ? 'Hide password' : 'Show password'
+                      }
                     >
                       {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
+                        <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" />
                       ) : (
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
                       )}
                     </button>
                   </div>
                   <div className="flex gap-2 sm:flex-shrink-0">
                     <button
                       onClick={handlePasswordSave}
-                      disabled={isSavingPassword}
-                      className="flex-1 sm:flex-initial px-3 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
+                      disabled={isSavingPassword || excelPassword.length < 6}
+                      className="flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
                     >
                       {isSavingPassword ? (
                         <>
                           <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          Saving...
+                          <span className="hidden sm:inline">Saving...</span>
                         </>
                       ) : (
                         <>
-                          <Check className="w-4 h-4" />
-                          Save
+                          <Check className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span>Save</span>
                         </>
                       )}
                     </button>
@@ -173,57 +185,83 @@ const ExcelPasswordSection = () => {
                         setShowPassword(false);
                       }}
                       disabled={isSavingPassword}
-                      className="flex-1 sm:flex-initial px-3 sm:px-6 py-2 sm:py-3 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition-all shadow-sm disabled:opacity-50 text-sm sm:text-base"
+                      className="flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition-all shadow-md hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base"
                     >
-                      <X className="w-4 h-4 inline mr-1" />
-                      Cancel
+                      <X className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="hidden sm:inline">Cancel</span>
                     </button>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="flex-1 px-4 py-3 bg-gray-100 border border-gray-300 rounded-lg flex items-center gap-2">
-                    <Lock className="w-4 h-4 text-gray-500" />
-                    <span className="text-sm sm:text-base text-gray-700 font-mono">
+                  <div className="flex-1 px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-300 rounded-lg flex items-center gap-2 sm:gap-3 min-h-[44px]">
+                    <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                    <span className="text-sm sm:text-base text-gray-700 font-mono tracking-wider">
                       {'•'.repeat(Math.min(excelPassword.length, 20))}
                     </span>
                   </div>
                   <button
                     onClick={() => setEditingPassword(true)}
-                    className="sm:flex-shrink-0 px-3 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-sm flex items-center justify-center gap-2 text-sm sm:text-base"
+                    className="sm:flex-shrink-0 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-lg hover:from-green-700 hover:to-green-800 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base min-h-[44px]"
                   >
-                    <Pencil className="w-4 h-4" />
-                    Change Password
+                    <Pencil className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline">Change Password</span>
+                    <span className="sm:hidden">Change</span>
                   </button>
                 </>
               )}
             </div>
           )}
 
-          <p className="text-xs text-gray-500 flex items-center gap-1">
-            <AlertCircle className="w-3 h-3" />
-            Current password will be used for all newly exported Excel reports
+          {excelPassword.length > 0 &&
+            excelPassword.length < 6 &&
+            editingPassword && (
+              <p className="text-xs sm:text-sm text-red-600 flex items-center gap-1.5 animate-pulse">
+                <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                Password must be at least 6 characters long
+              </p>
+            )}
+
+          <p className="text-xs sm:text-sm text-gray-600 flex items-start gap-1.5">
+            <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5" />
+            <span>
+              Current password will be used for all newly exported Excel reports
+            </span>
           </p>
         </div>
 
         {/* Usage Example */}
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-          <h4 className="text-sm font-semibold text-gray-700 mb-2">
+        <div className="bg-gradient-to-br from-green-50 to-white border-2 border-green-200 rounded-xl p-4 sm:p-5">
+          <h4 className="text-sm sm:text-base font-bold text-green-900 mb-3 flex items-center gap-2">
+            <Info className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
             How it works:
           </h4>
-          <ul className="text-xs sm:text-sm text-gray-600 space-y-1 list-disc list-inside">
-            <li>
-              All exported Excel reports are automatically protected with this
-              password
+          <ul className="text-xs sm:text-sm text-gray-700 space-y-2">
+            <li className="flex items-start gap-2">
+              <span className="text-green-600 font-bold mt-0.5">•</span>
+              <span>
+                All exported Excel reports are automatically protected with this
+                password
+              </span>
             </li>
-            <li>
-              Users can view and print reports but cannot modify protected
-              sheets
+            <li className="flex items-start gap-2">
+              <span className="text-green-600 font-bold mt-0.5">•</span>
+              <span>
+                Users can view and print reports but cannot modify protected
+                sheets
+              </span>
             </li>
-            <li>
-              To edit a protected sheet, users must enter this password in Excel
+            <li className="flex items-start gap-2">
+              <span className="text-green-600 font-bold mt-0.5">•</span>
+              <span>
+                To edit a protected sheet, users must enter this password in
+                Excel
+              </span>
             </li>
-            <li>Change this password anytime to update future exports</li>
+            <li className="flex items-start gap-2">
+              <span className="text-green-600 font-bold mt-0.5">•</span>
+              <span>Change this password anytime to update future exports</span>
+            </li>
           </ul>
         </div>
       </CardContent>

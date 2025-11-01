@@ -556,7 +556,9 @@ const RecordHeader = ({
     await summarySheet.protect(password, protectionOptions);
     await recordsSheet.protect(password, protectionOptions);
     await statisticsSheet.protect(password, protectionOptions);
-    await rawDataSheet.protect(password, protectionOptions); // --- EXPORT FILE ---
+    await rawDataSheet.protect(password, protectionOptions);
+
+    // --- EXPORT FILE ---
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -590,18 +592,19 @@ const RecordHeader = ({
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
         <Button
           onClick={() => setOpenAddRecordModal(true)}
-          className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm flex items-center justify-center gap-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+          className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 rounded-xl font-bold shadow-md hover:shadow-xl transition-all min-h-[44px]"
         >
-          + Add Residents
+          <span className="text-lg sm:text-xl">+</span>
+          <span>Add Residents</span>
         </Button>
 
         <Button
           onClick={handleExportToExcel}
-          className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+          className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold shadow-md hover:shadow-xl transition-all hover:scale-105 min-h-[44px]"
         >
           <Download className="w-4 h-4 sm:w-5 sm:h-5" />
           <span className="hidden sm:inline">Export Excel Report</span>
-          <span className="sm:hidden">Export</span>
+          <span className="sm:hidden">Export Excel</span>
         </Button>
       </div>
     </header>
