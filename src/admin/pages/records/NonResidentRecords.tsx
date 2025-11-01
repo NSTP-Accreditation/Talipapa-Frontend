@@ -357,7 +357,9 @@ const NonResidentRecords: React.FC = () => {
                             <span className="text-xs sm:text-sm font-semibold text-gray-900">
                               {`${r.firstName || r.first_name || r.first || ''} ${r.middleName || r.middle_name || ''} ${r.lastName || r.last_name || r.last || ''}`}
                               {(r.suffix || r.name_suffix) && (
-                                <span className="ml-1 text-gray-600">{r.suffix || r.name_suffix}</span>
+                                <span className="ml-1 text-gray-600">
+                                  {r.suffix || r.name_suffix}
+                                </span>
                               )}
                             </span>
                           </div>
@@ -385,7 +387,11 @@ const NonResidentRecords: React.FC = () => {
                       </td>
                       <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                         <span className="text-xs sm:text-sm text-gray-700 font-medium">
-                          {r.createdAt || r.created_at ? new Date(r.createdAt || r.created_at).toLocaleDateString() : '-'}
+                          {r.createdAt || r.created_at
+                            ? new Date(
+                                r.createdAt || r.created_at
+                              ).toLocaleDateString()
+                            : '-'}
                         </span>
                       </td>
                       <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">

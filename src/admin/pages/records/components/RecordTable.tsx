@@ -89,9 +89,12 @@ const RecordTable = ({
                         </div>
                         <div className="flex flex-col">
                           <span className="text-xs sm:text-sm font-semibold text-gray-900">
-                            {record?.firstName} {record?.middleName || ''} {record?.lastName}
+                            {record?.firstName} {record?.middleName || ''}{' '}
+                            {record?.lastName}
                             {(record as any)?.suffix && (
-                              <span className="ml-1 text-gray-600">{(record as any).suffix}</span>
+                              <span className="ml-1 text-gray-600">
+                                {(record as any).suffix}
+                              </span>
                             )}
                           </span>
                         </div>
