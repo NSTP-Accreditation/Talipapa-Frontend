@@ -466,7 +466,10 @@ export const exportResidentRecords = async (
 
     // Add metadata row with proper cell merging
     recordsSheet.getCell('A2').value = 'Generated:';
-    recordsSheet.getCell('A2').alignment = { vertical: 'middle', horizontal: 'left' };
+    recordsSheet.getCell('A2').alignment = {
+      vertical: 'middle',
+      horizontal: 'left',
+    };
     recordsSheet.getColumn(1).width = 12; // Ensure "Generated:" fits
     recordsSheet.getCell('B2').value = dayjs().format('MMMM DD, YYYY | h:mm A');
     recordsSheet.mergeCells('B2:G2');
@@ -648,7 +651,10 @@ export const exportResidentRecords = async (
       const rowData = allKeys.map((key) => {
         const value = (r as any)[key];
         // Format date fields to be more readable (replace T with |)
-        if (typeof value === 'string' && value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
+        if (
+          typeof value === 'string' &&
+          value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
+        ) {
           return value.replace('T', ' | ').replace(/\.\d{3}Z?$/, '');
         }
         return value;
@@ -661,13 +667,20 @@ export const exportResidentRecords = async (
     // Only style rows with actual data (header at row 5, then data rows)
     const lastRawDataRow = 5 + records.length;
     const numColumns = allKeys.length;
-    
+
     // Determine which columns to center based on their keys
-    const centerAlignKeys = ['residentStatus', 'gender', 'age', 'isResident', 'points', 'contact_number'];
+    const centerAlignKeys = [
+      'residentStatus',
+      'gender',
+      'age',
+      'isResident',
+      'points',
+      'contact_number',
+    ];
     const centerAlignIndices = allKeys
       .map((key, idx) => (centerAlignKeys.includes(key) ? idx + 1 : -1))
-      .filter(idx => idx > 0);
-    
+      .filter((idx) => idx > 0);
+
     for (let rowNumber = 5; rowNumber <= lastRawDataRow; rowNumber++) {
       const row = rawDataSheet.getRow(rowNumber);
       // Only style columns that have actual data
@@ -993,7 +1006,10 @@ export const exportNonResidentRecords = async (
       const rowData = allKeys.map((key) => {
         const value = (r as any)[key];
         // Format date fields to be more readable (replace T with |)
-        if (typeof value === 'string' && value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
+        if (
+          typeof value === 'string' &&
+          value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
+        ) {
           return value.replace('T', ' | ').replace(/\.\d{3}Z?$/, '');
         }
         return value;
@@ -1006,13 +1022,20 @@ export const exportNonResidentRecords = async (
     // Only style rows with actual data (header at row 5, then data rows) - Non-Resident
     const lastRawDataRow2 = 5 + records.length;
     const numColumns2 = allKeys.length;
-    
+
     // Determine which columns to center based on their keys
-    const centerAlignKeys2 = ['residentStatus', 'gender', 'age', 'isResident', 'points', 'contact_number'];
+    const centerAlignKeys2 = [
+      'residentStatus',
+      'gender',
+      'age',
+      'isResident',
+      'points',
+      'contact_number',
+    ];
     const centerAlignIndices2 = allKeys
       .map((key, idx) => (centerAlignKeys2.includes(key) ? idx + 1 : -1))
-      .filter(idx => idx > 0);
-    
+      .filter((idx) => idx > 0);
+
     for (let rowNumber = 5; rowNumber <= lastRawDataRow2; rowNumber++) {
       const row = rawDataSheet.getRow(rowNumber);
       // Only style columns that have actual data
@@ -1292,7 +1315,10 @@ export const exportEstablishmentRecords = async (
       const rowData = allKeys.map((key) => {
         const value = (r as any)[key];
         // Format date fields to be more readable (replace T with |)
-        if (typeof value === 'string' && value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) {
+        if (
+          typeof value === 'string' &&
+          value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
+        ) {
           return value.replace('T', ' | ').replace(/\.\d{3}Z?$/, '');
         }
         return value;
@@ -1305,13 +1331,20 @@ export const exportEstablishmentRecords = async (
     // Only style rows with actual data (header at row 5, then data rows) - Establishment
     const lastRawDataRow3 = 5 + records.length;
     const numColumns3 = allKeys.length;
-    
+
     // Determine which columns to center based on their keys
-    const centerAlignKeys3 = ['residentStatus', 'gender', 'age', 'isResident', 'points', 'contact_number'];
+    const centerAlignKeys3 = [
+      'residentStatus',
+      'gender',
+      'age',
+      'isResident',
+      'points',
+      'contact_number',
+    ];
     const centerAlignIndices3 = allKeys
       .map((key, idx) => (centerAlignKeys3.includes(key) ? idx + 1 : -1))
-      .filter(idx => idx > 0);
-    
+      .filter((idx) => idx > 0);
+
     for (let rowNumber = 5; rowNumber <= lastRawDataRow3; rowNumber++) {
       const row = rawDataSheet.getRow(rowNumber);
       // Only style columns that have actual data
