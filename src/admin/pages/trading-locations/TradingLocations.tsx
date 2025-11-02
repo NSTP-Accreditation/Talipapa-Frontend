@@ -11,8 +11,21 @@ import 'leaflet/dist/leaflet.css';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { MapPin, Plus, Trash2, Edit2, Save, X } from 'lucide-react';
+import {
+  MapPin,
+  Plus,
+  Trash2,
+  Edit2,
+  Save,
+  X,
+  Store,
+  MapPinned,
+  AlertCircle,
+  Check,
+} from 'lucide-react';
 import { useToast } from '@/hooks/useToast';
+import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
+import type { NominatimSuggestion } from '@/hooks/useNominatim';
 
 // Import marker images
 import markerIconUrl from 'leaflet/dist/images/marker-icon.png';
@@ -100,8 +113,16 @@ const TradingLocations: React.FC = () => {
   const handleMapClick = (lat: number, lng: number) => {
     if (isAdding || editingId) {
       setSelectedLocation({ lat, lng });
-      toast.success('Location selected on map');
+      toast.success('Location pinned on map');
     }
+  };
+
+  const handleAddressSelect = (suggestion: NominatimSuggestion) => {
+    // Auto-fill coordinates when address is selected
+    const lat = parseFloat(suggestion.lat);
+    const lng = parseFloat(suggestion.lon);
+    setSelectedLocation({ lat, lng });
+    toast.success('Location coordinates auto-filled from address');
   };
 
   const handleAddLocation = () => {
@@ -208,138 +229,198 @@ const TradingLocations: React.FC = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-            <MapPin className="w-8 h-8 text-green-600" />
-            Trading Locations
-          </h1>
-          <p className="text-gray-600 mt-1">
-            Manage and geotag stores or locations where trading activities
-            happen
-          </p>
-        </div>
-        {!isAdding && !editingId && (
-          <Button
-            onClick={startAdding}
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Location
-          </Button>
-        )}
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
+      <div className="space-y-6 sm:space-y-8">
+        {/* Header */}
+        <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
+          {/* Decorative background pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-green-600 rounded-full -ml-24 -mb-24"></div>
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Map Section */}
-        <Card className="lg:col-span-2">
-          <CardHeader className="bg-gradient-to-r from-green-50 to-green-100 border-b border-green-200">
-            <CardTitle className="text-green-700 flex items-center gap-2">
-              <MapPin className="w-5 h-5" />
-              Trading Locations Map
-              {(isAdding || editingId) && (
-                <span className="text-sm font-normal text-green-600">
-                  (Click on the map to select location)
-                </span>
+          <div className="relative p-5 sm:p-6 lg:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+              <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-br from-green-500 via-green-600 to-green-700 shadow-lg ring-4 ring-green-100">
+                <MapPinned className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" />
+              </div>
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                  Trading Locations
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600 font-medium mb-4">
+                  Manage and geotag stores or locations where trading activities
+                  happen
+                </p>
+
+                {/* Quick Info Pills */}
+                <div className="flex flex-wrap gap-2 sm:gap-3">
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
+                    <Store className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>
+                      {locations.length} Location
+                      {locations.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
+                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Interactive Map</span>
+                  </div>
+                </div>
+              </div>
+              {!isAdding && !editingId && (
+                <Button
+                  onClick={startAdding}
+                  className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold shadow-md hover:shadow-lg transition-all px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl"
+                >
+                  <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                  Add Location
+                </Button>
               )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div style={{ height: '600px', width: '100%' }}>
-              <MapContainer
-                center={defaultCenter}
-                zoom={12}
-                style={{ height: '100%', width: '100%' }}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution="&copy; OpenStreetMap contributors"
-                />
-                <MapClickHandler onLocationSelect={handleMapClick} />
-
-                {/* Existing locations */}
-                {locations.map((loc) => (
-                  <Marker
-                    key={loc._id}
-                    position={[loc.location.lat, loc.location.lng]}
-                    icon={DefaultIcon}
-                  >
-                    <Popup>
-                      <div className="max-w-xs">
-                        <h4 className="font-bold text-green-700">{loc.name}</h4>
-                        <p className="text-xs text-gray-600 mt-1">
-                          {loc.address}
-                        </p>
-                        {loc.description && (
-                          <p className="text-xs text-gray-500 mt-1">
-                            {loc.description}
-                          </p>
-                        )}
-                      </div>
-                    </Popup>
-                  </Marker>
-                ))}
-
-                {/* Selected location marker (temporary) */}
-                {selectedLocation && (isAdding || editingId) && (
-                  <Marker
-                    position={[selectedLocation.lat, selectedLocation.lng]}
-                    icon={
-                      new L.Icon({
-                        iconUrl: markerIconUrl,
-                        iconRetinaUrl: markerIcon2xUrl,
-                        shadowUrl: markerShadowUrl,
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                        shadowSize: [41, 41],
-                      })
-                    }
-                  >
-                    <Popup>
-                      <div className="text-center">
-                        <p className="font-semibold text-green-600">
-                          {isAdding ? 'New Location' : 'Updated Location'}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {selectedLocation.lat.toFixed(6)},{' '}
-                          {selectedLocation.lng.toFixed(6)}
-                        </p>
-                      </div>
-                    </Popup>
-                  </Marker>
-                )}
-              </MapContainer>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        {/* Sidebar */}
-        <div className="space-y-4">
+        {/* Map Section */}
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex items-center gap-3 px-2">
+            <div className="h-1 w-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full"></div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800">
+              Interactive Map
+            </h2>
+            <div className="h-px flex-1 bg-gradient-to-r from-gray-300 to-transparent"></div>
+          </div>
+
+          <Card className="shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="pb-4 sm:pb-6 bg-gradient-to-r from-green-50 via-green-50/50 to-white border-b-2 border-green-100">
+              <CardTitle className="text-base sm:text-xl lg:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+                <div className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-green-500 to-green-600 shadow-md">
+                  <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                </div>
+                <span>Trading Locations Map</span>
+              </CardTitle>
+              {(isAdding || editingId) && (
+                <div className="mt-3 ml-11 sm:ml-14 bg-blue-50 border-l-4 border-blue-400 rounded-r-xl p-3">
+                  <p className="text-xs sm:text-sm font-semibold text-blue-900 flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                    Click on the map to pin the exact location
+                  </p>
+                </div>
+              )}
+            </CardHeader>
+            <CardContent className="p-0">
+              <div style={{ height: '600px', width: '100%' }}>
+                <MapContainer
+                  center={defaultCenter}
+                  zoom={12}
+                  style={{ height: '100%', width: '100%' }}
+                >
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution="&copy; OpenStreetMap contributors"
+                  />
+                  <MapClickHandler onLocationSelect={handleMapClick} />
+
+                  {/* Existing locations */}
+                  {locations.map((loc) => (
+                    <Marker
+                      key={loc._id}
+                      position={[loc.location.lat, loc.location.lng]}
+                      icon={DefaultIcon}
+                    >
+                      <Popup>
+                        <div className="max-w-xs">
+                          <h4 className="font-bold text-green-700">
+                            {loc.name}
+                          </h4>
+                          <p className="text-xs text-gray-600 mt-1">
+                            {loc.address}
+                          </p>
+                          {loc.description && (
+                            <p className="text-xs text-gray-500 mt-1">
+                              {loc.description}
+                            </p>
+                          )}
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ))}
+
+                  {/* Selected location marker (temporary) */}
+                  {selectedLocation && (isAdding || editingId) && (
+                    <Marker
+                      position={[selectedLocation.lat, selectedLocation.lng]}
+                      icon={
+                        new L.Icon({
+                          iconUrl: markerIconUrl,
+                          iconRetinaUrl: markerIcon2xUrl,
+                          shadowUrl: markerShadowUrl,
+                          iconSize: [25, 41],
+                          iconAnchor: [12, 41],
+                          popupAnchor: [1, -34],
+                          shadowSize: [41, 41],
+                        })
+                      }
+                    >
+                      <Popup>
+                        <div className="text-center">
+                          <p className="font-semibold text-green-600">
+                            {isAdding ? 'New Location' : 'Updated Location'}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {selectedLocation.lat.toFixed(6)},{' '}
+                            {selectedLocation.lng.toFixed(6)}
+                          </p>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  )}
+                </MapContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Location Management Section */}
+        <div className="space-y-4 sm:space-y-6">
+          <div className="flex items-center gap-3 px-2">
+            <div className="h-1 w-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full"></div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800">
+              {isAdding
+                ? 'Add New Location'
+                : editingId
+                  ? 'Edit Location'
+                  : 'Saved Locations'}
+            </h2>
+            <div className="h-px flex-1 bg-gradient-to-r from-gray-300 to-transparent"></div>
+          </div>
+
           {/* Add/Edit Form */}
           {(isAdding || editingId) && (
-            <Card className="border-green-200">
-              <CardHeader className="bg-gradient-to-r from-green-50 to-green-100 border-b border-green-200">
-                <CardTitle className="text-green-700 flex items-center gap-2">
-                  {isAdding ? (
-                    <>
-                      <Plus className="w-5 h-5" />
-                      Add New Location
-                    </>
-                  ) : (
-                    <>
-                      <Edit2 className="w-5 h-5" />
-                      Edit Location
-                    </>
-                  )}
+            <Card className="shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+              <CardHeader className="pb-4 sm:pb-6 bg-gradient-to-r from-green-50 via-green-50/50 to-white border-b-2 border-green-100">
+                <CardTitle className="text-base sm:text-xl lg:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+                  <div className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-green-500 to-green-600 shadow-md">
+                    {isAdding ? (
+                      <Plus className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                    ) : (
+                      <Edit2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                    )}
+                  </div>
+                  <span>{isAdding ? 'Add New Location' : 'Edit Location'}</span>
                 </CardTitle>
+                <p className="text-xs sm:text-sm text-gray-600 mt-2 ml-11 sm:ml-14">
+                  Fill in the details below to{' '}
+                  {isAdding ? 'add a new' : 'update the'} trading location
+                </p>
               </CardHeader>
-              <CardContent className="p-4 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location Name *
+              <CardContent className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 bg-gradient-to-br from-white to-gray-50">
+                {/* Location Name */}
+                <div className="space-y-3 p-4 sm:p-5 bg-white rounded-xl border-2 border-gray-200 hover:border-green-300 transition-colors">
+                  <label className="flex items-center gap-2 text-sm sm:text-base font-bold text-gray-800">
+                    <span className="text-green-600">•</span>
+                    Location Name
+                    <span className="text-red-500">*</span>
                   </label>
                   <Input
                     type="text"
@@ -347,29 +428,42 @@ const TradingLocations: React.FC = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    placeholder="e.g., Main Trading Center"
-                    className="w-full"
+                    placeholder="e.g., Main Trading Center, Sari-Sari Store"
+                    className="px-4 py-3 text-sm sm:text-base border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all shadow-sm"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Address *
+                {/* Address with Autocomplete */}
+                <div className="space-y-3 p-4 sm:p-5 bg-white rounded-xl border-2 border-gray-200 hover:border-green-300 transition-colors">
+                  <label className="flex items-center gap-2 text-sm sm:text-base font-bold text-gray-800">
+                    <span className="text-green-600">•</span>
+                    Address
+                    <span className="text-red-500">*</span>
                   </label>
-                  <Input
-                    type="text"
+                  <AddressAutocomplete
                     value={formData.address}
-                    onChange={(e) =>
-                      setFormData({ ...formData, address: e.target.value })
+                    onChange={(value) =>
+                      setFormData({ ...formData, address: value })
                     }
-                    placeholder="e.g., 123 Main St, City"
-                    className="w-full"
+                    onSelect={handleAddressSelect}
+                    placeholder="Start typing to search for an address..."
+                    countryCode="ph"
+                    className="border-2 border-gray-300 rounded-xl"
                   />
+                  <p className="text-xs text-gray-500 flex items-center gap-1 mt-2">
+                    <AlertCircle className="w-3 h-3" />
+                    Address will auto-fill coordinates on the map
+                  </p>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Description (Optional)
+                {/* Description */}
+                <div className="space-y-3 p-4 sm:p-5 bg-white rounded-xl border-2 border-gray-200 hover:border-green-300 transition-colors">
+                  <label className="flex items-center gap-2 text-sm sm:text-base font-bold text-gray-800">
+                    <span className="text-green-600">•</span>
+                    Description
+                    <span className="text-xs font-normal text-gray-500">
+                      (Optional)
+                    </span>
                   </label>
                   <Input
                     type="text"
@@ -377,109 +471,162 @@ const TradingLocations: React.FC = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, description: e.target.value })
                     }
-                    placeholder="Additional details..."
-                    className="w-full"
+                    placeholder="Additional details about this location..."
+                    className="px-4 py-3 text-sm sm:text-base border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all shadow-sm"
                   />
                 </div>
 
+                {/* Coordinates Display */}
                 {selectedLocation && (
-                  <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
-                    <span className="font-semibold">Coordinates:</span>
-                    <br />
-                    Lat: {selectedLocation.lat.toFixed(6)}
-                    <br />
-                    Lng: {selectedLocation.lng.toFixed(6)}
+                  <div className="p-4 sm:p-5 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border-2 border-green-200">
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-green-500 rounded-lg">
+                        <Check className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-bold text-gray-900 mb-1">
+                          Location Coordinates Set
+                        </p>
+                        <div className="text-xs text-gray-700 space-y-0.5">
+                          <p>
+                            <span className="font-semibold">Latitude:</span>{' '}
+                            {selectedLocation.lat.toFixed(6)}
+                          </p>
+                          <p>
+                            <span className="font-semibold">Longitude:</span>{' '}
+                            {selectedLocation.lng.toFixed(6)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
 
-                <div className="flex gap-2">
-                  <Button
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
                     onClick={isAdding ? handleAddLocation : handleEditLocation}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                    disabled={
+                      !formData.name.trim() ||
+                      !formData.address.trim() ||
+                      !selectedLocation
+                    }
+                    className="flex-1 px-6 py-3.5 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-base min-h-[44px]"
                   >
-                    <Save className="w-4 h-4 mr-2" />
-                    {isAdding ? 'Add' : 'Update'}
-                  </Button>
-                  <Button
+                    <Save className="w-5 h-5" />
+                    <span>
+                      {isAdding ? 'Save Location' : 'Update Location'}
+                    </span>
+                  </button>
+                  <button
                     onClick={cancelEdit}
-                    variant="outline"
-                    className="flex-1 border-gray-300"
+                    className="sm:flex-shrink-0 px-6 py-3.5 bg-gray-500 text-white font-bold rounded-xl hover:bg-gray-600 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-base min-h-[44px]"
                   >
-                    <X className="w-4 h-4 mr-2" />
-                    Cancel
-                  </Button>
+                    <X className="w-5 h-5" />
+                    <span>Cancel</span>
+                  </button>
                 </div>
               </CardContent>
             </Card>
           )}
 
           {/* Locations List */}
-          <Card>
-            <CardHeader className="bg-gradient-to-r from-green-50 to-green-100 border-b border-green-200">
-              <CardTitle className="text-green-700">
-                Saved Locations ({locations.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4">
-              {locations.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  <MapPin className="w-12 h-12 mx-auto mb-2 opacity-30" />
-                  <p>No locations added yet</p>
-                  <p className="text-sm">Click "Add Location" to get started</p>
-                </div>
-              ) : (
-                <div className="space-y-3 max-h-[500px] overflow-y-auto">
-                  {locations.map((location) => (
-                    <div
-                      key={location._id}
-                      className="border border-gray-200 rounded-lg p-3 hover:border-green-300 transition-colors"
+          {!isAdding && !editingId && (
+            <Card className="shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+              <CardHeader className="pb-4 sm:pb-6 bg-gradient-to-r from-green-50 via-green-50/50 to-white border-b-2 border-green-100">
+                <CardTitle className="text-base sm:text-xl lg:text-2xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+                  <div className="p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-green-500 to-green-600 shadow-md">
+                    <Store className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  </div>
+                  <span>Saved Locations ({locations.length})</span>
+                </CardTitle>
+                <p className="text-xs sm:text-sm text-gray-600 mt-2 ml-11 sm:ml-14">
+                  All registered trading locations and stores
+                </p>
+              </CardHeader>
+              <CardContent className="p-4 sm:p-6 bg-gradient-to-br from-white to-gray-50">
+                {locations.length === 0 ? (
+                  <div className="text-center py-12 sm:py-16">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Store className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400" />
+                    </div>
+                    <p className="text-base sm:text-lg font-bold text-gray-700 mb-2">
+                      No locations added yet
+                    </p>
+                    <p className="text-sm text-gray-500 mb-6">
+                      Click "Add Location" button above to get started
+                    </p>
+                    <button
+                      onClick={startAdding}
+                      className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all shadow-md hover:shadow-lg inline-flex items-center gap-2"
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-gray-800 flex items-center gap-1">
-                            <MapPin className="w-4 h-4 text-green-600" />
-                            {location.name}
-                          </h4>
-                          <p className="text-xs text-gray-600 mt-1">
-                            {location.address}
-                          </p>
-                          {location.description && (
-                            <p className="text-xs text-gray-500 mt-1">
-                              {location.description}
-                            </p>
-                          )}
-                          <p className="text-xs text-gray-400 mt-2">
-                            {location.location.lat.toFixed(4)},{' '}
-                            {location.location.lng.toFixed(4)}
-                          </p>
-                        </div>
-                        <div className="flex gap-1 ml-2">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => startEdit(location)}
-                            className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                            disabled={isAdding || editingId !== null}
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleDeleteLocation(location._id!)}
-                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                            disabled={isAdding || editingId !== null}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
+                      <Plus className="w-5 h-5" />
+                      Add First Location
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-3 sm:space-y-4 max-h-[600px] overflow-y-auto">
+                    {locations.map((location) => (
+                      <div
+                        key={location._id}
+                        className="bg-white border-2 border-gray-200 rounded-xl p-4 sm:p-5 hover:border-green-300 hover:shadow-md transition-all"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start gap-2 mb-2">
+                              <div className="p-1.5 bg-green-100 rounded-lg flex-shrink-0 mt-0.5">
+                                <Store className="w-4 h-4 text-green-600" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-bold text-gray-900 text-sm sm:text-base break-words">
+                                  {location.name}
+                                </h4>
+                              </div>
+                            </div>
+                            <div className="ml-8 space-y-1.5">
+                              <div className="flex items-start gap-2">
+                                <MapPin className="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-0.5" />
+                                <p className="text-xs sm:text-sm text-gray-600 break-words">
+                                  {location.address}
+                                </p>
+                              </div>
+                              {location.description && (
+                                <p className="text-xs sm:text-sm text-gray-500 italic pl-5">
+                                  "{location.description}"
+                                </p>
+                              )}
+                              <p className="text-xs text-gray-400 pl-5 font-mono">
+                                📍 {location.location.lat.toFixed(4)},{' '}
+                                {location.location.lng.toFixed(4)}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex gap-2 flex-shrink-0">
+                            <button
+                              onClick={() => startEdit(location)}
+                              className="p-2 sm:p-2.5 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                              title="Edit location"
+                            >
+                              <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleDeleteLocation(location._id!)
+                              }
+                              className="p-2 sm:p-2.5 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Delete location"
+                            >
+                              <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>
