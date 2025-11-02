@@ -145,6 +145,27 @@ const TradingLocations: React.FC = () => {
     const lat = parseFloat(suggestion.lat);
     const lng = parseFloat(suggestion.lon);
     setSelectedLocation({ lat, lng });
+
+    // Check if user typed a house/building number at the beginning
+    const currentInput = formData.address.trim();
+    const suggestionAddress = suggestion.display_name;
+
+    // Match leading numbers/house numbers (e.g., "1", "123", "12-A", "1/2")
+    const numberMatch = currentInput.match(/^[\d\-\/A-Za-z]+(?=\s)/);
+
+    let finalAddress = suggestionAddress;
+
+    if (numberMatch) {
+      const houseNumber = numberMatch[0];
+      // Check if the number is not already in the suggestion
+      if (!suggestionAddress.startsWith(houseNumber)) {
+        // Prepend the house number to the suggestion
+        finalAddress = `${houseNumber} ${suggestionAddress}`;
+      }
+    }
+
+    // Update the address field with the final address
+    setFormData({ ...formData, address: finalAddress });
     toast.success('Location coordinates auto-filled from address');
   };
 
