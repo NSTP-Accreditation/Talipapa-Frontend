@@ -36,6 +36,9 @@ const FarmInventory = lazy(
 );
 const SwapItem = lazy(() => import('@/admin/pages/swap-item/SwapItem'));
 const GreenPages = lazy(() => import('@/admin/pages/green-pages/GreenPages'));
+const TradingLocations = lazy(
+  () => import('@/admin/pages/trading-locations/TradingLocations')
+);
 const Records = lazy(() => import('@/admin/pages/records/Records'));
 const NonResidentRecords = lazy(
   () => import('@/admin/pages/records/NonResidentRecords')
@@ -101,6 +104,10 @@ function App() {
                   />
                   <Route path="trading/swap-item" element={<SwapItem />} />
                   <Route path="trading/swap" element={<SwapLogs />} />
+                  <Route
+                    path="trading/locations"
+                    element={<TradingLocations />}
+                  />
 
                   {/* Green Pages Route */}
                   <Route path="green-pages" element={<GreenPages />} />

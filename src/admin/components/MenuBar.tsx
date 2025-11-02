@@ -23,6 +23,7 @@ import {
   Sprout,
   RotateCwSquare,
   Building,
+  MapPin,
 } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 
@@ -101,6 +102,11 @@ const MenuBar: React.FC<MenuBarProps> = ({
           icon: <ArrowRightLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Swap item',
           href: APP_ROUTES.ADMIN.TRADING + '/swap-item',
+        },
+        {
+          icon: <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
+          label: 'Geotag Locations',
+          href: APP_ROUTES.ADMIN.TRADING + '/locations',
         },
       ],
     },
