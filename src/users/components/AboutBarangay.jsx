@@ -19,7 +19,10 @@ export default function AboutBarangay() {
       {/* Video Section */}
       <div className="relative w-full h-[300px] sm:h-[500px] overflow-hidden shadow-2xl">
         <iframe
-          src="https://www.youtube.com/embed/_A71fgP5Xt8?autoplay=1&mute=1&loop=1&playlist=_A71fgP5Xt8"
+          src={
+            pageContent?.youtubeVideoUrl ||
+            'https://www.youtube.com/embed/_A71fgP5Xt8?autoplay=1&mute=1&loop=1&playlist=_A71fgP5Xt8'
+          }
           title="Barangay Talipapa Video"
           allow="autoplay; encrypted-media"
           allowFullScreen

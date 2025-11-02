@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { BookOpen, History, Target, Eye, X, Save } from 'lucide-react';
+import { BookOpen, History, Target, Eye, X, Save, Youtube } from 'lucide-react';
 
 interface ContentModalProps {
   isOpen: boolean;
@@ -11,12 +11,14 @@ interface ContentModalProps {
     vision?: string;
     barangayHistory?: string;
     barangayDescription?: string;
+    youtubeVideoUrl?: string;
   };
   onSave: (content: {
     barangayDescription: string;
     barangayHistory: string;
     mission: string;
     vision: string;
+    youtubeVideoUrl: string;
   }) => Promise<void> | void;
   isSaving: boolean;
 }
@@ -33,6 +35,7 @@ export default function ContentModal({
     barangayHistory: '',
     mission: '',
     vision: '',
+    youtubeVideoUrl: '',
   });
 
   useEffect(() => {
@@ -42,6 +45,7 @@ export default function ContentModal({
         barangayHistory: pageContent.barangayHistory || '',
         mission: pageContent.mission || '',
         vision: pageContent.vision || '',
+        youtubeVideoUrl: pageContent.youtubeVideoUrl || '',
       });
     }
   }, [pageContent, isOpen]);
@@ -88,6 +92,34 @@ export default function ContentModal({
 
         {/* Content */}
         <div className="p-4 sm:p-8 space-y-4 sm:space-y-6 overflow-y-auto max-h-[calc(95vh-200px)] bg-gradient-to-br from-gray-50 to-white">
+          {/* YouTube Video URL */}
+          <div className="space-y-2 sm:space-y-3">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center shadow-md">
+                <Youtube className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+              </div>
+              <label className="text-sm sm:text-base font-bold text-gray-700">
+                YouTube Video URL
+              </label>
+            </div>
+            <input
+              type="text"
+              value={formData.youtubeVideoUrl}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  youtubeVideoUrl: e.target.value,
+                }))
+              }
+              className="w-full p-3 sm:p-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-100 focus:border-red-500 text-sm sm:text-base transition-all"
+              placeholder="Enter YouTube embed URL (e.g., https://www.youtube.com/embed/VIDEO_ID)"
+            />
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">
+              Enter the full YouTube embed URL. This video will be displayed on
+              the About Us page.
+            </p>
+          </div>
+
           {/* Barangay Information */}
           <div className="space-y-2 sm:space-y-3">
             <div className="flex items-center gap-2 sm:gap-3">

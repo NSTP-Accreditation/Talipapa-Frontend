@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/useToast';
-import { Home, BookOpen, History, Target, Eye, SquarePen } from 'lucide-react';
+import {
+  Home,
+  BookOpen,
+  History,
+  Target,
+  Eye,
+  SquarePen,
+  Users,
+  Building,
+} from 'lucide-react';
 import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
 import useFetchData from '../../hooks/useFetchData';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
@@ -22,6 +31,7 @@ export default function AboutBarangayEditable() {
     vision?: string;
     barangayHistory?: string;
     barangayDescription?: string;
+    youtubeVideoUrl?: string;
   }>();
 
   // Centralized modal state
@@ -38,6 +48,7 @@ export default function AboutBarangayEditable() {
         vision: data.vision || '',
         barangayHistory: data.barangayHistory || '',
         barangayDescription: data.barangayDescription || '',
+        youtubeVideoUrl: data.youtubeVideoUrl || '',
       });
     }
   }, [data, dataLoading, error]);
@@ -64,12 +75,12 @@ export default function AboutBarangayEditable() {
       </div>
     );
   }
-
   const handleSave = async (updatedContent: {
     barangayDescription: string;
     barangayHistory: string;
     mission: string;
     vision: string;
+    youtubeVideoUrl: string;
   }) => {
     setIsSaving(true);
     try {
@@ -117,10 +128,26 @@ export default function AboutBarangayEditable() {
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                   About Barangay
                 </h1>
-                <p className="text-sm sm:text-base text-gray-600 font-medium">
+                <p className="text-sm sm:text-base text-gray-600 font-medium mb-4">
                   Manage barangay information, history, mission, vision, and
                   officials
                 </p>
+
+                {/* Quick Info Pills */}
+                <div className="flex flex-wrap gap-2 sm:gap-3">
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
+                    <Building className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Barangay Info</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
+                    <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Mission & Vision</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-full text-xs sm:text-sm font-semibold text-purple-700">
+                    <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Officials</span>
+                  </div>
+                </div>
               </div>
               <button
                 onClick={() => setIsModalOpen(true)}
@@ -135,6 +162,48 @@ export default function AboutBarangayEditable() {
 
         {/* Content Grid */}
         <div className="grid grid-cols-1 gap-4 sm:gap-6">
+          {/* YouTube Video URL */}
+          <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-red-200 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div className="p-5 sm:p-6 lg:p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-md">
+                  <svg
+                    className="w-5 h-5 sm:w-6 sm:h-6 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                  </svg>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  YouTube Video
+                </h2>
+              </div>
+              <div className="space-y-3">
+                <p className="text-sm sm:text-base text-gray-700">
+                  <span className="font-semibold">Current Video URL:</span>
+                </p>
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg border border-gray-200">
+                  <p className="text-xs sm:text-sm text-gray-600 break-all font-mono">
+                    {pageContent?.youtubeVideoUrl ||
+                      'No video URL set (using default)'}
+                  </p>
+                </div>
+                {pageContent?.youtubeVideoUrl && (
+                  <div className="aspect-video w-full rounded-lg overflow-hidden shadow-lg">
+                    <iframe
+                      src={pageContent.youtubeVideoUrl}
+                      title="Barangay Video Preview"
+                      allow="autoplay; encrypted-media"
+                      allowFullScreen
+                      className="w-full h-full"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Barangay Information */}
           <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
             <div className="p-5 sm:p-6 lg:p-8">
