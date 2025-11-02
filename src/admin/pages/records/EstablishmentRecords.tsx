@@ -11,6 +11,9 @@ import {
   MapPin,
   Building2,
   Trash,
+  Store,
+  FileText,
+  Filter,
 } from 'lucide-react';
 import ExcelExportButton from '@/components/ui/ExcelExportButton';
 import useFetchData from '../../hooks/useFetchData';
@@ -118,13 +121,28 @@ const EstablishmentRecords: React.FC = () => {
                   <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                     Establishment Records
                   </h1>
-                  <p className="text-sm sm:text-base text-gray-600 font-medium flex items-center flex-wrap gap-2">
-                    <span>Manage business information</span>
-                    <span className="px-2 sm:px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
-                      {records.length}{' '}
-                      {records.length === 1 ? 'Record' : 'Records'}
-                    </span>
+                  <p className="text-sm sm:text-base text-gray-600 font-medium mb-4">
+                    Manage business information
                   </p>
+
+                  {/* Quick Info Pills */}
+                  <div className="flex flex-wrap gap-2 sm:gap-3">
+                    <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
+                      <Store className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span>
+                        {records.length}{' '}
+                        {records.length === 1 ? 'Business' : 'Businesses'}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
+                      <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span>Excel Export</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-full text-xs sm:text-sm font-semibold text-purple-700">
+                      <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span>Search Records</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 

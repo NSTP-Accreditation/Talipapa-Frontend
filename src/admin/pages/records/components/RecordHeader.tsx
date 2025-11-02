@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui';
-import { UserRoundPen } from 'lucide-react';
+import { UserRoundPen, Users, FileText, Filter } from 'lucide-react';
 import { RecordInterface } from '@/types/global.types';
 import { Dispatch, SetStateAction } from 'react';
 import ExcelExportButton from '@/components/ui/ExcelExportButton';
@@ -31,13 +31,28 @@ const RecordHeader = ({
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                 Resident Records
               </h1>
-              <p className="text-sm sm:text-base text-gray-600 font-medium flex items-center flex-wrap gap-2">
-                <span>Manage and track resident information</span>
-                <span className="px-2 sm:px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
-                  {recordsData?.length}{' '}
-                  {recordsData?.length === 1 ? 'Record' : 'Records'}
-                </span>
+              <p className="text-sm sm:text-base text-gray-600 font-medium mb-4">
+                Manage and track resident information
               </p>
+
+              {/* Quick Info Pills */}
+              <div className="flex flex-wrap gap-2 sm:gap-3">
+                <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
+                  <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span>
+                    {recordsData?.length || 0}{' '}
+                    {recordsData?.length === 1 ? 'Resident' : 'Residents'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
+                  <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span>Excel Export</span>
+                </div>
+                <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-full text-xs sm:text-sm font-semibold text-purple-700">
+                  <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span>Search & Filter</span>
+                </div>
+              </div>
             </div>
           </div>
 

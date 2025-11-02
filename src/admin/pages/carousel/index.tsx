@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Image as ImageIcon } from 'lucide-react';
+import {
+  Plus,
+  Image as ImageIcon,
+  LayoutGrid,
+  ArrowUpDown,
+} from 'lucide-react';
 import useFetchData from '../../hooks/useFetchData';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
@@ -159,18 +164,32 @@ const CarouselEditor: React.FC = () => {
                   <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                     Carousel Editor
                   </h1>
-                  <div className="flex items-center gap-3">
-                    <p className="text-sm sm:text-base text-gray-600 font-medium">
-                      Manage carousel slides shown on the Home page
-                    </p>
-                    <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
-                      {slides.length} {slides.length === 1 ? 'Slide' : 'Slides'}
-                    </span>
-                    {isSaving && (
-                      <span className="ml-2 inline-flex items-center gap-2 px-3 py-1 bg-yellow-50 text-yellow-800 rounded-full text-xs font-semibold">
-                        <span className="w-2 h-2 rounded-full border-2 border-yellow-800 border-t-transparent animate-spin inline-block" />
-                        Saving...
+                  <p className="text-sm sm:text-base text-gray-600 font-medium mb-4">
+                    Manage carousel slides shown on the Home page
+                  </p>
+
+                  {/* Quick Info Pills */}
+                  <div className="flex flex-wrap gap-2 sm:gap-3">
+                    <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
+                      <LayoutGrid className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span>
+                        {slides.length}{' '}
+                        {slides.length === 1 ? 'Slide' : 'Slides'}
                       </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
+                      <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span>Image Upload</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-full text-xs sm:text-sm font-semibold text-purple-700">
+                      <ArrowUpDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span>Drag & Reorder</span>
+                    </div>
+                    {isSaving && (
+                      <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-yellow-50 border border-yellow-200 rounded-full text-xs sm:text-sm font-semibold text-yellow-700">
+                        <span className="w-3 h-3 rounded-full border-2 border-yellow-700 border-t-transparent animate-spin inline-block" />
+                        <span>Saving...</span>
+                      </div>
                     )}
                   </div>
                 </div>

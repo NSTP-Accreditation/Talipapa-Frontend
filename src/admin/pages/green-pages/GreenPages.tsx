@@ -6,6 +6,7 @@ import {
   CardContent,
   CardTitle,
 } from '../../../components/ui/card';
+import { Sprout, Users, TrendingUp } from 'lucide-react';
 import LeafletMap from './LeafletMap';
 import MapDropdown, { Farm } from './MapDropdown';
 import ProfileTab from './ProfileTab';
@@ -186,10 +187,26 @@ const GreenPages: React.FC = () => {
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                   Green Pages
                 </h1>
-                <p className="text-sm sm:text-base text-gray-600 font-medium">
+                <p className="text-sm sm:text-base text-gray-600 font-medium mb-4">
                   Interactive farm mapping, staff management, and skills
                   tracking
                 </p>
+
+                {/* Quick Info Pills */}
+                <div className="flex flex-wrap gap-2 sm:gap-3">
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
+                    <Sprout className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Farm Mapping</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
+                    <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Staff Management</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-full text-xs sm:text-sm font-semibold text-purple-700">
+                    <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Skills Tracking</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

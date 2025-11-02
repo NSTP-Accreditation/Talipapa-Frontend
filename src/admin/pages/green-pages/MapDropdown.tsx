@@ -87,6 +87,22 @@ const MapDropdown: React.FC<MapDropdownProps> = ({
         {/* Farm Details */}
         {selectedFarm ? (
           <div className="space-y-3 md:space-y-4">
+            {/* Farm Image */}
+            {selectedFarm.image?.url && (
+              <div className="relative w-full h-48 md:h-64 bg-gray-100 rounded-xl sm:rounded-2xl overflow-hidden border-2 border-green-200 shadow-md hover:shadow-xl transition-all duration-300">
+                <img
+                  src={selectedFarm.image.url}
+                  alt={selectedFarm.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 md:p-4">
+                  <p className="text-white font-bold text-sm md:text-base truncate">
+                    {selectedFarm.name}
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Farm Card */}
             <div className="p-4 md:p-5 bg-gradient-to-br from-white to-green-50/30 rounded-xl sm:rounded-2xl border-2 border-green-200 shadow-md hover:border-green-400 hover:shadow-xl transition-all duration-300">
               <div className="flex items-start gap-3 mb-3">

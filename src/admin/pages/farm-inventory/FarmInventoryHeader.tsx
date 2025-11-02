@@ -1,7 +1,7 @@
 import { Input } from '@/components/ui';
 import { FarmItemInterface } from '@/types/global.types';
 import { debounce, DebouncedFunc } from 'lodash';
-import { Search, Sprout } from 'lucide-react';
+import { Search, Sprout, Package, ListTree } from 'lucide-react';
 import {
   ChangeEvent,
   Dispatch,
@@ -72,9 +72,25 @@ const FarmInventoryHeader = ({
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
               Farm Inventory Management
             </h1>
-            <p className="text-sm sm:text-base text-gray-600 font-medium">
+            <p className="text-sm sm:text-base text-gray-600 font-medium mb-4">
               Manage agricultural products for farm operations
             </p>
+
+            {/* Quick Info Pills */}
+            <div className="flex flex-wrap gap-2 sm:gap-3">
+              <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
+                <Sprout className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>Farm Products</span>
+              </div>
+              <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
+                <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>Stock Management</span>
+              </div>
+              <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-full text-xs sm:text-sm font-semibold text-purple-700">
+                <ListTree className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>Item Tracking</span>
+              </div>
+            </div>
           </div>
         </div>
 

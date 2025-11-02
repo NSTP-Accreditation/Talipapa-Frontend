@@ -4,7 +4,7 @@ import useFetchData from '@/admin/hooks/useFetchData';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 import { FormTablePageSkeleton } from '@/components/LoadingSkeletons';
 import { useToast } from '@/hooks/useToast';
-import { BookOpen, Plus, Trash2 } from 'lucide-react';
+import { BookOpen, Plus, Trash2, FileText, Layers, Clock } from 'lucide-react';
 import GuidelineEditModal from './GuidelineEditModal';
 import GuidelinesFilters from './components/GuidelinesFilters';
 import GuidelinesList from './components/GuidelinesList';
@@ -321,13 +321,28 @@ const Guidelines: React.FC = () => {
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                   Guidelines
                 </h1>
-                <p className="text-sm sm:text-base text-gray-600 font-medium">
+                <p className="text-sm sm:text-base text-gray-600 font-medium mb-4">
                   Step-by-step guides and barangay service instructions
-                  <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
-                    {guidelines.length}{' '}
-                    {guidelines.length === 1 ? 'Guide' : 'Guides'}
-                  </span>
                 </p>
+
+                {/* Quick Info Pills */}
+                <div className="flex flex-wrap gap-2 sm:gap-3">
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
+                    <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>
+                      {guidelines.length}{' '}
+                      {guidelines.length === 1 ? 'Guide' : 'Guides'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
+                    <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Step-by-Step</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-full text-xs sm:text-sm font-semibold text-purple-700">
+                    <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Time Estimates</span>
+                  </div>
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 {showBulkActions && (

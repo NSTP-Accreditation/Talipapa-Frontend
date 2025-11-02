@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Plus, Trophy } from 'lucide-react';
+import { Plus, Trophy, Award, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '@/hooks/useToast';
 import ResponsiveSkeleton from '../../../components/ResponsiveSkeleton';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
@@ -196,13 +196,28 @@ export default function Achievements() {
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                   Achievements
                 </h1>
-                <p className="text-sm sm:text-base text-gray-600 font-medium">
+                <p className="text-sm sm:text-base text-gray-600 font-medium mb-4">
                   Manage community achievements and milestones
-                  <span className="ml-3 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs sm:text-sm font-semibold">
-                    {items.length}{' '}
-                    {items.length === 1 ? 'Achievement' : 'Achievements'}
-                  </span>
                 </p>
+
+                {/* Quick Info Pills */}
+                <div className="flex flex-wrap gap-2 sm:gap-3">
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
+                    <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>
+                      {items.length}{' '}
+                      {items.length === 1 ? 'Achievement' : 'Achievements'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
+                    <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Milestones</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-full text-xs sm:text-sm font-semibold text-purple-700">
+                    <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Image Gallery</span>
+                  </div>
+                </div>
               </div>
               <button
                 onClick={openAdd}

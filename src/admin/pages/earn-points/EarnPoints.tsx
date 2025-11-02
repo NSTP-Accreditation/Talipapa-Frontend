@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { sanitizeName, validateName } from '@/utils/validation';
-import { Recycle, CheckCircle2 } from 'lucide-react';
+import { Recycle, CheckCircle2, Award, Scale, TrendingUp } from 'lucide-react';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
 import { FormTablePageSkeleton } from '../../../components/LoadingSkeletons';
@@ -177,9 +177,25 @@ export default function App() {
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                   Earn Points
                 </h1>
-                <p className="text-sm sm:text-base text-gray-600 font-medium">
+                <p className="text-sm sm:text-base text-gray-600 font-medium mb-4">
                   Accumulate points for residents' recycling records
                 </p>
+
+                {/* Quick Info Pills */}
+                <div className="flex flex-wrap gap-2 sm:gap-3">
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
+                    <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Points System</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
+                    <Scale className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Weight Tracking</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-full text-xs sm:text-sm font-semibold text-purple-700">
+                    <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Material Records</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
