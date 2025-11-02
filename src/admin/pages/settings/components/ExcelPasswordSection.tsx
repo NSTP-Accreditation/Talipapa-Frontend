@@ -35,11 +35,11 @@ const ExcelPasswordSection = () => {
           setExcelPassword(response.excelProtectionPassword);
         } else {
           // Default password if not set
-          setExcelPassword('BarangayTalipapa2024');
+          setExcelPassword('BarangayTalipapa2025');
         }
       } catch (err) {
         console.error('Failed to fetch Excel password:', err);
-        setExcelPassword('BarangayTalipapa2024');
+        setExcelPassword('BarangayTalipapa2025');
       } finally {
         setLoadingPassword(false);
       }

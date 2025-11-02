@@ -43,7 +43,7 @@ const ExcelExportButton: React.FC<ExcelExportButtonProps> = ({
 
     try {
       // Fetch Excel protection password from settings
-      let password = 'BarangayTalipapa2024'; // Default fallback
+      let password = 'BarangayTalipapa2025'; // Default fallback
       try {
         const settingsResponse = await authFetch(
           `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`
