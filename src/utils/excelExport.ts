@@ -95,6 +95,10 @@ const styleCoverSheet = (
     'Generated On:',
     dayjs().format('MMMM DD, YYYY | h:mm A'),
   ];
+
+  // Set column widths to prevent label overflow
+  sheet.getColumn(1).width = 18;
+  sheet.getColumn(2).width = 35;
   sheet.getRow(12).values = ['Total Records:', recordCount];
   sheet.getRow(13).values = ['Status:', '✓ Protected & Read-Only'];
   sheet.getRow(14).values = ['Department:', 'Barangay Records Management'];
@@ -282,7 +286,7 @@ const addStatisticsSheet = (
     typeCount?: Record<string, number>;
   }
 ) => {
-  sheet.mergeCells('A1:C1');
+  sheet.mergeCells('A1:D1');
   const statsTitle = sheet.getCell('A1');
   statsTitle.value = '📈 DETAILED STATISTICS';
   statsTitle.alignment = { horizontal: 'center', vertical: 'middle' };
@@ -534,7 +538,12 @@ export const exportResidentRecords = async (
         // Data rows - only apply styles to cells with actual data (columns 1-9)
         for (let colNum = 1; colNum <= 9; colNum++) {
           const cell = row.getCell(colNum);
-          cell.alignment = { vertical: 'middle', wrapText: true };
+          // Center align #, Gender, Age, Points columns
+          if (colNum === 1 || colNum === 4 || colNum === 5 || colNum === 6) {
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+          } else {
+            cell.alignment = { vertical: 'middle', wrapText: true };
+          }
 
           // Alternate row coloring
           if ((rowNumber - 4) % 2 === 0) {
@@ -614,14 +623,18 @@ export const exportResidentRecords = async (
       (key) => !key.startsWith('__') && key !== '_V'
     );
     const rawHeaders = rawDataSheet.addRow(allKeys);
-    rawHeaders.font = { bold: true, color: { argb: COLORS.white } };
-    rawHeaders.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FF546E7A' },
-    };
-    rawHeaders.alignment = { horizontal: 'center', vertical: 'middle' };
     rawHeaders.height = 25;
+    // Apply styling only to columns with data to prevent horizontal bleeding
+    for (let colNum = 1; colNum <= allKeys.length; colNum++) {
+      const cell = rawHeaders.getCell(colNum);
+      cell.font = { bold: true, color: { argb: COLORS.white } };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FF546E7A' },
+      };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    }
 
     records.forEach((r) => {
       const rowData = allKeys.map((key) => (r as any)[key]);
@@ -852,7 +865,12 @@ export const exportNonResidentRecords = async (
         // Data rows - only apply styles to cells with actual data (columns 1-9)
         for (let colNum = 1; colNum <= 9; colNum++) {
           const cell = row.getCell(colNum);
-          cell.alignment = { vertical: 'middle', wrapText: true };
+          // Center align #, Gender, Age, Points columns
+          if (colNum === 1 || colNum === 4 || colNum === 5 || colNum === 6) {
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+          } else {
+            cell.alignment = { vertical: 'middle', wrapText: true };
+          }
 
           // Alternate row coloring
           if ((rowNumber - 4) % 2 === 0) {
@@ -932,14 +950,18 @@ export const exportNonResidentRecords = async (
       (key) => !key.startsWith('__') && key !== '_V'
     );
     const rawHeaders = rawDataSheet.addRow(allKeys);
-    rawHeaders.font = { bold: true, color: { argb: COLORS.white } };
-    rawHeaders.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FF546E7A' },
-    };
-    rawHeaders.alignment = { horizontal: 'center', vertical: 'middle' };
     rawHeaders.height = 25;
+    // Apply styling only to columns with data to prevent horizontal bleeding
+    for (let colNum = 1; colNum <= allKeys.length; colNum++) {
+      const cell = rawHeaders.getCell(colNum);
+      cell.font = { bold: true, color: { argb: COLORS.white } };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FF546E7A' },
+      };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    }
 
     records.forEach((r) => {
       const rowData = allKeys.map((key) => (r as any)[key]);
@@ -1137,7 +1159,12 @@ export const exportEstablishmentRecords = async (
         // Data rows - only apply styles to cells with actual data (columns 1-8 for establishment)
         for (let colNum = 1; colNum <= 8; colNum++) {
           const cell = row.getCell(colNum);
-          cell.alignment = { vertical: 'middle', wrapText: true };
+          // Center align # column
+          if (colNum === 1) {
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+          } else {
+            cell.alignment = { vertical: 'middle', wrapText: true };
+          }
 
           // Alternate row coloring
           if ((rowNumber - 4) % 2 === 0) {
@@ -1204,14 +1231,18 @@ export const exportEstablishmentRecords = async (
       (key) => !key.startsWith('__') && key !== '_V'
     );
     const rawHeaders = rawDataSheet.addRow(allKeys);
-    rawHeaders.font = { bold: true, color: { argb: COLORS.white } };
-    rawHeaders.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FF546E7A' },
-    };
-    rawHeaders.alignment = { horizontal: 'center', vertical: 'middle' };
     rawHeaders.height = 25;
+    // Apply styling only to columns with data to prevent horizontal bleeding
+    for (let colNum = 1; colNum <= allKeys.length; colNum++) {
+      const cell = rawHeaders.getCell(colNum);
+      cell.font = { bold: true, color: { argb: COLORS.white } };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FF546E7A' },
+      };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    }
 
     records.forEach((r) => {
       const rowData = allKeys.map((key) => (r as any)[key]);
