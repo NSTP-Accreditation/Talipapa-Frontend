@@ -9,6 +9,7 @@ import { Admin } from './Settings.types';
 import AdminSection from './components/AdminSection';
 import AddAdminModal from './components/AddAdminModal';
 import DeleteAdminModal from './components/DeleteAdminModal';
+import EditAdminModal from './components/EditAdminModal';
 
 const Settings: React.FC = () => {
   const { isLoading } = useLoadingState(1000);
@@ -25,6 +26,8 @@ const Settings: React.FC = () => {
   const [adminToDelete, setAdminToDelete] = useState<Admin | null>(null);
   const [isAddAdminModalOpen, setIsAddAdminModalOpen] =
     useState<boolean>(false);
+  const [isEditAdminOpen, setIsEditAdminOpen] = useState<boolean>(false);
+  const [adminToEdit, setAdminToEdit] = useState<Admin | null>(null);
 
   if (isLoading || loadingAdmins) {
     return <SettingsPageSkeleton />;
@@ -69,6 +72,8 @@ const Settings: React.FC = () => {
             openAddAdminModal={setIsAddAdminModalOpen}
             openDeleteAdminModal={setIsDeleteAdminOpen}
             setAdminToDelete={setAdminToDelete}
+            openEditAdminModal={setIsEditAdminOpen}
+            setAdminToEdit={setAdminToEdit}
           />
         </div>
 
@@ -89,6 +94,17 @@ const Settings: React.FC = () => {
             setAdminToDelete(null);
           }}
           refetchAdmins={refetchAdmins}
+        />
+
+        {/* Edit Admin Modal */}
+        <EditAdminModal
+          isOpen={isEditAdminOpen}
+          onClose={() => {
+            setIsEditAdminOpen(false);
+            setAdminToEdit(null);
+          }}
+          refetchAdmin={refetchAdmins}
+          adminToEdit={adminToEdit}
         />
       </div>
     </div>

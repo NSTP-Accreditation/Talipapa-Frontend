@@ -7,6 +7,8 @@ type AdminSectionProps = {
   openAddAdminModal: React.Dispatch<React.SetStateAction<boolean>>;
   openDeleteAdminModal: React.Dispatch<React.SetStateAction<boolean>>;
   setAdminToDelete: React.Dispatch<React.SetStateAction<Admin>>;
+  openEditAdminModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  setAdminToEdit?: React.Dispatch<React.SetStateAction<Admin | null>>;
 };
 
 const AdminSection = ({
@@ -14,6 +16,8 @@ const AdminSection = ({
   openAddAdminModal,
   openDeleteAdminModal,
   setAdminToDelete,
+  openEditAdminModal,
+  setAdminToEdit,
 }: AdminSectionProps) => {
   return (
     <Card className="shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
@@ -176,17 +180,33 @@ const AdminSection = ({
                       );
                     })}
                   </div>
-                  <button
-                    onClick={() => {
-                      openDeleteAdminModal(true);
-                      setAdminToDelete(admin);
-                    }}
-                    className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all shadow-md border-2 border-red-300 hover:border-red-600 hover:shadow-lg flex-shrink-0"
-                    title="Delete admin account"
-                    aria-label="Delete admin account"
-                  >
-                    <Trash className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        if (openEditAdminModal && setAdminToEdit) {
+                          setAdminToEdit(admin);
+                          openEditAdminModal(true);
+                        }
+                      }}
+                      className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center text-green-700 hover:text-white hover:bg-green-600 rounded-lg transition-all shadow-md border-2 border-green-300 hover:border-green-600 hover:shadow-lg flex-shrink-0"
+                      title="Edit admin account"
+                      aria-label="Edit admin account"
+                    >
+                      <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        openDeleteAdminModal(true);
+                        setAdminToDelete(admin);
+                      }}
+                      className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all shadow-md border-2 border-red-300 hover:border-red-600 hover:shadow-lg flex-shrink-0"
+                      title="Delete admin account"
+                      aria-label="Delete admin account"
+                    >
+                      <Trash className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
