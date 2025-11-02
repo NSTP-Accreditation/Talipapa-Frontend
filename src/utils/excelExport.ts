@@ -232,34 +232,41 @@ const addSummarySheet = (
 
   kpiData.forEach((row, idx) => {
     const excelRow = sheet.addRow(row);
-    if (idx === 0) {
-      // Header row
-      excelRow.font = { bold: true, color: { argb: COLORS.white } };
-      excelRow.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: COLORS.accent },
-      };
-      excelRow.height = 25;
-      excelRow.alignment = { horizontal: 'center', vertical: 'middle' };
-    } else {
-      excelRow.height = 22;
-      excelRow.alignment = { horizontal: 'left', vertical: 'middle' };
-      excelRow.getCell(1).font = { bold: true };
-      excelRow.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: idx % 2 === 0 ? COLORS.accentLight : COLORS.white },
-      };
-    }
-    excelRow.eachCell((cell) => {
+    excelRow.height = idx === 0 ? 25 : 22;
+
+    // Only style columns A-D (1-4) for Executive Summary
+    for (let colNum = 1; colNum <= 4; colNum++) {
+      const cell = excelRow.getCell(colNum);
+
+      if (idx === 0) {
+        // Header row styling
+        cell.font = { bold: true, color: { argb: COLORS.white } };
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: COLORS.accent },
+        };
+        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      } else {
+        // Data row styling
+        cell.alignment = { horizontal: 'left', vertical: 'middle' };
+        if (colNum === 1) {
+          cell.font = { bold: true };
+        }
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: idx % 2 === 0 ? COLORS.accentLight : COLORS.white },
+        };
+      }
+
       cell.border = {
         top: { style: 'thin', color: { argb: COLORS.lightGray } },
         left: { style: 'thin', color: { argb: COLORS.lightGray } },
         bottom: { style: 'thin', color: { argb: COLORS.lightGray } },
         right: { style: 'thin', color: { argb: COLORS.lightGray } },
       };
-    });
+    }
   });
 
   sheet.columns = [{ width: 35 }, { width: 25 }, { width: 20 }, { width: 20 }];
@@ -315,25 +322,37 @@ const addStatisticsSheet = (
     sheet.addRow(['Category', 'Count', 'Percentage']);
 
     const headerRow = sheet.getRow(sheet.lastRow!.number);
-    headerRow.font = { bold: true, color: { argb: COLORS.white } };
-    headerRow.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: COLORS.accent },
-    };
-    headerRow.alignment = { horizontal: 'center', vertical: 'middle' };
+    // Only style columns A-C (1-3) for Statistics header
+    for (let colNum = 1; colNum <= 3; colNum++) {
+      const cell = headerRow.getCell(colNum);
+      cell.font = { bold: true, color: { argb: COLORS.white } };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: COLORS.accent },
+      };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    }
 
     Object.entries(section.data).forEach(([category, count]) => {
       const percentage = ((count / stats.totalRecords) * 100).toFixed(1) + '%';
       const row = sheet.addRow([category, count, percentage]);
-      row.eachCell((cell) => {
+      // Only style columns A-C (1-3) for Statistics data rows
+      for (let colNum = 1; colNum <= 3; colNum++) {
+        const cell = row.getCell(colNum);
         cell.border = {
           top: { style: 'thin' },
           left: { style: 'thin' },
           bottom: { style: 'thin' },
           right: { style: 'thin' },
         };
-      });
+      }
       const barLength = Math.floor((count / stats.totalRecords) * 20);
       row.getCell(4).value = '█'.repeat(barLength);
       row.getCell(4).font = { color: { argb: COLORS.accent } };
@@ -380,7 +399,7 @@ export const exportResidentRecords = async (
       records.reduce((sum, r) => sum + (Number(r.age) || 0), 0) / totalResidents
     ).toFixed(1);
     const avgPoints = (totalPoints / totalResidents).toFixed(1);
-    const maxPoints = Math.max(...records.map((r) => r.points || 0));
+    const maxPoints_resident = Math.max(...records.map((r) => r.points || 0));
     const minPoints = Math.min(...records.map((r) => r.points || 0));
 
     const ageGroups: Record<string, number> = {
@@ -410,7 +429,7 @@ export const exportResidentRecords = async (
       totalPoints,
       avgAge,
       avgPoints,
-      maxPoints,
+      maxPoints: maxPoints_resident,
       minPoints,
       ageGroups,
       genderCount,
@@ -471,22 +490,24 @@ export const exportResidentRecords = async (
       'Address',
       'Created At',
     ];
-    headerRow.font = { bold: true, color: { argb: COLORS.white }, size: 11 };
-    headerRow.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: COLORS.primaryMedium },
-    };
-    headerRow.alignment = { horizontal: 'center', vertical: 'middle' };
     headerRow.height = 28;
-    headerRow.eachCell((cell) => {
+    // Only style the 9 columns that have data
+    for (let colNum = 1; colNum <= 9; colNum++) {
+      const cell = headerRow.getCell(colNum);
+      cell.font = { bold: true, color: { argb: COLORS.white }, size: 11 };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: COLORS.primaryMedium },
+      };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
       cell.border = {
         top: { style: 'thin', color: { argb: COLORS.lightGray } },
         left: { style: 'thin', color: { argb: COLORS.lightGray } },
         bottom: { style: 'thin', color: { argb: COLORS.lightGray } },
         right: { style: 'thin', color: { argb: COLORS.lightGray } },
       };
-    });
+    }
 
     // Add data rows starting from row 5
     records.forEach((r, i) => {
@@ -504,34 +525,39 @@ export const exportResidentRecords = async (
       ]);
     });
 
-    // Style data rows
-    recordsSheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+    // Style data rows - only iterate through rows with actual data
+    const lastDataRow = 4 + records.length;
+    for (let rowNumber = 1; rowNumber <= lastDataRow; rowNumber++) {
+      const row = recordsSheet.getRow(rowNumber);
+
       if (rowNumber > 4) {
-        // Don't set row height - let it auto-adjust based on content
-        row.alignment = { vertical: 'middle', wrapText: true };
-
-        if ((rowNumber - 4) % 2 === 0) {
-          row.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: COLORS.accentLight },
-          };
-        }
-
-        const pointsCell = row.getCell(6);
-        const points = Number(pointsCell.value);
-        if (points >= maxPoints * 0.8) {
-          pointsCell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: COLORS.highlight },
-          };
-          pointsCell.font = { bold: true, color: { argb: COLORS.primary } };
-        }
-
-        // Only apply borders and styles to cells with actual data (columns 1-9)
+        // Data rows - only apply styles to cells with actual data (columns 1-9)
         for (let colNum = 1; colNum <= 9; colNum++) {
           const cell = row.getCell(colNum);
+          cell.alignment = { vertical: 'middle', wrapText: true };
+
+          // Alternate row coloring
+          if ((rowNumber - 4) % 2 === 0) {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: COLORS.accentLight },
+            };
+          }
+
+          // Highlight high points
+          if (colNum === 6) {
+            const points = Number(cell.value);
+            if (points >= maxPoints_resident * 0.8) {
+              cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: COLORS.highlight },
+              };
+              cell.font = { bold: true, color: { argb: COLORS.primary } };
+            }
+          }
+
           cell.border = {
             top: { style: 'thin', color: { argb: COLORS.lightGray } },
             left: { style: 'thin', color: { argb: COLORS.lightGray } },
@@ -539,13 +565,11 @@ export const exportResidentRecords = async (
             right: { style: 'thin', color: { argb: COLORS.lightGray } },
           };
         }
-      } else {
-        // For header and title rows, also limit to 9 columns
+      } else if (rowNumber <= 4) {
+        // Header and title rows - limit to 9 columns
         for (let colNum = 1; colNum <= 9; colNum++) {
           const cell = row.getCell(colNum);
-          if (cell.border) {
-            // Keep existing border if it has one
-          } else {
+          if (!cell.border) {
             cell.border = {
               top: { style: 'thin', color: { argb: COLORS.lightGray } },
               left: { style: 'thin', color: { argb: COLORS.lightGray } },
@@ -555,7 +579,7 @@ export const exportResidentRecords = async (
           }
         }
       }
-    });
+    }
 
     recordsSheet.views = [{ state: 'frozen', xSplit: 0, ySplit: 4 }];
 
@@ -606,18 +630,22 @@ export const exportResidentRecords = async (
 
     rawDataSheet.columns = allKeys.map(() => ({ width: 20 }));
 
-    rawDataSheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-      if (rowNumber >= 5) {
-        row.eachCell((cell) => {
-          cell.border = {
-            top: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-            left: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-            bottom: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-            right: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-          };
-        });
+    // Only style rows with actual data (header at row 5, then data rows)
+    const lastRawDataRow = 5 + records.length;
+    const numColumns = allKeys.length;
+    for (let rowNumber = 5; rowNumber <= lastRawDataRow; rowNumber++) {
+      const row = rawDataSheet.getRow(rowNumber);
+      // Only style columns that have actual data
+      for (let colNum = 1; colNum <= numColumns; colNum++) {
+        const cell = row.getCell(colNum);
+        cell.border = {
+          top: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+          left: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+          bottom: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+          right: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+        };
       }
-    });
+    }
 
     // Protect sheets
     const protectionOptions = {
@@ -688,7 +716,9 @@ export const exportNonResidentRecords = async (
       records.reduce((sum, r) => sum + (Number(r.age) || 0), 0) / totalRecords
     ).toFixed(1);
     const avgPoints = (totalPoints / totalRecords).toFixed(1);
-    const maxPoints = Math.max(...records.map((r) => r.points || 0));
+    const maxPoints_nonresident = Math.max(
+      ...records.map((r) => r.points || 0)
+    );
     const minPoints = Math.min(...records.map((r) => r.points || 0));
 
     const ageGroups: Record<string, number> = {
@@ -717,7 +747,7 @@ export const exportNonResidentRecords = async (
       totalPoints,
       avgAge,
       avgPoints,
-      maxPoints,
+      maxPoints: maxPoints_nonresident,
       minPoints,
       ageGroups,
       genderCount,
@@ -778,22 +808,24 @@ export const exportNonResidentRecords = async (
       'Address',
       'Created At',
     ];
-    headerRow.font = { bold: true, color: { argb: COLORS.white }, size: 11 };
-    headerRow.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: COLORS.primaryMedium },
-    };
-    headerRow.alignment = { horizontal: 'center', vertical: 'middle' };
     headerRow.height = 28;
-    headerRow.eachCell((cell) => {
+    // Only style the 9 columns that have data
+    for (let colNum = 1; colNum <= 9; colNum++) {
+      const cell = headerRow.getCell(colNum);
+      cell.font = { bold: true, color: { argb: COLORS.white }, size: 11 };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: COLORS.primaryMedium },
+      };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
       cell.border = {
         top: { style: 'thin', color: { argb: COLORS.lightGray } },
         left: { style: 'thin', color: { argb: COLORS.lightGray } },
         bottom: { style: 'thin', color: { argb: COLORS.lightGray } },
         right: { style: 'thin', color: { argb: COLORS.lightGray } },
       };
-    });
+    }
 
     // Add data rows starting from row 5
     records.forEach((r, i) => {
@@ -811,33 +843,39 @@ export const exportNonResidentRecords = async (
       ]);
     });
 
-    recordsSheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+    // Style data rows - only iterate through rows with actual data
+    const lastDataRow = 4 + records.length;
+    for (let rowNumber = 1; rowNumber <= lastDataRow; rowNumber++) {
+      const row = recordsSheet.getRow(rowNumber);
+
       if (rowNumber > 4) {
-        // Don't set row height - let it auto-adjust based on content
-        row.alignment = { vertical: 'middle', wrapText: true };
-
-        if ((rowNumber - 4) % 2 === 0) {
-          row.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: COLORS.accentLight },
-          };
-        }
-
-        const pointsCell = row.getCell(6);
-        const points = Number(pointsCell.value);
-        if (points >= maxPoints * 0.8) {
-          pointsCell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: COLORS.highlight },
-          };
-          pointsCell.font = { bold: true, color: { argb: COLORS.primary } };
-        }
-
-        // Only apply borders and styles to cells with actual data (columns 1-9)
+        // Data rows - only apply styles to cells with actual data (columns 1-9)
         for (let colNum = 1; colNum <= 9; colNum++) {
           const cell = row.getCell(colNum);
+          cell.alignment = { vertical: 'middle', wrapText: true };
+
+          // Alternate row coloring
+          if ((rowNumber - 4) % 2 === 0) {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: COLORS.accentLight },
+            };
+          }
+
+          // Highlight high points
+          if (colNum === 6) {
+            const points = Number(cell.value);
+            if (points >= maxPoints_nonresident * 0.8) {
+              cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: COLORS.highlight },
+              };
+              cell.font = { bold: true, color: { argb: COLORS.primary } };
+            }
+          }
+
           cell.border = {
             top: { style: 'thin', color: { argb: COLORS.lightGray } },
             left: { style: 'thin', color: { argb: COLORS.lightGray } },
@@ -845,13 +883,11 @@ export const exportNonResidentRecords = async (
             right: { style: 'thin', color: { argb: COLORS.lightGray } },
           };
         }
-      } else {
-        // For header and title rows, also limit to 9 columns
+      } else if (rowNumber <= 4) {
+        // Header and title rows - limit to 9 columns
         for (let colNum = 1; colNum <= 9; colNum++) {
           const cell = row.getCell(colNum);
-          if (cell.border) {
-            // Keep existing border if it has one
-          } else {
+          if (!cell.border) {
             cell.border = {
               top: { style: 'thin', color: { argb: COLORS.lightGray } },
               left: { style: 'thin', color: { argb: COLORS.lightGray } },
@@ -861,14 +897,14 @@ export const exportNonResidentRecords = async (
           }
         }
       }
-    });
+    }
 
     recordsSheet.views = [{ state: 'frozen', xSplit: 0, ySplit: 4 }];
 
     // Explicitly set the print area to prevent extra columns
     recordsSheet.pageSetup.printArea = 'A1:I' + (records.length + 4);
 
-    // Raw Data Sheet
+    // Raw Data Sheet (Non-Resident)
     rawDataSheet.mergeCells('A1:E1');
     const rawTitle = rawDataSheet.getCell('A1');
     rawTitle.value = '🗄️ RAW DATA (Technical Reference)';
@@ -912,18 +948,22 @@ export const exportNonResidentRecords = async (
 
     rawDataSheet.columns = allKeys.map(() => ({ width: 20 }));
 
-    rawDataSheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-      if (rowNumber >= 5) {
-        row.eachCell((cell) => {
-          cell.border = {
-            top: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-            left: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-            bottom: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-            right: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-          };
-        });
+    // Only style rows with actual data (header at row 5, then data rows) - Non-Resident
+    const lastRawDataRow2 = 5 + records.length;
+    const numColumns2 = allKeys.length;
+    for (let rowNumber = 5; rowNumber <= lastRawDataRow2; rowNumber++) {
+      const row = rawDataSheet.getRow(rowNumber);
+      // Only style columns that have actual data
+      for (let colNum = 1; colNum <= numColumns2; colNum++) {
+        const cell = row.getCell(colNum);
+        cell.border = {
+          top: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+          left: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+          bottom: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+          right: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+        };
       }
-    });
+    }
 
     const protectionOptions = {
       selectLockedCells: true,
@@ -1055,22 +1095,24 @@ export const exportEstablishmentRecords = async (
       'Address',
       'Created At',
     ];
-    headerRow.font = { bold: true, color: { argb: COLORS.white }, size: 11 };
-    headerRow.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: COLORS.primaryMedium },
-    };
-    headerRow.alignment = { horizontal: 'center', vertical: 'middle' };
     headerRow.height = 28;
-    headerRow.eachCell((cell) => {
+    // Only style the 8 columns that have data
+    for (let colNum = 1; colNum <= 8; colNum++) {
+      const cell = headerRow.getCell(colNum);
+      cell.font = { bold: true, color: { argb: COLORS.white }, size: 11 };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: COLORS.primaryMedium },
+      };
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
       cell.border = {
         top: { style: 'thin', color: { argb: COLORS.lightGray } },
         left: { style: 'thin', color: { argb: COLORS.lightGray } },
         bottom: { style: 'thin', color: { argb: COLORS.lightGray } },
         right: { style: 'thin', color: { argb: COLORS.lightGray } },
       };
-    });
+    }
 
     // Add data rows starting from row 5
     records.forEach((r, i) => {
@@ -1086,22 +1128,26 @@ export const exportEstablishmentRecords = async (
       ]);
     });
 
-    recordsSheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+    // Style data rows - only iterate through rows with actual data
+    const lastDataRow = 4 + records.length;
+    for (let rowNumber = 1; rowNumber <= lastDataRow; rowNumber++) {
+      const row = recordsSheet.getRow(rowNumber);
+
       if (rowNumber > 4) {
-        // Don't set row height - let it auto-adjust based on content
-        row.alignment = { vertical: 'middle', wrapText: true };
-
-        if ((rowNumber - 4) % 2 === 0) {
-          row.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: COLORS.accentLight },
-          };
-        }
-
-        // Only apply borders and styles to cells with actual data (columns 1-8 for establishment)
+        // Data rows - only apply styles to cells with actual data (columns 1-8 for establishment)
         for (let colNum = 1; colNum <= 8; colNum++) {
           const cell = row.getCell(colNum);
+          cell.alignment = { vertical: 'middle', wrapText: true };
+
+          // Alternate row coloring
+          if ((rowNumber - 4) % 2 === 0) {
+            cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: COLORS.accentLight },
+            };
+          }
+
           cell.border = {
             top: { style: 'thin', color: { argb: COLORS.lightGray } },
             left: { style: 'thin', color: { argb: COLORS.lightGray } },
@@ -1109,13 +1155,11 @@ export const exportEstablishmentRecords = async (
             right: { style: 'thin', color: { argb: COLORS.lightGray } },
           };
         }
-      } else {
-        // For header and title rows, also limit to 8 columns
+      } else if (rowNumber <= 4) {
+        // Header and title rows - limit to 8 columns
         for (let colNum = 1; colNum <= 8; colNum++) {
           const cell = row.getCell(colNum);
-          if (cell.border) {
-            // Keep existing border if it has one
-          } else {
+          if (!cell.border) {
             cell.border = {
               top: { style: 'thin', color: { argb: COLORS.lightGray } },
               left: { style: 'thin', color: { argb: COLORS.lightGray } },
@@ -1125,14 +1169,14 @@ export const exportEstablishmentRecords = async (
           }
         }
       }
-    });
+    }
 
     recordsSheet.views = [{ state: 'frozen', xSplit: 0, ySplit: 4 }];
 
     // Explicitly set the print area to prevent extra columns
     recordsSheet.pageSetup.printArea = 'A1:H' + (records.length + 4);
 
-    // Raw Data Sheet
+    // Raw Data Sheet (Establishment)
     rawDataSheet.mergeCells('A1:E1');
     const rawTitle = rawDataSheet.getCell('A1');
     rawTitle.value = '🗄️ RAW DATA (Technical Reference)';
@@ -1176,18 +1220,22 @@ export const exportEstablishmentRecords = async (
 
     rawDataSheet.columns = allKeys.map(() => ({ width: 20 }));
 
-    rawDataSheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-      if (rowNumber >= 5) {
-        row.eachCell((cell) => {
-          cell.border = {
-            top: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-            left: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-            bottom: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-            right: { style: 'thin', color: { argb: 'FFE0E0E0' } },
-          };
-        });
+    // Only style rows with actual data (header at row 5, then data rows) - Establishment
+    const lastRawDataRow3 = 5 + records.length;
+    const numColumns3 = allKeys.length;
+    for (let rowNumber = 5; rowNumber <= lastRawDataRow3; rowNumber++) {
+      const row = rawDataSheet.getRow(rowNumber);
+      // Only style columns that have actual data
+      for (let colNum = 1; colNum <= numColumns3; colNum++) {
+        const cell = row.getCell(colNum);
+        cell.border = {
+          top: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+          left: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+          bottom: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+          right: { style: 'thin', color: { argb: 'FFE0E0E0' } },
+        };
       }
-    });
+    }
 
     const protectionOptions = {
       selectLockedCells: true,
