@@ -229,11 +229,11 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
 
           {/* Tablet Welcome Card - Medium */}
           <div className="hidden sm:flex lg:hidden items-center gap-3 px-4 py-2.5 rounded-xl bg-white/20 backdrop-blur-sm ring-1 ring-white/30 shadow-lg hover:shadow-xl transition-all duration-300">
-            <div className="text-right">
+            <div className="flex flex-col items-center w-full">
               <p className="text-[10px] font-bold uppercase tracking-wider text-green-100 mb-1">
                 Welcome back 👋
               </p>
-              <div className="flex items-center justify-end gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <span
                   className={`inline-flex px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider text-white bg-gradient-to-r ${getRoleBadgeColor()} shadow-sm`}
                 >
@@ -248,11 +248,11 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
 
           {/* Desktop Welcome Card - Full */}
           <div className="hidden lg:flex items-center gap-4 px-5 py-2.5 rounded-xl bg-white/20 backdrop-blur-sm ring-1 ring-white/30 shadow-lg hover:shadow-xl transition-all duration-300">
-            <div className="text-right">
+            <div className="flex flex-col items-center w-full">
               <p className="text-xs font-bold uppercase tracking-wider text-green-100 mb-1.5">
                 Welcome back 👋
               </p>
-              <div className="flex items-center justify-end gap-2.5">
+              <div className="flex items-center justify-center gap-2.5">
                 <span
                   className={`inline-flex px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white bg-gradient-to-r ${getRoleBadgeColor()} shadow-md`}
                 >

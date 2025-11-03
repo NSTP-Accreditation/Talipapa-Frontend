@@ -249,9 +249,9 @@ const MenuBar: React.FC<MenuBarProps> = ({
           </div>
         )}
         {/* Header */}
-        <div className="px-4 py-4 sm:px-6 sm:py-6 bg-gradient-to-r from-green-950 to-green-900">
-          <div className="flex items-center justify-center space-x-2 sm:space-x-3">
-            <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-white/30">
+        <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-b border-green-700/30 shadow-xl">
+          <div className="flex items-center justify-center space-x-2 sm:space-x-3 px-4 py-[20px] sm:px-6 sm:py-[26px] lg:px-10 lg:py-[32px]">
+            <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ring-1 ring-white/30 backdrop-blur-sm">
               <img
                 src={data?.image?.url ? data.image.url : '/brgy talipapa.png'}
                 alt="Barangay Talipapa Logo"
@@ -268,9 +268,6 @@ const MenuBar: React.FC<MenuBarProps> = ({
             </div>
           </div>
         </div>
-
-        {/* Separator Line */}
-        <div className="border-t border-green-700/30 mx-4 sm:mx-6 mb-2"></div>
 
         {/* Navigation Items */}
         <nav className="flex-1 px-3 sm:px-4 py-3 sm:py-5 space-y-1.5 sm:space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-green-600 scrollbar-track-transparent">
