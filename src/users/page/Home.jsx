@@ -6,8 +6,10 @@ import { useLoadingState } from '../../hooks/useLoadingState';
 import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 
 const Home = () => {
+  // Add loading state with 1 second display
   const { isLoading } = useLoadingState(1000);
 
+  // Show loading skeleton while loading (responsive: mobile compact, desktop page-specific)
   if (isLoading) {
     return <ResponsiveSkeleton page="home" />;
   }
@@ -18,5 +20,8 @@ const Home = () => {
       <MissionVision />
       <CalendarEvents />
       <Achievements />
+    </div>
+  );
+};
 
 export default Home;
