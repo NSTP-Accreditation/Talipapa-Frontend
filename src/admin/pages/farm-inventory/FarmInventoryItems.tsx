@@ -17,9 +17,8 @@ const FarmInventoryItems = ({
   farmItemsData,
   onAddItem,
   onUpdateItem,
-  onDeleteItem
+  onDeleteItem,
 }: FarmInventoryItemsProps) => {
-
   return (
     <section className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
