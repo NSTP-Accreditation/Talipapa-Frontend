@@ -75,6 +75,35 @@ export default function AboutBarangayEditable() {
       </div>
     );
   }
+  // Helper function to convert YouTube URL to embed format
+  const convertToEmbedUrl = (url: string): string => {
+    if (!url) return '';
+
+    // Already an embed URL
+    if (url.includes('youtube.com/embed/')) {
+      return url;
+    }
+
+    // Extract video ID from various YouTube URL formats
+    let videoId = '';
+
+    // https://www.youtube.com/watch?v=VIDEO_ID
+    if (url.includes('youtube.com/watch?v=')) {
+      const urlParams = new URLSearchParams(url.split('?')[1]);
+      videoId = urlParams.get('v') || '';
+    }
+    // https://youtu.be/VIDEO_ID
+    else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1]?.split('?')[0] || '';
+    }
+    // https://www.youtube.com/v/VIDEO_ID
+    else if (url.includes('youtube.com/v/')) {
+      videoId = url.split('youtube.com/v/')[1]?.split('?')[0] || '';
+    }
+
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+  };
+
   const handleSave = async (updatedContent: {
     barangayDescription: string;
     barangayHistory: string;
@@ -84,10 +113,17 @@ export default function AboutBarangayEditable() {
   }) => {
     setIsSaving(true);
     try {
+      // Convert YouTube URL to embed format
+      const contentToSave = {
+        ...updatedContent,
+        youtubeVideoUrl: convertToEmbedUrl(updatedContent.youtubeVideoUrl),
+      };
+
       const url = `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`;
       const result = await authFetch(url, {
         method: 'PATCH',
-        body: JSON.stringify(updatedContent),
+        body: JSON.stringify(contentToSave),
+        headers: { 'Content-Type': 'application/json' },
       });
 
       // If API returns updated object, update local state
@@ -97,8 +133,9 @@ export default function AboutBarangayEditable() {
 
       await refetch();
 
-      success('Changes saved successfully!', { title: 'Saved' });
+      // Close modal first then show toast
       setIsModalOpen(false);
+      success('Changes saved successfully!', { title: 'Saved' });
     } catch (err) {
       const message =
         err instanceof Error ? err.message : 'Failed to save changes';

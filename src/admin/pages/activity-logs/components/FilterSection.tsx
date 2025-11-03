@@ -35,7 +35,7 @@ export const FiltersSection = ({
           />
 
           <button
-            onClick={onRefresh}
+            onClick={() => onRefresh()}
             className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 sm:px-5 sm:py-3 rounded-lg sm:rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all text-sm sm:text-base whitespace-nowrap"
             title="Refresh activity logs"
           >

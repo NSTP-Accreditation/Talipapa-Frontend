@@ -20,29 +20,34 @@ const useFetchData = <T = any>(
   const [error, setError] = useState<string | null>(null);
   const authFetch = useAuthFetch();
 
-  const fetchData = useCallback(async (fetchUrl: string = url ): Promise<T | null> => {
-    if (!url) {
-      setLoading(false);
-      return null;
-    }
+  const fetchData = useCallback(
+    async (fetchUrl?: string): Promise<T | null> => {
+      const urlToFetch = fetchUrl || url;
 
-    try {
-      setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setError(null);
-      const result = await authFetch<T>(fetchUrl, options);
-      setData(result as T);
-      return result as T;
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'An error occurred';
-      setData(null);
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [url, authFetch, JSON.stringify(options)]);
+      if (!urlToFetch) {
+        setLoading(false);
+        return null;
+      }
+
+      try {
+        setLoading(true);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        setError(null);
+        const result = await authFetch<T>(urlToFetch, options);
+        setData(result as T);
+        return result as T;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'An error occurred';
+        setData(null);
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [url, authFetch, JSON.stringify(options)]
+  );
 
   useEffect(() => {
     fetchData();

@@ -25,7 +25,7 @@ const News: React.FC = () => {
     refetch: refetchNews,
   } = useFetchData('/news');
 
-  const { error } = useToast();
+  const { error, success } = useToast();
   const authFetch = useAuthFetch();
 
   useEffect(() => {
@@ -66,7 +66,9 @@ const News: React.FC = () => {
 
   const handleSaveEvent = async (event: CalendarEvent) => {
     try {
-      if (event.id && events.find((e) => e.id === event.id)) {
+      const isUpdate = event.id && events.find((e) => e.id === event.id);
+
+      if (isUpdate) {
         const body = {
           title: event.title,
           description: event.description,
@@ -108,6 +110,17 @@ const News: React.FC = () => {
 
       setEditingEvent(null);
       setIsAddModalOpen(false);
+
+      // Show success toast
+      if (isUpdate) {
+        success(`Event "${event.title}" has been successfully updated!`, {
+          title: 'Updated',
+        });
+      } else {
+        success(`Event "${event.title}" has been successfully created!`, {
+          title: 'Created',
+        });
+      }
     } catch (err) {
       console.error('Save event failed', err);
       error('Failed to save event', { title: 'Save failed' });
@@ -130,6 +143,11 @@ const News: React.FC = () => {
       await authFetch(`/news/${id}`, { method: 'DELETE' });
       refetchNews();
       setDeletingEvent(null);
+
+      // Show success toast
+      success(`Event "${deletingEvent.title}" has been successfully deleted!`, {
+        title: 'Deleted',
+      });
     } catch (err) {
       console.error('Delete failed', err);
       error('Failed to delete event', { title: 'Delete failed' });

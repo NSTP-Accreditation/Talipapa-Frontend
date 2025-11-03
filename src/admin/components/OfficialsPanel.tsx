@@ -418,6 +418,7 @@ export default function OfficialsPanel() {
     const formData = new FormData();
     formData.append('name', officialData.name);
     formData.append('position', officialData.position);
+    formData.append('bio', officialData.bio || '');
     if (officialData.imageFile)
       formData.append('image', officialData.imageFile);
 
@@ -440,6 +441,19 @@ export default function OfficialsPanel() {
       }
 
       await refetch();
+      setIsModalOpen(false);
+      setEditingOfficial(null);
+
+      // Show success toast
+      if (editingOfficial) {
+        toast.success(`${officialData.name} has been successfully updated!`, {
+          title: 'Updated',
+        });
+      } else {
+        toast.success(`${officialData.name} has been successfully added!`, {
+          title: 'Added',
+        });
+      }
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : 'Failed to save official';
@@ -468,6 +482,11 @@ export default function OfficialsPanel() {
       await refetch();
       setIsDeleteModalOpen(false);
       setDeletingOfficial(null);
+
+      // Show success toast
+      toast.success(`${deletingOfficial.name} has been successfully deleted!`, {
+        title: 'Deleted',
+      });
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : 'Failed to delete official';
