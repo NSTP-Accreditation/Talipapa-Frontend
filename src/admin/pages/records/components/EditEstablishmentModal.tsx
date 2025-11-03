@@ -46,11 +46,13 @@ const EditEstablishmentModal = ({
         address: editItem.address,
       };
 
-      await authFetch(`/establishments/${editItem._id}`, {
+      const res = await authFetch(`/establishment/${editItem._id}`, {
         method: 'PATCH',
         body: JSON.stringify(payload),
       });
 
+      console.log(res);
+      
       // refresh
       await refetchRecords();
       setEditItem(null);
