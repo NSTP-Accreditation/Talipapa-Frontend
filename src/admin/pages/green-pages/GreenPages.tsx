@@ -46,7 +46,7 @@ const GreenPages: React.FC = () => {
     position: '',
     age: '',
     gender: '',
-    email: '',
+    email_address: '',
     contact_number: '',
     skills: [],
     assigned_farm: [],

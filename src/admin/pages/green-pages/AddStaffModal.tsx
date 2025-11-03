@@ -311,9 +311,9 @@ const AddStaffModal: React.FC<Props> = ({
                   </label>
                   <input
                     type="email"
-                    value={staffForm.email}
+                    value={staffForm.email_address}
                     onChange={(e) =>
-                      handleStaffFormChange('email', e.target.value)
+                      handleStaffFormChange('email_address', e.target.value)
                     }
                     className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-blue-500 focus:ring-2 sm:focus:ring-4 focus:ring-blue-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
                     placeholder="email@example.com"
