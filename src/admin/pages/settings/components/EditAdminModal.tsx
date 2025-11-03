@@ -173,11 +173,7 @@ const EditAdminModal = ({
         );
       }
     } catch (fetchErr) {
-      // If fetching users fails, don't block the update; log and continue
-      console.warn(
-        'Could not validate role limits due to fetch error',
-        fetchErr
-      );
+      // If fetching users fails, don't block the update; continue silently
     }
 
     const payload: any = {
@@ -219,34 +215,25 @@ const EditAdminModal = ({
 
       for (const attempt of attempts) {
         try {
-          console.log(`[EditAdmin] Trying ${attempt.method} ${attempt.url}`);
           await authFetch(attempt.url, {
             method: attempt.method,
             body: JSON.stringify(payload),
           });
           // If successful, break out of loop
-          console.log(
-            `[EditAdmin] Success with ${attempt.method} ${attempt.url}`
-          );
           lastError = null;
           break;
         } catch (err: any) {
-          console.log(
-            `[EditAdmin] Failed ${attempt.method} ${attempt.url}:`,
-            err.message
-          );
           lastError = err;
           // Only continue trying if it's a 404 (endpoint doesn't exist)
           if (!err.message?.includes('404')) {
             // Not a 404 - this is a real error (validation, permissions, etc)
-            console.error('[EditAdmin] Non-404 error, stopping attempts:', err);
             throw err;
           }
           // Otherwise, continue to next attempt
         }
       }
 
-      // If all attempts failed with 404, throw the last error
+      // If all attempts failed with 404s, throw the last error
       if (lastError) {
         throw lastError;
       }
@@ -261,7 +248,6 @@ const EditAdminModal = ({
       refetchAdmin();
       onClose();
     } catch (err: any) {
-      console.error('Update admin failed', err);
       error(err?.message || 'Failed to update admin', { title: 'Error' });
     } finally {
       setIsSaving(false);

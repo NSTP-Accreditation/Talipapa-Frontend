@@ -150,8 +150,10 @@ const AddEditProductModal = memo(
         });
         await refetchProduct();
         success(response?.message || 'Product created', { title: 'Success' });
-      } catch (error) {
-        console.log(error.message);
+      } catch (error: any) {
+        showError(error?.message || 'Failed to create product', {
+          title: 'Error',
+        });
       }
     };
 
@@ -169,8 +171,10 @@ const AddEditProductModal = memo(
 
         await refetchProduct();
         success(response.message || 'Product updated', { title: 'Success' });
-      } catch (error) {
-        console.log(error.message);
+      } catch (error: any) {
+        showError(error?.message || 'Failed to update product', {
+          title: 'Error',
+        });
       }
     };
 

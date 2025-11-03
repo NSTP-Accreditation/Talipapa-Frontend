@@ -24,7 +24,7 @@ const DeleteProductMaterialModal = ({
   type,
 }: DeleteProductMaterialModalProps) => {
   const authFetch = useAuthFetch();
-  const { success } = useToast();
+  const { success, error: showError } = useToast();
 
   if (!itemToDelete) return null;
 
@@ -46,8 +46,8 @@ const DeleteProductMaterialModal = ({
       }
       await refetch();
       success(message, { title: 'Deleted' });
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      showError(error?.message || 'Failed to delete item', { title: 'Error' });
     } finally {
       setItemToDelete(null);
     }

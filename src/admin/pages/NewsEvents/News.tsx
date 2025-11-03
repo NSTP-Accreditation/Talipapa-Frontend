@@ -121,9 +121,8 @@ const News: React.FC = () => {
           title: 'Created',
         });
       }
-    } catch (err) {
-      console.error('Save event failed', err);
-      error('Failed to save event', { title: 'Save failed' });
+    } catch (err: any) {
+      error(err?.message || 'Failed to save event', { title: 'Save failed' });
     }
   };
 
@@ -148,9 +147,10 @@ const News: React.FC = () => {
       success(`Event "${deletingEvent.title}" has been successfully deleted!`, {
         title: 'Deleted',
       });
-    } catch (err) {
-      console.error('Delete failed', err);
-      error('Failed to delete event', { title: 'Delete failed' });
+    } catch (err: any) {
+      error(err?.message || 'Failed to delete event', {
+        title: 'Delete failed',
+      });
     }
   };
 

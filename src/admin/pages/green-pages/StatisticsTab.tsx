@@ -206,7 +206,6 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
       closeAddFarm();
       refetchFarms();
     } catch (error: any) {
-      console.error('Error adding farm:', error);
       toast.error(error?.message || 'Failed to add farm', {
         title: 'Error',
       });

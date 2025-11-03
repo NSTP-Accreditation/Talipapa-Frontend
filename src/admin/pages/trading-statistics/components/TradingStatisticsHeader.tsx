@@ -261,11 +261,13 @@ const TradingStatisticsHeader = ({
       );
 
       setShowDatePicker(false);
-    } catch (err) {
-      console.error('Error generating PDF report:', err);
-      showError('Failed to generate PDF report. Please try again.', {
-        title: 'Error',
-      });
+    } catch (err: any) {
+      showError(
+        err?.message || 'Failed to generate PDF report. Please try again.',
+        {
+          title: 'Error',
+        }
+      );
     } finally {
       setIsGenerating(false);
     }
@@ -376,11 +378,13 @@ const TradingStatisticsHeader = ({
       doc.save(
         `trading_statistics_${new Date().toISOString().split('T')[0]}.pdf`
       );
-    } catch (err) {
-      console.error('Error generating PDF report:', err);
-      showError('Failed to generate PDF report. Please try again.', {
-        title: 'Export',
-      });
+    } catch (err: any) {
+      showError(
+        err?.message || 'Failed to generate PDF report. Please try again.',
+        {
+          title: 'Export',
+        }
+      );
     }
   };
 

@@ -154,7 +154,6 @@ export default function Achievements() {
         );
       }
     } catch (error: any) {
-      console.error('Save failed:', error);
       toast.error(error?.message || String(error), { title: 'Save failed' });
     }
   };
@@ -183,7 +182,6 @@ export default function Achievements() {
       refetchAchievements();
       closeDeleteModal();
     } catch (err: any) {
-      console.error('Delete failed:', err);
       toast.error(err?.message || String(err), { title: 'Delete failed' });
       setIsDeleting(false);
     }

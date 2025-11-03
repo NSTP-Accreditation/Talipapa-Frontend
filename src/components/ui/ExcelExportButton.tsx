@@ -51,8 +51,8 @@ const ExcelExportButton: React.FC<ExcelExportButtonProps> = ({
         if (settingsResponse?.excelProtectionPassword) {
           password = settingsResponse.excelProtectionPassword;
         }
-      } catch (err) {
-        console.warn('Failed to fetch Excel password, using default:', err);
+      } catch (err: any) {
+        // Silent fail - use default password
       }
 
       // Call appropriate export function based on record type
@@ -87,11 +87,13 @@ const ExcelExportButton: React.FC<ExcelExportButtonProps> = ({
       setTimeout(() => {
         setExportSuccess(false);
       }, 3000);
-    } catch (error) {
-      console.error('Export error:', error);
-      showError('Failed to export Excel report. Please try again.', {
-        title: 'Export Error',
-      });
+    } catch (error: any) {
+      showError(
+        error?.message || 'Failed to export Excel report. Please try again.',
+        {
+          title: 'Export Error',
+        }
+      );
     } finally {
       setIsExporting(false);
     }

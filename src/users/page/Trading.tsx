@@ -291,11 +291,13 @@ export default function Trading() {
       success('Your points have been successfully retrieved.', {
         title: 'Record found!',
       });
-    } catch (error) {
-      console.error('showRecord error:', error);
-      showError('Please double-check your Record ID and Last Name.', {
-        title: 'Record not found',
-      });
+    } catch (error: any) {
+      showError(
+        error?.message || 'Please double-check your Record ID and Last Name.',
+        {
+          title: 'Record not found',
+        }
+      );
     }
   };
 
@@ -928,8 +930,8 @@ export default function Trading() {
                               <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-green-600" />
                             </span>
                             <span className="text-xs font-medium text-gray-700 leading-normal">
-                                {item.name}
-                              </span>
+                              {item.name}
+                            </span>
                           </li>
                         ))}
                       </ul>

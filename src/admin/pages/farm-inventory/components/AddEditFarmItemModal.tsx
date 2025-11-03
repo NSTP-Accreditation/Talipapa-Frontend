@@ -166,7 +166,9 @@ const AddEditFarmItemModal = ({
       success(response.message || 'Farm item created', { title: 'Success' });
       onClose();
     } catch (error) {
-      showError(error?.message || 'Failed to create farm item', { title: 'Error' });
+      showError(error?.message || 'Failed to create farm item', {
+        title: 'Error',
+      });
     }
   };
 
@@ -189,7 +191,9 @@ const AddEditFarmItemModal = ({
       success(response.message || 'Farm item updated', { title: 'Success' });
       onClose();
     } catch (error) {
-      console.error(error);
+      showError(error?.message || 'Failed to update farm item', {
+        title: 'Error',
+      });
     }
   };
 

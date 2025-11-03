@@ -73,13 +73,6 @@ const AdminSection = ({
                     {(function deriveRoles() {
                       const anyAdmin = admin as any;
 
-                      // Debug logging
-                      console.log('Admin data:', {
-                        username: admin.username,
-                        rolesKeys: admin.rolesKeys,
-                        roles: anyAdmin.roles,
-                      });
-
                       // 1) Prefer rolesKeys if provided (array of labels)
                       if (
                         Array.isArray(admin.rolesKeys) &&
@@ -149,7 +142,6 @@ const AdminSection = ({
                       }
 
                       // Fallback: empty roles array
-                      console.warn('No roles found for admin:', admin.username);
                       return [] as string[];
                     })().map((role) => {
                       const roleLower = String(role).toLowerCase();
@@ -157,16 +149,16 @@ const AdminSection = ({
 
                       if (roleLower === 'superadmin') {
                         colorClass =
-                          'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300';
+                          'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border-2 border-green-400 shadow-md';
                       } else if (roleLower === 'admin') {
                         colorClass =
-                          'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300';
+                          'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border-2 border-blue-400 shadow-md';
                       } else if (roleLower === 'staff') {
                         colorClass =
-                          'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300';
+                          'bg-gradient-to-r from-orange-100 to-orange-200 text-orange-800 border-2 border-orange-400 shadow-md ring-2 ring-orange-200';
                       } else {
                         colorClass =
-                          'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 border border-purple-300';
+                          'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 border-2 border-purple-400';
                       }
 
                       return (

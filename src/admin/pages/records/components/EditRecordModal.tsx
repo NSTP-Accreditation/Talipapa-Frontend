@@ -142,9 +142,10 @@ const EditRecordModal = ({
       success(`Record Updated! ID: ${editRecord._id}`, {
         title: 'Record Updated',
       });
-    } catch (error) {
-      console.log(error);
-      showError('Failed to update record.', { title: 'Error' });
+    } catch (error: any) {
+      showError(error?.message || 'Failed to update record.', {
+        title: 'Error',
+      });
     } finally {
       setIsUpdating(false);
     }

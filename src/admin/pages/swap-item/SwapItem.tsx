@@ -56,9 +56,8 @@ const SwapItem = () => {
         `/records/BT-${recordIdRest}?lastName=${lastName}`
       );
       setRecordData(updatedRecord);
-    } catch (err) {
-      console.error('Error finding record:', err);
-      showError('No Record Found', { title: 'Not Found' });
+    } catch (err: any) {
+      showError(err?.message || 'No Record Found', { title: 'Not Found' });
       setRecordData(null);
     }
   };
@@ -80,8 +79,10 @@ const SwapItem = () => {
       const products = await authFetch('/products');
       const recordToUse = recordOverride || recordData;
       filterAvailableProducts(products, recordToUse);
-    } catch (error) {
-      console.error('Error fetching products:', error);
+    } catch (error: any) {
+      showError(error?.message || 'Error fetching products', {
+        title: 'Error',
+      });
       setRecordData(null);
     }
   };

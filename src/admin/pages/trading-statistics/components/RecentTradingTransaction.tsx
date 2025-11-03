@@ -4,9 +4,6 @@ import { TradingStatisticsProps } from '../TradingStatistics.types';
 import dayjs from 'dayjs';
 
 const RecentTradingTransaction = ({ logsData } : TradingStatisticsProps ) => {
-
-  console.log(logsData);
-  
   return (
     <Card className="border-2 border-[#1b4c2e]/20 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg sm:rounded-xl overflow-hidden">
       <CardHeader className="bg-gradient-to-r from-[#1b4c2e] to-[#2d6b47] text-white pb-4 sm:pb-6">
