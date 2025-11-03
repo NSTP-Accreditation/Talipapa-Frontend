@@ -17,9 +17,8 @@ const FarmInventoryItems = ({
   farmItemsData,
   onAddItem,
   onUpdateItem,
-  onDeleteItem
+  onDeleteItem,
 }: FarmInventoryItemsProps) => {
-
   return (
     <section className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
@@ -85,6 +84,11 @@ const FarmInventoryItems = ({
                           <Sprout className="w-3 h-3" />
                           {item.subCategory || 'No category'}
                         </span>
+                        {item.farmOrigin && (
+                          <span className="inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-bold bg-emerald-100 text-emerald-700">
+                            📍 {item.farmOrigin}
+                          </span>
+                        )}
                         <span
                           className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-bold ${
                             (item.stocks || 0) === 0

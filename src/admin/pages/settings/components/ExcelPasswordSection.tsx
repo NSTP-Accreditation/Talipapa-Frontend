@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 
 const ExcelPasswordSection = () => {
   const authFetch = useAuthFetch();
-  const { success, error } = useToast();
+  const { success, error: showError } = useToast();
 
   const [editingPassword, setEditingPassword] = useState<boolean>(false);
   const [isSavingPassword, setIsSavingPassword] = useState<boolean>(false);
@@ -37,8 +37,10 @@ const ExcelPasswordSection = () => {
           // Default password if not set
           setExcelPassword('BarangayTalipapa2025');
         }
-      } catch (err) {
-        console.error('Failed to fetch Excel password:', err);
+      } catch (err: any) {
+        showError(err?.message || 'Failed to fetch Excel password', {
+          title: 'Error',
+        });
         setExcelPassword('BarangayTalipapa2025');
       } finally {
         setLoadingPassword(false);
@@ -50,14 +52,14 @@ const ExcelPasswordSection = () => {
 
   const handlePasswordSave = async () => {
     if (!excelPassword.trim()) {
-      error('Excel protection password cannot be empty', {
+      showError('Excel protection password cannot be empty', {
         title: 'Validation Error',
       });
       return;
     }
 
     if (excelPassword.length < 6) {
-      error('Password must be at least 6 characters long', {
+      showError('Password must be at least 6 characters long', {
         title: 'Validation Error',
       });
       return;
@@ -76,9 +78,10 @@ const ExcelPasswordSection = () => {
       });
       setEditingPassword(false);
       setShowPassword(false);
-    } catch (err) {
-      console.error(err);
-      error('Failed to update Excel password', { title: 'Error' });
+    } catch (err: any) {
+      showError(err?.message || 'Failed to update Excel password', {
+        title: 'Error',
+      });
     } finally {
       setIsSavingPassword(false);
     }

@@ -46,7 +46,7 @@ const GreenPages: React.FC = () => {
     position: '',
     age: '',
     gender: '',
-    email: '',
+    email_address: '',
     contact_number: '',
     skills: [],
     assigned_farm: [],
@@ -122,9 +122,8 @@ const GreenPages: React.FC = () => {
       toast.success('Staff added');
       closeAddStaffModal();
       refetchStaff?.();
-    } catch (err) {
-      console.error(err);
-      toast.error('Failed to add staff');
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to add staff');
     }
     setIsSubmitting(false);
   };
@@ -148,8 +147,8 @@ const GreenPages: React.FC = () => {
       const res = await authFetch(`/staff?skill=${skill._id}`);
       // assume res is array
       setSkillStaff(res || []);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to load staff for skill');
       setSkillStaff([]);
     }
     setSkillLoading(false);

@@ -1,5 +1,5 @@
-import { AvailableProductsProps } from "../SwapItem.types";
-import AvailableProductCard from "./AvailableProductCard";
+import { AvailableProductsProps } from '../SwapItem.types';
+import AvailableProductCard from './AvailableProductCard';
 
 const Availableproducts = ({
   availableProducts,
@@ -11,8 +11,7 @@ const Availableproducts = ({
   if (availableProducts.length === 0) {
     return null;
   }
-  console.log('s');
-  
+
   return (
     <div
       className="grow bg-white shadow-md p-4 sm:p-10 rounded-lg"

@@ -46,7 +46,7 @@ const EditEstablishmentModal = ({
         address: editItem.address,
       };
 
-      await authFetch(`/establishment/${editItem._id}`, {
+      await authFetch(`/establishments/${editItem._id}`, {
         method: 'PATCH',
         body: JSON.stringify(payload),
       });

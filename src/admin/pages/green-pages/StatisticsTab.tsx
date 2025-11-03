@@ -155,14 +155,15 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
   const handleCreateFarm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmittingFarm) return;
-    // Basic validation
+
+    // Basic validation - do this BEFORE setting isSubmitting
     if (!newFarm.name || !newFarm.location) {
       toast.error('Farm name and location are required', {
         title: 'Validation',
       });
       return;
     }
-    setIsSubmittingFarm(true);
+
     if (!newFarm.image || !newFarm.description) {
       toast.error('Image and Description are required!', {
         title: 'Validation',
@@ -171,6 +172,18 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
     }
 
     const mapLoc = extractLatLong(newFarm.location);
+
+    if (!mapLoc || !mapLoc.lat || !mapLoc.lng) {
+      toast.error(
+        'Invalid location format. Please provide a valid Google Maps URL',
+        {
+          title: 'Validation',
+        }
+      );
+      return;
+    }
+
+    setIsSubmittingFarm(true);
 
     try {
       const formData = new FormData();
@@ -184,20 +197,21 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
       formData.append('description', newFarm.description);
       formData.append('image', newFarm.image);
 
-      try {
-        const res = await authFetch('/farms', {
-          method: 'POST',
-          body: formData,
-        });
+      await authFetch('/farms', {
+        method: 'POST',
+        body: formData,
+      });
 
-        refetchFarms();
-      } catch (error) {
-        console.log(error);
-      }
-    } catch (err) {
-      console.error(err);
+      toast.success('Farm added successfully!', { title: 'Success' });
+      closeAddFarm();
+      refetchFarms();
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to add farm', {
+        title: 'Error',
+      });
+    } finally {
+      setIsSubmittingFarm(false);
     }
-    setIsSubmittingFarm(false);
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

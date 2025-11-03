@@ -62,7 +62,7 @@ const BarangayOfficials = () => {
   return (
     <div className="mb-8 sm:mb-12 md:mb-16 lg:mb-24">
       {/* Header Section */}
-        <div className="text-center mb-8 sm:mb-12">
+      <div className="text-center mb-8 sm:mb-12">
         <div className="inline-block p-3 sm:p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-full mb-4 sm:mb-6 shadow-lg">
           <span className="text-3xl sm:text-5xl">👥</span>
         </div>
@@ -80,14 +80,14 @@ const BarangayOfficials = () => {
           {officials.slice(0, 1).map((official, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl p-5 sm:p-8 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden w-[160px] h-[180px] sm:w-[240px] sm:h-[240px] md:w-[250px] md:h-[250px] group"
+              className="bg-white rounded-2xl p-5 sm:p-8 flex flex-col items-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden w-[160px] sm:w-[240px] md:w-[250px] group"
             >
               {/* Hover Gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-              <div className="relative z-10 flex flex-col items-center w-full h-full justify-center">
+              <div className="relative z-10 flex flex-col items-center w-full">
                 {/* Avatar */}
-                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-3 sm:mb-5 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
+                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-3 sm:mb-4 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
                   {official.image ? (
                     <img
                       src={
@@ -104,14 +104,21 @@ const BarangayOfficials = () => {
                 </div>
 
                 {/* Name */}
-                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 leading-normal text-center group-hover:text-green-700 transition-colors">
+                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-1 sm:mb-2 leading-normal text-center group-hover:text-green-700 transition-colors">
                   {official.name}
                 </h3>
 
                 {/* Position */}
-                <p className="text-gray-600 text-xs sm:text-sm leading-tight text-center flex-grow flex items-center font-medium">
+                <p className="text-gray-600 text-xs sm:text-sm leading-tight text-center font-medium mb-2">
                   {official.position}
                 </p>
+
+                {/* Biography */}
+                {official.bio && official.bio.trim() && (
+                  <p className="text-gray-500 text-xs leading-snug text-center line-clamp-3 px-2">
+                    {official.bio}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -121,14 +128,14 @@ const BarangayOfficials = () => {
           {officials.slice(1, 3).map((official, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl p-5 sm:p-8 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden w-[160px] h-[180px] sm:w-[240px] sm:h-[240px] md:w-[250px] md:h-[250px] group"
+              className="bg-white rounded-2xl p-5 sm:p-8 flex flex-col items-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden w-[160px] sm:w-[240px] md:w-[250px] group"
             >
               {/* Hover Gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-              <div className="relative z-10 flex flex-col items-center w-full h-full justify-center">
+              <div className="relative z-10 flex flex-col items-center w-full">
                 {/* Avatar */}
-                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-3 sm:mb-5 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
+                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-3 sm:mb-4 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
                   {official.image ? (
                     <img
                       src={
@@ -145,14 +152,21 @@ const BarangayOfficials = () => {
                 </div>
 
                 {/* Name */}
-                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 leading-normal text-center group-hover:text-green-700 transition-colors">
+                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-1 sm:mb-2 leading-normal text-center group-hover:text-green-700 transition-colors">
                   {official.name}
                 </h3>
 
                 {/* Position */}
-                <p className="text-gray-600 text-xs sm:text-sm leading-tight text-center flex-grow flex items-center font-medium">
+                <p className="text-gray-600 text-xs sm:text-sm leading-tight text-center font-medium mb-2">
                   {official.position}
                 </p>
+
+                {/* Biography */}
+                {official.bio && official.bio.trim() && (
+                  <p className="text-gray-500 text-xs leading-snug text-center line-clamp-3 px-2">
+                    {official.bio}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -162,14 +176,14 @@ const BarangayOfficials = () => {
           {officials.slice(3).map((official, index) => (
             <div
               key={index + 3}
-              className="bg-white rounded-2xl p-5 sm:p-8 flex flex-col items-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden group w-[160px] h-[180px] sm:w-[240px] sm:h-[240px]"
+              className="bg-white rounded-2xl p-5 sm:p-8 flex flex-col items-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden group w-[160px] min-h-[180px] sm:w-[240px] sm:min-h-[240px]"
             >
               {/* Hover Gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-              <div className="relative z-10 flex flex-col items-center w-full h-full justify-center">
+              <div className="relative z-10 flex flex-col items-center w-full">
                 {/* Avatar */}
-                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-3 sm:mb-5 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
+                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-3 sm:mb-4 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
                   {official.image ? (
                     <img
                       src={
@@ -186,14 +200,21 @@ const BarangayOfficials = () => {
                 </div>
 
                 {/* Name */}
-                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 leading-normal text-center group-hover:text-green-700 transition-colors">
+                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-1 sm:mb-2 leading-normal text-center group-hover:text-green-700 transition-colors">
                   {official.name}
                 </h3>
 
                 {/* Position */}
-                <p className="text-gray-600 text-xs sm:text-sm leading-tight text-center flex-grow flex items-center font-medium">
+                <p className="text-gray-600 text-xs sm:text-sm leading-tight text-center font-medium mb-2">
                   {official.position}
                 </p>
+
+                {/* Biography */}
+                {official.bio && official.bio.trim() && (
+                  <p className="text-gray-500 text-xs leading-snug text-center line-clamp-3 px-2">
+                    {official.bio}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -218,7 +239,7 @@ const BarangayMap = () => {
   return (
     <div className="mt-8 sm:mt-12 md:mt-16 lg:mt-24">
       {/* Header Section */}
-        <div className="text-center mb-8 sm:mb-12">
+      <div className="text-center mb-8 sm:mb-12">
         <div className="inline-block p-3 sm:p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-full mb-4 sm:mb-6 shadow-lg">
           <span className="text-3xl sm:text-5xl">📍</span>
         </div>

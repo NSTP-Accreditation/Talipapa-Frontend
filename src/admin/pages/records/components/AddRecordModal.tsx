@@ -100,11 +100,13 @@ const AddRecordModal = ({
       success(`New Record Created! ID: ${data.record_id}`, {
         title: 'Record Created',
       });
-    } catch (error) {
-      console.log(error);
-      showError('Failed to create record. Please try again.', {
-        title: 'Error',
-      });
+    } catch (error: any) {
+      showError(
+        error?.message || 'Failed to create record. Please try again.',
+        {
+          title: 'Error',
+        }
+      );
     } finally {
       setIsCreating(false);
     }

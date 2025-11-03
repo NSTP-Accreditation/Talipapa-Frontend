@@ -130,9 +130,8 @@ export default function TalipapaNatin() {
       success(res.message, { title: 'Deleted' });
       refetchPrograms();
       setDeleteTarget(null);
-    } catch (error) {
-      console.error('Error deleting program:', error);
-      showError('Error deleting program. Please try again.', {
+    } catch (error: any) {
+      showError(error?.message || 'Error deleting program. Please try again.', {
         title: 'Delete failed',
       });
     } finally {
@@ -163,11 +162,13 @@ export default function TalipapaNatin() {
           setHasUnsavedChanges(true);
           refetchPrograms();
         }
-      } catch (error) {
-        console.error('Error duplicating program:', error);
-        showError('Error duplicating program. Please try again.', {
-          title: 'Duplicate failed',
-        });
+      } catch (error: any) {
+        showError(
+          error?.message || 'Error duplicating program. Please try again.',
+          {
+            title: 'Duplicate failed',
+          }
+        );
       }
     }
   };
@@ -229,9 +230,8 @@ export default function TalipapaNatin() {
           closeModal();
         }
       }
-    } catch (error) {
-      console.error('Error saving program:', error);
-      showError('Error saving program. Please try again.', {
+    } catch (error: any) {
+      showError(error?.message || 'Error saving program. Please try again.', {
         title: 'Save failed',
       });
     }

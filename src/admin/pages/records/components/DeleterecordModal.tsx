@@ -32,9 +32,10 @@ const DeleterecordModal = ({
       success(`Record Deleted! ID: ${deleteRecord._id}`, {
         title: 'Record Deleted',
       });
-    } catch (error) {
-      console.error(error);
-      showError('Failed to delete record.', { title: 'Error' });
+    } catch (error: any) {
+      showError(error?.message || 'Failed to delete record.', {
+        title: 'Error',
+      });
     } finally {
       setIsDeleting(false);
     }

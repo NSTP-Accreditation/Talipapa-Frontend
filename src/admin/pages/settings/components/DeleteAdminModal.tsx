@@ -6,17 +6,22 @@ import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
 
 type DeleteAdminModalProps = {
-  adminToDelete: Admin | null,
-  isDeleteAdminOpen: boolean,
-  closeDeleteAdminModal: () => void,
-  refetchAdmins: () => void
-}
+  adminToDelete: Admin | null;
+  isDeleteAdminOpen: boolean;
+  closeDeleteAdminModal: () => void;
+  refetchAdmins: () => void;
+};
 
-const DeleteAdminModal = ({ adminToDelete, isDeleteAdminOpen, closeDeleteAdminModal, refetchAdmins } : DeleteAdminModalProps ) => {
+const DeleteAdminModal = ({
+  adminToDelete,
+  isDeleteAdminOpen,
+  closeDeleteAdminModal,
+  refetchAdmins,
+}: DeleteAdminModalProps) => {
   const authFetch = useAuthFetch();
   const { success, error } = useToast();
 
-  const [ isDeletingAdmin, setIsDeletingAdmin ] = useState<boolean>();  
+  const [isDeletingAdmin, setIsDeletingAdmin] = useState<boolean>();
 
   const confirmDeleteAdmin = async () => {
     if (!adminToDelete) return;
@@ -27,7 +32,6 @@ const DeleteAdminModal = ({ adminToDelete, isDeleteAdminOpen, closeDeleteAdminMo
       refetchAdmins();
       closeDeleteAdminModal();
     } catch (err: any) {
-      console.error('Delete admin failed', err);
       error(err?.message || 'Failed to delete admin', { title: 'Error' });
       setIsDeletingAdmin(false);
     }

@@ -1,22 +1,26 @@
-import { useAuthFetch } from "@/admin/hooks/useAuthFetch";
-import ConfirmModal from "@/components/ui/ConfirmModal"
-import { useToast } from "@/hooks/useToast";
-import { FarmItemInterface } from "@/types/global.types";
-import { Dispatch, SetStateAction } from "react";
+import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
+import ConfirmModal from '@/components/ui/ConfirmModal';
+import { useToast } from '@/hooks/useToast';
+import { FarmItemInterface } from '@/types/global.types';
+import { Dispatch, SetStateAction } from 'react';
 
 interface DeleteFarmItemModalProps {
-  isOpen: boolean
+  isOpen: boolean;
   itemToDelete: FarmItemInterface;
   onClose: () => void;
   refetch: () => Promise<FarmItemInterface[]>;
 }
 
-const DeleteFarmItemModal = ({ isOpen, itemToDelete, onClose, refetch } : DeleteFarmItemModalProps ) => {
-
+const DeleteFarmItemModal = ({
+  isOpen,
+  itemToDelete,
+  onClose,
+  refetch,
+}: DeleteFarmItemModalProps) => {
   const authFetch = useAuthFetch();
-  const { success } = useToast();
+  const { success, error: showError } = useToast();
 
-  if(!itemToDelete) return null;
+  if (!itemToDelete) return null;
 
   const descriptionNode = (
     <div>
@@ -38,7 +42,9 @@ const DeleteFarmItemModal = ({ isOpen, itemToDelete, onClose, refetch } : Delete
       await refetch();
       success('Farm item deleted successfully!', { title: 'Deleted' });
     } catch (err) {
-      console.error('Delete failed', err);
+      showError(err?.message || 'Failed to delete farm item', {
+        title: 'Error',
+      });
     } finally {
       onClose();
     }
@@ -53,7 +59,7 @@ const DeleteFarmItemModal = ({ isOpen, itemToDelete, onClose, refetch } : Delete
       confirmLabel="Delete"
       cancelLabel="Cancel"
     />
-  )
-}
+  );
+};
 
-export default DeleteFarmItemModal
+export default DeleteFarmItemModal;

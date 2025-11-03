@@ -98,8 +98,10 @@ const TradingLocations: React.FC = () => {
     if (savedLocations) {
       try {
         setLocations(JSON.parse(savedLocations));
-      } catch (error) {
-        console.error('Error loading locations:', error);
+      } catch (error: any) {
+        toast.error(error?.message || 'Error loading locations', {
+          title: 'Error',
+        });
       }
     }
   }, []);
@@ -133,9 +135,8 @@ const TradingLocations: React.FC = () => {
             toast.success('Address auto-filled from map location');
           }
         }
-      } catch (error) {
-        console.error('Reverse geocoding error:', error);
-        // Don't show error toast, user can still manually enter address
+      } catch (error: any) {
+        // Silent fail - user can still manually enter address
       }
     }
   };

@@ -16,6 +16,7 @@ interface SlideModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (slide: Slide, imageFile: File | null) => void;
+  nextOrder?: number;
 }
 
 const readFileAsDataURL = (file: File): Promise<string> =>
@@ -31,6 +32,7 @@ const SlideModal: React.FC<SlideModalProps> = ({
   isOpen,
   onClose,
   onSave,
+  nextOrder = 0,
 }) => {
   const [formData, setFormData] = useState<Slide>({
     _id: slide?._id || '',
@@ -38,7 +40,7 @@ const SlideModal: React.FC<SlideModalProps> = ({
     subTitle: slide?.subTitle || '',
     image: slide?.image || undefined,
     link: slide?.link || '',
-    order: slide?.order || 0,
+    order: slide?.order !== undefined ? slide.order : nextOrder,
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
@@ -64,12 +66,12 @@ const SlideModal: React.FC<SlideModalProps> = ({
         subTitle: '',
         image: undefined,
         link: '',
-        order: 0,
+        order: nextOrder,
       });
       setImagePreview('');
       setImageFile(null);
     }
-  }, [slide, isOpen]);
+  }, [slide, isOpen, nextOrder]);
 
   const handleFile = async (file: File | null) => {
     if (!file) return;

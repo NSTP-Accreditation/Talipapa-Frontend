@@ -134,12 +134,10 @@ const AddAdminModal = ({
 
     try {
       setIsAddingAdmin(true);
-      const response = await authFetch('/auth/signup', {
+      await authFetch('/auth/signup', {
         method: 'POST',
         body: JSON.stringify({ ...payload }),
       });
-
-      console.log('Created admin response:', response);
 
       success('New admin account created successfully', {
         title: 'Success',
@@ -161,7 +159,6 @@ const AddAdminModal = ({
       await refetchAdmin();
       closeAddAdminModal();
     } catch (err: any) {
-      console.error('Failed to create admin:', err);
       error(err?.message || 'Failed to create admin account', {
         title: 'Error',
       });

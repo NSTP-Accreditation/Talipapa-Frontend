@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/useToast';
 import { CalendarEvent, EventModalProps } from './types';
+import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 
 const EventModal: React.FC<EventModalProps> = ({
   event,
@@ -186,19 +187,59 @@ const EventModal: React.FC<EventModalProps> = ({
               </h4>
             </div>
 
-            <div className="flex flex-col">
-              <label className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2">
-                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                Date and Time<span className="text-red-500">*</span>
-              </label>
-              <input
-                type="datetime-local"
-                value={formData.dateTime}
-                onChange={(e) =>
-                  setFormData({ ...formData, dateTime: e.target.value })
-                }
-                className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+              <div className="flex flex-col">
+                <label className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2">
+                  <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                  Date<span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={
+                    formData.dateTime ? formData.dateTime.split('T')[0] : ''
+                  }
+                  onChange={(e) => {
+                    const date = e.target.value;
+                    const time = formData.dateTime
+                      ? formData.dateTime.split('T')[1]
+                      : '00:00';
+                    setFormData({ ...formData, dateTime: `${date}T${time}` });
+                    // Auto-focus time input after date is selected
+                    if (date) {
+                      setTimeout(() => {
+                        const timeInput =
+                          document.getElementById('event-time-input');
+                        if (timeInput) timeInput.focus();
+                      }, 100);
+                    }
+                  }}
+                  className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1.5 sm:mb-2">
+                  <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                  Time<span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="event-time-input"
+                  type="time"
+                  value={
+                    formData.dateTime
+                      ? formData.dateTime.split('T')[1] || ''
+                      : ''
+                  }
+                  onChange={(e) => {
+                    const date = formData.dateTime
+                      ? formData.dateTime.split('T')[0]
+                      : new Date().toISOString().split('T')[0];
+                    const time = e.target.value;
+                    setFormData({ ...formData, dateTime: `${date}T${time}` });
+                  }}
+                  className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
+                />
+              </div>
             </div>
 
             <div className="flex flex-col">
@@ -206,15 +247,19 @@ const EventModal: React.FC<EventModalProps> = ({
                 <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
                 Location
               </label>
-              <input
-                type="text"
+              <AddressAutocomplete
                 value={formData.location}
-                onChange={(e) =>
-                  setFormData({ ...formData, location: e.target.value })
+                onChange={(value) =>
+                  setFormData({ ...formData, location: value })
                 }
-                className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
-                placeholder="e.g., Barangay Hall"
+                placeholder="e.g., Barangay Hall, City Center..."
+                className="border-2 border-gray-200 hover:border-gray-300 text-sm sm:text-base"
+                maxLength={200}
+                countryCode="ph"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Start typing to see address suggestions
+              </p>
             </div>
           </div>
 

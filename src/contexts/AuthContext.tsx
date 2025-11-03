@@ -8,6 +8,12 @@ import React, {
 
 interface UserData {
   username: String;
+  roles?: {
+    SuperAdmin?: number;
+    Admin?: number;
+    Staff?: number;
+  };
+  rolesKeys?: string[];
 }
 
 interface User {
@@ -112,8 +118,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       setUser(data);
       return data;
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      // Silent fail for token refresh
       return null;
     }
   };
@@ -124,8 +130,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         method: 'POST',
         credentials: 'include',
       });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      // Silent fail for logout
     } finally {
       setUser(null);
       setIsAuthenticated(false);

@@ -73,13 +73,6 @@ const AdminSection = ({
                     {(function deriveRoles() {
                       const anyAdmin = admin as any;
 
-                      // Debug logging
-                      console.log('Admin data:', {
-                        username: admin.username,
-                        rolesKeys: admin.rolesKeys,
-                        roles: anyAdmin.roles,
-                      });
-
                       // 1) Prefer rolesKeys if provided (array of labels)
                       if (
                         Array.isArray(admin.rolesKeys) &&
@@ -109,7 +102,7 @@ const AdminSection = ({
                         const adminId = Number(import.meta.env.VITE_ADMIN ?? 2);
                         const staffId = Number(import.meta.env.VITE_STAFF ?? 3);
 
-                        return roleKeys
+                        const derivedRoles = roleKeys
                           .map((k) => {
                             const keyLower = String(k).toLowerCase();
                             const value = anyAdmin.roles[k];
@@ -146,27 +139,43 @@ const AdminSection = ({
                             return k;
                           })
                           .filter(Boolean);
+
+                        // If we found valid roles, return them
+                        if (derivedRoles.length > 0) {
+                          return derivedRoles;
+                        }
                       }
 
-                      // Fallback: empty roles array
-                      console.warn('No roles found for admin:', admin.username);
-                      return [] as string[];
+                      // 4) Check if there's a 'role' field (singular)
+                      if (anyAdmin.role) {
+                        const roleLower = String(anyAdmin.role).toLowerCase();
+                        if (roleLower === 'superadmin') return ['SuperAdmin'];
+                        if (roleLower === 'admin') return ['Admin'];
+                        if (roleLower === 'staff') return ['Staff'];
+                        return [anyAdmin.role];
+                      }
+
+                      // Fallback: return 'User' badge if no roles found
+                      return ['User'] as string[];
                     })().map((role) => {
                       const roleLower = String(role).toLowerCase();
                       let colorClass = '';
 
                       if (roleLower === 'superadmin') {
                         colorClass =
-                          'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300';
+                          'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border-2 border-green-400 shadow-md';
                       } else if (roleLower === 'admin') {
                         colorClass =
-                          'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300';
+                          'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border-2 border-blue-400 shadow-md';
                       } else if (roleLower === 'staff') {
                         colorClass =
-                          'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300';
+                          'bg-gradient-to-r from-orange-100 to-orange-200 text-orange-800 border-2 border-orange-400 shadow-md ring-2 ring-orange-200';
+                      } else if (roleLower === 'user') {
+                        colorClass =
+                          'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 border-2 border-gray-300 shadow-md';
                       } else {
                         colorClass =
-                          'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 border border-purple-300';
+                          'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 border-2 border-purple-400';
                       }
 
                       return (

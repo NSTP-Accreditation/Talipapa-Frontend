@@ -113,9 +113,8 @@ export default function App() {
         resetWeights[material._id] = '';
       });
       setWeights(resetWeights);
-    } catch (err) {
-      console.error(err);
-      toastError('Failed to update record. Please try again.', {
+    } catch (err: any) {
+      toastError(err?.message || 'Failed to update record. Please try again.', {
         title: 'Error',
       });
     } finally {

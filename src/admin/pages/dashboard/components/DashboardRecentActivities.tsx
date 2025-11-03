@@ -63,21 +63,21 @@ const DashboardRecentActivities = () => {
           {recentActivities?.data.map((activity) => (
             <div
               key={activity._id}
-              className="p-3 border-b border-gray-200 last:border-0"
+              className="p-4 border-b border-gray-200 last:border-0"
             >
-              <div className="flex justify-between items-start mb-1">
-                <span className="text-sm font-bold text-gray-900">
+              <div className="flex justify-between items-start gap-3 mb-2">
+                <span className="text-sm font-bold text-gray-900 flex-1 line-clamp-2">
                   {activity.action}
                 </span>
-                <span className="text-xs text-gray-600">
-                  {dayjs(activity.created_at).format('MMM D')}
+                <span className="text-xs text-gray-600 font-medium flex-shrink-0 whitespace-nowrap">
+                  {dayjs(activity.created_at).format('MMM D, YYYY')}
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-1 rounded">
+              <div className="flex flex-col gap-2">
+                <span className="text-xs text-green-700 font-semibold bg-green-50 px-2.5 py-1 rounded-full inline-block w-fit">
                   {activity.category}
                 </span>
-                <span className="text-xs font-bold text-gray-900">
+                <span className="text-xs font-medium text-gray-700 leading-relaxed">
                   {activity.description}
                 </span>
               </div>
@@ -87,19 +87,19 @@ const DashboardRecentActivities = () => {
 
         {/* Desktop Table Layout */}
         <div className="hidden sm:block overflow-x-auto">
-          <table className="w-full text-xs sm:text-sm">
+          <table className="w-full text-sm">
             <thead>
               <tr className="bg-gradient-to-r from-green-50 to-green-100">
-                <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-left text-gray-800">
+                <th className="py-3 px-4 lg:px-6 font-bold text-left text-gray-800">
                   Action
                 </th>
-                <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-left text-gray-800">
+                <th className="py-3 px-4 lg:px-6 font-bold text-left text-gray-800">
                   Category
                 </th>
-                <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-right text-gray-800">
+                <th className="py-3 px-4 lg:px-6 font-bold text-right text-gray-800">
                   Description
                 </th>
-                <th className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-right text-gray-800">
+                <th className="py-3 px-4 lg:px-6 font-bold text-right text-gray-800 whitespace-nowrap">
                   Date
                 </th>
               </tr>
@@ -110,19 +110,19 @@ const DashboardRecentActivities = () => {
                   key={activity._id}
                   className="border-b border-gray-200 last:border-0 hover:bg-green-50/50 transition-colors"
                 >
-                  <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-semibold text-gray-900">
+                  <td className="py-3 px-4 lg:px-6 font-semibold text-gray-900">
                     {activity.action}
                   </td>
-                  <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5">
-                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
+                  <td className="py-3 px-4 lg:px-6">
+                    <span className="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold whitespace-nowrap inline-block">
                       {activity.category}
                     </span>
                   </td>
-                  <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 font-bold text-gray-900 text-right">
+                  <td className="py-3 px-4 lg:px-6 font-bold text-gray-900 text-right">
                     {activity.description}
                   </td>
-                  <td className="py-2 sm:py-3 px-2 sm:px-3 lg:px-5 text-gray-700 font-medium text-right">
-                    {dayjs(activity.created_at).format('MMM D, YYYY h:mm A')}
+                  <td className="py-3 px-4 lg:px-6 text-gray-700 font-medium text-right whitespace-nowrap">
+                    {dayjs(activity.created_at).format('MMM D, YYYY | h:mm A')}
                   </td>
                 </tr>
               ))}

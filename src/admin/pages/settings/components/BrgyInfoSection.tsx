@@ -9,7 +9,7 @@ const BrngyInfoSection = () => {
   const { pageContent, loading, error: brgyInfoError, refetch } = useBrgyInfo();
 
   const authFetch = useAuthFetch();
-  const { success, error } = useToast();
+  const { success, error: showError } = useToast();
   const [editingBarangay, setEditingBarangay] = useState<boolean>(false);
   const [isSavingBarangay, setIsSavingBarangay] = useState<boolean>(false);
   const [barangayName, setBarangayName] = useState<string>(
@@ -24,7 +24,7 @@ const BrngyInfoSection = () => {
 
   const handleBarangayNameSave = async () => {
     if (!barangayName.trim()) {
-      error('Barangay name cannot be empty', {
+      showError('Barangay name cannot be empty', {
         title: 'Validation Error',
       });
       return;
@@ -41,9 +41,10 @@ const BrngyInfoSection = () => {
       success('Barangay name updated successfully', { title: 'Success' });
       setEditingBarangay(false);
       refetch();
-    } catch (err) {
-      console.error(err);
-      error('Failed to update barangay name', { title: 'Error' });
+    } catch (err: any) {
+      showError(err?.message || 'Failed to update barangay name', {
+        title: 'Error',
+      });
     } finally {
       setIsSavingBarangay(false);
     }
@@ -56,14 +57,14 @@ const BrngyInfoSection = () => {
     if (!file) return;
 
     if (file.size > 2 * 1024 * 1024) {
-      error('File size should be less than 2MB', {
+      showError('File size should be less than 2MB', {
         title: 'File Error',
       });
       return;
     }
 
     if (!file.type.startsWith('image/')) {
-      error('Please select an image file', { title: 'File Error' });
+      showError('Please select an image file', { title: 'File Error' });
       return;
     }
 
@@ -90,9 +91,8 @@ const BrngyInfoSection = () => {
       success('Barangay logo updated successfully', {
         title: 'Success',
       });
-    } catch (error) {
-      console.error(error);
-      error('Failed to upload logo', { title: 'Error' });
+    } catch (error: any) {
+      showError(error?.message || 'Failed to upload logo', { title: 'Error' });
     } finally {
       setIsUploadingLogo(false);
     }
