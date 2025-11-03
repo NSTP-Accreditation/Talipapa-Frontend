@@ -10,7 +10,7 @@ import {
   Calendar,
   Clock,
 } from 'lucide-react';
-import useFetchData from '@/admin/hooks/useFetchData';
+import { useBrgyInfo } from '@/contexts/BrgyInfoContext';
 
 export default function NavBar() {
   const [currentDate, setCurrentDate] = useState('');
@@ -21,16 +21,21 @@ export default function NavBar() {
   const headerRef = useRef<HTMLElement>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
 
-  const { data, loading, error } = useFetchData(
-    `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`
-  );
+  const { pageContent, loading, error } = useBrgyInfo();
 
   const imageMemo = useMemo(() => {
-    if (data && !loading && !error) {
-      return data?.image?.url;
+    if (pageContent && !loading && !error) {
+      return pageContent?.image?.url;
     }
     return;
-  }, [data, loading, error]);
+  }, [pageContent, loading, error]);
+
+  const barangayName = useMemo(() => {
+    if (pageContent && !loading && !error) {
+      return pageContent?.barangayName || 'Barangay Talipapa';
+    }
+    return 'Barangay Talipapa';
+  }, [pageContent, loading, error]);
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -155,7 +160,7 @@ export default function NavBar() {
               <Link to="/" className="group min-w-0 flex-shrink">
                 <div className="min-w-0">
                   <h1 className="text-sm sm:text-base lg:text-lg font-bold text-white leading-tight group-hover:text-green-200 transition-colors truncate">
-                    Barangay Talipapa
+                    {barangayName}
                   </h1>
                   <p className="text-[10px] sm:text-xs text-green-200 truncate">
                     Quezon City
@@ -278,7 +283,7 @@ export default function NavBar() {
               {/* Mobile Menu Footer */}
               <div className="px-3 sm:px-4 py-3 sm:py-4 border-t border-green-700/40 bg-green-950/60">
                 <p className="text-xs text-green-300 text-center font-medium">
-                  © 2025 Barangay Talipapa • Quezon City
+                  © 2025 {barangayName} • Quezon City
                 </p>
               </div>
             </div>

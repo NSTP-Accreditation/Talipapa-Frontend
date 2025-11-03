@@ -84,8 +84,9 @@ const AddEditFarmItemModal = ({
       showError('Please select a category', { title: 'Validation' });
       return false;
     }
+    // Allow zero stock but not negative
     if (itemFormData.stocks < 0 || isNaN(itemFormData.stocks)) {
-      showError('Please enter valid stock quantity', { title: 'Validation' });
+      showError('Stock quantity cannot be negative', { title: 'Validation' });
       return false;
     }
     if (!itemFormData.unit.trim()) {
@@ -109,10 +110,7 @@ const AddEditFarmItemModal = ({
     formData.append('subCategory', itemFormData.subCategory.trim());
     formData.append('stocks', itemFormData.stocks.toString());
     formData.append('unit', itemFormData.unit.trim());
-
-    if (itemFormData.farmOrigin?.trim()) {
-      formData.append('farmOrigin', itemFormData.farmOrigin.trim());
-    }
+    formData.append('farmOrigin', itemFormData.farmOrigin?.trim() || '');
 
     if (itemFormData.imageFile && itemFormData.imageFile instanceof File) {
       formData.append('image', itemFormData.imageFile);
@@ -125,12 +123,12 @@ const AddEditFarmItemModal = ({
     const file = e.target.files?.[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
-    setItemFormData((prev) => ({ 
-      ...prev, 
+    setItemFormData((prev) => ({
+      ...prev,
       image: {
-        url
-      }, 
-      imageFile: file 
+        url,
+      },
+      imageFile: file,
     }));
   };
 
@@ -168,7 +166,7 @@ const AddEditFarmItemModal = ({
       success(response.message || 'Farm item created', { title: 'Success' });
       onClose();
     } catch (error) {
-      console.log(error.message);
+      showError(error?.message || 'Failed to create farm item', { title: 'Error' });
     }
   };
 

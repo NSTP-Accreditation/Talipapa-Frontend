@@ -123,6 +123,7 @@ const CarouselEditor: React.FC = () => {
           authFetch(`/pagecontent/${pageContent._id}/carousel/${s._id}`, {
             method: 'PATCH',
             body: JSON.stringify({ order: s.order }),
+            headers: { 'Content-Type': 'application/json' },
           })
         )
       );
@@ -247,6 +248,7 @@ const CarouselEditor: React.FC = () => {
             setIsAddModalOpen(false);
           }}
           onSave={handleSaveSlide}
+          nextOrder={slides.length}
         />
       </div>
     </div>
