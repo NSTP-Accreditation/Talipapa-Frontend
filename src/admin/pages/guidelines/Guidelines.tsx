@@ -233,6 +233,9 @@ const Guidelines: React.FC = () => {
           method: 'PUT',
           body: JSON.stringify(payload),
         });
+        // Close modal first before showing toast
+        setIsModalOpen(false);
+        setEditingGuideline(null);
         success(
           `Guidelines "${updatedGuideline.title}" has been successfully updated!`,
           { title: 'Updated' }
@@ -243,6 +246,9 @@ const Guidelines: React.FC = () => {
           method: 'POST',
           body: JSON.stringify(payload),
         });
+        // Close modal first before showing toast
+        setIsModalOpen(false);
+        setEditingGuideline(null);
         success(
           `New guidelines "${updatedGuideline.title}" has been successfully created!`,
           { title: 'Created' }
@@ -251,16 +257,6 @@ const Guidelines: React.FC = () => {
 
       // refresh list
       await refetchGuidelines();
-
-      // If parent requested to keep the modal open (for creating multiple), do not close
-      const keepOpen = opts?.keepOpen === true;
-      if (!keepOpen) {
-        setIsModalOpen(false);
-        setEditingGuideline(null);
-      } else {
-        // keep modal open but reset editingGuideline so the modal treats as create
-        setEditingGuideline(null);
-      }
 
       setSelectedGuidelines(new Set());
       setShowBulkActions(false);

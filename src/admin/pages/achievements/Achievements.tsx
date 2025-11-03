@@ -136,6 +136,23 @@ export default function Achievements() {
       await authFetch(url, { method, body: formData });
       refetchAchievements();
       closeModal();
+
+      // Show success toast
+      if (isCreating) {
+        toast.success(
+          `Achievement "${form.title}" has been successfully created!`,
+          {
+            title: 'Created',
+          }
+        );
+      } else {
+        toast.success(
+          `Achievement "${form.title}" has been successfully updated!`,
+          {
+            title: 'Updated',
+          }
+        );
+      }
     } catch (error: any) {
       console.error('Save failed:', error);
       toast.error(error?.message || String(error), { title: 'Save failed' });
