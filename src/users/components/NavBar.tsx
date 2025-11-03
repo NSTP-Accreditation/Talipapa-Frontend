@@ -7,6 +7,7 @@ import {
   BookOpen,
   Recycle,
   Info,
+  Phone,
   Calendar,
   Clock,
 } from 'lucide-react';
@@ -105,6 +106,7 @@ export default function NavBar() {
     { path: '/guidelines', label: 'Guides', icon: BookOpen },
     { path: '/trading', label: 'EcoCycle', icon: Recycle },
     { path: '/aboutus', label: 'About Us', icon: Info },
+    { path: '/emergency-contact', label: 'Emergency', icon: Phone },
   ];
 
   return (

@@ -59,6 +59,7 @@ const UnifiedGuide = lazy(
 );
 const Trading = lazy(() => import('@/users/page/Trading'));
 const AboutUs = lazy(() => import('@/users/page/AboutUs'));
+const EmergencyContact = lazy(() => import('@/users/page/EmergencyContact'));
 
 // These are small and used everywhere, keep them imported normally
 import NavBar from '@/users/components/NavBar';
@@ -208,6 +209,10 @@ function App() {
                         />
                         <Route path="/trading" element={<Trading />} />
                         <Route path="/aboutus" element={<AboutUs />} />
+                        <Route
+                          path="/emergency-contact"
+                          element={<EmergencyContact />}
+                        />
 
                         {/* 404 for unknown public routes */}
                         <Route path="*" element={<NotFound />} />
