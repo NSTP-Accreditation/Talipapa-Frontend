@@ -8,6 +8,12 @@ import React, {
 
 interface UserData {
   username: String;
+  roles?: {
+    SuperAdmin?: number;
+    Admin?: number;
+    Staff?: number;
+  };
+  rolesKeys?: string[];
 }
 
 interface User {

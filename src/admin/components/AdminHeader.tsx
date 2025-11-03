@@ -17,6 +17,81 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
   const { user } = useAuth();
   const [currentTime, setCurrentTime] = useState(new Date());
 
+  // Decode JWT token to get role information
+  const decodeJWT = (token: string) => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      console.error('Failed to decode JWT:', error);
+      return null;
+    }
+  };
+
+  // Get the primary role (highest priority role)
+  const getPrimaryRole = () => {
+    if (!user?.userData) return 'User';
+
+    const userData = user.userData as any;
+
+    // First, try to decode the JWT token to get role info
+    if (user.accessToken) {
+      const decoded = decodeJWT(user.accessToken.toString());
+      if (decoded?.userInfo?.roles && Array.isArray(decoded.userInfo.roles)) {
+        const roles = decoded.userInfo.roles;
+        const superAdminId = Number(import.meta.env.VITE_SUPERADMIN || 32562);
+        const adminId = Number(import.meta.env.VITE_ADMIN || 2);
+        const staffId = Number(import.meta.env.VITE_STAFF || 3);
+
+        if (roles.includes(superAdminId)) return 'SuperAdmin';
+        if (roles.includes(adminId)) return 'Admin';
+        if (roles.includes(staffId)) return 'Staff';
+      }
+    }
+
+    // Check rolesKeys array
+    if (Array.isArray(userData.rolesKeys) && userData.rolesKeys.length > 0) {
+      if (userData.rolesKeys.includes('SuperAdmin')) return 'SuperAdmin';
+      if (userData.rolesKeys.includes('Admin')) return 'Admin';
+      if (userData.rolesKeys.includes('Staff')) return 'Staff';
+      return userData.rolesKeys[0];
+    }
+
+    // Fallback to roles object
+    if (userData.roles && typeof userData.roles === 'object') {
+      const rolesObj = userData.roles;
+      if (rolesObj.SuperAdmin) return 'SuperAdmin';
+      if (rolesObj.Admin) return 'Admin';
+      if (rolesObj.Staff) return 'Staff';
+    }
+
+    return 'User';
+  };
+
+  const role = getPrimaryRole();
+  const username = user?.userData?.username || 'User';
+
+  // Get role badge color
+  const getRoleBadgeColor = () => {
+    switch (role) {
+      case 'SuperAdmin':
+        return 'from-green-400 to-emerald-500';
+      case 'Admin':
+        return 'from-blue-400 to-blue-500';
+      case 'Staff':
+        return 'from-orange-400 to-orange-500';
+      default:
+        return 'from-gray-400 to-gray-500';
+    }
+  };
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -139,31 +214,55 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
         </div>
 
         {/* Right Side - Admin User Info */}
-        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-          {/* Mobile Welcome Text - Compact */}
-          <div className="text-right sm:hidden">
-            <p className="text-xs font-bold leading-tight text-white">
-              Admin {user.userData.username}
-            </p>
+        <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 flex-shrink-0">
+          {/* Mobile Welcome Card - Compact */}
+          <div className="sm:hidden px-3 py-2 rounded-xl bg-white/20 backdrop-blur-sm ring-1 ring-white/30 shadow-lg">
+            <div className="text-right">
+              <p className="text-[9px] font-semibold leading-tight text-green-200 mb-0.5">
+                {role}
+              </p>
+              <p className="text-xs font-bold leading-tight text-white truncate max-w-[100px]">
+                {username}
+              </p>
+            </div>
           </div>
 
-          {/* Tablet Welcome Text - Medium */}
-          <div className="text-right hidden sm:block lg:hidden">
-            <p className="text-base font-bold leading-tight text-white">
-              Welcome, Admin {user.userData.username}
-            </p>
+          {/* Tablet Welcome Card - Medium */}
+          <div className="hidden sm:flex lg:hidden items-center gap-3 px-4 py-2.5 rounded-xl bg-white/20 backdrop-blur-sm ring-1 ring-white/30 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="text-right">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-green-100 mb-1">
+                Welcome back 👋
+              </p>
+              <div className="flex items-center justify-end gap-2">
+                <span
+                  className={`inline-flex px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider text-white bg-gradient-to-r ${getRoleBadgeColor()} shadow-sm`}
+                >
+                  {role}
+                </span>
+                <p className="text-sm font-bold leading-tight text-white">
+                  {username}
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Desktop Welcome Text - Full */}
-          <div className="text-right hidden lg:block">
-            <p className="text-lg font-bold leading-tight text-white">
-              Welcome Back, Admin {user.userData.username}
-            </p>
-          </div>
-
-          {/* Avatar - Responsive sizing */}
-          <div className="flex items-center justify-center text-green-900 font-black shadow-lg hover:shadow-xl transition-all duration-300 leading-none flex-shrink-0 cursor-pointer bg-white ring-2 ring-white/30 hover:scale-110 w-[40px] h-[40px] min-w-[40px] min-h-[40px] sm:w-[46px] sm:h-[46px] sm:min-w-[46px] sm:min-h-[46px] rounded-full text-base sm:text-lg">
-            A
+          {/* Desktop Welcome Card - Full */}
+          <div className="hidden lg:flex items-center gap-4 px-5 py-2.5 rounded-xl bg-white/20 backdrop-blur-sm ring-1 ring-white/30 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="text-right">
+              <p className="text-xs font-bold uppercase tracking-wider text-green-100 mb-1.5">
+                Welcome back 👋
+              </p>
+              <div className="flex items-center justify-end gap-2.5">
+                <span
+                  className={`inline-flex px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white bg-gradient-to-r ${getRoleBadgeColor()} shadow-md`}
+                >
+                  {role}
+                </span>
+                <p className="text-sm font-bold leading-tight text-white">
+                  {username}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
