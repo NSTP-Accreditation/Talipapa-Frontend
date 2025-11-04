@@ -25,7 +25,7 @@ const DeleteEstablishmentModal = ({
     if (isDeleting || !deleteItem) return;
     setIsDeleting(true);
     try {
-      await authFetch(`/establishments/${deleteItem._id}`, {
+      await authFetch(`/establishment/${deleteItem._id}`, {
         method: 'DELETE',
       });
       await refetchRecords();
