@@ -48,7 +48,6 @@ const CarouselEditor: React.FC = () => {
       const formData = new FormData();
       formData.append('title', slide.title);
       if (slide.subTitle) formData.append('subTitle', slide.subTitle);
-      if (slide.link) formData.append('link', slide.link);
       formData.append('order', String(slide.order || 0));
       if (imageFile) formData.append('image', imageFile);
 
@@ -195,7 +194,7 @@ const CarouselEditor: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-purple-50 border border-purple-200 rounded-full text-xs sm:text-sm font-semibold text-purple-700">
                       <ArrowUpDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      <span>Drag & Reorder</span>
+                      <span>Slide Reorder</span>
                     </div>
                     {isSaving && (
                       <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-yellow-50 border border-yellow-200 rounded-full text-xs sm:text-sm font-semibold text-yellow-700">

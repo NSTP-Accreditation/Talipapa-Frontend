@@ -40,12 +40,10 @@ export const useAuthFetch = () => {
         token = localStorage.getItem('accessToken') || undefined;
       }
 
-      // If no token, redirect to login instead of throwing error
-      if (!token || token === 'undefined' || token === 'null') {
-        console.warn('⚠️ No authentication token - redirecting to login');
+      // If no token, logout (which will redirect to login)
+      if (!token) {
         logout();
-        window.location.href = '/admin/login';
-        throw new Error('No authentication token available');
+        return Promise.reject(new Error('Authentication required'));
       }
 
       const isFormData = options.body instanceof FormData;
@@ -59,28 +57,13 @@ export const useAuthFetch = () => {
       try {
         const finalUrl = /^https?:\/\//i.test(url) ? url : `${apiURL}${url}`;
 
-        console.log('📤 Making authenticated request:', {
-          url: finalUrl,
-          method: options.method || 'GET',
-          hasToken: !!token,
-          tokenLength: token?.length,
-        });
-
         let response = await fetch(finalUrl, {
           ...options,
           headers,
           credentials: 'include',
         });
 
-        console.log('📥 Response:', {
-          status: response.status,
-          statusText: response.statusText,
-          ok: response.ok,
-        });
-
         if (response.status === 403) {
-          console.log('🔄 Token expired (403), attempting refresh...');
-
           try {
             const newTokens = await refreshToken();
             token = newTokens?.accessToken;
@@ -88,8 +71,6 @@ export const useAuthFetch = () => {
             if (!token) {
               throw new Error('Token refresh returned no token');
             }
-
-            console.log('✅ Token refreshed, retrying request...');
 
             const retryHeaders: HeadersInit = {
               ...(options.headers || {}),
@@ -102,10 +83,7 @@ export const useAuthFetch = () => {
               headers: retryHeaders,
               credentials: 'include',
             });
-
-            console.log('📥 Retry response:', response.status);
           } catch (refreshErr) {
-            console.error('❌ Token refresh failed, logging out:', refreshErr);
             logout();
             throw refreshErr;
           }

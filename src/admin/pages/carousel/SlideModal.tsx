@@ -39,7 +39,6 @@ const SlideModal: React.FC<SlideModalProps> = ({
     title: slide?.title || '',
     subTitle: slide?.subTitle || '',
     image: slide?.image || undefined,
-    link: slide?.link || '',
     order: slide?.order !== undefined ? slide.order : nextOrder,
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -54,7 +53,6 @@ const SlideModal: React.FC<SlideModalProps> = ({
         title: slide.title || '',
         subTitle: slide.subTitle || '',
         image: slide.image || undefined,
-        link: slide.link || '',
         order: slide.order || 0,
       });
       setImagePreview(slide.image?.url || '');
@@ -65,7 +63,6 @@ const SlideModal: React.FC<SlideModalProps> = ({
         title: '',
         subTitle: '',
         image: undefined,
-        link: '',
         order: nextOrder,
       });
       setImagePreview('');
@@ -185,22 +182,6 @@ const SlideModal: React.FC<SlideModalProps> = ({
                 }
                 className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
                 placeholder="Enter subTitle (optional)..."
-              />
-            </label>
-
-            <label className="block">
-              <div className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                <SquarePen className="w-4 h-4 text-green-600" />
-                Link (optional)
-              </div>
-              <input
-                type="url"
-                value={formData.link || ''}
-                onChange={(e) =>
-                  setFormData({ ...formData, link: e.target.value })
-                }
-                className="w-full border-2 border-gray-200 rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
-                placeholder="https://example.com"
               />
             </label>
 

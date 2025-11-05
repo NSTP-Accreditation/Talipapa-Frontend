@@ -41,93 +41,107 @@ const SlideCard: React.FC<SlideCardProps> = ({
       setIsConfirmOpen(false);
     }
   };
+
   return (
-    <div className="group bg-white rounded-xl overflow-hidden border-2 border-gray-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
-      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-        {slide.image?.url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={slide.image.url}
-            alt={slide.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <ImageIcon className="w-20 h-20 text-gray-400" />
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    <div className="group bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-green-300 shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 h-full flex flex-col relative">
+      {/* Order Badge */}
+      <div className="absolute top-4 left-4 z-10 px-3.5 py-2 bg-gradient-to-br from-green-500 to-green-600 backdrop-blur-sm rounded-xl shadow-xl border-2 border-white">
+        <span className="text-sm font-black text-white drop-shadow-sm">
+          #{idx + 1}
+        </span>
       </div>
 
-      <div className="p-5 flex flex-col flex-1">
-        <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-500 text-white mb-3 shadow-md group-hover:scale-110 transition-transform duration-300">
-          <ImageIcon className="w-5 h-5" />
-        </div>
+      {/* Image Section */}
+      <div className="relative h-64 overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50 to-green-100">
+        {slide.image?.url ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={slide.image.url}
+              alt={slide.title}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
+            {/* Shimmer effect on hover */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+          </>
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center gap-4">
+            <div className="relative">
+              <div className="absolute inset-0 bg-green-400 rounded-2xl blur-xl opacity-60"></div>
+              <div className="relative p-6 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 shadow-2xl">
+                <ImageIcon className="w-14 h-14 text-white" />
+              </div>
+            </div>
+            <span className="text-sm font-bold text-gray-500 bg-white px-4 py-2 rounded-full shadow-md">
+              No Image
+            </span>
+          </div>
+        )}
+      </div>
 
-        <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-green-600 transition-colors leading-tight">
+      {/* Content Section */}
+      <div className="p-6 flex flex-col flex-1 gap-3">
+        {/* Title */}
+        <h3 className="font-bold text-xl text-gray-900 leading-tight line-clamp-2 group-hover:text-green-600 transition-colors min-h-[3.5rem] drop-shadow-sm">
           {slide.title}
         </h3>
 
+        {/* Subtitle */}
         {slide.subTitle && (
-          <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-2">
+          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 min-h-[3.75rem]">
             {slide.subTitle}
           </p>
         )}
 
-        {slide.link && (
-          <a
-            href={slide.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-green-600 text-sm font-semibold hover:text-green-700 hover:gap-3 transition-all mb-3"
-          >
-            <span>View Link</span>
-            <span>→</span>
-          </a>
-        )}
-
-        <div className="text-xs text-gray-500 mb-3">
-          Order: {slide.order ?? idx}
-        </div>
-
-        <div className="flex items-center gap-1 mt-auto">
+        <div className="mt-auto pt-4 border-t-2 border-gray-100">
           {canEditContent ? (
-            <>
-              <button
-                onClick={() => onMove(idx, 'up')}
-                disabled={idx === 0}
-                className="flex items-center justify-center gap-1 px-2 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
-                title="Move Up"
-              >
-                <ArrowUp size={14} /> Up
-              </button>
-              <button
-                onClick={() => onMove(idx, 'down')}
-                disabled={idx === slidesLength - 1}
-                className="flex items-center justify-center gap-1 px-2 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
-                title="Move Down"
-              >
-                <ArrowDown size={14} /> Down
-              </button>
+            <div className="flex flex-wrap items-center gap-2.5">
+              {/* Reorder Buttons */}
+              <div className="flex gap-1.5 bg-gray-50 p-1 rounded-xl border border-gray-200">
+                <button
+                  onClick={() => onMove(idx, 'up')}
+                  disabled={idx === 0}
+                  className="flex items-center justify-center w-9 h-9 bg-white hover:bg-green-50 text-gray-700 hover:text-green-600 rounded-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:scale-110 shadow-sm disabled:hover:scale-100 disabled:shadow-none"
+                  title="Move Up"
+                >
+                  <ArrowUp size={18} strokeWidth={2.5} />
+                </button>
+                <button
+                  onClick={() => onMove(idx, 'down')}
+                  disabled={idx === slidesLength - 1}
+                  className="flex items-center justify-center w-9 h-9 bg-white hover:bg-green-50 text-gray-700 hover:text-green-600 rounded-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:scale-110 shadow-sm disabled:hover:scale-100 disabled:shadow-none"
+                  title="Move Down"
+                >
+                  <ArrowDown size={18} strokeWidth={2.5} />
+                </button>
+              </div>
+
+              <div className="flex-1" />
+
+              {/* Action Buttons */}
               <button
                 onClick={() => onEdit(slide)}
-                className="flex items-center justify-center gap-1 px-2 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-semibold"
-                title="Edit"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl shadow-lg hover:shadow-xl transition-all text-sm font-bold hover:scale-105 active:scale-95"
+                title="Edit Slide"
               >
-                <SquarePen size={14} /> Edit
+                <SquarePen size={17} strokeWidth={2.5} />
+                <span>Edit</span>
               </button>
               <button
                 onClick={() => setIsConfirmOpen(true)}
-                className="flex items-center justify-center gap-1 px-2 py-2 bg-white hover:bg-red-50 text-red-600 border-2 border-red-300 hover:border-red-500 rounded-lg transition-all text-sm font-semibold"
-                title="Delete"
+                className="flex items-center justify-center w-10 h-10 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border-2 border-red-200 hover:border-red-500 rounded-xl transition-all hover:scale-110 active:scale-95 shadow-sm hover:shadow-lg"
+                title="Delete Slide"
               >
-                <Trash2 size={14} /> Delete
+                <Trash2 size={18} strokeWidth={2.5} />
               </button>
-            </>
+            </div>
           ) : (
-            <span className="text-xs text-gray-400 font-medium px-2 py-2">
-              View Only
-            </span>
+            <div className="flex items-center justify-center py-3 px-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border-2 border-gray-200">
+              <span className="text-sm text-gray-600 font-bold">
+                👁️ View Only
+              </span>
+            </div>
           )}
         </div>
         {canEditContent && (

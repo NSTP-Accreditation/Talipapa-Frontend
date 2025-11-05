@@ -96,9 +96,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         );
       };
 
-      console.log(
-        '💡 Debug helper available: Call window.debugAuth() in console'
-      );
+      // Debug helper available in development mode only
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Debug helper: window.debugAuth()');
+      }
     }
   }, [apiURL, isAuthenticated, user]);
 
@@ -118,15 +119,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           };
           setIsAuthenticated(true);
           setUser(userWithToken);
-          console.log('✅ Auth restored from localStorage');
         } else {
           // No auth found - explicitly set not authenticated
           setIsAuthenticated(false);
           setUser(null);
-          console.log('⚠️ No stored auth found - user needs to login');
         }
       } catch (error) {
-        console.error('❌ Error restoring auth:', error);
         // Clear invalid data
         localStorage.removeItem('adminUser');
         localStorage.removeItem('accessToken');
@@ -145,8 +143,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     password: string
   ): Promise<boolean> => {
     try {
-      console.log('🔐 Attempting login...');
-
       const response = await fetch(`${apiURL}/auth/login`, {
         method: 'POST',
         headers: {
@@ -159,21 +155,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error('❌ Login failed:', data.message);
-        throw new Error(data.message);
+        throw new Error(data.message || 'Login failed');
       }
 
-      // ✅ CRITICAL: Store both token and user data
+      // Store both token and user data
       if (data.accessToken) {
         localStorage.setItem('accessToken', data.accessToken);
-        console.log('✅ Token saved to localStorage');
-        console.log('📊 Token length:', data.accessToken.length);
-        console.log(
-          '📊 Token preview:',
-          data.accessToken.substring(0, 50) + '...'
-        );
       } else {
-        console.error('❌ No accessToken in response!');
+        throw new Error('No access token received');
       }
 
       // Store user data (without token to avoid duplication)
@@ -181,16 +170,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         userData: data.userData,
       };
       localStorage.setItem('adminUser', JSON.stringify(userDataToStore));
-      console.log('✅ User data saved to localStorage');
 
       // Set state with full user object including token
       setUser(data);
       setIsAuthenticated(true);
-      console.log('✅ Login successful!');
 
       return true;
     } catch (error) {
-      console.error('❌ Login error:', error);
       setUser(null);
       setIsAuthenticated(false);
       // Clear any partial data
@@ -202,8 +188,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const refreshToken = async (): Promise<User | null> => {
     try {
-      console.log('🔄 Refreshing token...');
-
       const response = await fetch(`${apiURL}/auth/refreshToken`, {
         method: 'POST',
         headers: {
@@ -218,10 +202,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         throw new Error('Failed to refresh token');
       }
 
-      // ✅ Update stored token
+      // Update stored token
       if (data.accessToken) {
         localStorage.setItem('accessToken', data.accessToken);
-        console.log('✅ Token refreshed and saved');
       }
 
       // Update user data
@@ -231,11 +214,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       localStorage.setItem('adminUser', JSON.stringify(userDataToStore));
 
       setUser(data);
-      console.log('✅ Token refresh successful');
 
       return data;
     } catch (error: any) {
-      console.error('❌ Token refresh failed:', error);
       // Clear invalid tokens
       localStorage.removeItem('accessToken');
       localStorage.removeItem('adminUser');
@@ -247,25 +228,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = async () => {
     try {
-      console.log('👋 Logging out...');
-
       await fetch(`${apiURL}/auth/logout`, {
         method: 'POST',
         credentials: 'include',
       });
-
-      console.log('✅ Logout request sent');
     } catch (error: any) {
-      console.error('⚠️ Logout request failed (continuing anyway):', error);
+      // Silent failure - continue with logout
     } finally {
-      // ✅ CRITICAL: Clear all stored auth data
+      // Clear all stored auth data
       localStorage.removeItem('accessToken');
       localStorage.removeItem('adminUser');
-      console.log('✅ Auth data cleared from localStorage');
 
       setUser(null);
       setIsAuthenticated(false);
-      console.log('✅ Logout complete');
     }
   };
 

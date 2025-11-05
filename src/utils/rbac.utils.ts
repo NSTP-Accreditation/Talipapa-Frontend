@@ -103,26 +103,29 @@ const logDeniedAccess = (
 ) => {
   if (typeof window === 'undefined') return;
 
-  const logEntry = {
-    type: 'PERMISSION_DENIED',
-    timestamp: new Date().toISOString(),
-    user: user?.userData?.username || 'anonymous',
-    role: getUserRole(user),
-    permission,
-    page: window.location.pathname,
-    context,
-  };
+  // Only log in development mode with debug flag
+  if (
+    process.env.NODE_ENV === 'development' &&
+    (window as any).__RBAC_DEBUG__
+  ) {
+    const logEntry = {
+      type: 'PERMISSION_DENIED',
+      timestamp: new Date().toISOString(),
+      user: user?.userData?.username || 'anonymous',
+      role: getUserRole(user),
+      permission,
+      page: window.location.pathname,
+      context,
+    };
+    console.warn('[RBAC] Permission denied:', logEntry);
+  }
 
-  console.warn('[RBAC Security] Permission denied:', logEntry);
-
-  // In production, send to analytics/logging service
+  // In production, send to analytics/logging service (not console)
   if (import.meta.env.PROD) {
     // TODO: Send to logging service
-    // sendSecurityLog(logEntry);
+    // sendSecurityLog({ permission, timestamp: Date.now() });
   }
-};
-
-/**
+}; /**
  * Extract user role from the user object
  * Handles the current API structure where roles are stored as role IDs from env
  *
