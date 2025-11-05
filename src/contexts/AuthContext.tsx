@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   ReactNode,
+  useMemo,
 } from 'react';
 import { logger } from '@/utils/logger';
 
@@ -22,16 +23,30 @@ interface User {
   accessToken: string;
 }
 
-interface AuthContextType {
+// Separate state and actions to reduce unnecessary re-renders
+interface AuthStateType {
   isAuthenticated: boolean;
   user: User | null;
+  loading: boolean;
+}
+
+interface AuthActionsType {
   login: (username: string, password: string) => Promise<boolean>;
   refreshToken: () => Promise<User | null>;
   logout: () => void;
-  loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+// Legacy combined type for backward compatibility
+interface AuthContextType extends AuthStateType, AuthActionsType {}
+
+// Create separate contexts for state and actions
+const AuthStateContext = createContext<AuthStateType | undefined>(undefined);
+const AuthActionsContext = createContext<AuthActionsType | undefined>(
+  undefined
+);
+
+// Legacy context for backward compatibility
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
@@ -245,19 +260,77 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const value: AuthContextType = {
-    isAuthenticated,
-    user,
-    login,
-    refreshToken,
-    logout,
-    loading,
-    setLoading,
-  };
+  // Memoize state and actions separately to prevent unnecessary re-renders
+  const stateValue: AuthStateType = useMemo(
+    () => ({
+      isAuthenticated,
+      user,
+      loading,
+    }),
+    [isAuthenticated, user, loading]
+  );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const actionsValue: AuthActionsType = useMemo(
+    () => ({
+      login,
+      refreshToken,
+      logout,
+      setLoading,
+    }),
+    [] // Actions never change, so empty deps array
+  );
+
+  // Legacy combined value for backward compatibility
+  const legacyValue: AuthContextType = useMemo(
+    () => ({
+      ...stateValue,
+      ...actionsValue,
+    }),
+    [stateValue, actionsValue]
+  );
+
+  return (
+    <AuthStateContext.Provider value={stateValue}>
+      <AuthActionsContext.Provider value={actionsValue}>
+        <AuthContext.Provider value={legacyValue}>
+          {children}
+        </AuthContext.Provider>
+      </AuthActionsContext.Provider>
+    </AuthStateContext.Provider>
+  );
 };
 
+/**
+ * Hook to access auth state only (isAuthenticated, user, loading)
+ * Use this when you only need to read auth state to avoid unnecessary re-renders
+ * when actions like login/logout are called in other components.
+ */
+export const useAuthState = (): AuthStateType => {
+  const context = useContext(AuthStateContext);
+  if (context === undefined) {
+    throw new Error('useAuthState must be used within an AuthProvider');
+  }
+  return context;
+};
+
+/**
+ * Hook to access auth actions only (login, logout, refreshToken, setLoading)
+ * Use this when you only need to trigger actions without needing the current user state.
+ * This prevents re-renders when the user state changes.
+ */
+export const useAuthActions = (): AuthActionsType => {
+  const context = useContext(AuthActionsContext);
+  if (context === undefined) {
+    throw new Error('useAuthActions must be used within an AuthProvider');
+  }
+  return context;
+};
+
+/**
+ * Legacy hook that provides both state and actions
+ * Use the new useAuthState() and useAuthActions() hooks instead for better performance.
+ * This hook is kept for backward compatibility.
+ */
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {

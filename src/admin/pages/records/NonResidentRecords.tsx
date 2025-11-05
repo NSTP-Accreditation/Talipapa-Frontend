@@ -1,4 +1,11 @@
-import React, { useState, FormEvent, useMemo, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  FormEvent,
+  useMemo,
+  useRef,
+  useEffect,
+  memo,
+} from 'react';
 import { Input } from '../../../components/ui/input';
 import { Button } from '../../../components/ui/button';
 import {
@@ -29,7 +36,7 @@ import { useRBAC } from '../../../hooks/useRBAC';
 import { Permission } from '../../../types/rbac.types';
 import { ReadOnly } from '../../../components/rbac/Can';
 
-const NonResidentRecords: React.FC = () => {
+const NonResidentRecords: React.FC = memo(function NonResidentRecords() {
   const { data, loading, refetch } = useFetchData(
     '/records?residentStatus=non-resident'
   );
@@ -816,6 +823,6 @@ const NonResidentRecords: React.FC = () => {
       )}
     </>
   );
-};
+});
 
 export default NonResidentRecords;

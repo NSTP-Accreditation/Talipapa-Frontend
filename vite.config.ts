@@ -4,9 +4,19 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import * as path from 'path';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    // Bundle size visualizer (generates stats.html after build)
+    visualizer({
+      filename: './dist/stats.html',
+      open: false, // Set to true to auto-open after build
+      gzipSize: true,
+      brotliSize: true,
+    }) as any,
+  ],
   css: {
     postcss: './postcss.config.cjs',
   },
@@ -58,6 +68,57 @@ export default defineConfig({
   build: {
     target: 'esnext',
     outDir: 'build',
+    // Manual chunk splitting for better caching and performance
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React core libraries
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+
+          // UI component libraries
+          'ui-vendor': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-select',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-tooltip',
+            '@radix-ui/react-tabs',
+          ],
+
+          // Utility libraries
+          utils: ['dayjs', 'lodash', 'dompurify'],
+
+          // Chart and visualization libraries
+          charts: ['recharts'],
+
+          // Form and validation libraries
+          forms: ['react-hook-form'],
+
+          // Icon libraries
+          icons: ['lucide-react'],
+
+          // Virtual scrolling (for large lists)
+          virtualization: ['react-window'],
+        },
+        // Naming pattern for chunk files
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
+      },
+    },
+    // Chunk size warning limit (500KB gzipped)
+    chunkSizeWarningLimit: 500,
+    // Source maps for production debugging (disable if not needed)
+    sourcemap: false,
+    // Minification settings
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console.log in production
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info'], // Remove specific console methods
+      },
+    },
   },
   server: {
     port: 3000,

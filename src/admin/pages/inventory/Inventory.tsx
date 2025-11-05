@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import InventoryHeader from './InventoryHeader';
 import useFetchData from '@/admin/hooks/useFetchData';
 import { MaterialInterface, ProductInterface } from '@/types/global.types';
@@ -10,7 +10,7 @@ import { useRBAC } from '../../../hooks/useRBAC';
 import { Permission } from '../../../types/rbac.types';
 import { ReadOnly } from '../../../components/rbac/Can';
 
-const Inventory = () => {
+const Inventory = memo(function Inventory() {
   const { hasPermission } = useRBAC();
   const canManageInventory = hasPermission(Permission.MANAGE_INVENTORY);
 
@@ -95,6 +95,6 @@ const Inventory = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Inventory;

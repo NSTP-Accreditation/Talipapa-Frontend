@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import { useToast } from '../../../hooks/useToast';
 import { BarChart3, TrendingUp, Activity, Award } from 'lucide-react';
 import { useLoadingState } from '../../../hooks/useLoadingState';
@@ -10,7 +10,7 @@ import DashboardRecentActivities from './components/DashboardRecentActivities';
 import DashboardAchievements from './components/DashboardAchievements';
 dayjs.extend(isBetween);
 
-const Dashboard: React.FC = () => {
+const Dashboard: React.FC = memo(function Dashboard() {
   const { isLoading } = useLoadingState(1000);
 
   const { success } = useToast();
@@ -83,6 +83,6 @@ const Dashboard: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Dashboard;
