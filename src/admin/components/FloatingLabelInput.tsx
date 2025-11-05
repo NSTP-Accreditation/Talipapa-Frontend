@@ -22,10 +22,10 @@ interface FloatingLabelInputProps {
 
 /**
  * FloatingLabelInput Component
- * 
+ *
  * An input component with a floating label that animates when the input has a value or is focused.
  * Optionally supports a prefix (e.g., for record IDs like 'BT-123').
- * 
+ *
  * @example
  * <FloatingLabelInput
  *   label="Record ID"
