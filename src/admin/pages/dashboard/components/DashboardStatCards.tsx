@@ -104,7 +104,7 @@ const DashboardStatCards = () => {
           <CardTitle className="text-xs sm:text-sm font-bold text-gray-800">
             Today's Visits
           </CardTitle>
-          <div className="p-2 rounded-xl sm:rounded-lg bg-green-100 group-hover:bg-green-200 transition-colors">
+          <div className="p-2 rounded-lg bg-green-100 group-hover:bg-green-200 transition-colors w-fit">
             <Eye className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-green-600" />
           </div>
         </CardHeader>
@@ -126,7 +126,7 @@ const DashboardStatCards = () => {
           <CardTitle className="text-xs sm:text-sm font-bold text-gray-800">
             Total Visits
           </CardTitle>
-          <div className="p-2 rounded-xl sm:rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
+          <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors w-fit">
             <SquareMousePointer className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-blue-600" />
           </div>
         </CardHeader>
@@ -148,7 +148,7 @@ const DashboardStatCards = () => {
           <CardTitle className="text-xs sm:text-sm font-bold text-gray-800">
             Total Records
           </CardTitle>
-          <div className="p-2 rounded-xl sm:rounded-lg bg-purple-100 group-hover:bg-purple-200 transition-colors">
+          <div className="p-2 rounded-lg bg-purple-100 group-hover:bg-purple-200 transition-colors w-fit">
             <Users className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-purple-600" />
           </div>
         </CardHeader>
@@ -168,7 +168,7 @@ const DashboardStatCards = () => {
           <CardTitle className="text-xs sm:text-sm font-bold text-orange-700">
             Coming Soon
           </CardTitle>
-          <div className="p-2 rounded-xl sm:rounded-lg bg-orange-200 group-hover:bg-orange-300 transition-colors">
+          <div className="p-2 rounded-lg bg-orange-200 group-hover:bg-orange-300 transition-colors w-fit">
             <FileText className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 text-orange-600" />
           </div>
         </CardHeader>
