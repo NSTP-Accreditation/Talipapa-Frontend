@@ -1,11 +1,50 @@
-// Small validation utilities for name fields
+/**
+ * Validation Utilities
+ * 
+ * Provides validation and sanitization functions for user input,
+ * particularly for names and addresses.
+ */
+
+/**
+ * Regular expression for validating name fields
+ * Allows Unicode letters, spaces, hyphens, and apostrophes
+ */
 export const nameRegex = /^[\p{L}\s'\-]+$/u;
 
+/**
+ * Sanitizes a name string by removing invalid characters
+ * 
+ * @param value - The name string to sanitize
+ * @returns The sanitized name containing only valid characters
+ * 
+ * @example
+ * sanitizeName("Juan123!@#"); // Returns: "Juan"
+ * sanitizeName("O'Brien-Smith"); // Returns: "O'Brien-Smith"
+ */
 export function sanitizeName(value: string) {
   if (!value) return '';
   return value.replace(/[^\p{L}\s'\-]/gu, '');
 }
 
+/**
+ * Validates a name string according to specific rules
+ * 
+ * @param value - The name string to validate
+ * @param required - Whether the field is required (default: false)
+ * @returns Validation result with `valid` boolean and `message` string
+ * 
+ * @example
+ * validateName("Juan", true);
+ * // Returns: { valid: true, message: '' }
+ * 
+ * @example
+ * validateName("", true);
+ * // Returns: { valid: false, message: 'This field is required.' }
+ * 
+ * @example
+ * validateName("Juan123");
+ * // Returns: { valid: false, message: 'Only alphabetic characters...' }
+ */
 export function validateName(value: string, required = false) {
   const v = (value || '').trim();
   if (required && v === '') {
@@ -23,6 +62,34 @@ export function validateName(value: string, required = false) {
   return { valid: true, message: '' };
 }
 
+/**
+ * Validates an address string with comprehensive checks
+ * 
+ * Performs multiple validation checks including:
+ * - Minimum length requirements
+ * - Pattern detection for repeated characters
+ * - Presence of numbers or address keywords
+ * - Detection of invalid patterns (single letters, random characters)
+ * 
+ * @param address - The address string to validate
+ * @returns Validation result with `valid` boolean and optional `message` string
+ * 
+ * @example
+ * validateAddress("123 Main Street, Quezon City");
+ * // Returns: { valid: true, message: '' }
+ * 
+ * @example
+ * validateAddress("abc");
+ * // Returns: { valid: false, message: 'Address is too short.' }
+ * 
+ * @example
+ * validateAddress("asdasdasdasd");
+ * // Returns: { valid: false, message: 'Address looks invalid.' }
+ * 
+ * @example
+ * validateAddress("Purok 5 Barangay Talipapa");
+ * // Returns: { valid: true, message: '' }
+ */
 export const validateAddress = (address: string) => {
     const clean = (address || '').trim();
 

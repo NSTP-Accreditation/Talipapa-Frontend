@@ -1,12 +1,47 @@
-const FloatingLabelInput = ({
+import React from 'react';
+
+/**
+ * Props for FloatingLabelInput component
+ */
+interface FloatingLabelInputProps {
+  /** The label text to display */
+  label: string;
+  /** The current input value */
+  value: string;
+  /** Change handler for input value */
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  /** Input type (default: 'text') */
+  type?: string;
+  /** Whether the field is required (default: false) */
+  required?: boolean;
+  /** Optional prefix inside the input (e.g. 'BT-') */
+  prefix?: string | null;
+  /** Additional classes for the input element */
+  inputClassName?: string;
+}
+
+/**
+ * FloatingLabelInput Component
+ * 
+ * An input component with a floating label that animates when the input has a value or is focused.
+ * Optionally supports a prefix (e.g., for record IDs like 'BT-123').
+ * 
+ * @example
+ * <FloatingLabelInput
+ *   label="Record ID"
+ *   value={recordId}
+ *   onChange={(e) => setRecordId(e.target.value)}
+ *   prefix="BT-"
+ *   required
+ * />
+ */
+const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
   label,
   value,
   onChange,
   type = 'text',
   required = false,
-  // optional prefix inside the input (e.g. 'BT-')
   prefix = null,
-  // allow additional classes for the input
   inputClassName = '',
 }) => {
   // Match EarnPoints input sizing and style: px-3 py-2, border-2, bg-gray-50, font-normal

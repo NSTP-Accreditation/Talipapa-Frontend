@@ -1,11 +1,15 @@
 /**
  * Format currency values
- * @param {number} amount - The amount to format
- * @param {string} currency - Currency code (default: 'PHP')
- * @param {string} locale - Locale for formatting (default: 'en-PH')
- * @returns {string} Formatted currency string
+ * @param amount - The amount to format
+ * @param currency - Currency code (default: 'PHP')
+ * @param locale - Locale for formatting (default: 'en-PH')
+ * @returns Formatted currency string
  */
-export const formatCurrency = (amount, currency = 'PHP', locale = 'en-PH') => {
+export const formatCurrency = (
+  amount: number,
+  currency: string = 'PHP',
+  locale: string = 'en-PH'
+): string => {
   if (typeof amount !== 'number' || isNaN(amount)) {
     return '₱0.00';
   }
@@ -18,10 +22,10 @@ export const formatCurrency = (amount, currency = 'PHP', locale = 'en-PH') => {
 
 /**
  * Parse currency string to number
- * @param {string} currencyString - Currency string to parse
- * @returns {number} Parsed number or 0 if invalid
+ * @param currencyString - Currency string to parse
+ * @returns Parsed number or 0 if invalid
  */
-export const parseCurrency = (currencyString) => {
+export const parseCurrency = (currencyString: string): number => {
   if (typeof currencyString !== 'string') {
     return 0;
   }

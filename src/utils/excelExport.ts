@@ -1,9 +1,21 @@
+/**
+ * Excel Export Utility
+ * 
+ * Provides comprehensive Excel file generation with professional styling,
+ * password protection, and support for multiple record types.
+ * 
+ * @module excelExport
+ */
+
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import dayjs from 'dayjs';
 
 // ==================== TYPES ====================
 
+/**
+ * Type of record to export
+ */
 export type RecordType = 'resident' | 'non-resident' | 'establishment';
 
 export interface ResidentRecord {
@@ -374,6 +386,30 @@ const addStatisticsSheet = (
 
 // ==================== EXPORT FUNCTIONS ====================
 
+/**
+ * Exports resident records to a professionally styled Excel file
+ * 
+ * Creates a comprehensive Excel workbook with:
+ * - Cover sheet with report metadata
+ * - Complete data sheet with all records
+ * - Summary sheet with statistics and charts
+ * - Professional styling and formatting
+ * - Optional password protection
+ * 
+ * @param records - Array of resident records to export
+ * @param options - Export options including password and loading state callback
+ * @param options.password - Password to protect the Excel file (default: 'BarangayTalipapa2024')
+ * @param options.showLoadingState - Optional callback to show loading state
+ * @returns Promise that resolves when file download starts
+ * 
+ * @example
+ * await exportResidentRecords(residents, {
+ *   password: 'MyPassword123',
+ *   showLoadingState: (loading) => setIsLoading(loading)
+ * });
+ * 
+ * @throws Will throw an error if Excel generation fails
+ */
 export const exportResidentRecords = async (
   records: ResidentRecord[],
   options: ExcelExportOptions = {}
@@ -735,6 +771,23 @@ export const exportResidentRecords = async (
   }
 };
 
+/**
+ * Exports non-resident records to a professionally styled Excel file
+ * 
+ * Similar to exportResidentRecords but tailored for non-resident data,
+ * with appropriate styling and summary statistics.
+ * 
+ * @param records - Array of non-resident records to export
+ * @param options - Export options including password and loading state callback
+ * @returns Promise that resolves when file download starts
+ * 
+ * @example
+ * await exportNonResidentRecords(nonResidents, {
+ *   password: 'SecurePassword123'
+ * });
+ * 
+ * @see exportResidentRecords
+ */
 export const exportNonResidentRecords = async (
   records: ResidentRecord[],
   options: ExcelExportOptions = {}
@@ -1088,6 +1141,24 @@ export const exportNonResidentRecords = async (
   }
 };
 
+/**
+ * Exports establishment records to a professionally styled Excel file
+ * 
+ * Tailored specifically for establishment data including business types,
+ * owner information, and establishment-specific statistics.
+ * 
+ * @param records - Array of establishment records to export
+ * @param options - Export options including password and loading state callback
+ * @returns Promise that resolves when file download starts
+ * 
+ * @example
+ * await exportEstablishmentRecords(establishments, {
+ *   password: 'BusinessData2024'
+ * });
+ * 
+ * @see exportResidentRecords
+ * @see exportNonResidentRecords
+ */
 export const exportEstablishmentRecords = async (
   records: EstablishmentRecord[],
   options: ExcelExportOptions = {}
