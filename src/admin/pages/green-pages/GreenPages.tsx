@@ -16,10 +16,15 @@ import AddStaffModal from './AddStaffModal';
 import SkillStaffModal from './SkillStaffModal';
 import useFetchData from '../../hooks/useFetchData';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
+import { useRBAC } from '../../../hooks/useRBAC';
+import { Permission } from '../../../types/rbac.types';
+import { ReadOnly } from '../../../components/rbac/Can';
 
 const GreenPages: React.FC = () => {
   const toast = useToast();
   const authFetch = useAuthFetch();
+  const { hasPermission } = useRBAC();
+  const canManageGreenPages = hasPermission(Permission.MANAGE_GREEN_PAGES);
 
   const {
     data: farmsData = [],
@@ -157,6 +162,7 @@ const GreenPages: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
       <div className="space-y-6 sm:space-y-8">
+        <ReadOnly message="You have view-only access to Green Pages. Contact a SuperAdmin to manage farms, staff, or skills." />
         {/* Page Header */}
         <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
           {/* Decorative background pattern */}
@@ -312,6 +318,7 @@ const GreenPages: React.FC = () => {
               <ProfileTab
                 staffDirectory={Array.isArray(staffData) ? staffData : null}
                 openAddStaffModal={openAddStaffModal}
+                canManageGreenPages={canManageGreenPages}
               />
             )}
 
@@ -333,26 +340,30 @@ const GreenPages: React.FC = () => {
           </div>
         </div>
 
-        <AddStaffModal
-          isOpen={isAddStaffModalOpen}
-          onClose={closeAddStaffModal}
-          onSubmit={handleSubmitStaff}
-          staffForm={staffForm}
-          handleStaffFormChange={handleStaffFormChange}
-          contactRest={contactRest}
-          setContactRest={setContactRest}
-          skillsData={skillsData}
-          farmsData={farmsData}
-          isSubmitting={isSubmitting}
-        />
+        {canManageGreenPages && (
+          <>
+            <AddStaffModal
+              isOpen={isAddStaffModalOpen}
+              onClose={closeAddStaffModal}
+              onSubmit={handleSubmitStaff}
+              staffForm={staffForm}
+              handleStaffFormChange={handleStaffFormChange}
+              contactRest={contactRest}
+              setContactRest={setContactRest}
+              skillsData={skillsData}
+              farmsData={farmsData}
+              isSubmitting={isSubmitting}
+            />
 
-        <SkillStaffModal
-          isOpen={skillModalOpen}
-          onClose={() => setSkillModalOpen(false)}
-          skillLoading={skillLoading}
-          staffList={skillStaff}
-          formatContact={formatContact}
-        />
+            <SkillStaffModal
+              isOpen={skillModalOpen}
+              onClose={() => setSkillModalOpen(false)}
+              skillLoading={skillLoading}
+              staffList={skillStaff}
+              formatContact={formatContact}
+            />
+          </>
+        )}
       </div>
     </div>
   );

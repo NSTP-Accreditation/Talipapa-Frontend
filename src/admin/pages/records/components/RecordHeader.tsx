@@ -7,11 +7,13 @@ import ExcelExportButton from '@/components/ui/ExcelExportButton';
 type RecordHeaderProps = {
   recordsData: RecordInterface[];
   setOpenAddRecordModal: Dispatch<SetStateAction<boolean>>;
+  canManageRecords: boolean;
 };
 
 const RecordHeader = ({
   recordsData,
   setOpenAddRecordModal,
+  canManageRecords,
 }: RecordHeaderProps) => {
   return (
     <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
@@ -58,13 +60,15 @@ const RecordHeader = ({
 
           {/* Right side: Add Residents and Download button */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full lg:w-auto">
-            <Button
-              onClick={() => setOpenAddRecordModal(true)}
-              className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 rounded-xl font-bold shadow-md hover:shadow-xl transition-all min-h-[44px]"
-            >
-              <span className="text-lg sm:text-xl">+</span>
-              <span>Add Residents</span>
-            </Button>
+            {canManageRecords && (
+              <Button
+                onClick={() => setOpenAddRecordModal(true)}
+                className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 rounded-xl font-bold shadow-md hover:shadow-xl transition-all min-h-[44px]"
+              >
+                <span className="text-lg sm:text-xl">+</span>
+                <span>Add Residents</span>
+              </Button>
+            )}
 
             <ExcelExportButton
               records={recordsData || []}

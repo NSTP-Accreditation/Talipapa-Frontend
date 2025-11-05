@@ -24,10 +24,17 @@ import { createPortal } from 'react-dom';
 import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 import EditEstablishmentModal from './components/EditEstablishmentModal';
 import DeleteEstablishmentModal from './components/DeleteEstablishmentModal';
+import { useRBAC } from '../../../hooks/useRBAC';
+import { Permission } from '../../../types/rbac.types';
+import { ReadOnly } from '../../../components/rbac/Can';
 
 const EstablishmentRecords: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const { data, loading, refetch } = useFetchData('/establishment');
+
+  // RBAC: Check if user can manage records
+  const { hasPermission } = useRBAC();
+  const canManageRecords = hasPermission(Permission.MANAGE_RECORDS);
 
   const authFetch = useAuthFetch();
   const { success, error: showError } = useToast();
@@ -103,6 +110,7 @@ const EstablishmentRecords: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
       <div className="space-y-4 sm:space-y-6">
+        <ReadOnly message="You have view-only access to Establishment Records. Contact a SuperAdmin to add, edit, or delete records." />
         {/* Header */}
         <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
           {/* Decorative background pattern */}
@@ -147,13 +155,15 @@ const EstablishmentRecords: React.FC = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full lg:w-auto">
-                <Button
-                  onClick={openAddModal}
-                  className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 rounded-xl font-bold shadow-md hover:shadow-xl transition-all min-h-[44px]"
-                >
-                  <span className="text-lg sm:text-xl">+</span>
-                  <span>Add Establishment</span>
-                </Button>
+                {canManageRecords && (
+                  <Button
+                    onClick={openAddModal}
+                    className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 rounded-xl font-bold shadow-md hover:shadow-xl transition-all min-h-[44px]"
+                  >
+                    <span className="text-lg sm:text-xl">+</span>
+                    <span>Add Establishment</span>
+                  </Button>
+                )}
 
                 <ExcelExportButton
                   records={records || []}
@@ -240,20 +250,29 @@ const EstablishmentRecords: React.FC = () => {
                       </td>
                       <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                         <div className="flex items-center justify-center gap-2">
-                          <Button
-                            onClick={() => setEditItem(r)}
-                            className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
-                          >
-                            <UserRoundPen className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="hidden sm:inline">Edit</span>
-                          </Button>
-                          <Button
-                            onClick={() => setDeleteItem(r)}
-                            className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
-                          >
-                            <Trash className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="hidden sm:inline">Delete</span>
-                          </Button>
+                          {canManageRecords && (
+                            <>
+                              <Button
+                                onClick={() => setEditItem(r)}
+                                className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
+                              >
+                                <UserRoundPen className="w-3 h-3 sm:w-4 sm:h-4" />
+                                <span className="hidden sm:inline">Edit</span>
+                              </Button>
+                              <Button
+                                onClick={() => setDeleteItem(r)}
+                                className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
+                              >
+                                <Trash className="w-3 h-3 sm:w-4 sm:h-4" />
+                                <span className="hidden sm:inline">Delete</span>
+                              </Button>
+                            </>
+                          )}
+                          {!canManageRecords && (
+                            <span className="text-xs text-gray-500 italic">
+                              View Only
+                            </span>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -284,7 +303,8 @@ const EstablishmentRecords: React.FC = () => {
         </div>
       </div>
 
-      {isAddModalOpen &&
+      {canManageRecords &&
+        isAddModalOpen &&
         createPortal(
           <div
             className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-sm p-3 sm:p-4 animate-fadeIn"
@@ -548,8 +568,8 @@ const EstablishmentRecords: React.FC = () => {
           </div>,
           document.body
         )}
-      {/* Edit / Delete modals should render at top-level so action buttons can open them */}
-      {editItem && (
+      {/* Edit / Delete modals should render at top-level so action buttons can open them - Only if user can manage */}
+      {canManageRecords && editItem && (
         <EditEstablishmentModal
           editItem={editItem}
           setEditItem={setEditItem}
@@ -557,7 +577,7 @@ const EstablishmentRecords: React.FC = () => {
         />
       )}
 
-      {deleteItem && (
+      {canManageRecords && deleteItem && (
         <DeleteEstablishmentModal
           deleteItem={deleteItem}
           setDeleteItem={setDeleteItem}

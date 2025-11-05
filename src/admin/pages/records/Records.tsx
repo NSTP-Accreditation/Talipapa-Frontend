@@ -8,6 +8,9 @@ import RecordHeader from './components/RecordHeader';
 import RecordTable from './components/RecordTable';
 import { useEffect, useState } from 'react';
 import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
+import { useRBAC } from '../../../hooks/useRBAC';
+import { Permission } from '../../../types/rbac.types';
+import { ReadOnly } from '../../../components/rbac/Can';
 
 const Records = () => {
   const [originalRecords, setOriginalRecords] = useState<RecordInterface[]>([]);
@@ -19,6 +22,9 @@ const Records = () => {
   } = useFetchData<RecordInterface[] | null>(
     '/records?residentStatus=resident'
   );
+
+  const { hasPermission } = useRBAC();
+  const canManageRecords = hasPermission(Permission.MANAGE_RECORDS);
 
   useEffect(() => {
     if (recordsData && !recordsLoading && !recordsError) {
@@ -65,10 +71,12 @@ const Records = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
       <div className="space-y-4 sm:space-y-6">
+        <ReadOnly message="You have view-only access to Resident Records. Contact a SuperAdmin to add, edit, or delete records." />
         {/* Record Header */}
         <RecordHeader
           setOpenAddRecordModal={setOpenAddRecordModal}
           recordsData={recordsData}
+          canManageRecords={canManageRecords}
         />
 
         {/* Enhanced Search Bar */}
@@ -93,30 +101,35 @@ const Records = () => {
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             totalPages={totalPages}
+            canManageRecords={canManageRecords}
           />
         )}
 
         {/* MODALS */}
-        {/* ADD MODAL */}
-        <AddRecordModal
-          openAddRecordModal={openAddRecordModal}
-          setOpenAddRecordModal={setOpenAddRecordModal}
-          refetchRecords={refetchRecords}
-        />
+        {canManageRecords && (
+          <>
+            {/* ADD MODAL */}
+            <AddRecordModal
+              openAddRecordModal={openAddRecordModal}
+              setOpenAddRecordModal={setOpenAddRecordModal}
+              refetchRecords={refetchRecords}
+            />
 
-        {/* EDIT MODAL */}
-        <EditRecordModal
-          editRecord={editRecord}
-          setEditRecord={setEditRecord}
-          setOriginalRecords={setOriginalRecords}
-          refetchRecords={refetchRecords}
-        />
+            {/* EDIT MODAL */}
+            <EditRecordModal
+              editRecord={editRecord}
+              setEditRecord={setEditRecord}
+              setOriginalRecords={setOriginalRecords}
+              refetchRecords={refetchRecords}
+            />
 
-        <DeleterecordModal
-          deleteRecord={deleteRecord}
-          setDeleteRecord={setDeleteRecord}
-          refetchRecords={refetchRecords}
-        />
+            <DeleterecordModal
+              deleteRecord={deleteRecord}
+              setDeleteRecord={setDeleteRecord}
+              refetchRecords={refetchRecords}
+            />
+          </>
+        )}
       </div>
     </div>
   );

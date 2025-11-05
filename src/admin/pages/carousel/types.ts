@@ -5,6 +5,5 @@ export interface Slide {
   title: string;
   subTitle?: string;
   image?: ImageInterface;
-  link?: string;
   order?: number;
 }

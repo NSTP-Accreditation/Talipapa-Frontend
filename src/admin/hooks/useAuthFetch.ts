@@ -33,7 +33,19 @@ export const useAuthFetch = () => {
       url: string,
       options: AuthFetchOptions = {}
     ): Promise<T | SuccessResponse> => {
+      // Get token from context OR fallback to localStorage
       let token = user?.accessToken;
+
+      if (!token) {
+        token = localStorage.getItem('accessToken') || undefined;
+      }
+
+      // If no token, logout (which will redirect to login)
+      if (!token) {
+        logout();
+        return Promise.reject(new Error('Authentication required'));
+      }
+
       const isFormData = options.body instanceof FormData;
 
       const headers: HeadersInit = {
@@ -56,9 +68,13 @@ export const useAuthFetch = () => {
             const newTokens = await refreshToken();
             token = newTokens?.accessToken;
 
+            if (!token) {
+              throw new Error('Token refresh returned no token');
+            }
+
             const retryHeaders: HeadersInit = {
               ...(options.headers || {}),
-              Authorization: token ? `Bearer ${token}` : '',
+              Authorization: `Bearer ${token}`,
               ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
             };
 
@@ -68,10 +84,6 @@ export const useAuthFetch = () => {
               credentials: 'include',
             });
           } catch (refreshErr) {
-            const errorMessage =
-              refreshErr instanceof Error
-                ? refreshErr.message
-                : 'Token refresh failed';
             logout();
             throw refreshErr;
           }

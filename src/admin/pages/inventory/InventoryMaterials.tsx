@@ -12,6 +12,7 @@ type InventoryMaterialsProps = {
   materialsData: MaterialInterface[];
   materialsDataError: string | null;
   refetchMaterial: () => Promise<MaterialInterface[]>;
+  canManageInventory: boolean;
 };
 
 const InventoryMaterials = ({
@@ -19,6 +20,7 @@ const InventoryMaterials = ({
   materialsData,
   materialsDataError,
   refetchMaterial,
+  canManageInventory,
 }: InventoryMaterialsProps) => {
   const [showMaterialModal, setShowMaterialModal] = useState<boolean>(false);
 
@@ -31,14 +33,14 @@ const InventoryMaterials = ({
     useState<MaterialInterface | null>(null);
   if (!materialsData) return null;
 
-  const [materialToDelete, setMaterialToDelete] = useState<MaterialInterface | null>(null);
-  
+  const [materialToDelete, setMaterialToDelete] =
+    useState<MaterialInterface | null>(null);
 
   const handleEditMaterial = (material: MaterialInterface) => {
-      setShowMaterialModal(true);
-      setMode('Edit');
-      setMaterialToEdit(material);
-    };
+    setShowMaterialModal(true);
+    setMode('Edit');
+    setMaterialToEdit(material);
+  };
 
   return (
     <>
@@ -54,15 +56,17 @@ const InventoryMaterials = ({
               materials
             </p>
           </div>
-          <Button
-            onClick={() => {
-              setShowMaterialModal(true);
-              setMode("Add");
-            }}
-            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
-          >
-            <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add Material
-          </Button>
+          {canManageInventory && (
+            <Button
+              onClick={() => {
+                setShowMaterialModal(true);
+                setMode('Add');
+              }}
+              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
+            >
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add Material
+            </Button>
+          )}
         </div>
 
         <Card className="border-none shadow-xl overflow-hidden">
@@ -121,22 +125,30 @@ const InventoryMaterials = ({
                       <div className="text-xs sm:text-sm font-bold text-emerald-700 bg-emerald-50 px-2.5 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-lg whitespace-nowrap">
                         {material.pointsPerKg} pts/kg
                       </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEditMaterial(material)}
-                        className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-all duration-200"
-                      >
-                        <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => setMaterialToDelete(material)}
-                        className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:shadow-lg transition-all duration-200"
-                      >
-                        <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      </Button>
+                      {canManageInventory ? (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditMaterial(material)}
+                            className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-all duration-200"
+                          >
+                            <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => setMaterialToDelete(material)}
+                            className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:shadow-lg transition-all duration-200"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </Button>
+                        </>
+                      ) : (
+                        <span className="text-xs text-gray-400 font-medium">
+                          View Only
+                        </span>
+                      )}
                     </div>
                   </div>
                 ))
@@ -147,22 +159,26 @@ const InventoryMaterials = ({
       </section>
 
       {/* Add/Edit Material Modal*/}
-      <AddEditMaterialModal
-        showMaterialModal={showMaterialModal}
-        setShowMaterialModal={setShowMaterialModal}
-        materialtoEdit={materialToEdit}
-        mode={mode}
-        refetchMaterial={refetchMaterial}
-      />
+      {canManageInventory && (
+        <>
+          <AddEditMaterialModal
+            showMaterialModal={showMaterialModal}
+            setShowMaterialModal={setShowMaterialModal}
+            materialtoEdit={materialToEdit}
+            mode={mode}
+            refetchMaterial={refetchMaterial}
+          />
 
-      {/* Delete Material Modal */}
-      <DeleteProductMaterialModal 
-        itemToDelete={materialToDelete}
-        setItemToDelete={setMaterialToDelete}
-        onClose={() => setMaterialToDelete(null)}
-        refetch={refetchMaterial}
-        type='Material'
-      />
+          {/* Delete Material Modal */}
+          <DeleteProductMaterialModal
+            itemToDelete={materialToDelete}
+            setItemToDelete={setMaterialToDelete}
+            onClose={() => setMaterialToDelete(null)}
+            refetch={refetchMaterial}
+            type="Material"
+          />
+        </>
+      )}
     </>
   );
 };

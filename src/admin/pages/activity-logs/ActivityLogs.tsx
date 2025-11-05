@@ -6,8 +6,15 @@ import { LogPagination } from './components/LogPagination';
 import { FiltersSection } from './components/FilterSection';
 import { useActivityLogs } from '@/admin/hooks/useActivityLogs';
 import { LogLoadingState } from './components/LogLoadingState';
+import { ReadOnly } from '../../../components/rbac/Can';
+import { useRBAC } from '../../../hooks/useRBAC';
+import { Permission } from '../../../types/rbac.types';
 
 const ActivityLogs = () => {
+  // RBAC: Check if user has export permission
+  const { hasPermission } = useRBAC();
+  const canExport = hasPermission(Permission.EXPORT_DATA);
+
   const {
     page,
     setPage,
@@ -57,6 +64,9 @@ const ActivityLogs = () => {
           title="Activity Log"
           description="List of Recent Activities"
         />
+
+        {/* RBAC: Read-only warning for staff */}
+        <ReadOnly message="You have view-only access to activity logs. Export functionality is restricted." />
 
         <FiltersSection
           search={search}

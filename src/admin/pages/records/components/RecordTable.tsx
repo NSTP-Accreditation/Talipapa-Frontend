@@ -8,6 +8,7 @@ type RecordTableType = {
   showingRecords: RecordInterface[];
   setEditRecord: Dispatch<SetStateAction<RecordInterface>>;
   setDeleteRecord: Dispatch<SetStateAction<RecordInterface>>;
+  canManageRecords: boolean;
 };
 
 type PaginationType = {
@@ -27,6 +28,7 @@ const RecordTable = ({
   currentPage,
   setCurrentPage,
   totalPages,
+  canManageRecords,
 }: RecordTableType & PaginationType) => {
   const prevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -150,27 +152,35 @@ const RecordTable = ({
                       </div>
                     </td>
                     <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                      <div className="flex items-center justify-center gap-2">
-                        <Button
-                          onClick={() =>
-                            setEditRecord({
-                              ...record,
-                              contact_number: record.contact_number.slice(2),
-                            })
-                          }
-                          className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
-                        >
-                          <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span className="hidden sm:inline">Edit</span>
-                        </Button>
-                        <Button
-                          onClick={() => setDeleteRecord(record)}
-                          className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
-                        >
-                          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span className="hidden sm:inline">Delete</span>
-                        </Button>
-                      </div>
+                      {canManageRecords ? (
+                        <div className="flex items-center justify-center gap-2">
+                          <Button
+                            onClick={() =>
+                              setEditRecord({
+                                ...record,
+                                contact_number: record.contact_number.slice(2),
+                              })
+                            }
+                            className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
+                          >
+                            <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">Edit</span>
+                          </Button>
+                          <Button
+                            onClick={() => setDeleteRecord(record)}
+                            className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
+                          >
+                            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">Delete</span>
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center">
+                          <span className="text-xs text-gray-400 font-medium">
+                            View Only
+                          </span>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))
