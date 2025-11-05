@@ -14,13 +14,42 @@ export default function AboutBarangay() {
     }
   }, [data, loading, error]);
 
+  // Helper function to convert YouTube URL to embed format
+  const convertToEmbedUrl = (url) => {
+    if (!url) return '';
+
+    // Already an embed URL
+    if (url.includes('youtube.com/embed/')) {
+      return url;
+    }
+
+    // Extract video ID from various YouTube URL formats
+    let videoId = '';
+
+    // https://www.youtube.com/watch?v=VIDEO_ID
+    if (url.includes('youtube.com/watch?v=')) {
+      const urlParams = new URLSearchParams(url.split('?')[1]);
+      videoId = urlParams.get('v') || '';
+    }
+    // https://youtu.be/VIDEO_ID
+    else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1]?.split('?')[0] || '';
+    }
+    // https://www.youtube.com/v/VIDEO_ID
+    else if (url.includes('youtube.com/v/')) {
+      videoId = url.split('youtube.com/v/')[1]?.split('?')[0] || '';
+    }
+
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+  };
+
   return (
     <>
       {/* Video Section */}
       <div className="relative w-full h-[300px] sm:h-[500px] overflow-hidden shadow-2xl">
         <iframe
           src={
-            pageContent?.youtubeVideoUrl ||
+            convertToEmbedUrl(pageContent?.youtubeUrl) ||
             'https://www.youtube.com/embed/_A71fgP5Xt8?autoplay=1&mute=1&loop=1&playlist=_A71fgP5Xt8'
           }
           title="Barangay Talipapa Video"

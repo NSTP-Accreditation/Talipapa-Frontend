@@ -11,14 +11,14 @@ interface ContentModalProps {
     vision?: string;
     barangayHistory?: string;
     barangayDescription?: string;
-    youtubeVideoUrl?: string;
+    youtubeUrl?: string;
   };
   onSave: (content: {
     barangayDescription: string;
     barangayHistory: string;
     mission: string;
     vision: string;
-    youtubeVideoUrl: string;
+    youtubeUrl: string;
   }) => Promise<void> | void;
   isSaving: boolean;
 }
@@ -35,7 +35,7 @@ export default function ContentModal({
     barangayHistory: '',
     mission: '',
     vision: '',
-    youtubeVideoUrl: '',
+    youtubeUrl: '',
   });
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function ContentModal({
         barangayHistory: pageContent.barangayHistory || '',
         mission: pageContent.mission || '',
         vision: pageContent.vision || '',
-        youtubeVideoUrl: pageContent.youtubeVideoUrl || '',
+        youtubeUrl: pageContent.youtubeUrl || '',
       });
     }
   }, [pageContent, isOpen]);
@@ -104,11 +104,11 @@ export default function ContentModal({
             </div>
             <input
               type="text"
-              value={formData.youtubeVideoUrl}
+              value={formData.youtubeUrl}
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
-                  youtubeVideoUrl: e.target.value,
+                  youtubeUrl: e.target.value,
                 }))
               }
               className="w-full p-3 sm:p-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-100 focus:border-red-500 text-sm sm:text-base transition-all"

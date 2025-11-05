@@ -114,9 +114,9 @@ const BarangayOfficials = () => {
                 </p>
 
                 {/* Biography */}
-                {official.bio && official.bio.trim() && (
+                {official.biography && official.biography.trim() && (
                   <p className="text-gray-500 text-xs leading-snug text-center line-clamp-3 px-2">
-                    {official.bio}
+                    {official.biography}
                   </p>
                 )}
               </div>
@@ -162,9 +162,9 @@ const BarangayOfficials = () => {
                 </p>
 
                 {/* Biography */}
-                {official.bio && official.bio.trim() && (
+                {official.biography && official.biography.trim() && (
                   <p className="text-gray-500 text-xs leading-snug text-center line-clamp-3 px-2">
-                    {official.bio}
+                    {official.biography}
                   </p>
                 )}
               </div>
@@ -210,9 +210,9 @@ const BarangayOfficials = () => {
                 </p>
 
                 {/* Biography */}
-                {official.bio && official.bio.trim() && (
+                {official.biography && official.biography.trim() && (
                   <p className="text-gray-500 text-xs leading-snug text-center line-clamp-3 px-2">
-                    {official.bio}
+                    {official.biography}
                   </p>
                 )}
               </div>
