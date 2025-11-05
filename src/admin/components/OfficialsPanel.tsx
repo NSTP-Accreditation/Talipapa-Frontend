@@ -555,17 +555,30 @@ export default function OfficialsPanel() {
                 className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:border-green-400 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
               >
                 {/* Official Image */}
-                <div className="relative h-40 sm:h-56 bg-gradient-to-br from-green-500 to-green-600">
+                <div className="relative h-40 sm:h-56 bg-gray-900 overflow-hidden">
                   {official.image ? (
-                    <img
-                      src={
-                        typeof official.image === 'string'
-                          ? official.image
-                          : official.image?.url
-                      }
-                      alt={official.name}
-                      className="w-full h-full object-cover"
-                    />
+                    <>
+                      {/* Blurred background */}
+                      <img
+                        src={
+                          typeof official.image === 'string'
+                            ? official.image
+                            : official.image?.url
+                        }
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-50"
+                      />
+                      {/* Main image */}
+                      <img
+                        src={
+                          typeof official.image === 'string'
+                            ? official.image
+                            : official.image?.url
+                        }
+                        alt={official.name}
+                        className="relative w-full h-full object-contain z-10"
+                      />
+                    </>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <div className="w-20 h-20 sm:w-28 sm:h-28 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
