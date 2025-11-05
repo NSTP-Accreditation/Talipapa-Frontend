@@ -25,6 +25,7 @@ export interface PageContentInterface {
     mimetype: string;
   };
   carousel: CarouselInterface[];
+  youtubeVideoUrl?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

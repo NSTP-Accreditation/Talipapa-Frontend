@@ -418,9 +418,9 @@ export default function OfficialsPanel() {
     const formData = new FormData();
     formData.append('name', officialData.name);
     formData.append('position', officialData.position);
-    formData.append('bio', officialData.bio || '');
+    formData.append('biography', officialData.bio || '');
     if (officialData.imageFile)
-      formData.append('image', officialData.imageFile);
+      formData.append('officialImage', officialData.imageFile);
 
     try {
       if (editingOfficial) {

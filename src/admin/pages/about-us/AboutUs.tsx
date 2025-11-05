@@ -11,49 +11,21 @@ import {
   Building,
 } from 'lucide-react';
 import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
-import useFetchData from '../../hooks/useFetchData';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
 import OfficialsPanel from '../../components/OfficialsPanel';
 import ContentModal from './ContentModal';
+import { useBrgyInfo } from '@/contexts/BrgyInfoContext';
 
 export default function AboutBarangayEditable() {
+  const { pageContent, loading, error, refetch } = useBrgyInfo();
   const { success, error: showError } = useToast();
-  const {
-    data,
-    loading: dataLoading,
-    error,
-    refetch,
-  } = useFetchData<any>(`/pageContent`);
-
-  const [pageContent, setPageContent] = useState<{
-    barangayName: string;
-    mission?: string;
-    vision?: string;
-    barangayHistory?: string;
-    barangayDescription?: string;
-    youtubeVideoUrl?: string;
-  }>();
 
   // Centralized modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const authFetch = useAuthFetch();
 
-  // Populate local state when data loads
-  useEffect(() => {
-    if (data && !dataLoading && !error) {
-      setPageContent({
-        barangayName: data.barangayName || 'Name',
-        mission: data.mission || '',
-        vision: data.vision || '',
-        barangayHistory: data.barangayHistory || '',
-        barangayDescription: data.barangayDescription || '',
-        youtubeVideoUrl: data.youtubeVideoUrl || '',
-      });
-    }
-  }, [data, dataLoading, error]);
-
-  if (dataLoading) {
+  if (loading) {
     return <ResponsiveSkeleton page="aboutus-admin" />;
   }
 
@@ -126,14 +98,8 @@ export default function AboutBarangayEditable() {
         headers: { 'Content-Type': 'application/json' },
       });
 
-      // If API returns updated object, update local state
-      if (result && typeof result === 'object' && !(result as any).message) {
-        setPageContent(result as any);
-      }
-
       await refetch();
 
-      // Close modal first then show toast
       setIsModalOpen(false);
       success('Changes saved successfully!', { title: 'Saved' });
     } catch (err) {

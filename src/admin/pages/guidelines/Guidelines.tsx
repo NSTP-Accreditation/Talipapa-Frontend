@@ -192,8 +192,6 @@ const Guidelines: React.FC = () => {
   ) => {
     try {
       const payload = buildGuidelinePayload(updatedGuideline);
-      console.log(payload);
-      
       if (
         updatedGuideline._id &&
         guidelines.find((g) => g._id === updatedGuideline._id)
