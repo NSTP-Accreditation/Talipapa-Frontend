@@ -33,7 +33,21 @@ export const useAuthFetch = () => {
       url: string,
       options: AuthFetchOptions = {}
     ): Promise<T | SuccessResponse> => {
+      // Get token from context OR fallback to localStorage
       let token = user?.accessToken;
+
+      if (!token) {
+        token = localStorage.getItem('accessToken') || undefined;
+      }
+
+      // If no token, redirect to login instead of throwing error
+      if (!token || token === 'undefined' || token === 'null') {
+        console.warn('⚠️ No authentication token - redirecting to login');
+        logout();
+        window.location.href = '/admin/login';
+        throw new Error('No authentication token available');
+      }
+
       const isFormData = options.body instanceof FormData;
 
       const headers: HeadersInit = {
@@ -45,20 +59,41 @@ export const useAuthFetch = () => {
       try {
         const finalUrl = /^https?:\/\//i.test(url) ? url : `${apiURL}${url}`;
 
+        console.log('📤 Making authenticated request:', {
+          url: finalUrl,
+          method: options.method || 'GET',
+          hasToken: !!token,
+          tokenLength: token?.length,
+        });
+
         let response = await fetch(finalUrl, {
           ...options,
           headers,
           credentials: 'include',
         });
 
+        console.log('📥 Response:', {
+          status: response.status,
+          statusText: response.statusText,
+          ok: response.ok,
+        });
+
         if (response.status === 403) {
+          console.log('🔄 Token expired (403), attempting refresh...');
+
           try {
             const newTokens = await refreshToken();
             token = newTokens?.accessToken;
 
+            if (!token) {
+              throw new Error('Token refresh returned no token');
+            }
+
+            console.log('✅ Token refreshed, retrying request...');
+
             const retryHeaders: HeadersInit = {
               ...(options.headers || {}),
-              Authorization: token ? `Bearer ${token}` : '',
+              Authorization: `Bearer ${token}`,
               ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
             };
 
@@ -67,11 +102,10 @@ export const useAuthFetch = () => {
               headers: retryHeaders,
               credentials: 'include',
             });
+
+            console.log('📥 Retry response:', response.status);
           } catch (refreshErr) {
-            const errorMessage =
-              refreshErr instanceof Error
-                ? refreshErr.message
-                : 'Token refresh failed';
+            console.error('❌ Token refresh failed, logging out:', refreshErr);
             logout();
             throw refreshErr;
           }
