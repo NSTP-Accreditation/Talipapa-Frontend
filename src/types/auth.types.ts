@@ -22,7 +22,7 @@ export interface UserData {
   username: string;
   email?: string;
   contactNumber?: string;
-  roles: UserRoles;
+  roles?: UserRoles;
   rolesKeys?: string[]; // Array of role labels like ['SuperAdmin', 'Admin']
 }
 

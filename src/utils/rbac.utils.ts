@@ -48,15 +48,24 @@ const getRoleConfig = () => {
 const permissionCache = new WeakMap<AuthUser, Permission[]>();
 
 // Rate limiter to prevent permission check spam
+// NOTE: Set to high limit because React components re-render frequently
 const permissionCheckLimiter = new Map<
   string,
   { count: number; resetTime: number }
 >();
-const MAX_CHECKS_PER_SECOND = 100;
+const MAX_CHECKS_PER_SECOND = 10000; // Very high limit - only blocks actual attacks
 const RATE_LIMIT_WINDOW = 1000; // 1 second
+
+// Cache permission check results to prevent redundant checks
+const permissionCheckCache = new Map<
+  string,
+  { result: boolean; expiry: number }
+>();
+const PERMISSION_CHECK_CACHE_TTL = 100; // Cache for 100ms
 
 /**
  * Check if user exceeds rate limit for permission checks
+ * NOTE: Increased limit to accommodate React re-renders
  */
 const isRateLimited = (userId: string): boolean => {
   const now = Date.now();
@@ -75,7 +84,7 @@ const isRateLimited = (userId: string): boolean => {
   userLimit.count++;
 
   if (userLimit.count > MAX_CHECKS_PER_SECOND) {
-    console.error('[RBAC Security] Rate limit exceeded:', {
+    console.error('[RBAC Security] Rate limit exceeded (potential attack):', {
       user: userId,
       checks: userLimit.count,
       window: RATE_LIMIT_WINDOW,
@@ -339,8 +348,18 @@ export const hasPermission = (
 ): boolean => {
   if (!user) return false;
 
-  // Rate limiting check
   const userId = user.userData?.username || 'anonymous';
+
+  // Check cache first to avoid redundant calculations
+  const cacheKey = `${userId}:${permission}`;
+  const now = Date.now();
+  const cached = permissionCheckCache.get(cacheKey);
+
+  if (cached && now < cached.expiry) {
+    return cached.result;
+  }
+
+  // Rate limiting check (only for actual attacks - 10k/second threshold)
   if (isRateLimited(userId)) {
     console.error(
       '[RBAC Security] Permission check rate limit exceeded for:',
@@ -363,6 +382,12 @@ export const hasPermission = (
       return userGrantedPerms.includes(p);
     })
   );
+
+  // Cache the result
+  permissionCheckCache.set(cacheKey, {
+    result: hasAccess,
+    expiry: now + PERMISSION_CHECK_CACHE_TTL,
+  });
 
   // Log denied access for security monitoring
   if (!hasAccess && user) {

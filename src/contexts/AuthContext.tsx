@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 
 interface UserData {
-  username: String;
+  username: string;
   roles?: {
     SuperAdmin?: number;
     Admin?: number;
@@ -18,7 +18,7 @@ interface UserData {
 
 interface User {
   userData: UserData;
-  accessToken: String;
+  accessToken: string;
 }
 
 interface AuthContextType {
