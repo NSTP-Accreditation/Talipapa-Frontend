@@ -4,14 +4,14 @@ import { MaterialInterface } from '@/types/global.types';
 import { Box, Edit, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import AddEditMaterialModal from './components/AddEditMaterialModal';
-import DeleterecordModal from '../records/components/DeleterecordModal';
 import DeleteProductMaterialModal from './components/DeleteProductModal';
+import { PaginatedResponse } from '@/types/pagination';
 
 type InventoryMaterialsProps = {
   filteredMaterials: MaterialInterface[];
   materialsData: MaterialInterface[];
   materialsDataError: string | null;
-  refetchMaterial: () => Promise<MaterialInterface[]>;
+  refetchMaterial: () => Promise<PaginatedResponse<MaterialInterface>>;
 };
 
 const InventoryMaterials = ({

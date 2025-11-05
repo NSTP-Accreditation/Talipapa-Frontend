@@ -6,6 +6,7 @@ import InventoryCards from './components/InventoryCards';
 import InventoryProducts from './InventoryProducts';
 import ResponsiveSkeleton from '@/components/ResponsiveSkeleton';
 import InventoryMaterials from './InventoryMaterials';
+import { PaginatedResponse } from '@/types/pagination';
 
 const Inventory = () => {
   // FETCH NEEDED DATA
@@ -14,13 +15,13 @@ const Inventory = () => {
     loading: productsDataLoading,
     error: productsDataErr,
     refetch: refetchProduct,
-  } = useFetchData<ProductInterface[]>('/products');
+  } = useFetchData<PaginatedResponse<ProductInterface>>('/products');
   const {
     data: materialsData,
     loading: materialsDataLoading,
     error: materialsDataErr,
     refetch: refetchMaterials,
-  } = useFetchData<MaterialInterface[]>('/materials');
+  } = useFetchData<PaginatedResponse<MaterialInterface>>('/materials');
 
   // Variables
   const [filteredProducts, setFilteredProducts] = useState<ProductInterface[]>(
@@ -32,11 +33,11 @@ const Inventory = () => {
 
   useEffect(() => {
     if (productsData && !productsDataLoading && !productsDataErr) {
-      setFilteredProducts(productsData);
+      setFilteredProducts(productsData.data);
     }
 
     if (materialsData && !materialsDataLoading && !materialsDataErr) {
-      setFilteredMaterials(materialsData);
+      setFilteredMaterials(materialsData.data);
     }
   }, [
     productsData,
@@ -51,27 +52,29 @@ const Inventory = () => {
     return <ResponsiveSkeleton page="inventory" />;
   }
 
+  if(!productsData) return;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
       <div className="space-y-6 sm:space-y-8">
         {/* Inventory Header */}
         <InventoryHeader
-          productsData={productsData}
-          materialsData={materialsData}
+          productsData={productsData.data}
+          materialsData={materialsData.data}
           setFilteredProducts={setFilteredProducts}
           setFilteredMaterials={setFilteredMaterials}
         />
 
         {/* Inventory Cards */}
         <InventoryCards
-          productsData={productsData}
-          materialsData={materialsData}
+          productsData={productsData.data}
+          materialsData={materialsData.data}
         />
 
         {/* Products Container */}
         <InventoryProducts
           filteredProducts={filteredProducts}
-          productsData={productsData}
+          productsData={productsData.data}
           productsDataError={productsDataErr}
           refetchProduct={refetchProduct}
         />
@@ -79,7 +82,7 @@ const Inventory = () => {
         {/* Materials Container */}
         <InventoryMaterials
           filteredMaterials={filteredMaterials}
-          materialsData={materialsData}
+          materialsData={materialsData.data}
           materialsDataError={materialsDataErr}
           refetchMaterial={refetchMaterials}
         />

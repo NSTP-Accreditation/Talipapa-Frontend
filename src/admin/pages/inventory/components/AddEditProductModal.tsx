@@ -3,6 +3,7 @@ import ImageWithFallback from '@/components/ImageWithFallback';
 import { Button, Input } from '@/components/ui';
 import { useToast } from '@/hooks/useToast';
 import { ProductInterface } from '@/types/global.types';
+import { PaginatedResponse } from '@/types/pagination';
 import { Package, PenSquare, Plus, Tag, X } from 'lucide-react';
 import { Dispatch, memo, SetStateAction, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -12,7 +13,7 @@ type AddEditProductModalType = {
   setShowProductModal: Dispatch<SetStateAction<boolean>>;
   mode: string;
   productToEdit: ProductInterface | null;
-  refetchProduct: () => Promise<ProductInterface[]>;
+  refetchProduct: () => Promise<PaginatedResponse<ProductInterface>>;
 };
 
 const AddEditProductModal = memo(
@@ -130,7 +131,7 @@ const AddEditProductModal = memo(
         productFormData.imageFile &&
         productFormData.imageFile instanceof File
       ) {
-        formData.append('image', productFormData.imageFile);
+        formData.append('productImage', productFormData.imageFile);
       }
 
       return formData;
@@ -279,8 +280,8 @@ const AddEditProductModal = memo(
                       >
                         <option value="">Select</option>
                         <option value="Agricultural">Agricultural</option>
-                        <option value="Non Agricultural">
-                          Non Agricultural
+                        <option value="Non-Agricultural">
+                          Non-Agricultural
                         </option>
                       </select>
                     </div>
@@ -312,7 +313,7 @@ const AddEditProductModal = memo(
                             <option value="Fruits">Fruits</option>
                           </>
                         )}
-                        {productFormData.category === 'Non Agricultural' && (
+                        {productFormData.category === 'Non-Agricultural' && (
                           <>
                             <option value="Household">
                               Eco Bags and Eco Rags

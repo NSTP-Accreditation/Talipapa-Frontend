@@ -5,6 +5,7 @@ import { MaterialInterface, ProductInterface } from '@/types/global.types';
 import { AlertTriangle } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import { PaginatedResponse } from '@/types/pagination';
 
 interface DeleteProductMaterialModalProps {
   itemToDelete: ProductInterface | MaterialInterface;
@@ -12,7 +13,7 @@ interface DeleteProductMaterialModalProps {
     SetStateAction<ProductInterface | MaterialInterface>
   >;
   onClose: () => void;
-  refetch: () => Promise<ProductInterface[]> | Promise<MaterialInterface[]>;
+  refetch: () => Promise<PaginatedResponse<ProductInterface>> | PaginatedResponse<MaterialInterface>;
   type: 'Product' | 'Material';
 }
 
@@ -31,7 +32,7 @@ const DeleteProductMaterialModal = ({
   const confirmDelete = async (): Promise<void> => {
     if (!itemToDelete || !type) return;
 
-    let message;
+    let message: string;
     try {
       if (type === 'Product') {
         await authFetch(`/products/${itemToDelete?._id}`, {

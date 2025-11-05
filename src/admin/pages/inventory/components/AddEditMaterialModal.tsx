@@ -3,6 +3,7 @@ import ImageWithFallback from '@/components/ImageWithFallback';
 import { Button, Input } from '@/components/ui';
 import { useToast } from '@/hooks/useToast';
 import { MaterialInterface } from '@/types/global.types';
+import { PaginatedResponse } from '@/types/pagination';
 import { Box, PenSquare, Plus, X } from 'lucide-react';
 import React, {
   Dispatch,
@@ -18,7 +19,7 @@ type AddEditMaterialModalProps = {
   setShowMaterialModal: Dispatch<SetStateAction<boolean>>;
   mode: 'Add' | 'Edit';
   materialtoEdit: MaterialInterface | null;
-  refetchMaterial: () => Promise<MaterialInterface[]>;
+  refetchMaterial: () => Promise<PaginatedResponse<MaterialInterface>>;
 };
 
 const AddEditMaterialModal = memo(
@@ -140,7 +141,7 @@ const AddEditMaterialModal = memo(
       return true;
     };
 
-    const buildProductFormData = (): FormData => {
+    const buildMaterialFormData = (): FormData => {
       const formData = new FormData();
       formData.append('name', materialFormData.name.trim());
       formData.append('description', materialFormData.description.trim());
@@ -150,7 +151,7 @@ const AddEditMaterialModal = memo(
         materialFormData.imageFile &&
         materialFormData.imageFile instanceof File
       ) {
-        formData.append('image', materialFormData.imageFile);
+        formData.append('materialImage', materialFormData.imageFile);
       }
 
       return formData;
@@ -161,7 +162,7 @@ const AddEditMaterialModal = memo(
         return;
       }
 
-      const formData = buildProductFormData();
+      const formData = buildMaterialFormData();
 
       try {
         const response = await authFetch('/materials', {
@@ -180,7 +181,7 @@ const AddEditMaterialModal = memo(
         return;
       }
 
-      const formData = buildProductFormData();
+      const formData = buildMaterialFormData();
       try {
         const response = await authFetch(`/materials/${materialtoEdit._id}`, {
           method: 'PATCH',

@@ -12,12 +12,13 @@ import {
 import { useState } from 'react';
 import AddEditProductModal from './components/AddEditProductModal';
 import DeleteProductMaterialModal from './components/DeleteProductModal';
+import { PaginatedResponse } from '@/types/pagination';
 
 type InventoryProductsProps = {
   filteredProducts: ProductInterface[];
   productsData: ProductInterface[];
   productsDataError: string | null;
-  refetchProduct: () => Promise<ProductInterface[]>;
+  refetchProduct: () => Promise<PaginatedResponse<ProductInterface>>;
 };
 
 const InventoryProducts = ({
