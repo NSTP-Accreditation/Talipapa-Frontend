@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -9,7 +9,7 @@ import {
 } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Phone, MapPin, AlertTriangle, Flame, Droplets, Mountain, Wind, Info, Shield, X } from 'lucide-react';
+import { Phone, MapPin, AlertTriangle, Flame, Droplets, Mountain, Wind, Info, Shield } from 'lucide-react';
 
 // Import marker images so Vite bundles them and paths resolve correctly
 import markerIconUrl from 'leaflet/dist/images/marker-icon.png';
@@ -134,11 +134,49 @@ const evacuationCenters = [
 ];
 
 const emergencyContacts = [
-  { name: 'Barangay Hall (Emergency)', phone: '(02) 1234-5678' },
-  { name: 'Police (PNP)', phone: '117' },
-  { name: 'Fire Department (BFP)', phone: '(02) 8426-0219' },
-  { name: 'NDRRMC Hotline', phone: '(02) 8911-1406' },
-  { name: 'Red Cross Emergency', phone: '143' },
+  // Barangay Talipapa Contacts
+  { name: 'Barangay Talipapa Desk', phone: '0917 320 6662', category: 'Barangay' },
+  { name: 'Barangay Talipapa BHERT', phone: '0956 071 4281', category: 'Barangay' },
+  { name: 'Barangay Help Desk', phone: '0917-155-6735', category: 'Barangay', link: 'https://www.facebook.com/QCGov/photos/228370875217344/' },
+  { name: 'Barangay Hall - Talipapa Peoples Civic Center', phone: '0988 103 2471', category: 'Barangay', link: 'https://www.facebook.com/TalipapaPeoplesCivicCenterD6' },
+  
+  // Quezon City Emergency Helpline
+  { name: 'QC Emergency Helpline (Main)', phone: '122', category: 'QC Emergency' },
+  { name: 'QC Emergency Helpline', phone: '0919-0670096', category: 'QC Emergency' },
+  { name: 'QC Emergency Helpline', phone: '0919-0670715', category: 'QC Emergency' },
+  { name: 'QC Emergency Helpline', phone: '0919-0670236', category: 'QC Emergency' },
+  { name: 'QC Emergency Helpline', phone: '8988-4242 loc. 8416/8407', category: 'QC Emergency' },
+  { name: 'QC Helpdesk Email', phone: 'helpdesk@quezoncity.gov.ph', category: 'QC Emergency', isEmail: true },
+  { name: 'QC Citizen Service Email', phone: 'qcitizenservice@qchelpline122.onmicrosoft.com', category: 'QC Emergency', isEmail: true },
+  
+  // Emergency Operations Center
+  { name: 'Emergency Operations Center', phone: '8988 4242 loc. 7245', category: 'Operations Center' },
+  { name: 'Emergency Operations Center (Smart)', phone: '0999-228-7362', category: 'Operations Center' },
+  { name: 'Emergency Operations Center (Smart)', phone: '0919-067-1170', category: 'Operations Center' },
+  { name: 'Emergency Operations Center (Smart)', phone: '0947-885-9929', category: 'Operations Center' },
+  { name: 'Emergency Operations Center (Globe)', phone: '0977-031-2892', category: 'Operations Center' },
+  
+  // Emergency Medical Services / Search and Rescue
+  { name: 'Emergency Medical Services / Search and Rescue', phone: '0947-884-7498', category: 'Medical/Rescue' },
+  
+  // Police - PNP District 6 & Station 3 Talipapa
+  { name: 'PNP District 6', phone: '0961 791 9571', category: 'Police', link: 'https://share.google/cBbF4Yx5s4WIBk0vN' },
+  { name: 'Police Station 3 Talipapa (PLTCOL. Resty O. Damaso)', phone: '8937-1703', category: 'Police' },
+  { name: 'Police Station 3 Talipapa', phone: '8939-6070', category: 'Police' },
+  { name: 'Police Station 3 Talipapa (Globe)', phone: '0961-3011376', category: 'Police' },
+  { name: 'QCPD Main Line', phone: '117', category: 'Police', link: 'https://quezoncity.gov.ph/departments/quezon-city-police-district/' },
+  
+  // Fire Department
+  { name: 'Talipapa Fire Sub Station', phone: '(02) 8983 1125', category: 'Fire', link: 'https://share.google/aIcaRUtHjN1Tt8GJo' },
+  { name: 'QCFD Station 6', phone: '3454-5390', category: 'Fire', link: 'https://quezoncity.gov.ph/departments/quezon-city-fire-station/' },
+  { name: 'BFP Emergency', phone: '160', category: 'Fire' },
+  
+  // Disaster Risk Reduction
+  { name: 'QC NDRRMC', phone: '122', category: 'DRRM', link: 'https://www.facebook.com/qcdrrmc/' },
+  
+  // Red Cross
+  { name: 'Philippine Red Cross (National)', phone: '143', category: 'Red Cross', link: 'https://redcross.org.ph/contact-us/' },
+  { name: 'Philippine Red Cross QC Chapter', phone: '0945 220 1056', category: 'Red Cross', link: 'https://www.facebook.com/p/Philippine-Red-Cross-QC-Chapter-61575342616287/' },
 ];
 
 // Address suggestions for autocomplete
@@ -182,62 +220,7 @@ export default function EmergencyContact() {
   const [showAshfall, setShowAshfall] = useState(true);
   const [showEvacuationCenters, setShowEvacuationCenters] = useState(true);
   const [showBarangayMarker, setShowBarangayMarker] = useState(true);
-  const [reportMarkers, setReportMarkers] = useState(() => {
-    try {
-      const raw = localStorage.getItem('reportedHazards');
-      return raw ? JSON.parse(raw) : [];
-    } catch (e) {
-      return [];
-    }
-  });
-  const [showReportModal, setShowReportModal] = useState(false);
-  const [reportForm, setReportForm] = useState({ type: 'Flood', address: '', desc: '' });
   const [notice, setNotice] = useState('');
-  const [contactQuery, setContactQuery] = useState('');
-  const [showAddressSuggestions, setShowAddressSuggestions] = useState(false);
-  const [filteredAddresses, setFilteredAddresses] = useState([]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('reportedHazards', JSON.stringify(reportMarkers));
-    } catch (e) {}
-  }, [reportMarkers]);
-
-  const handleAddressChange = (value) => {
-    setReportForm((f) => ({ ...f, address: value }));
-    
-    if (value.trim().length > 0) {
-      const filtered = addressSuggestions.filter(addr => 
-        addr.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredAddresses(filtered);
-      setShowAddressSuggestions(filtered.length > 0);
-    } else {
-      setShowAddressSuggestions(false);
-      setFilteredAddresses([]);
-    }
-  };
-
-  const handleAddressSelect = (address) => {
-    setReportForm((f) => ({ ...f, address }));
-    setShowAddressSuggestions(false);
-    setFilteredAddresses([]);
-  };
-
-  const handleReportSubmit = (e) => {
-    e.preventDefault();
-    const { address, type, desc } = reportForm;
-    if (!address || address.trim() === '') {
-      setNotice('Please provide an address for the hazard location.');
-      return;
-    }
-    const m = { id: Date.now(), address: address.trim(), type, desc };
-    setReportMarkers((s) => [...s, m]);
-    setShowReportModal(false);
-    setReportForm({ type: 'Flood', address: '', desc: '' });
-    setNotice('Report saved successfully.');
-    setTimeout(() => setNotice(''), 3000);
-  };
 
   const Accordion = ({ title, colorClass, icon: Icon, children }) => {
     const [open, setOpen] = useState(false);
@@ -245,7 +228,7 @@ export default function EmergencyContact() {
       <div className="border-2 border-gray-200 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 hover:border-green-300">
         <button
           onClick={() => setOpen((v) => !v)}
-          className={`w-full flex items-center justify-between px-5 py-4 text-sm font-bold hover:bg-gradient-to-r hover:from-green-50 hover:to-white transition-all duration-200 ${
+          className={`w-full flex items-center justify-between px-6 py-5 text-lg font-bold hover:bg-gradient-to-r hover:from-green-50 hover:to-white transition-all duration-200 ${
             open ? 'bg-gradient-to-r from-green-50 to-white border-b-2 border-gray-200' : 'bg-white'
           }`}
           aria-expanded={open}
@@ -253,17 +236,17 @@ export default function EmergencyContact() {
           <div className="flex items-center gap-3">
             {Icon && (
               <div className={`p-2 rounded-lg ${open ? 'bg-green-100' : 'bg-gray-100'} transition-colors duration-200`}>
-                <Icon className={`w-5 h-5 ${colorClass}`} />
+                <Icon className={`w-6 h-6 ${colorClass}`} />
               </div>
             )}
-            <span className={`${colorClass} text-base`}>{title}</span>
+            <span className={`${colorClass} text-lg`}>{title}</span>
           </div>
-          <div className={`flex items-center justify-center w-8 h-8 rounded-full ${open ? 'bg-green-700 text-white rotate-180' : 'bg-gray-200 text-gray-600'} transition-all duration-300`}>
-            <span className="text-lg font-bold">{open ? '−' : '+'}</span>
+          <div className={`flex items-center justify-center w-10 h-10 rounded-full ${open ? 'bg-green-700 text-white rotate-180' : 'bg-gray-200 text-gray-600'} transition-all duration-300`}>
+            <span className="text-xl font-bold">{open ? '−' : '+'}</span>
           </div>
         </button>
         {open && (
-          <div className="p-5 bg-gradient-to-br from-white to-gray-50 text-sm text-gray-700 animate-fadeIn">
+          <div className="p-5 bg-gradient-to-br from-white to-gray-50 text-base text-gray-700 animate-fadeIn">
             {children}
           </div>
         )}
@@ -322,15 +305,6 @@ export default function EmergencyContact() {
                     Interactive hazard map, emergency contacts and disaster preparedness guide for Barangay Talipapa.
                   </p>
                 </div>
-              </div>
-              <div className="flex flex-wrap gap-3 items-center">
-                <button 
-                  onClick={() => setShowReportModal(true)} 
-                  className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
-                >
-                  <AlertTriangle className="w-5 h-5" /> 
-                  <span>Report Hazard</span>
-                </button>
               </div>
             </div>
           </div>
@@ -532,9 +506,15 @@ export default function EmergencyContact() {
 
             <MapContainer
               center={defaultCenter}
-              zoom={14}
+              zoom={15}
               style={{ height: '100%', width: '100%' }}
               whenCreated={(map) => (mapRef.current = map)}
+              whenReady={(map) => {
+                // Auto-zoom to Barangay Talipapa on load
+                setTimeout(() => {
+                  map.target.setView(defaultCenter, 15);
+                }, 100);
+              }}
             >
               <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -718,84 +698,87 @@ export default function EmergencyContact() {
         </div>
       </div>
 
-      {/* Community Reported Hazards List */}
-      {reportMarkers.length > 0 && (
-        <div className="mb-6 bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-purple-500 rounded-xl p-4 shadow-md animate-fadeIn">
-          <div className="flex items-start gap-3 mb-3">
-            <AlertTriangle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
-            <div className="text-sm flex-1">
-              <div className="font-bold text-purple-900 mb-2">📢 Community Reported Hazards</div>
-              <div className="space-y-2">
-                {reportMarkers.map((m) => (
-                  <div key={m.id} className="bg-white rounded-lg p-3 border border-purple-200">
-                    <div className="font-semibold text-purple-900">⚠️ {m.type}</div>
-                    <div className="text-xs text-gray-600 mt-1">📍 <strong>Location:</strong> {m.address}</div>
-                    {m.desc && <div className="text-xs text-gray-700 mt-1">{m.desc}</div>}
-                    <div className="text-xs text-gray-500 mt-1">Reported by community</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* EMERGENCY CONTACTS SECTION */}
       <section id="contacts" className="mb-10 animate-fadeIn">
         <div className="bg-white rounded-2xl shadow-2xl p-8 border-2 border-gray-100">
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-green-100 p-3 rounded-xl">
-              <Phone className="w-7 h-7 text-green-700" />
+              <Phone className="w-8 h-8 text-green-700" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-800">Emergency Contacts</h2>
-              <p className="text-sm text-gray-600">Quick access to emergency services</p>
+              <h2 className="text-3xl font-bold text-gray-800">Emergency Contacts</h2>
+              <p className="text-lg text-gray-600">Quick access to emergency services</p>
             </div>
           </div>
-          
-          <div className="mb-6">
-            <input
-              type="search"
-              placeholder="🔍 Search contacts by name or number..."
-              value={contactQuery}
-              onChange={(e) => setContactQuery(e.target.value)}
-              className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
-            />
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {emergencyContacts.map((c) => {
-              if (contactQuery && !`${c.name} ${c.phone}`.toLowerCase().includes(contactQuery.toLowerCase())) return null;
-              const tel = c.phone.replace(/[^+\d]/g, '');
+          <div className="space-y-3">
+            {/* Group contacts by category with dropdowns */}
+            {['Barangay', 'QC Emergency', 'Operations Center', 'Medical/Rescue', 'Police', 'Fire', 'DRRM', 'Red Cross'].map((category) => {
+              const categoryContacts = emergencyContacts.filter(c => c.category === category);
+              if (categoryContacts.length === 0) return null;
+              
               return (
-                <div key={c.phone} className="group flex items-center justify-between gap-4 p-4 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-xl transition-all duration-200 bg-gradient-to-br from-white to-gray-50">
-                  <div className="flex items-center gap-4">
-                    <div className="bg-gradient-to-br from-green-100 to-green-50 p-3 rounded-xl group-hover:scale-110 transition-transform duration-200">
-                      <Phone className="w-6 h-6 text-green-700" />
-                    </div>
-                    <div>
-                      <div className="font-bold text-gray-800">{c.name}</div>
-                      <div className="text-sm text-gray-600 font-medium">{c.phone}</div>
-                    </div>
+                <Accordion 
+                  key={category}
+                  title={`${category} (${categoryContacts.length})`}
+                  colorClass="border-green-200"
+                  icon={Phone}
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5">
+                    {categoryContacts.map((c, idx) => {
+                      const tel = c.isEmail ? c.phone : c.phone.replace(/[^+\d]/g, '');
+                      const href = c.isEmail ? `mailto:${c.phone}` : c.link || `tel:${tel}`;
+                      const isExternal = c.link && !c.isEmail;
+                      
+                      return (
+                        <div key={`${c.phone}-${idx}`} className="group flex items-center justify-between gap-4 p-4 rounded-lg border-2 border-gray-200 hover:border-green-300 hover:shadow-lg transition-all duration-200 bg-gradient-to-br from-white to-gray-50">
+                          <div className="flex items-center gap-3 flex-1 min-w-0">
+                            <div className="bg-gradient-to-br from-green-100 to-green-50 p-3 rounded-lg group-hover:scale-110 transition-transform duration-200 flex-shrink-0">
+                              <Phone className="w-6 h-6 text-green-700" />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <div className="font-bold text-gray-800 text-base leading-tight mb-1">{c.name}</div>
+                              <div className="text-base text-gray-600 font-semibold">{c.phone}</div>
+                            </div>
+                          </div>
+                          <a 
+                            href={href}
+                            target={isExternal ? "_blank" : undefined}
+                            rel={isExternal ? "noopener noreferrer" : undefined}
+                            className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-3 rounded-lg text-base font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg flex-shrink-0"
+                          >
+                            {c.isEmail ? (
+                              <>
+                                <Info className="w-5 h-5" />
+                                <span>Email</span>
+                              </>
+                            ) : isExternal ? (
+                              <>
+                                <MapPin className="w-5 h-5" />
+                                <span>Visit</span>
+                              </>
+                            ) : (
+                              <>
+                                <Phone className="w-5 h-5" />
+                                <span>Call</span>
+                              </>
+                            )}
+                          </a>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <a 
-                    href={`tel:${tel}`} 
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
-                  >
-                    <Phone className="w-4 h-4" />
-                    <span>Call</span>
-                  </a>
-                </div>
+                </Accordion>
               );
             })}
           </div>
 
-          <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-amber-500 rounded-xl text-sm">
+          <div className="mt-6 p-5 bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-amber-500 rounded-xl text-base">
             <div className="flex items-start gap-3">
-              <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <Info className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
               <div>
-                <strong className="text-amber-900">Pro Tip:</strong>
-                <span className="text-gray-700"> Save these numbers in your phone's contacts for quick access during emergencies. Use the "Report Hazard" button to mark danger zones on the map.</span>
+                <strong className="text-amber-900 text-lg">Pro Tip:</strong>
+                <span className="text-gray-700"> Save these numbers in your phone's contacts for quick access during emergencies. For real-time response, you can message the Talipapa People's Civic Center on Facebook.</span>
               </div>
             </div>
           </div>
@@ -838,111 +821,6 @@ export default function EmergencyContact() {
           </div>
         </div>
       </section>
-
-      {/* Report Modal */}
-      {showReportModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl animate-slideUp border-2 border-gray-100">
-            <div className="bg-gradient-to-r from-red-600 to-red-500 text-white p-6 rounded-t-2xl">
-              <h3 className="text-xl font-bold flex items-center gap-3">
-                <div className="bg-white/20 backdrop-blur-sm p-2 rounded-lg">
-                  <AlertTriangle className="w-6 h-6" />
-                </div>
-                <span>Report Hazard</span>
-              </h3>
-              <p className="text-sm opacity-90 mt-2">Help keep the community safe by reporting hazards</p>
-            </div>
-            
-            <form onSubmit={handleReportSubmit} className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-bold mb-2 text-gray-700">Hazard Type</label>
-                <select 
-                  value={reportForm.type} 
-                  onChange={(e) => setReportForm((f) => ({ ...f, type: e.target.value }))} 
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all bg-gray-50 focus:bg-white font-medium"
-                >
-                  <option>Flood</option>
-                  <option>Earthquake damage</option>
-                  <option>Fire</option>
-                  <option>Landslide</option>
-                  <option>Obstruction</option>
-                  <option>Other</option>
-                </select>
-              </div>
-              
-              <div className="relative">
-                <label className="block text-sm font-bold mb-2 text-gray-700">Address / Location</label>
-                <input 
-                  type="text"
-                  value={reportForm.address} 
-                  onChange={(e) => handleAddressChange(e.target.value)}
-                  onFocus={() => {
-                    if (reportForm.address.trim().length > 0) {
-                      const filtered = addressSuggestions.filter(addr => 
-                        addr.toLowerCase().includes(reportForm.address.toLowerCase())
-                      );
-                      setFilteredAddresses(filtered);
-                      setShowAddressSuggestions(filtered.length > 0);
-                    }
-                  }}
-                  onBlur={() => {
-                    // Delay to allow click on suggestion
-                    setTimeout(() => setShowAddressSuggestions(false), 200);
-                  }}
-                  placeholder="Start typing street name or landmark..." 
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all bg-gray-50 focus:bg-white"
-                  required
-                  autoComplete="off"
-                />
-                {showAddressSuggestions && filteredAddresses.length > 0 && (
-                  <div className="absolute z-10 w-full mt-1 bg-white border-2 border-gray-200 rounded-xl shadow-2xl max-h-60 overflow-y-auto">
-                    {filteredAddresses.map((addr, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => handleAddressSelect(addr)}
-                        className="w-full text-left px-4 py-3 text-sm hover:bg-red-50 transition-colors border-b border-gray-100 last:border-b-0 focus:bg-red-50 focus:outline-none"
-                      >
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-red-500 flex-shrink-0" />
-                          <span className="text-gray-700">{addr}</span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-                <div className="text-xs text-gray-500 mt-1">💡 Start typing to see address suggestions</div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-bold mb-2 text-gray-700">Description</label>
-                <textarea 
-                  value={reportForm.desc} 
-                  onChange={(e) => setReportForm((f) => ({ ...f, desc: e.target.value }))} 
-                  placeholder="Describe the hazard in detail..." 
-                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all bg-gray-50 focus:bg-white h-24 resize-none"
-                />
-              </div>
-              
-              <div className="flex justify-end gap-3 pt-2">
-                <button 
-                  type="button" 
-                  onClick={() => setShowReportModal(false)} 
-                  className="px-5 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 font-bold text-gray-700 transition-all duration-200 hover:scale-105 active:scale-95"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit" 
-                  className="px-5 py-3 rounded-xl bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-                >
-                  Submit Report
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
       </div>
     </div>
   );
