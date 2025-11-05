@@ -8,6 +8,8 @@ import useFetchData from '../../hooks/useFetchData';
 import AchievementCard from './components/AchievementCard';
 import AchievementModal from './components/AchievementModal';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import { PaginatedResponse } from '@/types/pagination';
+import { Achievement } from './Achievementtypes';
 
 /* ---------- utilities ---------- */
 const readFileAsDataURL = (file: File) =>
@@ -24,8 +26,8 @@ export default function Achievements() {
     loading: achievementsLoading,
     error: achievementsError,
     refetch: refetchAchievements,
-  } = useFetchData('/achievements');
-
+  } = useFetchData<PaginatedResponse<Achievement>>('/achievements');
+  
   const authFetch = useAuthFetch();
   const toast = useToast();
 
@@ -43,7 +45,7 @@ export default function Achievements() {
 
   useEffect(() => {
     if (achievements && !achievementsLoading && !achievementsError) {
-      setItems(achievements);
+      setItems(achievements.data);
     }
   }, [achievements, achievementsLoading, achievementsError]);
 
@@ -220,8 +222,8 @@ export default function Achievements() {
                   <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
                     <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     <span>
-                      {items.length}{' '}
-                      {items.length === 1 ? 'Achievement' : 'Achievements'}
+                      {items?.length}{' '}
+                      {items?.length === 1 ? 'Achievement' : 'Achievements'}
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
@@ -246,7 +248,7 @@ export default function Achievements() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {items.length === 0 ? (
+          {items?.length === 0 ? (
             <div className="col-span-full text-center py-24">
               <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-green-100 to-green-100 rounded-3xl shadow-xl mb-6">
                 <Trophy className="w-20 h-20 text-yellow-500" />
@@ -265,7 +267,7 @@ export default function Achievements() {
               </button>
             </div>
           ) : (
-            items.map((it: any, idx: number) => (
+            items?.map((it: any, idx: number) => (
               <AchievementCard
                 key={it._id || idx}
                 item={it}
