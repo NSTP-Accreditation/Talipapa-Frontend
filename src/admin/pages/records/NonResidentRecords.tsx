@@ -25,6 +25,9 @@ import { debounce } from 'lodash';
 import EditRecordModal from './components/EditRecordModal';
 import DeleterecordModal from './components/DeleterecordModal';
 import RecordTable from './components/RecordTable';
+import { useRBAC } from '../../../hooks/useRBAC';
+import { Permission } from '../../../types/rbac.types';
+import { ReadOnly } from '../../../components/rbac/Can';
 
 const NonResidentRecords: React.FC = () => {
   const { data, loading, refetch } = useFetchData(
@@ -32,6 +35,10 @@ const NonResidentRecords: React.FC = () => {
   );
   const authFetch = useAuthFetch();
   const { success, error: showError } = useToast();
+
+  // RBAC: Check if user can manage records
+  const { hasPermission } = useRBAC();
+  const canManageRecords = hasPermission(Permission.MANAGE_RECORDS);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -291,6 +298,7 @@ const NonResidentRecords: React.FC = () => {
     <>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
         <div className="space-y-4 sm:space-y-6">
+          <ReadOnly message="You have view-only access to Non-Resident Records. Contact a SuperAdmin to add, edit, or delete records." />
           {/* Header */}
           <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
             {/* Decorative background pattern */}
@@ -334,13 +342,15 @@ const NonResidentRecords: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full lg:w-auto">
-                  <Button
-                    onClick={openAddModal}
-                    className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 rounded-xl font-bold shadow-md hover:shadow-xl transition-all min-h-[44px]"
-                  >
-                    <span className="text-lg sm:text-xl">+</span>
-                    <span>Add Non-Resident</span>
-                  </Button>
+                  {canManageRecords && (
+                    <Button
+                      onClick={openAddModal}
+                      className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 rounded-xl font-bold shadow-md hover:shadow-xl transition-all min-h-[44px]"
+                    >
+                      <span className="text-lg sm:text-xl">+</span>
+                      <span>Add Non-Resident</span>
+                    </Button>
+                  )}
 
                   <ExcelExportButton
                     records={records || []}
@@ -457,12 +467,14 @@ const NonResidentRecords: React.FC = () => {
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
               totalPages={totalPages}
+              canManageRecords={canManageRecords}
             />
           )}
         </div>
       </div>
 
-      {isAddModalOpen &&
+      {canManageRecords &&
+        isAddModalOpen &&
         createPortal(
           <div
             className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-3 sm:p-4 animate-fadeIn"
@@ -785,19 +797,23 @@ const NonResidentRecords: React.FC = () => {
           </div>,
           document.body
         )}
-      {/* EDIT & DELETE MODALS (reuse resident components) */}
-      <EditRecordModal
-        editRecord={editRecord}
-        setEditRecord={setEditRecord}
-        setOriginalRecords={setOriginalRecords}
-        refetchRecords={refetch}
-      />
+      {/* EDIT & DELETE MODALS (reuse resident components) - Only show if user can manage records */}
+      {canManageRecords && (
+        <>
+          <EditRecordModal
+            editRecord={editRecord}
+            setEditRecord={setEditRecord}
+            setOriginalRecords={setOriginalRecords}
+            refetchRecords={refetch}
+          />
 
-      <DeleterecordModal
-        deleteRecord={deleteRecord}
-        setDeleteRecord={setDeleteRecord}
-        refetchRecords={refetch}
-      />
+          <DeleterecordModal
+            deleteRecord={deleteRecord}
+            setDeleteRecord={setDeleteRecord}
+            refetchRecords={refetch}
+          />
+        </>
+      )}
     </>
   );
 };

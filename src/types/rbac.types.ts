@@ -87,6 +87,27 @@ export enum Permission {
  * Role permission mapping
  * Defines which permissions each role has
  *
+ * Updated Access Rules:
+ * - SuperAdmin: Full access to everything
+ * - Admin:
+ *   - Records: VIEW ONLY (no add/edit/delete)
+ *   - Trading: NO ACCESS (not visible)
+ *   - Green Pages: FULL ACCESS
+ *   - Home Editables: FULL ACCESS (Guidelines, News, Carousel, About Us, Achievements, Talipapa Natin)
+ *   - Inventory: VIEW ONLY (no add/edit/delete)
+ *   - Farm Inventory: VIEW ONLY (no add/edit/delete)
+ *   - Activity Logs: NO ACCESS (not visible)
+ *   - Settings: NO ACCESS (not visible)
+ * - Staff:
+ *   - Records: NO ACCESS (not visible)
+ *   - Trading: NO ACCESS (not visible)
+ *   - Green Pages: VIEW ONLY (no add/edit/delete)
+ *   - Home Editables: NO ACCESS (not visible)
+ *   - Inventory: NO ACCESS (not visible)
+ *   - Farm Inventory: NO ACCESS (not visible)
+ *   - Activity Logs: NO ACCESS (not visible)
+ *   - Settings: NO ACCESS (not visible)
+ *
  * To add new permissions:
  * 1. Add the permission to the Permission enum above
  * 2. Add it to the appropriate role(s) below
@@ -105,70 +126,59 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.EDIT_USERS,
     Permission.DELETE_USERS,
 
-    // Content Management - Full access
+    // Records - VIEW ONLY (no MANAGE_RECORDS)
+    Permission.VIEW_RECORDS,
+
+    // Trading Operations - NO ACCESS (removed all trading permissions)
+    // (Admin cannot see or access Trading section)
+
+    // Green Pages - FULL ACCESS
+    Permission.VIEW_GREEN_PAGES,
+    Permission.MANAGE_GREEN_PAGES,
+
+    // Home Editables - FULL ACCESS
     Permission.VIEW_CONTENT,
     Permission.CREATE_CONTENT,
     Permission.EDIT_CONTENT,
     Permission.DELETE_CONTENT,
 
-    // Settings - View only
-    Permission.VIEW_SETTINGS,
-
-    // Reports & Analytics
-    Permission.VIEW_REPORTS,
-    Permission.EXPORT_DATA,
-
-    // Activity Logs
-    Permission.VIEW_ACTIVITY_LOGS,
-
-    // Trading Operations - Full access
-    Permission.VIEW_TRADING,
-    Permission.MANAGE_TRADING,
-
-    // Inventory - Full access
-    Permission.VIEW_INVENTORY,
-    Permission.MANAGE_INVENTORY,
-
-    // Records - Full access
-    Permission.VIEW_RECORDS,
-    Permission.MANAGE_RECORDS,
-
-    // News & Events - Full access
-    Permission.VIEW_NEWS,
-    Permission.MANAGE_NEWS,
-
-    // Guidelines - Full access
+    // Guidelines - FULL ACCESS
     Permission.VIEW_GUIDELINES,
     Permission.MANAGE_GUIDELINES,
 
-    // Green Pages - Full access
-    Permission.VIEW_GREEN_PAGES,
-    Permission.MANAGE_GREEN_PAGES,
+    // News & Events - FULL ACCESS
+    Permission.VIEW_NEWS,
+    Permission.MANAGE_NEWS,
 
-    // Farm Inventory - Full access
-    Permission.VIEW_FARM_INVENTORY,
-    Permission.MANAGE_FARM_INVENTORY,
-
-    // Achievements - Full access
+    // Achievements - FULL ACCESS
     Permission.VIEW_ACHIEVEMENTS,
     Permission.MANAGE_ACHIEVEMENTS,
+
+    // Inventory - VIEW ONLY (no MANAGE_INVENTORY)
+    Permission.VIEW_INVENTORY,
+
+    // Farm Inventory - VIEW ONLY (no MANAGE_FARM_INVENTORY)
+    Permission.VIEW_FARM_INVENTORY,
+
+    // Activity Logs - NO ACCESS (removed)
+    // (Admin cannot see Activity Logs)
+
+    // Settings - NO ACCESS (removed)
+    // (Admin cannot see Settings)
+
+    // Reports & Analytics (keep for dashboard/exports)
+    Permission.VIEW_REPORTS,
+    Permission.EXPORT_DATA,
   ],
 
   [UserRole.STAFF]: [
-    // Staff has view-only access
-    Permission.VIEW_USERS,
-    Permission.VIEW_CONTENT,
-    Permission.VIEW_SETTINGS,
-    Permission.VIEW_REPORTS,
-    Permission.VIEW_ACTIVITY_LOGS,
-    Permission.VIEW_TRADING,
-    Permission.VIEW_INVENTORY,
-    Permission.VIEW_RECORDS,
-    Permission.VIEW_NEWS,
-    Permission.VIEW_GUIDELINES,
+    // Staff has very limited access - only Green Pages view-only
+
+    // Green Pages - VIEW ONLY (no MANAGE_GREEN_PAGES)
     Permission.VIEW_GREEN_PAGES,
-    Permission.VIEW_FARM_INVENTORY,
-    Permission.VIEW_ACHIEVEMENTS,
+
+    // All other sections: NO ACCESS
+    // (Staff cannot see Records, Trading, Home Editables, Inventory, Farm Inventory, Activity Logs, Settings)
   ],
 };
 

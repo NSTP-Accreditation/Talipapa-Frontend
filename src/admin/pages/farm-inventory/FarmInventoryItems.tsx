@@ -7,6 +7,7 @@ import { Dispatch, SetStateAction } from 'react';
 type FarmInventoryItemsProps = {
   filteredFarmItems: FarmItemInterface[];
   farmItemsData: FarmItemInterface[];
+  canManageFarmInventory: boolean;
   onAddItem: () => void;
   onUpdateItem: (item: FarmItemInterface) => void;
   onDeleteItem: (item: FarmItemInterface) => void;
@@ -15,6 +16,7 @@ type FarmInventoryItemsProps = {
 const FarmInventoryItems = ({
   filteredFarmItems,
   farmItemsData,
+  canManageFarmInventory,
   onAddItem,
   onUpdateItem,
   onDeleteItem,
@@ -31,12 +33,14 @@ const FarmInventoryItems = ({
             Showing {filteredFarmItems?.length} of {farmItemsData?.length} items
           </p>
         </div>
-        <Button
-          onClick={onAddItem}
-          className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
-        >
-          <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add Farm Item
-        </Button>
+        {canManageFarmInventory && (
+          <Button
+            onClick={onAddItem}
+            className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
+          >
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add Farm Item
+          </Button>
+        )}
       </div>
 
       {/* Farm Items List */}
@@ -104,22 +108,30 @@ const FarmInventoryItems = ({
                     </div>
                   </div>
                   <div className="flex sm:flex-col lg:flex-row items-center gap-2 sm:gap-2.5 lg:gap-3 flex-shrink-0">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onUpdateItem(item)}
-                      className="flex-1 sm:flex-none px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-all duration-200"
-                    >
-                      <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => onDeleteItem(item)}
-                      className="flex-1 sm:flex-none px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:shadow-lg transition-all duration-200"
-                    >
-                      <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    </Button>
+                    {canManageFarmInventory ? (
+                      <>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onUpdateItem(item)}
+                          className="flex-1 sm:flex-none px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-all duration-200"
+                        >
+                          <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => onDeleteItem(item)}
+                          className="flex-1 sm:flex-none px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:shadow-lg transition-all duration-200"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        </Button>
+                      </>
+                    ) : (
+                      <span className="text-xs text-gray-500 italic px-2">
+                        View Only
+                      </span>
+                    )}
                   </div>
                 </div>
               ))
