@@ -103,8 +103,9 @@ export const useRBAC = (): UseRBACReturn => {
   const { user } = useAuth();
 
   const currentRole = getUserRole(user);
+  const userPermissions = getUserPermissions(user);
 
-  // Debug logging (remove in production or set window.__RBAC_DEBUG__ = false)
+  // Debug logging (controlled by window.__RBAC_DEBUG__)
   if (typeof window !== 'undefined' && (window as any).__RBAC_DEBUG__) {
     console.group('🔒 RBAC Debug Info');
     console.log('User Object:', user);
@@ -117,7 +118,7 @@ export const useRBAC = (): UseRBACReturn => {
       'Role Display:',
       currentRole ? getRoleDisplayName(currentRole) : 'Unknown'
     );
-    console.log('Permissions:', getUserPermissions(user));
+    console.log('Permissions:', userPermissions);
     console.log('Is SuperAdmin:', isSuperAdmin(user));
     console.log('Is Admin:', isAdmin(user));
     console.log('Is Staff:', isStaff(user));
@@ -140,7 +141,7 @@ export const useRBAC = (): UseRBACReturn => {
     isStaff: isStaff(user),
 
     // Permission checking - bound to current user
-    permissions: getUserPermissions(user),
+    permissions: userPermissions,
     hasPermission: (permission: Permission) => hasPermission(user, permission),
     hasAnyPermission: (permissions: Permission[]) =>
       hasAnyPermission(user, permissions),

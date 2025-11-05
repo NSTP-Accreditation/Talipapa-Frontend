@@ -370,18 +370,13 @@ export const hasPermission = (
 
   const userPermissions = getUserPermissions(user);
 
-  // Get permissions granted by hierarchy
-  // If user has a higher permission (e.g., DELETE), they get lower ones (EDIT, VIEW)
-  const grantedPermissions = PERMISSION_HIERARCHY[permission] || [permission];
-
-  // Check if user has ANY of the permissions in the hierarchy
-  // This allows EDIT to grant VIEW, DELETE to grant EDIT+VIEW, etc.
-  const hasAccess = grantedPermissions.some((p) =>
-    userPermissions.some((userPerm) => {
-      const userGrantedPerms = PERMISSION_HIERARCHY[userPerm] || [userPerm];
-      return userGrantedPerms.includes(p);
-    })
-  );
+  // Check if user has the requested permission OR a higher permission that grants it
+  // For example: if checking VIEW_RECORDS, user with MANAGE_RECORDS will pass
+  // because MANAGE_RECORDS hierarchy includes VIEW_RECORDS
+  const hasAccess = userPermissions.some((userPerm) => {
+    const userGrantedPerms = PERMISSION_HIERARCHY[userPerm] || [userPerm];
+    return userGrantedPerms.includes(permission);
+  });
 
   // Cache the result
   permissionCheckCache.set(cacheKey, {
