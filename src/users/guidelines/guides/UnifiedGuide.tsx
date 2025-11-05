@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import GuideTemplate from '../../page/GuideTemplate';
 import { guidesData } from './guideData';
-import useFetchData from '@/admin/hooks/useFetchData';
+import usePublicFetch from '@/hooks/usePublicFetch';
 import { Building2 } from 'lucide-react';
 import NotFound from '@/components/NotFound';
 import { ResponsiveSkeleton } from '@/components/ResponsiveSkeleton';
@@ -45,7 +45,7 @@ const UnifiedGuide: React.FC = () => {
     data: guide,
     loading,
     error,
-  } = useFetchData<Guide>(`/guidelines/${guideId}`);
+  } = usePublicFetch<Guide>(`/guidelines/${guideId}`);
 
   const getUniqueRequiredDocuments = (): string[] => {
     if (!guide?.steps) return [];

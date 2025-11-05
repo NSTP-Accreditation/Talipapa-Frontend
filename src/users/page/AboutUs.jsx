@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useEffect, useState } from 'react';
-import useFetchData from '@/admin/hooks/useFetchData';
+import usePublicFetch from '@/hooks/usePublicFetch';
 
 const AboutUs = () => {
   // Add loading state with 1 second display
@@ -52,7 +52,7 @@ export default AboutUs;
 // BARANGAY  OFFICIALS
 const BarangayOfficials = () => {
   const [officials, setOfficials] = useState([]);
-  const { data, loading, error } = useFetchData(`/officials`);
+  const { data, loading, error } = usePublicFetch(`/officials`);
   useEffect(() => {
     if (data && !loading && !error) {
       setOfficials(data);

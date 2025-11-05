@@ -20,10 +20,10 @@ import { Button } from '../../components/ui/button';
 import { Link } from 'react-router-dom';
 import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useEffect, useState } from 'react';
-import useFetchData from '@/admin/hooks/useFetchData';
+import usePublicFetch from '@/hooks/usePublicFetch';
 
 export default function MoreGuides() {
-  const { data, loading, error } = useFetchData('/guidelines');
+  const { data, loading, error } = usePublicFetch('/guidelines');
   const [guides, setGuides] = useState([]);
 
   useEffect(() => {

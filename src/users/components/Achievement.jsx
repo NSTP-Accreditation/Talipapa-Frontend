@@ -1,7 +1,7 @@
-import useFetchData from '../../admin/hooks/useFetchData';
+import usePublicFetch from '@/hooks/usePublicFetch';
 
 export default function Achievements() {
-  const { data, loading, error } = useFetchData('/achievements');
+  const { data, loading, error } = usePublicFetch('/achievements');
 
   const achievements = Array.isArray(data) ? data : [];
 

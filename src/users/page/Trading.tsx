@@ -34,7 +34,7 @@ import {
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { TradingPageSkeleton } from '@/components/LoadingSkeletons';
 import ResponsiveSkeleton from '@/components/ResponsiveSkeleton';
-import useFetchData from '@/admin/hooks/useFetchData';
+import usePublicFetch from '@/hooks/usePublicFetch';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 
 const programCategories = [
@@ -155,14 +155,14 @@ export default function Trading() {
     loading: productsDataLoading,
     error: productsDataErr,
     refetch: refetchProduct,
-  } = useFetchData<Product[]>('/products');
+  } = usePublicFetch<Product[]>('/products');
 
   const {
     data: programsData,
     loading: programLoading,
     error: programError,
     refetch: refetchPrograms,
-  } = useFetchData<ProgramItem[]>('/talipapanatin');
+  } = usePublicFetch<ProgramItem[]>('/talipapanatin');
 
   const programs: ProgramItem[] = useMemo(() => {
     if (programsData && !programLoading && !programError) {
@@ -177,7 +177,7 @@ export default function Trading() {
     loading: materialsDataLoading,
     error: materialsDataErr,
     refetch: refetchMaterials,
-  } = useFetchData<Material[]>('/materials');
+  } = usePublicFetch<Material[]>('/materials');
 
   const materials: Material[] = useMemo(() => {
     if (materialsData && !materialsDataLoading && !materialsDataErr) {

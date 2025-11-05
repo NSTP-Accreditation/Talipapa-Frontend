@@ -1,10 +1,10 @@
 import { Target, Eye, Scroll } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import useFetchData from '@/admin/hooks/useFetchData';
+import usePublicFetch from '@/hooks/usePublicFetch';
 
 export default function AboutBarangay() {
   const [pageContent, setPageContent] = useState();
-  const { data, loading, error } = useFetchData(
+  const { data, loading, error } = usePublicFetch(
     `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`
   );
 

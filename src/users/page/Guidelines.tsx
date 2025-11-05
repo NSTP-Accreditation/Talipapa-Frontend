@@ -13,12 +13,12 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { GuidelinesPageSkeleton } from '@/components/LoadingSkeletons';
 import ResponsiveSkeleton from '@/components/ResponsiveSkeleton';
-import useFetchData from '../../admin/hooks/useFetchData';
+import usePublicFetch from '@/hooks/usePublicFetch';
 import { useEffect, useState } from 'react';
 
 export default function Guidelines() {
   // fetch guides from server
-  const { data, loading, error } = useFetchData('/guidelines');
+  const { data, loading, error } = usePublicFetch('/guidelines');
   const [guides, setGuides] = useState([]);
 
   useEffect(() => {

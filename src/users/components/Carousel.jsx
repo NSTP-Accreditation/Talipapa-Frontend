@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useBrgyInfo } from '@/contexts/BrgyInfoContext';
+import { logger } from '@/utils/logger';
 
 const fallbackSlides = [
   {
@@ -43,9 +44,19 @@ export default function Carousel() {
 
     let cancelled = false;
     fetch(url)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          // 404 is expected if carousel endpoint doesn't exist
+          // Just use fallback slides silently
+          logger.debug(
+            `Carousel endpoint not found (${res.status}), using fallback slides`
+          );
+          return null;
+        }
+        return res.json();
+      })
       .then((data) => {
-        if (cancelled) return;
+        if (cancelled || !data) return;
         const items = data?.items || data || [];
         if (Array.isArray(items) && items.length > 0) {
           const mapped = items.map((s) => ({
@@ -54,10 +65,15 @@ export default function Carousel() {
             subtitle: s.subtitle || '',
           }));
           setSlides(mapped);
+          logger.debug('Carousel slides loaded from API');
         }
       })
-      .catch(() => {
-        // ignore and use fallback
+      .catch((error) => {
+        // Network error or parse error - use fallback slides
+        logger.debug(
+          'Carousel API fetch failed, using fallback slides:',
+          error.message
+        );
       });
 
     return () => {
