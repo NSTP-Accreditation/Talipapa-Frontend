@@ -123,20 +123,25 @@ const CarouselEditor: React.FC = () => {
 
     try {
       setIsSaving(true);
-      await Promise.all(
-        newSlides.map((s) =>
-          authFetch(`/pagecontent/${pageContent._id}/carousel/${s._id}`, {
-            method: 'PATCH',
-            body: JSON.stringify({ order: s.order }),
-            headers: { 'Content-Type': 'application/json' },
-          })
-        )
-      );
+
+      // Send a single batch request to reorder all slides
+      await authFetch(`/pagecontent/${pageContent._id}/carousel/reorder`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          slideOrders: newSlides.map((s) => ({
+            slideId: s._id,
+            order: s.order,
+          })),
+        }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
       success('Slide order updated!', { title: 'Success' });
       // refresh shared content
       await refetch();
     } catch (e) {
       error('Failed to update slide order', { title: 'Error' });
+      // Revert to server state on error
       try {
         await refetch();
       } catch {}
