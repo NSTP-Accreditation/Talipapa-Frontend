@@ -67,354 +67,376 @@ import Footer from '@/users/components/Footer';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import RoleProtectedRoute from '@/components/RoleProtectedRoute';
 import NotFound from '@/components/NotFound';
+import AppErrorBoundary from '@/components/AppErrorBoundary';
 import { BrgyInfoProvider } from './contexts/BrgyInfoContext';
 import { Permission } from '@/types/rbac.types';
 
 function App() {
   return (
-    <AuthProvider>
-      <BrgyInfoProvider>
-        <ToastProvider position="top-right" maxToasts={5}>
-          <Router>
-            <SuspenseWrapper fallback={<FullPageSpinner />}>
-              <Routes>
-                {/* Admin Login Route - No protection needed */}
-                <Route path="/admin/login" element={<AdminLogin />} />
+    <AppErrorBoundary>
+      <AuthProvider>
+        <BrgyInfoProvider>
+          <ToastProvider position="top-right" maxToasts={5}>
+            <Router>
+              <SuspenseWrapper fallback={<FullPageSpinner />}>
+                <Routes>
+                  {/* Admin Login Route - No protection needed */}
+                  <Route path="/admin/login" element={<AdminLogin />} />
 
-                {/* Protected Admin Routes - No NavBar/Footer */}
-                <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute>
-                      <AdminLayout />
-                    </ProtectedRoute>
-                  }
-                >
-                  {/* Main Routes - Dashboard accessible to all authenticated users */}
-                  <Route index element={<Dashboard />} />
-                  <Route path="dashboard" element={<Dashboard />} />
+                  {/* Protected Admin Routes - No NavBar/Footer */}
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute>
+                        <AdminLayout />
+                      </ProtectedRoute>
+                    }
+                  >
+                    {/* Main Routes - Dashboard accessible to all authenticated users */}
+                    <Route index element={<Dashboard />} />
+                    <Route path="dashboard" element={<Dashboard />} />
 
-                  {/* Trading Routes - SuperAdmin ONLY (MANAGE_TRADING permission) */}
-                  <Route
-                    path="trading"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.MANAGE_TRADING}
-                      >
-                        <TradingStatistics />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="trading/statistics"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.MANAGE_TRADING}
-                      >
-                        <TradingStatistics />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="trading/activity"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.MANAGE_TRADING}
-                      >
-                        <ActivityLogs />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="trading/earn-points"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.MANAGE_TRADING}
-                      >
-                        <EarnPointsLogs />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="trading/swap-item"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.MANAGE_TRADING}
-                      >
-                        <SwapItem />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="trading/swap"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.MANAGE_TRADING}
-                      >
-                        <SwapLogs />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="trading/locations"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.MANAGE_TRADING}
-                      >
-                        <TradingLocations />
-                      </RoleProtectedRoute>
-                    }
-                  />
+                    {/* Trading Routes - SuperAdmin ONLY (MANAGE_TRADING permission) */}
+                    <Route
+                      path="trading"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.MANAGE_TRADING}
+                        >
+                          <TradingStatistics />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="trading/statistics"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.MANAGE_TRADING}
+                        >
+                          <TradingStatistics />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="trading/activity"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.MANAGE_TRADING}
+                        >
+                          <ActivityLogs />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="trading/earn-points"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.MANAGE_TRADING}
+                        >
+                          <EarnPointsLogs />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="trading/swap-item"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.MANAGE_TRADING}
+                        >
+                          <SwapItem />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="trading/swap"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.MANAGE_TRADING}
+                        >
+                          <SwapLogs />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="trading/locations"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.MANAGE_TRADING}
+                        >
+                          <TradingLocations />
+                        </RoleProtectedRoute>
+                      }
+                    />
 
-                  {/* Green Pages Route - SuperAdmin & Admin FULL, Staff VIEW */}
-                  <Route
-                    path="green-pages"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.VIEW_GREEN_PAGES}
-                      >
-                        <GreenPages />
-                      </RoleProtectedRoute>
-                    }
-                  />
+                    {/* Green Pages Route - SuperAdmin & Admin FULL, Staff VIEW */}
+                    <Route
+                      path="green-pages"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_GREEN_PAGES}
+                        >
+                          <GreenPages />
+                        </RoleProtectedRoute>
+                      }
+                    />
 
-                  {/* Home Editables Routes - SuperAdmin & Admin ONLY */}
-                  <Route
-                    path="about"
-                    element={
-                      <RoleProtectedRoute permission={Permission.VIEW_CONTENT}>
-                        <AboutUsAdmin />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="about/achievements"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.VIEW_ACHIEVEMENTS}
-                      >
-                        <Achievements />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="news"
-                    element={
-                      <RoleProtectedRoute permission={Permission.VIEW_NEWS}>
-                        <News />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="carousel-editor"
-                    element={
-                      <RoleProtectedRoute permission={Permission.VIEW_CONTENT}>
-                        <CarouselEditor />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="talipapa-natin"
-                    element={
-                      <RoleProtectedRoute permission={Permission.VIEW_CONTENT}>
-                        <TalipapaNatin />
-                      </RoleProtectedRoute>
-                    }
-                  />
+                    {/* Home Editables Routes - SuperAdmin & Admin ONLY */}
+                    <Route
+                      path="about"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_CONTENT}
+                        >
+                          <AboutUsAdmin />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="about/achievements"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_ACHIEVEMENTS}
+                        >
+                          <Achievements />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="news"
+                      element={
+                        <RoleProtectedRoute permission={Permission.VIEW_NEWS}>
+                          <News />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="carousel-editor"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_CONTENT}
+                        >
+                          <CarouselEditor />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="talipapa-natin"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_CONTENT}
+                        >
+                          <TalipapaNatin />
+                        </RoleProtectedRoute>
+                      }
+                    />
 
-                  {/* Forms Route (Admin version) - Disabled: Forms.tsx doesn't exist */}
-                  {/* <Route path="forms" element={<Forms />} /> */}
+                    {/* Forms Route (Admin version) - Disabled: Forms.tsx doesn't exist */}
+                    {/* <Route path="forms" element={<Forms />} /> */}
 
-                  {/* Guidelines Route (Admin version) - SuperAdmin & Admin ONLY */}
-                  <Route
-                    path="guidelines"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.VIEW_GUIDELINES}
-                      >
-                        <Guidelines />
-                      </RoleProtectedRoute>
-                    }
-                  />
+                    {/* Guidelines Route (Admin version) - SuperAdmin & Admin ONLY */}
+                    <Route
+                      path="guidelines"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_GUIDELINES}
+                        >
+                          <Guidelines />
+                        </RoleProtectedRoute>
+                      }
+                    />
 
-                  {/* Inventory Route - SuperAdmin FULL, Admin VIEW */}
-                  <Route
-                    path="inventory"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.VIEW_INVENTORY}
-                      >
-                        <Inventory />
-                      </RoleProtectedRoute>
-                    }
-                  />
+                    {/* Inventory Route - SuperAdmin FULL, Admin VIEW */}
+                    <Route
+                      path="inventory"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_INVENTORY}
+                        >
+                          <Inventory />
+                        </RoleProtectedRoute>
+                      }
+                    />
 
-                  {/* Farm Inventory Route - SuperAdmin FULL, Admin VIEW */}
-                  <Route
-                    path="farm-inventory"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.VIEW_FARM_INVENTORY}
-                      >
-                        <FarmInventory />
-                      </RoleProtectedRoute>
-                    }
-                  />
+                    {/* Farm Inventory Route - SuperAdmin FULL, Admin VIEW */}
+                    <Route
+                      path="farm-inventory"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_FARM_INVENTORY}
+                        >
+                          <FarmInventory />
+                        </RoleProtectedRoute>
+                      }
+                    />
 
-                  {/* Logs Routes (same as trading but under notifications path) - SuperAdmin ONLY */}
-                  <Route
-                    path="notifications"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.VIEW_ACTIVITY_LOGS}
-                      >
+                    {/* Logs Routes (same as trading but under notifications path) - SuperAdmin ONLY */}
+                    <Route
+                      path="notifications"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_ACTIVITY_LOGS}
+                        >
+                          <div className="p-6">
+                            <h1 className="text-2xl font-bold">
+                              Logs Dashboard
+                            </h1>
+                            <p>Select a log type from the menu.</p>
+                          </div>
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="notifications/activity"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_ACTIVITY_LOGS}
+                        >
+                          <ActivityLogs />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="notifications/earn-points"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.MANAGE_TRADING}
+                        >
+                          <EarnPointsLogs />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="notifications/swap"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.MANAGE_TRADING}
+                        >
+                          <SwapLogs />
+                        </RoleProtectedRoute>
+                      }
+                    />
+
+                    {/* Settings Route - SuperAdmin ONLY */}
+                    <Route
+                      path="settings"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_SETTINGS}
+                        >
+                          <Settings />
+                        </RoleProtectedRoute>
+                      }
+                    />
+
+                    {/* Records Routes - SuperAdmin FULL, Admin VIEW */}
+                    <Route
+                      path="records"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_RECORDS}
+                        >
+                          <Records />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="records/non-resident"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_RECORDS}
+                        >
+                          <NonResidentRecords />
+                        </RoleProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="records/establishment"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_RECORDS}
+                        >
+                          <EstablishmentRecords />
+                        </RoleProtectedRoute>
+                      }
+                    />
+
+                    {/* 404 for unknown admin routes */}
+                    <Route path="*" element={<NotFound />} />
+
+                    {/* Activity Logs Route - SuperAdmin ONLY */}
+                    <Route
+                      path="activity-logs"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_ACTIVITY_LOGS}
+                        >
+                          <ActivityLogs />
+                        </RoleProtectedRoute>
+                      }
+                    />
+
+                    {/* Legacy/Placeholder Routes */}
+                    <Route
+                      path="services"
+                      element={
                         <div className="p-6">
-                          <h1 className="text-2xl font-bold">Logs Dashboard</h1>
-                          <p>Select a log type from the menu.</p>
+                          <h1 className="text-2xl font-bold">Services Admin</h1>
+                          <p>Manage services here.</p>
                         </div>
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="notifications/activity"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.VIEW_ACTIVITY_LOGS}
-                      >
-                        <ActivityLogs />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="notifications/earn-points"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.MANAGE_TRADING}
-                      >
-                        <EarnPointsLogs />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="notifications/swap"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.MANAGE_TRADING}
-                      >
-                        <SwapLogs />
-                      </RoleProtectedRoute>
-                    }
-                  />
+                      }
+                    />
+                    <Route
+                      path="users"
+                      element={
+                        <div className="p-6">
+                          <h1 className="text-2xl font-bold">Users Admin</h1>
+                          <p>Manage users here.</p>
+                        </div>
+                      }
+                    />
+                  </Route>
 
-                  {/* Settings Route - SuperAdmin ONLY */}
+                  {/* Public Routes - With NavBar/Footer */}
                   <Route
-                    path="settings"
+                    path="*"
                     element={
-                      <RoleProtectedRoute permission={Permission.VIEW_SETTINGS}>
-                        <Settings />
-                      </RoleProtectedRoute>
-                    }
-                  />
+                      <div className="App">
+                        <NavBar />
+                        <Routes>
+                          <Route path="/" element={<Home />} />
+                          <Route
+                            path="/guidelines"
+                            element={<GuidelinesApp />}
+                          />
+                          <Route
+                            path="/guidelines/more"
+                            element={<MoreGuides />}
+                          />
+                          <Route
+                            path="/guidelines/:guideId"
+                            element={<UnifiedGuide />}
+                          />
+                          <Route path="/trading" element={<Trading />} />
+                          <Route path="/aboutus" element={<AboutUs />} />
+                          <Route
+                            path="/emergency-contact"
+                            element={<EmergencyContact />}
+                          />
 
-                  {/* Records Routes - SuperAdmin FULL, Admin VIEW */}
-                  <Route
-                    path="records"
-                    element={
-                      <RoleProtectedRoute permission={Permission.VIEW_RECORDS}>
-                        <Records />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="records/non-resident"
-                    element={
-                      <RoleProtectedRoute permission={Permission.VIEW_RECORDS}>
-                        <NonResidentRecords />
-                      </RoleProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="records/establishment"
-                    element={
-                      <RoleProtectedRoute permission={Permission.VIEW_RECORDS}>
-                        <EstablishmentRecords />
-                      </RoleProtectedRoute>
-                    }
-                  />
-
-                  {/* 404 for unknown admin routes */}
-                  <Route path="*" element={<NotFound />} />
-
-                  {/* Activity Logs Route - SuperAdmin ONLY */}
-                  <Route
-                    path="activity-logs"
-                    element={
-                      <RoleProtectedRoute
-                        permission={Permission.VIEW_ACTIVITY_LOGS}
-                      >
-                        <ActivityLogs />
-                      </RoleProtectedRoute>
-                    }
-                  />
-
-                  {/* Legacy/Placeholder Routes */}
-                  <Route
-                    path="services"
-                    element={
-                      <div className="p-6">
-                        <h1 className="text-2xl font-bold">Services Admin</h1>
-                        <p>Manage services here.</p>
+                          {/* 404 for unknown public routes */}
+                          <Route path="*" element={<NotFound />} />
+                        </Routes>
+                        <Footer />
                       </div>
                     }
                   />
-                  <Route
-                    path="users"
-                    element={
-                      <div className="p-6">
-                        <h1 className="text-2xl font-bold">Users Admin</h1>
-                        <p>Manage users here.</p>
-                      </div>
-                    }
-                  />
-                </Route>
-
-                {/* Public Routes - With NavBar/Footer */}
-                <Route
-                  path="*"
-                  element={
-                    <div className="App">
-                      <NavBar />
-                      <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/guidelines" element={<GuidelinesApp />} />
-                        <Route
-                          path="/guidelines/more"
-                          element={<MoreGuides />}
-                        />
-                        <Route
-                          path="/guidelines/:guideId"
-                          element={<UnifiedGuide />}
-                        />
-                        <Route path="/trading" element={<Trading />} />
-                        <Route path="/aboutus" element={<AboutUs />} />
-                        <Route
-                          path="/emergency-contact"
-                          element={<EmergencyContact />}
-                        />
-
-                        {/* 404 for unknown public routes */}
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                      <Footer />
-                    </div>
-                  }
-                />
-              </Routes>
-            </SuspenseWrapper>
-          </Router>
-        </ToastProvider>
-      </BrgyInfoProvider>
-    </AuthProvider>
+                </Routes>
+              </SuspenseWrapper>
+            </Router>
+          </ToastProvider>
+        </BrgyInfoProvider>
+      </AuthProvider>
+    </AppErrorBoundary>
   );
 }
 

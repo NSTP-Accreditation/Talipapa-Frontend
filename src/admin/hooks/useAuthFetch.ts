@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 
 // Types
@@ -28,13 +28,25 @@ export const useAuthFetch = () => {
   const apiURL = import.meta.env.VITE_API_URL as string;
   const { user, refreshToken, logout } = useAuth();
 
+  // Use refs to avoid recreating the callback on every token change
+  const userRef = useRef(user);
+  const refreshTokenRef = useRef(refreshToken);
+  const logoutRef = useRef(logout);
+
+  // Keep refs up to date
+  useEffect(() => {
+    userRef.current = user;
+    refreshTokenRef.current = refreshToken;
+    logoutRef.current = logout;
+  }, [user, refreshToken, logout]);
+
   const authFetch = useCallback(
     async <T = any>(
       url: string,
       options: AuthFetchOptions = {}
     ): Promise<T | SuccessResponse> => {
       // Get token from context OR fallback to localStorage
-      let token = user?.accessToken;
+      let token = userRef.current?.accessToken;
 
       if (!token) {
         token = localStorage.getItem('accessToken') || undefined;
@@ -42,7 +54,7 @@ export const useAuthFetch = () => {
 
       // If no token, logout (which will redirect to login)
       if (!token) {
-        logout();
+        logoutRef.current();
         return Promise.reject(new Error('Authentication required'));
       }
 
@@ -65,7 +77,7 @@ export const useAuthFetch = () => {
 
         if (response.status === 403) {
           try {
-            const newTokens = await refreshToken();
+            const newTokens = await refreshTokenRef.current();
             token = newTokens?.accessToken;
 
             if (!token) {
@@ -84,7 +96,7 @@ export const useAuthFetch = () => {
               credentials: 'include',
             });
           } catch (refreshErr) {
-            logout();
+            logoutRef.current();
             throw refreshErr;
           }
         }
@@ -118,7 +130,7 @@ export const useAuthFetch = () => {
         throw error;
       }
     },
-    [apiURL, user?.accessToken, refreshToken, logout]
+    [apiURL] // Only depend on apiURL (which never changes)
   );
 
   return authFetch;

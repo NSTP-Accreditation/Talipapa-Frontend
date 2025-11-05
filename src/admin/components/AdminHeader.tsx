@@ -1,5 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import React, { useState, useEffect } from 'react';
+import { logger } from '@/utils/logger';
 
 interface AdminHeaderProps {
   title?: string;
@@ -30,7 +31,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
       );
       return JSON.parse(jsonPayload);
     } catch (error) {
-      console.error('Failed to decode JWT:', error);
+      logger.error('Failed to decode JWT:', error);
       return null;
     }
   };

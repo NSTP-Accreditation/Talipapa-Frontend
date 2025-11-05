@@ -5,6 +5,7 @@ import React, {
   useEffect,
   ReactNode,
 } from 'react';
+import { logger } from '@/utils/logger';
 
 interface UserData {
   username: string;
@@ -51,37 +52,37 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const token = localStorage.getItem('accessToken');
         const storedUser = localStorage.getItem('adminUser');
 
-        console.log('=== 🔍 AUTH DEBUG ===');
-        console.log('API URL:', apiURL);
-        console.log('Is Authenticated:', isAuthenticated);
-        console.log('User in state:', user ? '✅ Yes' : '❌ No');
-        console.log('Token in localStorage:', token ? '✅ Yes' : '❌ No');
-        console.log('User in localStorage:', storedUser ? '✅ Yes' : '❌ No');
+        logger.group('🔍 AUTH DEBUG');
+        logger.debug('API URL:', apiURL);
+        logger.debug('Is Authenticated:', isAuthenticated);
+        logger.debug('User in state:', user ? '✅ Yes' : '❌ No');
+        logger.debug('Token in localStorage:', token ? '✅ Yes' : '❌ No');
+        logger.debug('User in localStorage:', storedUser ? '✅ Yes' : '❌ No');
 
         if (token) {
-          console.log('Token type:', typeof token);
-          console.log('Token length:', token.length);
-          console.log('Token preview:', token.substring(0, 50) + '...');
-          console.log(
+          logger.debug('Token type:', typeof token);
+          logger.debug('Token length:', token.length);
+          logger.debug('Token preview:', token.substring(0, 50) + '...');
+          logger.debug(
             'Token parts:',
             token.split('.').length,
             '(should be 3 for JWT)'
           );
         } else {
-          console.log('❌ NO TOKEN FOUND');
+          logger.debug('❌ NO TOKEN FOUND');
         }
 
         if (storedUser) {
           try {
             const parsed = JSON.parse(storedUser);
-            console.log('Stored user data:', parsed);
+            logger.debug('Stored user data:', parsed);
           } catch (e) {
-            console.error('❌ Failed to parse stored user:', e);
+            logger.error('❌ Failed to parse stored user:', e);
           }
         }
 
         if (user) {
-          console.log('Current user state:', {
+          logger.debug('Current user state:', {
             username: user.userData?.username,
             roles: user.userData?.roles,
             hasToken: !!user.accessToken,
@@ -89,16 +90,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           });
         }
 
-        console.log('==================');
-        console.log('💡 To test a request with token:');
-        console.log(
+        logger.debug('💡 To test a request with token:');
+        logger.debug(
           `fetch('${apiURL}/api/users', { headers: { 'Authorization': 'Bearer ${token?.substring(0, 20)}...' } })`
         );
+        logger.groupEnd();
       };
 
       // Debug helper available in development mode only
       if (process.env.NODE_ENV === 'development') {
-        console.log('Debug helper: window.debugAuth()');
+        logger.info('Debug helper: window.debugAuth()');
       }
     }
   }, [apiURL, isAuthenticated, user]);

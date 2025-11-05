@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuthFetch } from './useAuthFetch';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -22,6 +22,10 @@ const useFetchData = <T = any>(
   const authFetch = useAuthFetch();
   const { isAuthenticated, loading: authLoading } = useAuth();
 
+  // Stabilize options object to prevent unnecessary refetches
+  // Only recreate if the actual content of options changes
+  const stableOptions = useMemo(() => options, [JSON.stringify(options)]);
+
   const fetchData = useCallback(
     async (fetchUrl?: string): Promise<T | null> => {
       const urlToFetch = fetchUrl || url;
@@ -43,7 +47,7 @@ const useFetchData = <T = any>(
         setLoading(true);
         await new Promise((resolve) => setTimeout(resolve, 1000));
         setError(null);
-        const result = await authFetch<T>(urlToFetch, options);
+        const result = await authFetch<T>(urlToFetch, stableOptions);
         setData(result as T);
         return result as T;
       } catch (err) {
@@ -62,7 +66,7 @@ const useFetchData = <T = any>(
         setLoading(false);
       }
     },
-    [url, authFetch, isAuthenticated, JSON.stringify(options)]
+    [url, authFetch, isAuthenticated, stableOptions]
   );
 
   useEffect(() => {
