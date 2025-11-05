@@ -6,11 +6,12 @@ import { createPortal } from 'react-dom';
 import { RecordInterface } from '@/types/global.types';
 import { validateAddress } from '@/utils/validation';
 import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
+import { PaginatedResponse } from '@/types/pagination';
 
 type AddRecordModalType = {
   openAddRecordModal: boolean;
   setOpenAddRecordModal: Dispatch<SetStateAction<boolean>>;
-  refetchRecords: () => Promise<RecordInterface[]>;
+  refetchRecords: (fetchUrl?: string) => Promise<PaginatedResponse<RecordInterface>>;
 };
 
 const AddRecordModal = ({
@@ -29,7 +30,7 @@ const AddRecordModal = ({
     gender: '',
     points: 0,
     age: '',
-    contact_number: '',
+    contactNumber: '',
     address: '',
   });
 
@@ -72,8 +73,8 @@ const AddRecordModal = ({
       const payload = {
         ...newRecord,
         age: ageNum,
-        contact_number: newRecord.contact_number
-          ? `09${newRecord.contact_number}`
+        contactNumber: newRecord.contactNumber
+          ? `09${newRecord.contactNumber}`
           : '',
         isResident: true,
         type: 'resident',
@@ -94,7 +95,7 @@ const AddRecordModal = ({
         gender: '',
         points: 0,
         age: '',
-        contact_number: '',
+        contactNumber: '',
         address: '',
       });
       success(`New Record Created! ID: ${data.record_id}`, {
@@ -329,13 +330,13 @@ const AddRecordModal = ({
                   </span>
                   <input
                     type="text"
-                    value={newRecord.contact_number}
+                    value={newRecord.contactNumber}
                     onChange={(e) => {
                       const digitsOnly = e.target.value.replace(/\D/g, '');
                       const limited = digitsOnly.slice(0, 9);
                       setNewRecord((prev) => ({
                         ...prev,
-                        contact_number: limited,
+                        contactNumber: limited,
                       }));
                     }}
                     className="w-full pl-10 sm:pl-14 border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"

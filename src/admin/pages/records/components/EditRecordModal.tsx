@@ -6,11 +6,12 @@ import { useToast } from '@/hooks/useToast';
 import { validateAddress } from '@/utils/validation';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
+import { PaginatedResponse } from '@/types/pagination';
 
 type EditRecordModalType = {
   editRecord: RecordInterface | null;
   setEditRecord: Dispatch<SetStateAction<RecordInterface | null>>;
-  refetchRecords: (fetchUrl?: string) => Promise<RecordInterface[]>;
+  refetchRecords: (fetchUrl?: string) => Promise<PaginatedResponse<RecordInterface>>;
   setOriginalRecords?: Dispatch<SetStateAction<RecordInterface[]>>;
 };
 
@@ -73,8 +74,8 @@ const EditRecordModal = ({
         gender: (editRecord as any).gender || '',
         age: ageNum,
         address: editRecord.address,
-        contact_number: editRecord.contact_number
-          ? `09${editRecord.contact_number}`
+        contactNumber: editRecord.contactNumber
+          ? `09${editRecord.contactNumber}`
           : '',
         createdAt: editRecord.createdAt,
         updatedAt: editRecord.updatedAt,
@@ -103,7 +104,7 @@ const EditRecordModal = ({
                   age: String(payload.age),
                   address: payload.address,
                   // preserve points locally (don't change here)
-                  contact_number: payload.contact_number,
+                  contactNumber: payload.contactNumber,
                   updatedAt: payload.updatedAt || r.updatedAt,
                 }
               : r
@@ -130,7 +131,7 @@ const EditRecordModal = ({
                     middleName: payload.middleName,
                     age: String(payload.age),
                     address: payload.address,
-                    contact_number: payload.contact_number,
+                    contactNumber: payload.contactNumber,
                     updatedAt: payload.updatedAt || r.updatedAt,
                   }
                 : r
@@ -383,13 +384,13 @@ const EditRecordModal = ({
                   </span>
                   <input
                     type="text"
-                    value={editRecord.contact_number}
+                    value={editRecord.contactNumber}
                     onChange={(e) => {
                       const digitsOnly = e.target.value.replace(/\D/g, '');
                       const limited = digitsOnly.slice(0, 9);
                       setEditRecord(
                         editRecord
-                          ? { ...editRecord, contact_number: limited }
+                          ? { ...editRecord, contactNumber: limited }
                           : null
                       );
                     }}

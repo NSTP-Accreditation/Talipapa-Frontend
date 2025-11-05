@@ -70,12 +70,12 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Stats Cards */}
-        <DashboardStatCards />
+        {/* <DashboardStatCards /> */}
 
         {/* Bottom Section - Recent Activity and Achievements */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Recent Activity */}
-          <DashboardRecentActivities />
+          {/* <DashboardRecentActivities /> */}
 
           {/* Achievements */}
           <DashboardAchievements />

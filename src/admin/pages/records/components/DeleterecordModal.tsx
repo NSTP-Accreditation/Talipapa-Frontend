@@ -5,11 +5,12 @@ import { Dispatch, SetStateAction } from 'react';
 import { Trash2 } from 'lucide-react';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
+import { PaginatedResponse } from '@/types/pagination';
 
 type DeleterecordModalType = {
   deleteRecord: RecordInterface | null;
   setDeleteRecord: Dispatch<SetStateAction<RecordInterface | null>>;
-  refetchRecords: (fetchUrl?: string) => Promise<RecordInterface[]>;
+  refetchRecords: (fetchUrl?: string) => Promise<PaginatedResponse<RecordInterface>>;
 };
 
 const DeleterecordModal = ({

@@ -23,7 +23,7 @@ export default function AboutBarangayEditable() {
     loading: dataLoading,
     error,
     refetch,
-  } = useFetchData<any>(`/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`);
+  } = useFetchData<any>(`/pageContent`);
 
   const [pageContent, setPageContent] = useState<{
     barangayName: string;

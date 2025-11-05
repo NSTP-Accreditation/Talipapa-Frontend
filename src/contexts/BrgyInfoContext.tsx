@@ -46,7 +46,7 @@ export const BrgyInfoProvider = ({ children }: { children: ReactNode }) => {
     loading: dataLoading,
     error,
     refetch,
-  } = useFetchData<PageContentInterface>(`/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`);
+  } = useFetchData<PageContentInterface>(`/pageContent`);
 
   useEffect(() => {
     if (data && !dataLoading && !error) {

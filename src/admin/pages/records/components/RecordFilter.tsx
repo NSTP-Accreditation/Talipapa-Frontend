@@ -10,12 +10,13 @@ import React, {
 } from 'react';
 import { RecordInterface } from '@/types/global.types';
 import { debounce } from 'lodash';
+import { PaginatedResponse } from '@/types/pagination';
 
 type RecordFilterProps = {
   originalRecords: RecordInterface[];
   recordsData: RecordInterface[];
   setOriginalRecords: Dispatch<SetStateAction<RecordInterface[]>>;
-  refetchRecords: (fetchUrl?: string) => Promise<RecordInterface[]>;
+  refetchRecords: (fetchUrl?: string) => Promise<PaginatedResponse<RecordInterface>>;
   setSearchLoading?: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -144,7 +145,7 @@ const RecordFilter = ({
         const result = await refetchRecords(
           `${import.meta.env.VITE_API_URL}/records/search?query=${encodeURIComponent(query)}&residentStatus=resident`
         );
-        setOriginalRecords(result);
+        setOriginalRecords(result.data);
       } catch {
         setOriginalRecords([]);
       } finally {

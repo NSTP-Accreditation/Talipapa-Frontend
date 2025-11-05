@@ -5,7 +5,7 @@ export interface RecordInterface {
   lastName: string
   age: string
   address: string
-  contact_number: string
+  contactNumber: string
   points: number
   createdAt: string
   updatedAt: string

@@ -25,7 +25,7 @@ import {
   Building,
   MapPin,
 } from 'lucide-react';
-import useFetchData from '../hooks/useFetchData';
+import { useBrgyInfo } from '@/contexts/BrgyInfoContext';
 
 interface MenuBarProps {
   className?: string;
@@ -51,9 +51,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
   const location = useLocation();
   const { logout } = useAuth();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
-  const { data, loading, error } = useFetchData(
-    `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`
-  );
+  const { pageContent, loading, error } = useBrgyInfo();
 
   const menuItems: MenuItem[] = [
     {
@@ -253,7 +251,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
           <div className="flex items-center justify-center space-x-2 sm:space-x-3 px-4 py-[20px] sm:px-6 sm:py-[26px] lg:px-10 lg:py-[32px]">
             <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ring-1 ring-white/30 backdrop-blur-sm">
               <img
-                src={data?.image?.url ? data.image.url : '/brgy talipapa.png'}
+                src={pageContent?.image?.url ? pageContent.image.url : '/brgy talipapa.png'}
                 alt="Barangay Talipapa Logo"
                 className="w-8 h-8 sm:w-11 sm:h-11 object-contain"
               />

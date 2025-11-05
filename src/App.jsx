@@ -105,13 +105,13 @@ function App() {
                   />
                   <Route path="trading/swap-item" element={<SwapItem />} />
                   <Route path="trading/swap" element={<SwapLogs />} />
-                  <Route
+                  {/* <Route
                     path="trading/locations"
                     element={<TradingLocations />}
-                  />
+                  /> */}
 
                   {/* Green Pages Route */}
-                  <Route path="green-pages" element={<GreenPages />} />
+                  {/* <Route path="green-pages" element={<GreenPages />} /> */}
 
                   {/* Home Editables Routes */}
                   <Route path="about" element={<AboutUsAdmin />} />

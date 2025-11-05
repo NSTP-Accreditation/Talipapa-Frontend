@@ -2,8 +2,10 @@ import useFetchData from '@/admin/hooks/useFetchData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { Trophy } from 'lucide-react';
 import dayjs from 'dayjs';
+import { PaginatedResponse } from '@/types/pagination';
 
 interface Achievements {
+  _id: string;
   title: string;
   description: string;
   createdAt: string;
@@ -15,7 +17,7 @@ const DashboardAchievements = () => {
     loading: achievementsLoading,
     error: achievementsErr,
     refetch,
-  } = useFetchData<Achievements[]>(`/achievements`);
+  } = useFetchData<PaginatedResponse<Achievements>>(`/achievements`);
 
   if (!achievementsData) return null;
 
@@ -35,9 +37,9 @@ const DashboardAchievements = () => {
       <CardContent className="p-0">
         {/* Mobile Card Layout */}
         <div className="sm:hidden">
-          {achievementsData.map((achievement, index) => (
+          {achievementsData.data.map((achievement) => (
             <div
-              key={index}
+              key={achievement._id}
               className="border-b border-gray-200 last:border-0 p-4"
             >
               <div className="flex justify-between items-start gap-3 mb-2">
@@ -72,9 +74,9 @@ const DashboardAchievements = () => {
               </tr>
             </thead>
             <tbody>
-              {achievementsData.map((achievement, index) => (
+              {achievementsData.data.map((achievement) => (
                 <tr
-                  key={index}
+                  key={achievement._id}
                   className="border-b border-gray-200 last:border-0 hover:bg-green-50/50 transition-colors"
                 >
                   <td className="py-3 px-4 lg:px-6 font-semibold text-gray-900">

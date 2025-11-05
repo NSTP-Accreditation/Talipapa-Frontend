@@ -3,37 +3,32 @@ import { RecordInterface } from '@/types/global.types';
 import { Button } from '@/components/ui';
 import { Edit, Search, Trash2 } from 'lucide-react';
 import { Dispatch, SetStateAction } from 'react';
+import { PaginatedResponse } from '@/types/pagination';
 
 type RecordTableType = {
-  showingRecords: RecordInterface[];
+  recordsData: PaginatedResponse<RecordInterface> | null;
   setEditRecord: Dispatch<SetStateAction<RecordInterface>>;
   setDeleteRecord: Dispatch<SetStateAction<RecordInterface>>;
 };
 
 type PaginationType = {
-  startIndex: number;
-  recordsPerPage: number;
-  currentPage: number;
-  setCurrentPage: Dispatch<SetStateAction<number>>;
-  totalPages: number;
+  page: number;
+  setPage: Dispatch<SetStateAction<number>>;
 };
 
 const RecordTable = ({
-  showingRecords,
+  recordsData,
+  page,
+  setPage,
   setEditRecord,
   setDeleteRecord,
-  startIndex,
-  recordsPerPage,
-  currentPage,
-  setCurrentPage,
-  totalPages,
 }: RecordTableType & PaginationType) => {
   const prevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
+    if (page > 1) setPage(page - 1);
   };
 
   const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    if (page < recordsData.totalPages) setPage(page + 1);
   };
 
   return (
@@ -71,8 +66,8 @@ const RecordTable = ({
             </thead>
 
             <tbody className="divide-y divide-gray-200">
-              {showingRecords.length > 0 ? (
-                showingRecords.map((record, index) => (
+              {recordsData.data.length > 0 ? (
+                recordsData.data.map((record, index) => (
                   <tr
                     key={record?._id || index}
                     className="hover:bg-green-50 transition-colors duration-150"
@@ -155,7 +150,7 @@ const RecordTable = ({
                           onClick={() =>
                             setEditRecord({
                               ...record,
-                              contact_number: record.contact_number.slice(2),
+                              contactNumber: record?.contactNumber?.slice(2),
                             })
                           }
                           className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1 text-xs font-semibold shadow-md hover:shadow-lg transition-all"
@@ -205,13 +200,16 @@ const RecordTable = ({
       <div className="flex flex-col sm:flex-row justify-between items-center bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 px-4 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-0 hover:shadow-xl transition-shadow">
         <div className="text-xs sm:text-sm text-gray-600 font-medium text-center sm:text-left">
           Showing{' '}
-          <span className="font-bold text-green-600">{startIndex + 1}</span> to{' '}
           <span className="font-bold text-green-600">
-            {Math.min(startIndex + recordsPerPage, showingRecords.length)}
+            {(recordsData.page - 1) * recordsData.limit + 1}
+          </span>{' '}
+          to{' '}
+          <span className="font-bold   text-green-600">
+            {Math.min(recordsData.page * recordsData.limit, recordsData.totalItems)}
           </span>{' '}
           of{' '}
           <span className="font-bold text-green-600">
-            {showingRecords.length}
+            {recordsData.totalItems}
           </span>{' '}
           records
         </div>
@@ -221,7 +219,7 @@ const RecordTable = ({
             variant="outline"
             size="sm"
             onClick={prevPage}
-            disabled={currentPage === 1}
+            disabled={page === 1}
             className="px-3 sm:px-4 py-2 border-2 border-green-200 rounded-lg font-semibold hover:bg-green-50 hover:border-green-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm bg-white"
           >
             ← <span className="hidden sm:inline">Previous</span>
@@ -229,7 +227,7 @@ const RecordTable = ({
 
           <div className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-green-100 to-green-200 border-2 border-green-300 rounded-lg shadow-sm">
             <span className="text-xs sm:text-sm font-bold text-green-800">
-              {currentPage} / {totalPages || 1}
+              {page} / {recordsData.totalPages || 1}
             </span>
           </div>
 
@@ -237,7 +235,7 @@ const RecordTable = ({
             variant="outline"
             size="sm"
             onClick={nextPage}
-            disabled={currentPage === totalPages || totalPages === 0}
+            disabled={page === recordsData.totalPages || recordsData.totalPages === 0}
             className="px-3 sm:px-4 py-2 border-2 border-green-200 rounded-lg font-semibold hover:bg-green-50 hover:border-green-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm bg-white"
           >
             <span className="hidden sm:inline">Next</span> →
