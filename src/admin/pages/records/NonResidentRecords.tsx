@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useFetchData from '../../hooks/useFetchData';
 import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
 import EditRecordModal from './components/EditRecordModal';
@@ -9,26 +9,42 @@ import RecordFilter from './components/RecordFilter';
 import { RecordInterface } from '@/types/global.types';
 import { PaginatedResponse } from '@/types/pagination';
 import RecordHeader from './components/RecordHeader';
+import { useSearchRecords } from '@/admin/hooks/useSearchRecord';
 
 const NonResidentRecords: React.FC = () => {
-  const [page, setPage] = useState<number>(1);
-  const [searchTerm, setSearchTerm] = useState('');
+  const {
+    page,
+    setPage,
+    searchTerm,
+    isSearching,
+    handleSearchChange,
+    handleClearSearch,
+    getFetchUrl,
+  } = useSearchRecords();
+
   const {
     data: recordsData,
     loading: recordsLoading,
     error: recordsError,
     refetch: refetchRecords,
-  } = useFetchData<PaginatedResponse<RecordInterface>>(
-    `/records?residentStatus=non-resident&page=${page}`
-  );
+  } = useFetchData<PaginatedResponse<RecordInterface> | null>(getFetchUrl("non-resident"));
 
+  const [searchLoading, setSearchLoading] = useState(false);
   const [openAddRecordModal, setOpenAddRecordModal] = useState(false);
-
   const [editRecord, setEditRecord] = useState<RecordInterface | null>(null);
   const [deleteRecord, setDeleteRecord] = useState<RecordInterface | null>(null);
 
-  const [searchLoading, setSearchLoading] = useState(false);
+  useEffect(() => {
+    if (!recordsLoading) {
+      setSearchLoading(false);
+    }
+  }, [recordsLoading]);
 
+  useEffect(() => {
+    if (isSearching) {
+      setSearchLoading(true);
+    }
+  }, [isSearching]);
   if (recordsLoading) return <ResponsiveSkeleton page="records" />;
 
   if(!recordsData) return;
@@ -48,11 +64,11 @@ const NonResidentRecords: React.FC = () => {
           {/* Search */}
           <RecordFilter
             searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            recordsData={recordsData}
-            refetchRecords={refetchRecords}
-            setSearchLoading={setSearchLoading}
-            residentStatus="non-resident"
+            onSearchChange={handleSearchChange}
+            onClearSearch={handleClearSearch}
+            isSearching={isSearching}
+            recordCount={recordsData.data.length}
+            totalRecords={recordsData.totalItems}
           />
 
           {/* Table (resident table component to keep behavior consistent) */}

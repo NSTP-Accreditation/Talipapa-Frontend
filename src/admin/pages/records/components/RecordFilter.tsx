@@ -15,20 +15,22 @@ import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 
 type RecordFilterProps = {
   searchTerm: string;
-  setSearchTerm: Dispatch<SetStateAction<string>>;
-  recordsData: PaginatedResponse<RecordInterface> | null;
-  refetchRecords: (fetchUrl?: string) => Promise<PaginatedResponse<RecordInterface>>;
-  setSearchLoading?: Dispatch<SetStateAction<boolean>>;
-  residentStatus: "resident" | "non-resident";
+  onSearchChange: (value: string) => void;
+  onClearSearch: () => void;
+  isSearching: boolean;
+  recordCount: number;
+  totalRecords: number;
+  // Remove all data fetching props:
+  // recordsData, refetchRecords, setSearchLoading, setIsSearching
 };
 
 const RecordFilter = ({
   searchTerm,
-  setSearchTerm,
-  recordsData,
-  refetchRecords,
-  setSearchLoading,
-  residentStatus = "resident"
+  onSearchChange,
+  onClearSearch,
+  isSearching,
+  recordCount,
+  totalRecords,
 }: RecordFilterProps) => {
   // single list of sort keys (unique). Clicking same key toggles asc/desc.
   // Match the RecordTable column order: Record ID, Name, Age, Points, Created At
@@ -61,6 +63,14 @@ const RecordFilter = ({
     document.addEventListener('click', onDoc);
     return () => document.removeEventListener('click', onDoc);
   }, []);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onSearchChange(event.target.value);
+  };
+
+  const handleClear = () => {
+    onClearSearch();
+  };
 
   // const sortRecords = (items: RecordInterface[] = []) => {
   //   const arr = [...items];
@@ -114,62 +124,65 @@ const RecordFilter = ({
   //   });
   // }, [selectedKey, order, recordsData]);
 
-  const debouncedSearch = useCallback(
-    debounce(async (query: string) => {
-      if (setSearchLoading) {
-        if (loadingTimerRef.current)
-          window.clearTimeout(loadingTimerRef.current);
-        loadingShownRef.current = false;
-        loadingTimerRef.current = window.setTimeout(() => {
-          loadingShownRef.current = true;
-          setSearchLoading(true);
-        }, 250);
-      }
+  // const debouncedSearch = useCallback(
+  //   debounce(async (query: string) => {
+  //     if (setSearchLoading) {
+  //       if (loadingTimerRef.current)
+  //         window.clearTimeout(loadingTimerRef.current);
+  //       loadingShownRef.current = false;
+  //       loadingTimerRef.current = window.setTimeout(() => {
+  //         loadingShownRef.current = true;
+  //         setSearchLoading(true);
+  //       }, 250);
+  //     }
+      
+  //     if (setIsSearching) {
+  //       setIsSearching(!!query);
+  //     }
 
-      if (!query) {
-        try {
-          await refetchRecords();
-        } finally {
-          if (loadingTimerRef.current)
-            window.clearTimeout(loadingTimerRef.current);
-          if (loadingShownRef.current)
-            setSearchLoading && setSearchLoading(false);
-          loadingTimerRef.current = null;
-          loadingShownRef.current = false;
-        }
-        return;
-      }
+  //     if (!query) {
+  //       try {
+  //         await refetchRecords();
+  //       } finally {
+  //         if (loadingTimerRef.current)
+  //           window.clearTimeout(loadingTimerRef.current);
+  //         if (loadingShownRef.current)
+  //           setSearchLoading && setSearchLoading(false);
+  //         loadingTimerRef.current = null;
+  //         loadingShownRef.current = false;
+  //       }
+  //       return;
+  //     }
 
-      try {
-        await refetchRecords(
-          `${import.meta.env.VITE_API_URL}/records/search?query=${encodeURIComponent(query)}&residentStatus=${residentStatus}`
-        );
-      } catch {
-      } finally {
-        if (loadingTimerRef.current)
-          window.clearTimeout(loadingTimerRef.current);
-        if (loadingShownRef.current)
-          setSearchLoading && setSearchLoading(false);
-        loadingTimerRef.current = null;
-        loadingShownRef.current = false;
-      }
-    }, 700),
-    [recordsData]
-  );
+  //     try {
+  //       await refetchRecords(
+  //         `${import.meta.env.VITE_API_URL}/records/search?query=${encodeURIComponent(query)}&residentStatus=${residentStatus}`
+  //       );
+  //     } catch {
+  //     } finally {
+  //       if (loadingTimerRef.current)
+  //         window.clearTimeout(loadingTimerRef.current);
+  //       if (loadingShownRef.current)
+  //         setSearchLoading && setSearchLoading(false);
+  //       loadingTimerRef.current = null;
+  //       loadingShownRef.current = false;
+  //     }
+  //   }, 700),
+  //   [recordsData]
+  // );
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-    debouncedSearch(value);
-    // setCurrentPage(1);
-  };
+  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.target.value;
+  //   setSearchTerm(value);
+  //   debouncedSearch(value);
+  // };
 
-  useEffect(() => {
-    return () => {
-      debouncedSearch.cancel && debouncedSearch.cancel();
-      if (loadingTimerRef.current) window.clearTimeout(loadingTimerRef.current);
-    };
-  }, [debouncedSearch]);
+  // useEffect(() => {
+  //   return () => {
+  //     debouncedSearch.cancel && debouncedSearch.cancel();
+  //     if (loadingTimerRef.current) window.clearTimeout(loadingTimerRef.current);
+  //   };
+  // }, [debouncedSearch]);
 
   return (
     <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 hover:shadow-xl transition-shadow">
@@ -199,7 +212,6 @@ const RecordFilter = ({
             setOpen(true);
           }}
           onMouseLeave={() => {
-            // small delay before closing to allow moving pointer into dropdown
             hoverCloseTimeout.current = window.setTimeout(() => {
               setOpen(false);
               hoverCloseTimeout.current = null;
@@ -259,7 +271,7 @@ const RecordFilter = ({
         <div className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600">
           Found{' '}
           <span className="font-semibold text-green-600">
-            {recordsData.totalItems}
+            {totalRecords}
           </span>{' '}
           matching records
         </div>
