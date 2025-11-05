@@ -13,96 +13,61 @@ import { useAuthFetch } from '../../hooks/useAuthFetch';
 import dayjs from 'dayjs';
 import EventModal from './EventModal';
 import DeleteModal from './DeleteModal';
-import { CalendarEvent } from './types';
+import { NewsEvent } from './types';
 import { getCategoryColor, getPriorityIcon } from './utils';
+import { PaginatedResponse } from '@/types/pagination';
 
 const News: React.FC = () => {
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [newsEvent, setNewsEvents] = useState<NewsEvent[]>([]);
+
   const {
-    data: newsData,
-    loading: newsLoading,
-    error: newsError,
+    data: newsEventsData,
+    loading: newsEventLoading,
+    error: newsEventError,
     refetch: refetchNews,
-  } = useFetchData('/news');
+  } = useFetchData<PaginatedResponse<NewsEvent>>('/news');
 
   const { error, success } = useToast();
   const authFetch = useAuthFetch();
 
   useEffect(() => {
-    if (!newsData || newsLoading || newsError) return;
-    if (!Array.isArray(newsData)) return;
+    if(newsEventsData && !newsEventLoading && !newsEventError) {
+      setNewsEvents(newsEventsData.data);
+    }
+  }, [newsEventsData, newsEventLoading, newsEventError]);
 
-    const mapped: CalendarEvent[] = newsData.map((n: unknown) => {
-      const news = n as Record<string, unknown>;
-      return {
-        id:
-          (news._id as string) || (news.id as string) || Date.now().toString(),
-        title: (news.title as string) || '',
-        description: (news.description as string) || '',
-        dateTime:
-          (news.dateTime as string) ||
-          (news.createdAt as string) ||
-          new Date().toISOString(),
-        location: (news.location as string) || '',
-        category:
-          (news.category as CalendarEvent['category']) || 'Announcement',
-        priority: (news.priority as CalendarEvent['priority']) || 'Medium',
-        createdAt: (news.createdAt as string) || new Date().toISOString(),
-      };
-    });
-
-    setEvents(mapped);
-  }, [newsData, newsLoading, newsError]);
-
-  const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
-  const [deletingEvent, setDeletingEvent] = useState<CalendarEvent | null>(
+  const [editingEvent, setEditingEvent] = useState<NewsEvent | null>(null);
+  const [deletingEvent, setDeletingEvent] = useState<NewsEvent | null>(
     null
   );
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  if (newsLoading) {
+  if (newsEventLoading) {
     return <ResponsiveSkeleton page="news" />;
   }
 
-  const handleSaveEvent = async (event: CalendarEvent) => {
+  const handleSaveEvent = async (event: NewsEvent) => {
     try {
-      const isUpdate = event.id && events.find((e) => e.id === event.id);
+      const isUpdate = event._id && newsEvent.find((e) => e._id === event._id);
 
+      const body = {
+        title: event.title,
+        description: event.description,
+        dateTime: event.dateTime,
+        location: event.location,
+        category: event.category,
+        priority: event.priority.toUpperCase(),
+      };
+      
       if (isUpdate) {
-        const body = {
-          title: event.title,
-          description: event.description,
-          dateTime: event.dateTime,
-          location: event.location,
-          category: event.category,
-          priority: event.priority,
-        };
-        const remote = Array.isArray(newsData)
-          ? newsData.find((n: unknown) => {
-              const news = n as Record<string, unknown>;
-              return news._id === event.id || news.id === event.id;
-            })
-          : null;
-        const remoteItem = remote as Record<string, unknown> | null;
-        const id = remoteItem?._id || event.id;
-        await authFetch(`/news/${id}`, {
+        await authFetch(`/news/${event._id}`, {
           method: 'PUT',
           body: JSON.stringify(body),
-          headers: { 'Content-Type': 'application/json' },
         });
       } else {
-        const body = {
-          title: event.title,
-          description: event.description,
-          dateTime: event.dateTime,
-          location: event.location,
-          category: event.category,
-          priority: event.priority,
-        };
         await authFetch('/news', {
           method: 'POST',
           body: JSON.stringify(body),
-          headers: { 'Content-Type': 'application/json' },
         });
       }
 
@@ -129,16 +94,16 @@ const News: React.FC = () => {
   const handleDeleteEvent = async () => {
     if (!deletingEvent) return;
     try {
-      const remote = Array.isArray(newsData)
-        ? newsData.find((n: unknown) => {
+      const remote = Array.isArray(newsEventsData)
+        ? newsEventsData.find((n: unknown) => {
             const news = n as Record<string, unknown>;
             return (
-              news._id === deletingEvent.id || news.id === deletingEvent.id
+              news._id === deletingEvent._id || news._id === deletingEvent._id
             );
           })
         : null;
       const remoteItem = remote as Record<string, unknown> | null;
-      const id = remoteItem?._id || deletingEvent.id;
+      const id = remoteItem?._id || deletingEvent._id;
       await authFetch(`/news/${id}`, { method: 'DELETE' });
       refetchNews();
       setDeletingEvent(null);
@@ -153,6 +118,8 @@ const News: React.FC = () => {
       });
     }
   };
+
+  if(!newsEventsData) return;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
@@ -184,8 +151,8 @@ const News: React.FC = () => {
                     <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
                       <CalendarIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       <span>
-                        {events.length}{' '}
-                        {events.length === 1 ? 'Event' : 'Events'}
+                        {newsEventsData.totalItems}{' '}
+                        {newsEventsData.totalItems === 1 ? 'Event' : 'Events'}
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
@@ -243,30 +210,25 @@ const News: React.FC = () => {
                   Recent Calendar Events & News
                 </span>
               </CardTitle>
-              {events.length > 0 && (
+              {newsEvent.length > 0 && (
                 <span className="text-xs sm:text-sm text-gray-600 font-medium">
-                  Showing all {events.length} events
+                  Showing all {newsEvent.length} events
                 </span>
               )}
             </div>
           </CardHeader>
           <CardContent className="p-4 sm:p-6">
             <div className="space-y-4 sm:space-y-5">
-              {events.length > 0 ? (
-                events
-                  .sort(
-                    (a, b) =>
-                      new Date(b.dateTime).getTime() -
-                      new Date(a.dateTime).getTime()
-                  )
+              {newsEvent.length > 0 ? (
+                newsEvent
                   .map((event, index) => (
                     <div
-                      key={event.id}
+                      key={event._id}
                       className={`relative p-4 sm:p-6 border-l-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 ${getCategoryColor(
                         event.category
                       )} group`}
                     >
-                      {index < events.length - 1 && (
+                      {index < newsEvent.length - 1 && (
                         <div className="absolute left-[-2px] top-full h-2.5 sm:h-5 w-1 bg-gradient-to-b from-gray-300 to-transparent"></div>
                       )}
 

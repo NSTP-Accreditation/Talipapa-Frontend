@@ -1,6 +1,6 @@
-import { CalendarEvent } from './types';
+import { NewsEvent } from './types';
 
-export const getCategoryColor = (category: CalendarEvent['category']) => {
+export const getCategoryColor = (category: NewsEvent['category']) => {
   switch (category) {
     case 'Event':
       return 'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200';
@@ -15,13 +15,13 @@ export const getCategoryColor = (category: CalendarEvent['category']) => {
   }
 };
 
-export const getPriorityIcon = (priority: CalendarEvent['priority']) => {
+export const getPriorityIcon = (priority: string) => {
   switch (priority) {
-    case 'High':
+    case 'HIGH':
       return '🔴';
-    case 'Medium':
+    case 'MEDIUM':
       return '🟡';
-    case 'Low':
+    case 'LOW':
       return '🟢';
     default:
       return '⚪';

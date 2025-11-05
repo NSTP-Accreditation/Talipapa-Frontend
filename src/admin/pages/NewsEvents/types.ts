@@ -1,5 +1,5 @@
-export interface CalendarEvent {
-  id: string;
+export interface NewsEvent {
+  _id?: string;
   title: string;
   description: string;
   dateTime: string;
@@ -10,14 +10,14 @@ export interface CalendarEvent {
 }
 
 export interface EventModalProps {
-  event: CalendarEvent | null;
+  event: NewsEvent | null;
   isOpen: boolean;
   onClose: () => void;
-  onSave: (event: CalendarEvent) => void;
+  onSave: (event: NewsEvent) => void;
 }
 
 export interface DeleteModalProps {
-  event: CalendarEvent | null;
+  event: NewsEvent | null;
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;

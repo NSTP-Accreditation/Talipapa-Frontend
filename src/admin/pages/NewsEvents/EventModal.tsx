@@ -11,7 +11,7 @@ import {
   SquarePen,
 } from 'lucide-react';
 import { useToast } from '@/hooks/useToast';
-import { CalendarEvent, EventModalProps } from './types';
+import { NewsEvent, EventModalProps } from './types';
 import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 
 const EventModal: React.FC<EventModalProps> = ({
@@ -20,8 +20,7 @@ const EventModal: React.FC<EventModalProps> = ({
   onClose,
   onSave,
 }) => {
-  const [formData, setFormData] = useState<CalendarEvent>({
-    id: event?.id || '',
+  const [formData, setFormData] = useState<NewsEvent>({
     title: event?.title || '',
     description: event?.description || '',
     dateTime: event?.dateTime || '',
@@ -38,7 +37,6 @@ const EventModal: React.FC<EventModalProps> = ({
       setFormData(event);
     } else {
       const newEvent = {
-        id: '',
         title: '',
         description: '',
         dateTime: '',
@@ -76,8 +74,6 @@ const EventModal: React.FC<EventModalProps> = ({
 
     const updatedEvent = {
       ...formData,
-      id: formData.id || Date.now().toString(),
-      createdAt: formData.createdAt || new Date().toISOString(),
     };
 
     onSave(updatedEvent);
@@ -101,7 +97,7 @@ const EventModal: React.FC<EventModalProps> = ({
           <div className="relative flex items-center justify-between gap-2 sm:gap-3">
             <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
               <div className="w-9 h-9 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-2xl flex items-center justify-center ring-2 ring-white/30 flex-shrink-0">
-                {event?.id ? (
+                {event?._id ? (
                   <SquarePen className="w-4.5 h-4.5 sm:w-7 sm:h-7 text-white" />
                 ) : (
                   <Plus className="w-4.5 h-4.5 sm:w-7 sm:h-7 text-white" />
@@ -109,10 +105,10 @@ const EventModal: React.FC<EventModalProps> = ({
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-base sm:text-2xl md:text-3xl font-bold text-white mb-0.5 sm:mb-1 truncate">
-                  {event?.id ? 'Edit Calendar Event' : 'Add New Calendar Event'}
+                  {event?._id ? 'Edit Calendar Event' : 'Add New Calendar Event'}
                 </h3>
                 <p className="text-green-100 text-xs sm:text-sm font-medium truncate">
-                  {event?.id
+                  {event?._id
                     ? 'Update event details'
                     : 'Create a new calendar event'}
                 </p>
@@ -227,14 +223,14 @@ const EventModal: React.FC<EventModalProps> = ({
                   type="time"
                   value={
                     formData.dateTime
-                      ? formData.dateTime.split('T')[1] || ''
+                      ? formData.dateTime.split('T')[1]?.replace('Z', '').split('.')[0] || ''
                       : ''
                   }
                   onChange={(e) => {
                     const date = formData.dateTime
                       ? formData.dateTime.split('T')[0]
                       : new Date().toISOString().split('T')[0];
-                    const time = e.target.value;
+                    const time = e.target.value; // already in HH:mm or HH:mm:ss
                     setFormData({ ...formData, dateTime: `${date}T${time}` });
                   }}
                   className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
@@ -285,7 +281,7 @@ const EventModal: React.FC<EventModalProps> = ({
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      category: e.target.value as CalendarEvent['category'],
+                      category: e.target.value as NewsEvent['category'],
                     })
                   }
                   className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none bg-white cursor-pointer text-gray-900 font-medium text-sm sm:text-base"
@@ -307,7 +303,7 @@ const EventModal: React.FC<EventModalProps> = ({
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      priority: e.target.value as CalendarEvent['priority'],
+                      priority: e.target.value as NewsEvent['priority'],
                     })
                   }
                   className="w-full px-2 sm:px-4 py-1.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 transition-all outline-none bg-white cursor-pointer text-gray-900 font-medium text-sm sm:text-base"
@@ -347,7 +343,7 @@ const EventModal: React.FC<EventModalProps> = ({
             onClick={handleSave}
             className="px-3.5 sm:px-8 py-1.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 transition-all shadow-lg hover:shadow-xl flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base"
           >
-            {event?.id ? (
+            {event?._id ? (
               <>
                 <SquarePen className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
                 <span>Update</span>
