@@ -16,6 +16,7 @@ interface SlideCardProps {
   onMove: (index: number, direction: 'up' | 'down') => void;
   onEdit: (slide: Slide) => void;
   onDelete: (id?: string) => void;
+  canEditContent: boolean;
 }
 
 const SlideCard: React.FC<SlideCardProps> = ({
@@ -25,6 +26,7 @@ const SlideCard: React.FC<SlideCardProps> = ({
   onMove,
   onEdit,
   onDelete,
+  canEditContent,
 }) => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -88,55 +90,63 @@ const SlideCard: React.FC<SlideCardProps> = ({
           Order: {slide.order ?? idx}
         </div>
 
-        <div className="grid grid-cols-2 gap-2 mt-auto pt-3 border-t border-gray-100">
-          <button
-            onClick={() => onMove(idx, 'up')}
-            disabled={idx === 0}
-            className="flex items-center justify-center gap-1 px-2 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
-            title="Move Up"
-          >
-            <ArrowUp size={14} /> Up
-          </button>
-          <button
-            onClick={() => onMove(idx, 'down')}
-            disabled={idx === slidesLength - 1}
-            className="flex items-center justify-center gap-1 px-2 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
-            title="Move Down"
-          >
-            <ArrowDown size={14} /> Down
-          </button>
-          <button
-            onClick={() => onEdit(slide)}
-            className="flex items-center justify-center gap-1 px-2 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-semibold"
-            title="Edit"
-          >
-            <SquarePen size={14} /> Edit
-          </button>
-          <>
-            <button
-              onClick={() => setIsConfirmOpen(true)}
-              className="flex items-center justify-center gap-1 px-2 py-2 bg-white hover:bg-red-50 text-red-600 border-2 border-red-300 hover:border-red-500 rounded-lg transition-all text-sm font-semibold"
-              title="Delete"
-            >
-              <Trash2 size={14} /> Delete
-            </button>
-            <ConfirmModal
-              isOpen={isConfirmOpen}
-              title={`Delete slide "${slide.title}"?`}
-              description={
-                <p className="text-gray-700 text-base leading-relaxed">
-                  Are you sure you want to delete <strong>{slide.title}</strong>
-                  ? This action cannot be undone.
-                </p>
-              }
-              confirmLabel="Delete"
-              cancelLabel="Cancel"
-              loading={isDeleting}
-              onClose={() => setIsConfirmOpen(false)}
-              onConfirm={handleConfirmDelete}
-            />
-          </>
+        <div className="flex items-center gap-1 mt-auto">
+          {canEditContent ? (
+            <>
+              <button
+                onClick={() => onMove(idx, 'up')}
+                disabled={idx === 0}
+                className="flex items-center justify-center gap-1 px-2 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
+                title="Move Up"
+              >
+                <ArrowUp size={14} /> Up
+              </button>
+              <button
+                onClick={() => onMove(idx, 'down')}
+                disabled={idx === slidesLength - 1}
+                className="flex items-center justify-center gap-1 px-2 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
+                title="Move Down"
+              >
+                <ArrowDown size={14} /> Down
+              </button>
+              <button
+                onClick={() => onEdit(slide)}
+                className="flex items-center justify-center gap-1 px-2 py-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg shadow-md hover:shadow-lg transition-all text-sm font-semibold"
+                title="Edit"
+              >
+                <SquarePen size={14} /> Edit
+              </button>
+              <button
+                onClick={() => setIsConfirmOpen(true)}
+                className="flex items-center justify-center gap-1 px-2 py-2 bg-white hover:bg-red-50 text-red-600 border-2 border-red-300 hover:border-red-500 rounded-lg transition-all text-sm font-semibold"
+                title="Delete"
+              >
+                <Trash2 size={14} /> Delete
+              </button>
+            </>
+          ) : (
+            <span className="text-xs text-gray-400 font-medium px-2 py-2">
+              View Only
+            </span>
+          )}
         </div>
+        {canEditContent && (
+          <ConfirmModal
+            isOpen={isConfirmOpen}
+            title={`Delete slide "${slide.title}"?`}
+            description={
+              <p className="text-gray-700 text-base leading-relaxed">
+                Are you sure you want to delete <strong>{slide.title}</strong>?
+                This action cannot be undone.
+              </p>
+            }
+            confirmLabel="Delete"
+            cancelLabel="Cancel"
+            loading={isDeleting}
+            onClose={() => setIsConfirmOpen(false)}
+            onConfirm={handleConfirmDelete}
+          />
+        )}
       </div>
     </div>
   );

@@ -14,6 +14,9 @@ import SlideModal from './SlideModal';
 import SlideCard from './SlideCard';
 import type { Slide } from './types';
 import { useBrgyInfo } from '@/contexts/BrgyInfoContext';
+import { useRBAC } from '../../../hooks/useRBAC';
+import { Permission } from '../../../types/rbac.types';
+import { Can, ReadOnly } from '../../../components/rbac/Can';
 
 const CarouselEditor: React.FC = () => {
   const {
@@ -26,6 +29,8 @@ const CarouselEditor: React.FC = () => {
   const authFetch = useAuthFetch();
   const { success, error } = useToast();
   const { isLoading } = useLoadingState(300);
+  const { hasPermission } = useRBAC();
+  const canEditContent = hasPermission(Permission.EDIT_CONTENT);
 
   const [slides, setSlides] = useState<Slide[]>([]);
   const [editingSlide, setEditingSlide] = useState<Slide | null>(null);
@@ -147,6 +152,7 @@ const CarouselEditor: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
       <div className="space-y-6 sm:space-y-8">
+        <ReadOnly message="You have view-only access to Carousel. Contact a SuperAdmin to add, edit, or delete slides." />
         {/* Page Header */}
         <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
           {/* Decorative background pattern */}
@@ -195,13 +201,15 @@ const CarouselEditor: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <button
-                onClick={() => setIsAddModalOpen(true)}
-                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex items-center gap-2 whitespace-nowrap"
-              >
-                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-                Add New Slide
-              </button>
+              <Can permission={Permission.EDIT_CONTENT}>
+                <button
+                  onClick={() => setIsAddModalOpen(true)}
+                  className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex items-center gap-2 whitespace-nowrap"
+                >
+                  <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                  Add New Slide
+                </button>
+              </Can>
             </div>
           </div>
         </div>
@@ -218,12 +226,14 @@ const CarouselEditor: React.FC = () => {
               <p className="text-gray-600 text-lg mb-6 max-w-md mx-auto">
                 Start building your carousel by adding your first slide
               </p>
-              <button
-                onClick={() => setIsAddModalOpen(true)}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
-              >
-                <Plus size={20} /> Create First Slide
-              </button>
+              <Can permission={Permission.EDIT_CONTENT}>
+                <button
+                  onClick={() => setIsAddModalOpen(true)}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold"
+                >
+                  <Plus size={20} /> Create First Slide
+                </button>
+              </Can>
             </div>
           ) : (
             slides.map((slide, idx) => (
@@ -235,6 +245,7 @@ const CarouselEditor: React.FC = () => {
                 onMove={moveSlide}
                 onEdit={(s) => setEditingSlide(s)}
                 onDelete={deleteSlide}
+                canEditContent={canEditContent}
               />
             ))
           )}

@@ -36,11 +36,13 @@ interface Staff {
 interface ProfileTabProps {
   staffDirectory?: Staff[] | null;
   openAddStaffModal: () => void;
+  canManageGreenPages: boolean;
 }
 
 const ProfileTab: React.FC<ProfileTabProps> = ({
   staffDirectory,
   openAddStaffModal,
+  canManageGreenPages,
 }) => {
   const loading = staffDirectory == null;
   const error = null;
@@ -80,13 +82,15 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
               Staff Directory
             </span>
           </CardTitle>
-          <button
-            onClick={openAddStaffModal}
-            className="bg-white text-green-700 hover:bg-green-50 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 rounded-xl font-bold shadow-lg text-xs sm:text-sm md:text-base transition-all hover:shadow-xl hover:scale-105 flex items-center gap-1 sm:gap-2"
-          >
-            <Users className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span>Add Staff</span>
-          </button>
+          {canManageGreenPages && (
+            <button
+              onClick={openAddStaffModal}
+              className="bg-white text-green-700 hover:bg-green-50 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 rounded-xl font-bold shadow-lg text-xs sm:text-sm md:text-base transition-all hover:shadow-xl hover:scale-105 flex items-center gap-1 sm:gap-2"
+            >
+              <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>Add Staff</span>
+            </button>
+          )}
         </div>
       </CardHeader>
       <CardContent className="p-2 sm:p-3 md:p-5 lg:p-6 bg-gradient-to-br from-gray-50 to-white">

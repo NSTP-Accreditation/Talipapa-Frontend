@@ -15,21 +15,26 @@ import EventModal from './EventModal';
 import DeleteModal from './DeleteModal';
 import { CalendarEvent } from './types';
 import { getCategoryColor, getPriorityIcon } from './utils';
+import { useRBAC } from '../../../hooks/useRBAC';
+import { Permission } from '../../../types/rbac.types';
+import { Can, ReadOnly } from '../../../components/rbac/Can';
 
 const News: React.FC = () => {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const {
     data: newsData,
-    loading: newsLoading,
-    error: newsError,
+    loading: isLoading,
+    error: fetchError,
     refetch: refetchNews,
   } = useFetchData('/news');
-
-  const { error, success } = useToast();
+  const { success, error } = useToast();
   const authFetch = useAuthFetch();
+  const { hasPermission, isReadOnly } = useRBAC();
+
+  const canManageNews = hasPermission(Permission.MANAGE_NEWS);
 
   useEffect(() => {
-    if (!newsData || newsLoading || newsError) return;
+    if (!newsData || isLoading || fetchError) return;
     if (!Array.isArray(newsData)) return;
 
     const mapped: CalendarEvent[] = newsData.map((n: unknown) => {
@@ -52,7 +57,7 @@ const News: React.FC = () => {
     });
 
     setEvents(mapped);
-  }, [newsData, newsLoading, newsError]);
+  }, [newsData, isLoading, fetchError]);
 
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
   const [deletingEvent, setDeletingEvent] = useState<CalendarEvent | null>(
@@ -60,7 +65,7 @@ const News: React.FC = () => {
   );
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  if (newsLoading) {
+  if (isLoading) {
     return <ResponsiveSkeleton page="news" />;
   }
 
@@ -157,6 +162,7 @@ const News: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
       <div className="space-y-6 sm:space-y-8">
+        <ReadOnly message="You have view-only access to News & Events. Contact a SuperAdmin to create, edit, or delete events." />
         {/* Page Header */}
         <div className="relative bg-white rounded-2xl sm:rounded-3xl shadow-lg border border-gray-200 overflow-hidden">
           {/* Decorative background pattern */}
@@ -199,25 +205,27 @@ const News: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <button
-                onClick={() => setIsAddModalOpen(true)}
-                className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex items-center gap-2 whitespace-nowrap"
-              >
-                <svg
-                  className="w-4 h-4 sm:w-5 sm:h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <Can permission={Permission.MANAGE_NEWS}>
+                <button
+                  onClick={() => setIsAddModalOpen(true)}
+                  className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex items-center gap-2 whitespace-nowrap"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                <span>Add New Event</span>
-              </button>
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  <span>Add New Event</span>
+                </button>
+              </Can>
             </div>
           </div>
         </div>
@@ -369,46 +377,48 @@ const News: React.FC = () => {
                           </div>
                         </div>
 
-                        <div className="flex flex-col gap-1.5 sm:gap-2 flex-shrink-0">
-                          <button
-                            onClick={() => setEditingEvent(event)}
-                            className="p-2 sm:p-2.5 bg-white hover:bg-green-50 text-green-600 border-2 border-green-300 hover:border-green-500 rounded-lg sm:rounded-xl transition-all hover:shadow-md"
-                            title="Edit Event"
-                          >
-                            <svg
-                              className="w-4 h-4 sm:w-5 sm:h-5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
+                        <Can permission={Permission.MANAGE_NEWS}>
+                          <div className="flex flex-col gap-1.5 sm:gap-2 flex-shrink-0">
+                            <button
+                              onClick={() => setEditingEvent(event)}
+                              className="p-2 sm:p-2.5 bg-white hover:bg-green-50 text-green-600 border-2 border-green-300 hover:border-green-500 rounded-lg sm:rounded-xl transition-all hover:shadow-md"
+                              title="Edit Event"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                              />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={() => setDeletingEvent(event)}
-                            className="p-2 sm:p-2.5 bg-white hover:bg-red-50 text-red-600 border-2 border-red-300 hover:border-red-500 rounded-lg sm:rounded-xl transition-all hover:shadow-md"
-                            title="Delete Event"
-                          >
-                            <svg
-                              className="w-4 h-4 sm:w-5 sm:h-5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
+                              <svg
+                                className="w-4 h-4 sm:w-5 sm:h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => setDeletingEvent(event)}
+                              className="p-2 sm:p-2.5 bg-white hover:bg-red-50 text-red-600 border-2 border-red-300 hover:border-red-500 rounded-lg sm:rounded-xl transition-all hover:shadow-md"
+                              title="Delete Event"
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              />
-                            </svg>
-                          </button>
-                        </div>
+                              <svg
+                                className="w-4 h-4 sm:w-5 sm:h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        </Can>
                       </div>
                     </div>
                   ))
@@ -436,47 +446,53 @@ const News: React.FC = () => {
                     Get started by creating your first calendar event or
                     announcement.
                   </p>
-                  <button
-                    onClick={() => setIsAddModalOpen(true)}
-                    className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-5 sm:px-8 py-2.5 sm:py-4 rounded-lg sm:rounded-xl flex items-center gap-2 sm:gap-3 text-sm sm:text-base font-bold mx-auto shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
-                  >
-                    <svg
-                      className="w-5 h-5 sm:w-6 sm:h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  <Can permission={Permission.MANAGE_NEWS}>
+                    <button
+                      onClick={() => setIsAddModalOpen(true)}
+                      className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-5 sm:px-8 py-2.5 sm:py-4 rounded-lg sm:rounded-xl flex items-center gap-2 sm:gap-3 text-sm sm:text-base font-bold mx-auto shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
-                    Create Your First Event
-                  </button>
+                      <svg
+                        className="w-5 h-5 sm:w-6 sm:h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 4v16m8-8H4"
+                        />
+                      </svg>
+                      Create Your First Event
+                    </button>
+                  </Can>
                 </div>
               )}
             </div>
           </CardContent>
         </Card>
 
-        <EventModal
-          event={editingEvent}
-          isOpen={!!editingEvent || isAddModalOpen}
-          onClose={() => {
-            setEditingEvent(null);
-            setIsAddModalOpen(false);
-          }}
-          onSave={handleSaveEvent}
-        />
+        {canManageNews && (
+          <>
+            <EventModal
+              event={editingEvent}
+              isOpen={!!editingEvent || isAddModalOpen}
+              onClose={() => {
+                setEditingEvent(null);
+                setIsAddModalOpen(false);
+              }}
+              onSave={handleSaveEvent}
+            />
 
-        <DeleteModal
-          event={deletingEvent}
-          isOpen={!!deletingEvent}
-          onClose={() => setDeletingEvent(null)}
-          onConfirm={handleDeleteEvent}
-        />
+            <DeleteModal
+              event={deletingEvent}
+              isOpen={!!deletingEvent}
+              onClose={() => setDeletingEvent(null)}
+              onConfirm={handleDeleteEvent}
+            />
+          </>
+        )}
       </div>
     </div>
   );

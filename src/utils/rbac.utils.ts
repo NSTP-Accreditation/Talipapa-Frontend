@@ -9,21 +9,122 @@ import { UserRole, Permission, ROLE_PERMISSIONS } from '../types/rbac.types';
 
 /**
  * Extract user role from the user object
- * Handles the current API structure where roles are nested objects
+ * Handles the current API structure where roles are stored as role IDs from env
  *
  * @param user - User object from AuthContext
  * @returns UserRole enum value or null if no valid role found
  */
 export const getUserRole = (user: any): UserRole | null => {
-  if (!user?.userData?.roles) return null;
+  if (!user?.userData) return null;
 
-  const roles = user.userData.roles;
+  // Get role IDs from environment variables
+  const superAdminId = Number(import.meta.env.VITE_SUPERADMIN || 32562);
+  const adminId = Number(import.meta.env.VITE_ADMIN || 92781);
+  const staffId = Number(import.meta.env.VITE_STAFF || 3);
 
-  // Check roles in priority order
-  if (roles.SuperAdmin) return UserRole.SUPERADMIN;
-  if (roles.Admin) return UserRole.ADMIN;
-  if (roles.Staff) return UserRole.STAFF;
+  // Debug logging (controlled by window.__RBAC_DEBUG__)
+  const debugEnabled =
+    typeof window !== 'undefined' && (window as any).__RBAC_DEBUG__;
 
+  if (debugEnabled) {
+    console.group('🔍 getUserRole Analysis');
+    console.log('Expected Role IDs:', { superAdminId, adminId, staffId });
+    console.log('User Data:', user.userData);
+  }
+
+  // First, check rolesKeys array (direct role labels)
+  if (
+    Array.isArray(user.userData.rolesKeys) &&
+    user.userData.rolesKeys.length > 0
+  ) {
+    const roleKeys = user.userData.rolesKeys;
+    if (debugEnabled) console.log('✓ Found rolesKeys array:', roleKeys);
+
+    if (roleKeys.includes('SuperAdmin')) {
+      if (debugEnabled) console.log('✓ Detected: SUPERADMIN (from rolesKeys)');
+      if (debugEnabled) console.groupEnd();
+      return UserRole.SUPERADMIN;
+    }
+    if (roleKeys.includes('Admin')) {
+      if (debugEnabled) console.log('✓ Detected: ADMIN (from rolesKeys)');
+      if (debugEnabled) console.groupEnd();
+      return UserRole.ADMIN;
+    }
+    if (roleKeys.includes('Staff')) {
+      if (debugEnabled) console.log('✓ Detected: STAFF (from rolesKeys)');
+      if (debugEnabled) console.groupEnd();
+      return UserRole.STAFF;
+    }
+  }
+
+  // Second, check roles object (role IDs)
+  if (user.userData.roles && typeof user.userData.roles === 'object') {
+    const roles = user.userData.roles;
+    if (debugEnabled) console.log('✓ Found roles object:', roles);
+
+    // Check if role ID matches env values (in priority order)
+    if (roles.SuperAdmin === superAdminId || roles.SuperAdmin === 1) {
+      if (debugEnabled)
+        console.log('✓ Detected: SUPERADMIN (from roles object)');
+      if (debugEnabled) console.groupEnd();
+      return UserRole.SUPERADMIN;
+    }
+    if (roles.Admin === adminId || roles.Admin === 1) {
+      if (debugEnabled) console.log('✓ Detected: ADMIN (from roles object)');
+      if (debugEnabled) console.groupEnd();
+      return UserRole.ADMIN;
+    }
+    if (roles.Staff === staffId || roles.Staff === 1) {
+      if (debugEnabled) console.log('✓ Detected: STAFF (from roles object)');
+      if (debugEnabled) console.groupEnd();
+      return UserRole.STAFF;
+    }
+  }
+
+  // Third, decode JWT token if available
+  if (user.accessToken) {
+    try {
+      const base64Url = String(user.accessToken).split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      const decoded = JSON.parse(jsonPayload);
+
+      if (debugEnabled) console.log('✓ Decoded JWT:', decoded);
+
+      if (decoded?.userInfo?.roles && Array.isArray(decoded.userInfo.roles)) {
+        const roleIds = decoded.userInfo.roles;
+        if (debugEnabled) console.log('✓ Found role IDs in JWT:', roleIds);
+
+        if (roleIds.includes(superAdminId)) {
+          if (debugEnabled) console.log('✓ Detected: SUPERADMIN (from JWT)');
+          if (debugEnabled) console.groupEnd();
+          return UserRole.SUPERADMIN;
+        }
+        if (roleIds.includes(adminId)) {
+          if (debugEnabled) console.log('✓ Detected: ADMIN (from JWT)');
+          if (debugEnabled) console.groupEnd();
+          return UserRole.ADMIN;
+        }
+        if (roleIds.includes(staffId)) {
+          if (debugEnabled) console.log('✓ Detected: STAFF (from JWT)');
+          if (debugEnabled) console.groupEnd();
+          return UserRole.STAFF;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to decode JWT for role extraction:', error);
+    }
+  }
+
+  if (debugEnabled) {
+    console.log('✗ No valid role detected');
+    console.groupEnd();
+  }
   return null;
 };
 

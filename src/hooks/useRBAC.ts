@@ -104,6 +104,26 @@ export const useRBAC = (): UseRBACReturn => {
 
   const currentRole = getUserRole(user);
 
+  // Debug logging (remove in production or set window.__RBAC_DEBUG__ = false)
+  if (typeof window !== 'undefined' && (window as any).__RBAC_DEBUG__) {
+    console.group('🔒 RBAC Debug Info');
+    console.log('User Object:', user);
+    console.log('User Data:', user?.userData);
+    console.log('Roles Object:', user?.userData?.roles);
+    console.log('Roles Keys Array:', user?.userData?.rolesKeys);
+    console.log('Access Token:', user?.accessToken ? 'Present' : 'Missing');
+    console.log('Detected Role:', currentRole || 'NULL');
+    console.log(
+      'Role Display:',
+      currentRole ? getRoleDisplayName(currentRole) : 'Unknown'
+    );
+    console.log('Permissions:', getUserPermissions(user));
+    console.log('Is SuperAdmin:', isSuperAdmin(user));
+    console.log('Is Admin:', isAdmin(user));
+    console.log('Is Staff:', isStaff(user));
+    console.groupEnd();
+  }
+
   return {
     // User role information
     userRole: currentRole,

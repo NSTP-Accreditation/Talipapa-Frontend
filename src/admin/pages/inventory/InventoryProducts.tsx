@@ -1,14 +1,7 @@
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { Button, Card, CardContent, Input } from '@/components/ui';
 import { ProductInterface } from '@/types/global.types';
-import {
-  Edit,
-  Package,
-  Plus,
-  Tag,
-  Trash2,
-  X,
-} from 'lucide-react';
+import { Edit, Package, Plus, Tag, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
 import AddEditProductModal from './components/AddEditProductModal';
 import DeleteProductMaterialModal from './components/DeleteProductModal';
@@ -18,6 +11,7 @@ type InventoryProductsProps = {
   productsData: ProductInterface[];
   productsDataError: string | null;
   refetchProduct: () => Promise<ProductInterface[]>;
+  canManageInventory: boolean;
 };
 
 const InventoryProducts = ({
@@ -25,6 +19,7 @@ const InventoryProducts = ({
   productsData,
   productsDataError,
   refetchProduct,
+  canManageInventory,
 }: InventoryProductsProps) => {
   const [showProductModal, setShowProductModal] = useState<boolean>(false);
   const [mode, setMode] = useState<'Add' | 'Edit'>('Add');
@@ -32,7 +27,8 @@ const InventoryProducts = ({
     null
   );
 
-  const [productToDelete, setProductToDelete] = useState<ProductInterface | null>(null);
+  const [productToDelete, setProductToDelete] =
+    useState<ProductInterface | null>(null);
 
   if (productsDataError && !productsData) {
     return <p>Failed to fetch products data.</p>;
@@ -62,19 +58,21 @@ const InventoryProducts = ({
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Subcategory filter - placed left of Add Product */}
-            <Button
-              onClick={() => {
-                setShowProductModal(true);
-                setMode('Add');
-                setProductToEdit(null);
-              }}
-              className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
-            >
-              <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add Product
-            </Button>
-          </div>
+          {canManageInventory && (
+            <div className="flex items-center gap-3">
+              {/* Subcategory filter - placed left of Add Product */}
+              <Button
+                onClick={() => {
+                  setShowProductModal(true);
+                  setMode('Add');
+                  setProductToEdit(null);
+                }}
+                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white inline-flex items-center justify-center gap-2 px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 rounded-xl shadow-lg shadow-green-600/30 hover:shadow-xl hover:shadow-green-600/40 transition-all duration-200 font-bold hover:scale-[1.02] active:scale-[0.98] text-sm lg:text-base w-full sm:w-auto"
+              >
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add Product
+              </Button>
+            </div>
+          )}
         </div>
 
         <Card className="border-none shadow-xl overflow-hidden">
@@ -132,7 +130,9 @@ const InventoryProducts = ({
                               </span>
                             </div>
                           )}
-                          <div className={`text-[10px] sm:text-xs font-semibold  px-1.5 sm:px-2 py-0.5 sm:py-1 rounded ${product.stocks === 0 ? 'bg-red-100' : product.stocks <= 5 ? 'bg-yellow-100' : 'bg-green-50 text-green-700' }`}>
+                          <div
+                            className={`text-[10px] sm:text-xs font-semibold  px-1.5 sm:px-2 py-0.5 sm:py-1 rounded ${product.stocks === 0 ? 'bg-red-100' : product.stocks <= 5 ? 'bg-yellow-100' : 'bg-green-50 text-green-700'}`}
+                          >
                             Stock: {product.stocks}
                           </div>
                         </div>
@@ -142,23 +142,31 @@ const InventoryProducts = ({
                       <div className="text-xs sm:text-sm font-bold text-green-700 bg-green-50 px-2.5 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-lg whitespace-nowrap">
                         {product.requiredPoints} pts
                       </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEditProduct(product)}
-                        className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-all duration-200"
-                      >
-                        <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      </Button>
+                      {canManageInventory ? (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditProduct(product)}
+                            className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-all duration-200"
+                          >
+                            <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </Button>
 
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => setProductToDelete(product)}
-                        className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:shadow-lg transition-all duration-200"
-                      >
-                        <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => setProductToDelete(product)}
+                            className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:shadow-lg transition-all duration-200"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </Button>
+                        </>
+                      ) : (
+                        <span className="text-xs text-gray-400 font-medium">
+                          View Only
+                        </span>
+                      )}
                     </div>
                   </div>
                 ))
@@ -169,22 +177,26 @@ const InventoryProducts = ({
       </section>
 
       {/* Add/Edit Product Modal */}
-      <AddEditProductModal
-        showProductModal={showProductModal}
-        setShowProductModal={setShowProductModal}
-        mode={mode}
-        productToEdit={productToEdit}
-        refetchProduct={refetchProduct}
-      />
+      {canManageInventory && (
+        <>
+          <AddEditProductModal
+            showProductModal={showProductModal}
+            setShowProductModal={setShowProductModal}
+            mode={mode}
+            productToEdit={productToEdit}
+            refetchProduct={refetchProduct}
+          />
 
-      {/* Delete Product Modal */}
-      <DeleteProductMaterialModal 
-        itemToDelete={productToDelete}
-        setItemToDelete={setProductToDelete}
-        onClose={() => setProductToDelete(null)}
-        refetch={refetchProduct}
-        type='Product'
-      />
+          {/* Delete Product Modal */}
+          <DeleteProductMaterialModal
+            itemToDelete={productToDelete}
+            setItemToDelete={setProductToDelete}
+            onClose={() => setProductToDelete(null)}
+            refetch={refetchProduct}
+            type="Product"
+          />
+        </>
+      )}
     </>
   );
 };
