@@ -12,32 +12,25 @@ import { PaginatedResponse } from '@/types/pagination';
 
 const Records = () => {
   const [page, setPage] = useState<number>(1);
-  const [originalRecords, setOriginalRecords] = useState<RecordInterface[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const {
     data: recordsData,
     loading: recordsLoading,
     error: recordsError,
     refetch: refetchRecords,
   } = useFetchData<PaginatedResponse<RecordInterface> | null>(
-    '/records?residentStatus=resident'
+    `/records?residentStatus=resident&page=${page}`
   );
 
-  useEffect(() => {
-    if (recordsData && !recordsLoading && !recordsError) {
-      // Merge server data with local originalRecords to preserve local edits
-      setOriginalRecords(recordsData.data);
-    }
-  }, [recordsData, recordsLoading, recordsError]);
-
-  // Table Configuration
   const [searchLoading, setSearchLoading] = useState(false);
 
-  // State for modals
   const [openAddRecordModal, setOpenAddRecordModal] = useState(false);
   const [editRecord, setEditRecord] = useState<RecordInterface | null>(null);
   const [deleteRecord, setDeleteRecord] = useState<RecordInterface | null>(
     null
   );
+
+  if (recordsLoading) return <ResponsiveSkeleton page="records" />;
 
   if (!recordsData) return;
 
@@ -46,17 +39,20 @@ const Records = () => {
       <div className="space-y-4 sm:space-y-6">
         {/* Record Header */}
         <RecordHeader
+          title="Resident Records"
+          subTitle="Manage and track resident information"
           setOpenAddRecordModal={setOpenAddRecordModal}
-          recordsData={recordsData.data}
+          recordsData={recordsData}
         />
 
         {/* Enhanced Search Bar */}
         <RecordFilter
-          originalRecords={originalRecords}
-          recordsData={recordsData.data}
-          setOriginalRecords={setOriginalRecords}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          recordsData={recordsData}
           refetchRecords={refetchRecords}
           setSearchLoading={setSearchLoading}
+          residentStatus="resident"
         />
 
         {/* Record Table (show skeleton while server search is running) */}
@@ -78,6 +74,7 @@ const Records = () => {
           openAddRecordModal={openAddRecordModal}
           setOpenAddRecordModal={setOpenAddRecordModal}
           refetchRecords={refetchRecords}
+          isResident={true}
         />
 
         {/* EDIT MODAL */}
@@ -85,7 +82,6 @@ const Records = () => {
           <EditRecordModal
             editRecord={editRecord}
             setEditRecord={setEditRecord}
-            setOriginalRecords={setOriginalRecords}
             refetchRecords={refetchRecords}
           />
         )}

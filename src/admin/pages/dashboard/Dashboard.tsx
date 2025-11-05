@@ -5,8 +5,6 @@ import { useLoadingState } from '../../../hooks/useLoadingState';
 import ResponsiveSkeleton from '../../../components/ResponsiveSkeleton';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import DashboardStatCards from './components/DashboardStatCards';
-import DashboardRecentActivities from './components/DashboardRecentActivities';
 import DashboardAchievements from './components/DashboardAchievements';
 dayjs.extend(isBetween);
 

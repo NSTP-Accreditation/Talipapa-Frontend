@@ -1,15 +1,20 @@
 import { Button } from '@/components/ui';
-import { UserRoundPen, Users, FileText, Filter } from 'lucide-react';
+import { UserRoundPen, Users, FileText, Filter, Subtitles } from 'lucide-react';
 import { RecordInterface } from '@/types/global.types';
 import { Dispatch, SetStateAction } from 'react';
 import ExcelExportButton from '@/components/ui/ExcelExportButton';
+import { PaginatedResponse } from '@/types/pagination';
 
 type RecordHeaderProps = {
-  recordsData: RecordInterface[];
+  title: string,
+  subTitle: string,
+  recordsData: PaginatedResponse<RecordInterface> | null;
   setOpenAddRecordModal: Dispatch<SetStateAction<boolean>>;
 };
 
 const RecordHeader = ({
+  title,
+  subTitle,
   recordsData,
   setOpenAddRecordModal,
 }: RecordHeaderProps) => {
@@ -29,10 +34,10 @@ const RecordHeader = ({
             </div>
             <div className="flex-1">
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-                Resident Records
+                {title}
               </h1>
               <p className="text-sm sm:text-base text-gray-600 font-medium mb-4">
-                Manage and track resident information
+                {subTitle}
               </p>
 
               {/* Quick Info Pills */}
@@ -40,8 +45,8 @@ const RecordHeader = ({
                 <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full text-xs sm:text-sm font-semibold text-green-700">
                   <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span>
-                    {recordsData?.length || 0}{' '}
-                    {recordsData?.length === 1 ? 'Resident' : 'Residents'}
+                    {recordsData.totalItems || 0}{' '}
+                    {recordsData.totalItems === 1 ? 'Resident' : 'Residents'}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs sm:text-sm font-semibold text-blue-700">
@@ -63,11 +68,11 @@ const RecordHeader = ({
               className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 rounded-xl font-bold shadow-md hover:shadow-xl transition-all min-h-[44px]"
             >
               <span className="text-lg sm:text-xl">+</span>
-              <span>Add Residents</span>
+              <span>Add {title.slice(0, -1)}</span>
             </Button>
 
             <ExcelExportButton
-              records={recordsData || []}
+              records={recordsData.data || []}
               recordType="resident"
             />
           </div>

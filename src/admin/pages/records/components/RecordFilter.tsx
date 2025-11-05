@@ -11,23 +11,25 @@ import React, {
 import { RecordInterface } from '@/types/global.types';
 import { debounce } from 'lodash';
 import { PaginatedResponse } from '@/types/pagination';
+import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 
 type RecordFilterProps = {
-  originalRecords: RecordInterface[];
-  recordsData: RecordInterface[];
-  setOriginalRecords: Dispatch<SetStateAction<RecordInterface[]>>;
+  searchTerm: string;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
+  recordsData: PaginatedResponse<RecordInterface> | null;
   refetchRecords: (fetchUrl?: string) => Promise<PaginatedResponse<RecordInterface>>;
   setSearchLoading?: Dispatch<SetStateAction<boolean>>;
+  residentStatus: "resident" | "non-resident";
 };
 
 const RecordFilter = ({
-  originalRecords,
+  searchTerm,
+  setSearchTerm,
   recordsData,
-  setOriginalRecords,
   refetchRecords,
   setSearchLoading,
+  residentStatus = "resident"
 }: RecordFilterProps) => {
-  const [searchTerm, setSearchTerm] = useState('');
   // single list of sort keys (unique). Clicking same key toggles asc/desc.
   // Match the RecordTable column order: Record ID, Name, Age, Points, Created At
   const sortKeys = [
@@ -60,63 +62,60 @@ const RecordFilter = ({
     return () => document.removeEventListener('click', onDoc);
   }, []);
 
-  const sortRecords = (items: RecordInterface[] = []) => {
-    const arr = [...items];
-    const { key, order } = currentMode;
+  // const sortRecords = (items: RecordInterface[] = []) => {
+  //   const arr = [...items];
+  //   const { key, order } = currentMode;
 
-    const multiplier = order === 'asc' ? 1 : -1;
+  //   const multiplier = order === 'asc' ? 1 : -1;
 
-    arr.sort((a, b) => {
-      try {
-        if (key === 'createdAt') {
-          const ta = new Date(a.createdAt).getTime() || 0;
-          const tb = new Date(b.createdAt).getTime() || 0;
-          return (ta - tb) * multiplier;
-        }
+  //   arr.sort((a, b) => {
+  //     try {
+  //       if (key === 'createdAt') {
+  //         const ta = new Date(a.createdAt).getTime() || 0;
+  //         const tb = new Date(b.createdAt).getTime() || 0;
+  //         return (ta - tb) * multiplier;
+  //       }
 
-        if (key === '_id') {
-          return a._id.localeCompare(b._id) * multiplier;
-        }
+  //       if (key === '_id') {
+  //         return a._id.localeCompare(b._id) * multiplier;
+  //       }
 
-        if (key === 'points') {
-          return (Number(a.points || 0) - Number(b.points || 0)) * multiplier;
-        }
+  //       if (key === 'points') {
+  //         return (Number(a.points || 0) - Number(b.points || 0)) * multiplier;
+  //       }
 
-        if (key === 'age') {
-          return (Number(a.age || 0) - Number(b.age || 0)) * multiplier;
-        }
+  //       if (key === 'age') {
+  //         return (Number(a.age || 0) - Number(b.age || 0)) * multiplier;
+  //       }
 
-        if (key === 'name') {
-          const na = `${a.lastName ?? ''}, ${a.firstName ?? ''}`.toLowerCase();
-          const nb = `${b.lastName ?? ''}, ${b.firstName ?? ''}`.toLowerCase();
-          return na.localeCompare(nb) * multiplier;
-        }
+  //       if (key === 'name') {
+  //         const na = `${a.lastName ?? ''}, ${a.firstName ?? ''}`.toLowerCase();
+  //         const nb = `${b.lastName ?? ''}, ${b.firstName ?? ''}`.toLowerCase();
+  //         return na.localeCompare(nb) * multiplier;
+  //       }
 
-        return 0;
-      } catch (err) {
-        return 0;
-      }
-    });
+  //       return 0;
+  //     } catch (err) {
+  //       return 0;
+  //     }
+  //   });
 
-    return arr;
-  };
+  //   return arr;
+  // };
 
   // apply sorting whenever sort mode or the underlying records change
-  useEffect(() => {
-    setOriginalRecords((prev) => {
-      const sorted = sortRecords(prev);
-      const same =
-        prev.length === sorted.length &&
-        prev.every((v, i) => v._id === sorted[i]._id);
-      return same ? prev : sorted;
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedKey, order, recordsData]);
+  // useEffect(() => {
+  //   setOriginalRecords((prev) => {
+  //     const sorted = sortRecords(prev);
+  //     const same =
+  //       prev?.length === sorted?.length &&
+  //       prev.every((v, i) => v._id === sorted[i]._id);
+  //     return same ? prev : sorted;
+  //   });
+  // }, [selectedKey, order, recordsData]);
 
   const debouncedSearch = useCallback(
     debounce(async (query: string) => {
-      // start a short timer before showing the loading skeleton to avoid
-      // flicker on quick responses while the user types
       if (setSearchLoading) {
         if (loadingTimerRef.current)
           window.clearTimeout(loadingTimerRef.current);
@@ -142,12 +141,10 @@ const RecordFilter = ({
       }
 
       try {
-        const result = await refetchRecords(
-          `${import.meta.env.VITE_API_URL}/records/search?query=${encodeURIComponent(query)}&residentStatus=resident`
+        await refetchRecords(
+          `${import.meta.env.VITE_API_URL}/records/search?query=${encodeURIComponent(query)}&residentStatus=${residentStatus}`
         );
-        setOriginalRecords(result.data);
       } catch {
-        setOriginalRecords([]);
       } finally {
         if (loadingTimerRef.current)
           window.clearTimeout(loadingTimerRef.current);
@@ -157,7 +154,6 @@ const RecordFilter = ({
         loadingShownRef.current = false;
       }
     }, 700),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [recordsData]
   );
 
@@ -263,7 +259,7 @@ const RecordFilter = ({
         <div className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600">
           Found{' '}
           <span className="font-semibold text-green-600">
-            {originalRecords.length}
+            {recordsData.totalItems}
           </span>{' '}
           matching records
         </div>

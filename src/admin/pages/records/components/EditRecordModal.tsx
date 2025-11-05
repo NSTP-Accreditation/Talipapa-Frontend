@@ -70,8 +70,8 @@ const EditRecordModal = ({
         firstName: editRecord.firstName,
         lastName: editRecord.lastName,
         middleName: editRecord.middleName,
-        suffix: (editRecord as any).suffix || '',
-        gender: (editRecord as any).gender || '',
+        suffix: editRecord.suffix || '',
+        gender: editRecord.gender || '',
         age: ageNum,
         address: editRecord.address,
         contactNumber: editRecord.contactNumber
@@ -91,54 +91,9 @@ const EditRecordModal = ({
         body: JSON.stringify(payload),
       });
 
-      // Immediately apply optimistic update to local records to reflect changes in UI
-      if (setOriginalRecords) {
-        setOriginalRecords((prev) =>
-          prev.map((r) =>
-            r._id === payload._id
-              ? {
-                  ...r,
-                  firstName: payload.firstName,
-                  lastName: payload.lastName,
-                  middleName: payload.middleName,
-                  age: String(payload.age),
-                  address: payload.address,
-                  // preserve points locally (don't change here)
-                  contactNumber: payload.contactNumber,
-                  updatedAt: payload.updatedAt || r.updatedAt,
-                }
-              : r
-          )
-        );
-      }
-
       // refetch records and check server state
-      const refreshed = await refetchRecords();
+      await refetchRecords();
 
-      // If server didn't return the updated lastName for this record, re-apply optimistic update
-      if (setOriginalRecords && refreshed) {
-        const found =
-          Array.isArray(refreshed) &&
-          refreshed.find((r: any) => r._id === payload._id);
-        if (!found || found.lastName !== payload.lastName) {
-          setOriginalRecords((prev) =>
-            prev.map((r) =>
-              r._id === payload._id
-                ? {
-                    ...r,
-                    firstName: payload.firstName,
-                    lastName: payload.lastName,
-                    middleName: payload.middleName,
-                    age: String(payload.age),
-                    address: payload.address,
-                    contactNumber: payload.contactNumber,
-                    updatedAt: payload.updatedAt || r.updatedAt,
-                  }
-                : r
-            )
-          );
-        }
-      }
       setEditRecord(null);
       success(`Record Updated! ID: ${editRecord._id}`, {
         title: 'Record Updated',

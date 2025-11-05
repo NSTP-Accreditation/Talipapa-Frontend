@@ -1,14 +1,16 @@
 export interface RecordInterface {
-  _id: string
-  firstName: string
-  middleName?: string
-  lastName: string
-  age: string
-  address: string
-  contactNumber: string
-  points: number
-  createdAt: string
-  updatedAt: string
+  _id: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  age: string;
+  suffix?: string;
+  gender?: string;
+  address: string;
+  contactNumber: string;
+  points: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ProductInterface {
@@ -51,7 +53,7 @@ export interface ImageInterface {
   mimetype: string;
   originalName: string;
   size: number;
-  url: string
+  url: string;
 }
 
 

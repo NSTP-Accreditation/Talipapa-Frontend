@@ -12,12 +12,14 @@ type AddRecordModalType = {
   openAddRecordModal: boolean;
   setOpenAddRecordModal: Dispatch<SetStateAction<boolean>>;
   refetchRecords: (fetchUrl?: string) => Promise<PaginatedResponse<RecordInterface>>;
+  isResident: boolean;
 };
 
 const AddRecordModal = ({
   openAddRecordModal,
   setOpenAddRecordModal,
   refetchRecords,
+  isResident = true,
 }: AddRecordModalType) => {
   const authFetch = useAuthFetch();
 
@@ -76,7 +78,7 @@ const AddRecordModal = ({
         contactNumber: newRecord.contactNumber
           ? `09${newRecord.contactNumber}`
           : '',
-        isResident: true,
+        isResident,
         type: 'resident',
       };
 
