@@ -125,22 +125,37 @@ export default function Carousel() {
 
   return (
     <div
-      className="relative group w-full h-[600px] sm:h-[700px] md:h-[800px] lg:h-[900px] overflow-hidden"
+      className="relative group w-full h-[600px] sm:h-[700px] md:h-[800px] lg:h-[900px] overflow-hidden bg-gray-900"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      {/* Images (stacked) */}
+      {/* Blurred background images */}
+      {slides.map((s, idx) => (
+        <img
+          key={`bg-${idx}`}
+          src={s.image}
+          alt=""
+          className={`absolute inset-0 w-full h-full object-cover blur-3xl scale-110 transition-all duration-[3000ms] ease-in-out ${
+            idx === current
+              ? 'opacity-40 z-0'
+              : 'opacity-0 z-0 pointer-events-none'
+          }`}
+          style={{ willChange: 'opacity' }}
+        />
+      ))}
+      
+      {/* Main images (stacked) */}
       {slides.map((s, idx) => (
         <img
           key={idx}
           src={s.image}
           alt={s.title || `Slide ${idx + 1}`}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-2500 ease-[cubic-bezier(.25,.1,.25,1)] ${
+          className={`absolute inset-0 w-full h-full object-contain transition-all duration-[1500ms] ease-out ${
             idx === current
-              ? 'opacity-100 z-10'
-              : 'opacity-0 z-0 pointer-events-none'
+              ? 'opacity-100 z-10 scale-105'
+              : 'opacity-0 z-0 pointer-events-none scale-100'
           }`}
-          style={{ willChange: 'opacity' }}
+          style={{ willChange: 'opacity, transform' }}
         />
       ))}
 
@@ -155,10 +170,10 @@ export default function Carousel() {
       <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none px-4">
         <div
           key={current}
-          className={`text-white rounded-2xl md:rounded-3xl text-center transition-opacity duration-500 ease-[cubic-bezier(.25,.1,.25,1)] max-w-lg sm:max-w-4xl md:max-w-7xl w-full ${
-            slides[current] && !isPaused ? 'opacity-100' : 'opacity-0'
+          className={`text-white rounded-2xl md:rounded-3xl text-center transition-all duration-[1200ms] ease-out max-w-lg sm:max-w-4xl md:max-w-7xl w-full ${
+            slides[current] && !isPaused ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
-          style={{ willChange: 'opacity' }}
+          style={{ willChange: 'opacity, transform' }}
         >
           {/* Mobile: no backdrop/blur, smaller padding and text. Desktop (md+): translucent white + blur + larger padding/text */}
           <div className="w-full mx-auto bg-black/10 backdrop-blur-sm md:bg-black/30 md:backdrop-blur-xl border border-transparent md:border-black/30 shadow-2xl px-8 py-6 sm:px-10 sm:py-8 md:px-20 md:py-16 rounded-2xl md:rounded-3xl pointer-events-none">

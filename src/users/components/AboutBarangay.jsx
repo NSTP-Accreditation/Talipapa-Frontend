@@ -46,7 +46,7 @@ export default function AboutBarangay() {
   return (
     <>
       {/* Video Section */}
-      <div className="relative w-full h-[300px] sm:h-[500px] overflow-hidden shadow-2xl">
+      <div className="relative w-full h-[400px] sm:h-[600px] md:h-[700px] lg:h-[800px] overflow-hidden shadow-2xl">
         <iframe
           src={
             convertToEmbedUrl(pageContent?.youtubeUrl) ||
