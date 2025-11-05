@@ -3,9 +3,115 @@
  *
  * This module provides helper functions to check user permissions and roles.
  * All permission checks should go through these utilities for consistency.
+ *
+ * SECURITY: All permission checks are CLIENT-SIDE ONLY.
+ * Backend MUST validate permissions independently.
  */
 
-import { UserRole, Permission, ROLE_PERMISSIONS } from '../types/rbac.types';
+import {
+  UserRole,
+  Permission,
+  ROLE_PERMISSIONS,
+  PERMISSION_HIERARCHY,
+} from '../types/rbac.types';
+import { AuthUser } from '../types/auth.types';
+import { decodeJWT } from './jwt.utils';
+
+/**
+ * Role ID Configuration
+ * Validates that environment variables are properly configured
+ */
+const getRoleConfig = () => {
+  const superAdminId = Number(import.meta.env.VITE_SUPERADMIN);
+  const adminId = Number(import.meta.env.VITE_ADMIN);
+  const staffId = Number(import.meta.env.VITE_STAFF);
+
+  // Validate configuration (fail fast if misconfigured)
+  if (!superAdminId || !adminId || !staffId) {
+    console.error(
+      '[RBAC] CRITICAL: Role IDs not configured in environment variables'
+    );
+    console.error('[RBAC] Required: VITE_SUPERADMIN, VITE_ADMIN, VITE_STAFF');
+    // Return defaults to prevent app crash, but log error
+    return {
+      superAdminId: superAdminId || 32562,
+      adminId: adminId || 92781,
+      staffId: staffId || 3,
+      isConfigured: false,
+    };
+  }
+
+  return { superAdminId, adminId, staffId, isConfigured: true };
+};
+
+// Cache permission results for performance
+const permissionCache = new WeakMap<AuthUser, Permission[]>();
+
+// Rate limiter to prevent permission check spam
+const permissionCheckLimiter = new Map<
+  string,
+  { count: number; resetTime: number }
+>();
+const MAX_CHECKS_PER_SECOND = 100;
+const RATE_LIMIT_WINDOW = 1000; // 1 second
+
+/**
+ * Check if user exceeds rate limit for permission checks
+ */
+const isRateLimited = (userId: string): boolean => {
+  const now = Date.now();
+  const userLimit = permissionCheckLimiter.get(userId);
+
+  if (!userLimit || now >= userLimit.resetTime) {
+    // Reset counter
+    permissionCheckLimiter.set(userId, {
+      count: 1,
+      resetTime: now + RATE_LIMIT_WINDOW,
+    });
+    return false;
+  }
+
+  // Increment counter
+  userLimit.count++;
+
+  if (userLimit.count > MAX_CHECKS_PER_SECOND) {
+    console.error('[RBAC Security] Rate limit exceeded:', {
+      user: userId,
+      checks: userLimit.count,
+      window: RATE_LIMIT_WINDOW,
+    });
+    return true;
+  }
+
+  return false;
+};
+
+// Track denied access attempts for security monitoring
+const logDeniedAccess = (
+  user: AuthUser | null,
+  permission: Permission,
+  context?: string
+) => {
+  if (typeof window === 'undefined') return;
+
+  const logEntry = {
+    type: 'PERMISSION_DENIED',
+    timestamp: new Date().toISOString(),
+    user: user?.userData?.username || 'anonymous',
+    role: getUserRole(user),
+    permission,
+    page: window.location.pathname,
+    context,
+  };
+
+  console.warn('[RBAC Security] Permission denied:', logEntry);
+
+  // In production, send to analytics/logging service
+  if (import.meta.env.PROD) {
+    // TODO: Send to logging service
+    // sendSecurityLog(logEntry);
+  }
+};
 
 /**
  * Extract user role from the user object
@@ -14,13 +120,11 @@ import { UserRole, Permission, ROLE_PERMISSIONS } from '../types/rbac.types';
  * @param user - User object from AuthContext
  * @returns UserRole enum value or null if no valid role found
  */
-export const getUserRole = (user: any): UserRole | null => {
+export const getUserRole = (user: AuthUser | null): UserRole | null => {
   if (!user?.userData) return null;
 
   // Get role IDs from environment variables
-  const superAdminId = Number(import.meta.env.VITE_SUPERADMIN || 32562);
-  const adminId = Number(import.meta.env.VITE_ADMIN || 92781);
-  const staffId = Number(import.meta.env.VITE_STAFF || 3);
+  const { superAdminId, adminId, staffId, isConfigured } = getRoleConfig();
 
   // Debug logging (controlled by window.__RBAC_DEBUG__)
   const debugEnabled =
@@ -29,10 +133,14 @@ export const getUserRole = (user: any): UserRole | null => {
   if (debugEnabled) {
     console.group('🔍 getUserRole Analysis');
     console.log('Expected Role IDs:', { superAdminId, adminId, staffId });
+    console.log(
+      'Configuration Status:',
+      isConfigured ? '✅ Valid' : '⚠️ Using fallbacks'
+    );
     console.log('User Data:', user.userData);
   }
 
-  // First, check rolesKeys array (direct role labels)
+  // PRIORITY 1: Check rolesKeys array (most reliable - direct role labels)
   if (
     Array.isArray(user.userData.rolesKeys) &&
     user.userData.rolesKeys.length > 0
@@ -40,89 +148,79 @@ export const getUserRole = (user: any): UserRole | null => {
     const roleKeys = user.userData.rolesKeys;
     if (debugEnabled) console.log('✓ Found rolesKeys array:', roleKeys);
 
+    // Return first matching role (priority: SuperAdmin > Admin > Staff)
     if (roleKeys.includes('SuperAdmin')) {
-      if (debugEnabled) console.log('✓ Detected: SUPERADMIN (from rolesKeys)');
+      if (debugEnabled) console.log('✅ Detected: SUPERADMIN (from rolesKeys)');
       if (debugEnabled) console.groupEnd();
       return UserRole.SUPERADMIN;
     }
     if (roleKeys.includes('Admin')) {
-      if (debugEnabled) console.log('✓ Detected: ADMIN (from rolesKeys)');
+      if (debugEnabled) console.log('✅ Detected: ADMIN (from rolesKeys)');
       if (debugEnabled) console.groupEnd();
       return UserRole.ADMIN;
     }
     if (roleKeys.includes('Staff')) {
-      if (debugEnabled) console.log('✓ Detected: STAFF (from rolesKeys)');
+      if (debugEnabled) console.log('✅ Detected: STAFF (from rolesKeys)');
       if (debugEnabled) console.groupEnd();
       return UserRole.STAFF;
     }
   }
 
-  // Second, check roles object (role IDs)
+  // PRIORITY 2: Check roles object (role IDs from database)
   if (user.userData.roles && typeof user.userData.roles === 'object') {
     const roles = user.userData.roles;
     if (debugEnabled) console.log('✓ Found roles object:', roles);
 
-    // Check if role ID matches env values (in priority order)
-    if (roles.SuperAdmin === superAdminId || roles.SuperAdmin === 1) {
+    // SECURITY FIX: Only check for exact role ID match, NO || === 1 fallback
+    // This prevents security vulnerability where anyone with role: 1 gets access
+    if (roles.SuperAdmin === superAdminId) {
       if (debugEnabled)
-        console.log('✓ Detected: SUPERADMIN (from roles object)');
+        console.log('✅ Detected: SUPERADMIN (from roles object)');
       if (debugEnabled) console.groupEnd();
       return UserRole.SUPERADMIN;
     }
-    if (roles.Admin === adminId || roles.Admin === 1) {
-      if (debugEnabled) console.log('✓ Detected: ADMIN (from roles object)');
+    if (roles.Admin === adminId) {
+      if (debugEnabled) console.log('✅ Detected: ADMIN (from roles object)');
       if (debugEnabled) console.groupEnd();
       return UserRole.ADMIN;
     }
-    if (roles.Staff === staffId || roles.Staff === 1) {
-      if (debugEnabled) console.log('✓ Detected: STAFF (from roles object)');
+    if (roles.Staff === staffId) {
+      if (debugEnabled) console.log('✅ Detected: STAFF (from roles object)');
       if (debugEnabled) console.groupEnd();
       return UserRole.STAFF;
     }
   }
 
-  // Third, decode JWT token if available
+  // PRIORITY 3: Decode JWT token as fallback (should match backend structure)
   if (user.accessToken) {
-    try {
-      const base64Url = String(user.accessToken).split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split('')
-          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
-      );
-      const decoded = JSON.parse(jsonPayload);
+    const decoded = decodeJWT(user.accessToken);
 
-      if (debugEnabled) console.log('✓ Decoded JWT:', decoded);
+    if (debugEnabled) console.log('✓ Decoded JWT:', decoded);
 
-      if (decoded?.userInfo?.roles && Array.isArray(decoded.userInfo.roles)) {
-        const roleIds = decoded.userInfo.roles;
-        if (debugEnabled) console.log('✓ Found role IDs in JWT:', roleIds);
+    if (decoded?.userInfo?.roles && Array.isArray(decoded.userInfo.roles)) {
+      const roleIds = decoded.userInfo.roles;
+      if (debugEnabled) console.log('✓ Found role IDs in JWT:', roleIds);
 
-        if (roleIds.includes(superAdminId)) {
-          if (debugEnabled) console.log('✓ Detected: SUPERADMIN (from JWT)');
-          if (debugEnabled) console.groupEnd();
-          return UserRole.SUPERADMIN;
-        }
-        if (roleIds.includes(adminId)) {
-          if (debugEnabled) console.log('✓ Detected: ADMIN (from JWT)');
-          if (debugEnabled) console.groupEnd();
-          return UserRole.ADMIN;
-        }
-        if (roleIds.includes(staffId)) {
-          if (debugEnabled) console.log('✓ Detected: STAFF (from JWT)');
-          if (debugEnabled) console.groupEnd();
-          return UserRole.STAFF;
-        }
+      if (roleIds.includes(superAdminId)) {
+        if (debugEnabled) console.log('✅ Detected: SUPERADMIN (from JWT)');
+        if (debugEnabled) console.groupEnd();
+        return UserRole.SUPERADMIN;
       }
-    } catch (error) {
-      console.error('Failed to decode JWT for role extraction:', error);
+      if (roleIds.includes(adminId)) {
+        if (debugEnabled) console.log('✅ Detected: ADMIN (from JWT)');
+        if (debugEnabled) console.groupEnd();
+        return UserRole.ADMIN;
+      }
+      if (roleIds.includes(staffId)) {
+        if (debugEnabled) console.log('✅ Detected: STAFF (from JWT)');
+        if (debugEnabled) console.groupEnd();
+        return UserRole.STAFF;
+      }
     }
   }
 
   if (debugEnabled) {
-    console.log('✗ No valid role detected');
+    console.error('❌ No valid role detected');
     console.groupEnd();
   }
   return null;
@@ -135,7 +233,7 @@ export const getUserRole = (user: any): UserRole | null => {
  * @param role - Role to check for
  * @returns true if user has the specified role
  */
-export const hasRole = (user: any, role: UserRole): boolean => {
+export const hasRole = (user: AuthUser | null, role: UserRole): boolean => {
   const userRole = getUserRole(user);
   return userRole === role;
 };
@@ -147,7 +245,10 @@ export const hasRole = (user: any, role: UserRole): boolean => {
  * @param roles - Array of roles to check
  * @returns true if user has at least one of the specified roles
  */
-export const hasAnyRole = (user: any, roles: UserRole[]): boolean => {
+export const hasAnyRole = (
+  user: AuthUser | null,
+  roles: UserRole[]
+): boolean => {
   const userRole = getUserRole(user);
   return userRole ? roles.includes(userRole) : false;
 };
@@ -158,7 +259,7 @@ export const hasAnyRole = (user: any, roles: UserRole[]): boolean => {
  * @param user - User object from AuthContext
  * @returns true if user is a SuperAdmin
  */
-export const isSuperAdmin = (user: any): boolean => {
+export const isSuperAdmin = (user: AuthUser | null): boolean => {
   return hasRole(user, UserRole.SUPERADMIN);
 };
 
@@ -168,7 +269,7 @@ export const isSuperAdmin = (user: any): boolean => {
  * @param user - User object from AuthContext
  * @returns true if user is an Admin
  */
-export const isAdmin = (user: any): boolean => {
+export const isAdmin = (user: AuthUser | null): boolean => {
   return hasRole(user, UserRole.ADMIN);
 };
 
@@ -178,7 +279,7 @@ export const isAdmin = (user: any): boolean => {
  * @param user - User object from AuthContext
  * @returns true if user is Staff
  */
-export const isStaff = (user: any): boolean => {
+export const isStaff = (user: AuthUser | null): boolean => {
   return hasRole(user, UserRole.STAFF);
 };
 
@@ -194,25 +295,81 @@ export const getRolePermissions = (role: UserRole): Permission[] => {
 
 /**
  * Get all permissions for the current user
+ * Uses caching to avoid recalculating permissions on every call
  *
  * @param user - User object from AuthContext
  * @returns Array of permissions the user has
  */
-export const getUserPermissions = (user: any): Permission[] => {
+export const getUserPermissions = (user: AuthUser | null): Permission[] => {
+  if (!user) return [];
+
+  // Check cache first for performance
+  if (permissionCache.has(user)) {
+    return permissionCache.get(user)!;
+  }
+
+  // Calculate permissions
   const role = getUserRole(user);
-  return role ? getRolePermissions(role) : [];
+  const permissions = role ? getRolePermissions(role) : [];
+
+  // Cache result
+  permissionCache.set(user, permissions);
+
+  return permissions;
 };
 
 /**
  * Check if a user has a specific permission
+ * Uses permission hierarchy - higher permissions grant lower ones
+ * Logs denied access attempts for security monitoring
  *
  * @param user - User object from AuthContext
  * @param permission - Permission to check for
+ * @param context - Optional context for logging (e.g., 'Delete User Button')
  * @returns true if user has the specified permission
+ *
+ * @example
+ * // If user has MANAGE_INVENTORY, they automatically have VIEW_INVENTORY
+ * hasPermission(user, Permission.VIEW_INVENTORY) // returns true
  */
-export const hasPermission = (user: any, permission: Permission): boolean => {
+export const hasPermission = (
+  user: AuthUser | null,
+  permission: Permission,
+  context?: string
+): boolean => {
+  if (!user) return false;
+
+  // Rate limiting check
+  const userId = user.userData?.username || 'anonymous';
+  if (isRateLimited(userId)) {
+    console.error(
+      '[RBAC Security] Permission check rate limit exceeded for:',
+      userId
+    );
+    return false;
+  }
+
   const userPermissions = getUserPermissions(user);
-  return userPermissions.includes(permission);
+
+  // Get permissions granted by hierarchy
+  // If user has a higher permission (e.g., DELETE), they get lower ones (EDIT, VIEW)
+  const grantedPermissions = PERMISSION_HIERARCHY[permission] || [permission];
+
+  // Check if user has ANY of the permissions in the hierarchy
+  // This allows EDIT to grant VIEW, DELETE to grant EDIT+VIEW, etc.
+  const hasAccess = grantedPermissions.some((p) =>
+    userPermissions.some((userPerm) => {
+      const userGrantedPerms = PERMISSION_HIERARCHY[userPerm] || [userPerm];
+      return userGrantedPerms.includes(p);
+    })
+  );
+
+  // Log denied access for security monitoring
+  if (!hasAccess && user) {
+    logDeniedAccess(user, permission, context);
+  }
+
+  return hasAccess;
 };
 
 /**
@@ -223,7 +380,7 @@ export const hasPermission = (user: any, permission: Permission): boolean => {
  * @returns true if user has at least one of the specified permissions
  */
 export const hasAnyPermission = (
-  user: any,
+  user: AuthUser | null,
   permissions: Permission[]
 ): boolean => {
   const userPermissions = getUserPermissions(user);
@@ -238,7 +395,7 @@ export const hasAnyPermission = (
  * @returns true if user has all of the specified permissions
  */
 export const hasAllPermissions = (
-  user: any,
+  user: AuthUser | null,
   permissions: Permission[]
 ): boolean => {
   const userPermissions = getUserPermissions(user);
@@ -256,7 +413,7 @@ export const hasAllPermissions = (
  * @returns true if user has access
  */
 export const canAccess = (
-  user: any,
+  user: AuthUser | null,
   options: {
     permissions?: Permission[];
     roles?: UserRole[];
@@ -265,9 +422,9 @@ export const canAccess = (
 ): boolean => {
   const { permissions, roles, requireAll = false } = options;
 
-  // If no restrictions specified, allow access
+  // If no restrictions specified, deny access (secure by default)
   if (!permissions?.length && !roles?.length) {
-    return true;
+    return false;
   }
 
   // Check role-based access
@@ -299,7 +456,7 @@ export const canAccess = (
  * @param user - User object from AuthContext
  * @returns true if user can manage admins
  */
-export const canManageAdmins = (user: any): boolean => {
+export const canManageAdmins = (user: AuthUser | null): boolean => {
   return isSuperAdmin(user);
 };
 
@@ -310,7 +467,7 @@ export const canManageAdmins = (user: any): boolean => {
  * @param user - User object from AuthContext
  * @returns true if user can edit settings
  */
-export const canEditSettings = (user: any): boolean => {
+export const canEditSettings = (user: AuthUser | null): boolean => {
   return hasPermission(user, Permission.EDIT_SETTINGS);
 };
 
@@ -321,7 +478,7 @@ export const canEditSettings = (user: any): boolean => {
  * @param user - User object from AuthContext
  * @returns true if user has read-only access
  */
-export const isReadOnly = (user: any): boolean => {
+export const isReadOnly = (user: AuthUser | null): boolean => {
   return isStaff(user);
 };
 

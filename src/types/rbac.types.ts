@@ -197,3 +197,115 @@ export interface ComponentAccess {
   requiredRoles?: UserRole[];
   requireAll?: boolean; // If true, user must have ALL permissions/roles
 }
+
+/**
+ * Permission Hierarchy System
+ * Higher-level permissions automatically grant lower-level permissions
+ *
+ * Example: If you have DELETE_USERS, you automatically have EDIT_USERS and VIEW_USERS
+ * This prevents repetitive permission checks and ensures logical access control
+ */
+export const PERMISSION_HIERARCHY: Record<Permission, Permission[]> = {
+  // User Management Hierarchy
+  [Permission.DELETE_USERS]: [
+    Permission.DELETE_USERS,
+    Permission.EDIT_USERS,
+    Permission.VIEW_USERS,
+  ],
+  [Permission.EDIT_USERS]: [Permission.EDIT_USERS, Permission.VIEW_USERS],
+  [Permission.VIEW_USERS]: [Permission.VIEW_USERS],
+  [Permission.CREATE_USERS]: [Permission.CREATE_USERS, Permission.VIEW_USERS],
+
+  // Admin Management Hierarchy
+  [Permission.DELETE_ADMINS]: [
+    Permission.DELETE_ADMINS,
+    Permission.EDIT_ADMINS,
+    Permission.VIEW_ADMINS,
+  ],
+  [Permission.EDIT_ADMINS]: [Permission.EDIT_ADMINS, Permission.VIEW_ADMINS],
+  [Permission.VIEW_ADMINS]: [Permission.VIEW_ADMINS],
+  [Permission.CREATE_ADMINS]: [
+    Permission.CREATE_ADMINS,
+    Permission.VIEW_ADMINS,
+  ],
+
+  // Content Management Hierarchy
+  [Permission.DELETE_CONTENT]: [
+    Permission.DELETE_CONTENT,
+    Permission.EDIT_CONTENT,
+    Permission.VIEW_CONTENT,
+  ],
+  [Permission.EDIT_CONTENT]: [Permission.EDIT_CONTENT, Permission.VIEW_CONTENT],
+  [Permission.VIEW_CONTENT]: [Permission.VIEW_CONTENT],
+  [Permission.CREATE_CONTENT]: [
+    Permission.CREATE_CONTENT,
+    Permission.VIEW_CONTENT,
+  ],
+
+  // Settings Hierarchy
+  [Permission.EDIT_SETTINGS]: [
+    Permission.EDIT_SETTINGS,
+    Permission.VIEW_SETTINGS,
+  ],
+  [Permission.VIEW_SETTINGS]: [Permission.VIEW_SETTINGS],
+
+  // Reports & Analytics Hierarchy
+  [Permission.EXPORT_DATA]: [Permission.EXPORT_DATA, Permission.VIEW_REPORTS],
+  [Permission.VIEW_REPORTS]: [Permission.VIEW_REPORTS],
+
+  // Activity Logs Hierarchy
+  [Permission.VIEW_ACTIVITY_LOGS]: [Permission.VIEW_ACTIVITY_LOGS],
+
+  // Trading Hierarchy
+  [Permission.MANAGE_TRADING]: [
+    Permission.MANAGE_TRADING,
+    Permission.VIEW_TRADING,
+  ],
+  [Permission.VIEW_TRADING]: [Permission.VIEW_TRADING],
+
+  // Inventory Hierarchy
+  [Permission.MANAGE_INVENTORY]: [
+    Permission.MANAGE_INVENTORY,
+    Permission.VIEW_INVENTORY,
+  ],
+  [Permission.VIEW_INVENTORY]: [Permission.VIEW_INVENTORY],
+
+  // Records Hierarchy
+  [Permission.MANAGE_RECORDS]: [
+    Permission.MANAGE_RECORDS,
+    Permission.VIEW_RECORDS,
+  ],
+  [Permission.VIEW_RECORDS]: [Permission.VIEW_RECORDS],
+
+  // News Hierarchy
+  [Permission.MANAGE_NEWS]: [Permission.MANAGE_NEWS, Permission.VIEW_NEWS],
+  [Permission.VIEW_NEWS]: [Permission.VIEW_NEWS],
+
+  // Guidelines Hierarchy
+  [Permission.MANAGE_GUIDELINES]: [
+    Permission.MANAGE_GUIDELINES,
+    Permission.VIEW_GUIDELINES,
+  ],
+  [Permission.VIEW_GUIDELINES]: [Permission.VIEW_GUIDELINES],
+
+  // Green Pages Hierarchy
+  [Permission.MANAGE_GREEN_PAGES]: [
+    Permission.MANAGE_GREEN_PAGES,
+    Permission.VIEW_GREEN_PAGES,
+  ],
+  [Permission.VIEW_GREEN_PAGES]: [Permission.VIEW_GREEN_PAGES],
+
+  // Farm Inventory Hierarchy
+  [Permission.MANAGE_FARM_INVENTORY]: [
+    Permission.MANAGE_FARM_INVENTORY,
+    Permission.VIEW_FARM_INVENTORY,
+  ],
+  [Permission.VIEW_FARM_INVENTORY]: [Permission.VIEW_FARM_INVENTORY],
+
+  // Achievements Hierarchy
+  [Permission.MANAGE_ACHIEVEMENTS]: [
+    Permission.MANAGE_ACHIEVEMENTS,
+    Permission.VIEW_ACHIEVEMENTS,
+  ],
+  [Permission.VIEW_ACHIEVEMENTS]: [Permission.VIEW_ACHIEVEMENTS],
+};

@@ -48,6 +48,9 @@ export {
   ReadOnly,
 } from './Can';
 
+// Error Boundary
+export { RBACErrorBoundary, withRBACErrorBoundary } from './RBACErrorBoundary';
+
 // Route Protection Components
 export { RoleBasedRoute, SuperAdminRoute, AdminRoute } from './RoleBasedRoute';
 
