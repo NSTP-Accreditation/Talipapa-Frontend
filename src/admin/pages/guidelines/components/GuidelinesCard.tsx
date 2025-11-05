@@ -20,7 +20,7 @@ const GuidelinesCard: React.FC<Props> = ({
 }) => {
   return (
     <Card
-      key={guideline.id}
+      key={guideline._id}
       className="bg-white border-2 border-gray-200 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover:border-green-300 group cursor-pointer overflow-hidden flex flex-col"
     >
       <CardHeader className="pb-3 sm:pb-4 bg-gradient-to-br from-white to-gray-50 group-hover:from-green-50 group-hover:to-white transition-all duration-300">
@@ -72,7 +72,7 @@ const GuidelinesCard: React.FC<Props> = ({
           <input
             type="checkbox"
             checked={selected}
-            onChange={() => onSelect(guideline.id)}
+            onChange={() => onSelect(guideline._id)}
             className="w-4 h-4 sm:w-5 sm:h-5 rounded-md border-2 border-gray-300 text-green-600 focus:ring-2 focus:ring-green-500 cursor-pointer transition-all hover:border-green-500 flex-shrink-0"
           />
         </div>
@@ -102,14 +102,14 @@ const GuidelinesCard: React.FC<Props> = ({
           <div className="space-y-2 sm:space-y-2.5 pt-3 sm:pt-4 mt-auto border-t-2 border-gray-200">
             <div className="flex gap-2 sm:gap-2.5">
               <button
-                onClick={() => onEdit(guideline.id)}
+                onClick={() => onEdit(guideline._id)}
                 className="flex-1 bg-white hover:bg-gray-50 text-gray-700 py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-1.5 sm:gap-2 border-2 border-gray-300 hover:border-blue-400 hover:text-blue-600 hover:shadow-md"
               >
                 Edit
               </button>
 
               <button
-                onClick={() => onDelete(guideline.id)}
+                onClick={() => onDelete(guideline._id)}
                 className="px-3 sm:px-4 py-2 sm:py-2.5 text-red-600 hover:text-white hover:bg-red-600 rounded-lg sm:rounded-xl transition-all border-2 border-red-300 hover:border-red-600 font-semibold hover:shadow-md"
               >
                 <Trash2 size={16} />

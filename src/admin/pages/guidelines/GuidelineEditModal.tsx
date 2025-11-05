@@ -6,39 +6,15 @@ import {
   FileText,
   Tag,
   TrendingUp,
-  MapPin,
   FileCheck,
-  Lightbulb,
   ChevronUp,
   ChevronDown,
   Edit2,
   Trash2,
-  Plus,
   X,
-  AlertCircle,
   Clock,
 } from 'lucide-react';
-
-interface Step {
-  id: string;
-  stepNumber: number;
-  title: string;
-  description: string;
-  requiredDocuments?: string[];
-  estimatedTime?: string;
-  tips?: string[];
-}
-
-interface Guideline {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  steps: Step[];
-  totalEstimatedTime: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  lastUpdated: string;
-}
+import { Guideline, Step } from './types';
 
 interface EditModalProps {
   guideline: Guideline | null;
@@ -67,14 +43,12 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
 }) => {
   const toast = useToast();
   const [formData, setFormData] = useState<Guideline>({
-    id: guideline?.id || '',
     title: guideline?.title || '',
     description: guideline?.description || '',
     category: guideline?.category || '',
     steps: guideline?.steps || [],
     totalEstimatedTime: guideline?.totalEstimatedTime || '',
     difficulty: guideline?.difficulty || 'Easy',
-    lastUpdated: guideline?.lastUpdated || new Date().toISOString(),
   });
 
   const [editingStepIndex, setEditingStepIndex] = useState<number | null>(null);
@@ -98,7 +72,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
         steps: [],
         totalEstimatedTime: '',
         difficulty: 'Easy' as const,
-        lastUpdated: new Date().toISOString(),
       };
       setFormData(newGuideline);
     }
@@ -118,7 +91,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
 
   const handleAddStep = () => {
     const newStep: Step = {
-      id: Date.now().toString(),
       stepNumber: formData.steps.length + 1,
       title: stepFormData.title,
       description: stepFormData.description,
@@ -160,7 +132,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
     if (editingStepIndex === null) return;
 
     const updatedStep: Step = {
-      id: formData.steps[editingStepIndex].id,
       stepNumber: formData.steps[editingStepIndex].stepNumber,
       title: stepFormData.title,
       description: stepFormData.description,
@@ -255,10 +226,9 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
 
     const updatedGuideline = {
       ...formData,
-      lastUpdated: new Date().toISOString(),
     };
 
-    const isCreate = !updatedGuideline.id;
+    const isCreate = !updatedGuideline._id;
 
     try {
       // call parent's onSave and await when it's async
@@ -277,7 +247,6 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
           steps: [],
           totalEstimatedTime: '',
           difficulty: 'Easy' as const,
-          lastUpdated: new Date().toISOString(),
         };
         setFormData(newGuideline);
         setEditingStepIndex(null);
@@ -310,10 +279,10 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
             </div>
             <div className="flex-1">
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
-                {guideline?.id ? 'Edit Guidelines' : 'Add New Guidelines'}
+                {guideline?._id ? 'Edit Guidelines' : 'Add New Guidelines'}
               </h2>
               <p className="text-xs sm:text-sm text-green-50 mt-0.5 sm:mt-1">
-                {guideline?.id
+                {guideline?._id
                   ? 'Update step-by-step instructions'
                   : 'Create comprehensive step-by-step guide'}
               </p>
@@ -459,7 +428,7 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
               <div className="space-y-4">
                 {formData.steps.map((step, idx) => (
                   <div
-                    key={step.id}
+                    key={step._id ?? `step-${idx}`}
                     className="p-3 bg-white rounded-xl border-2 border-gray-100 shadow-sm"
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -476,9 +445,9 @@ const GuidelineEditModal: React.FC<EditModalProps> = ({
                           {step.description}
                         </p>
                         <div className="flex flex-wrap gap-2 text-xs">
-                          {step.requiredDocuments?.map((d) => (
+                          {step.requiredDocuments?.map((d, i) => (
                             <span
-                              key={d}
+                              key={i}
                               className="px-2 py-1 bg-gray-50 rounded-full text-gray-700 border"
                             >
                               {d}

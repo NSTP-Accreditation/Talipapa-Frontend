@@ -10,20 +10,20 @@ type Props = {
   onDelete: (id: string) => void;
 };
 
-const GuidelinesList: React.FC<Props> = ({
+const GuidelinesList = ({
   guidelines,
   selectedGuidelines,
   onSelect,
   onEdit,
   onDelete,
-}) => {
+}: Props) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
       {guidelines.map((g) => (
         <GuidelinesCard
-          key={g.id}
+          key={g._id}
           guideline={g}
-          selected={selectedGuidelines.has(g.id)}
+          selected={selectedGuidelines.has(g._id)}
           onSelect={onSelect}
           onEdit={onEdit}
           onDelete={onDelete}

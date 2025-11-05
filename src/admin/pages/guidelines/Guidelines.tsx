@@ -12,53 +12,25 @@ import EmptyState from './components/EmptyState';
 import DeleteModal from './components/DeleteModal';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import { Guideline } from './types';
+import { PaginatedResponse } from '@/types/pagination';
 
 const Guidelines: React.FC = () => {
-  // Add loading state with 1 second display
-  const { isLoading: pageLoading } = useLoadingState(1000);
-
   const { success, error: showError } = useToast();
 
-  // fetch guidelines from backend
   const {
     data: guidelinesData,
     loading: guidelinesLoading,
     error: guidelinesError,
     refetch: refetchGuidelines,
-  } = useFetchData('/guidelines');
+  } = useFetchData<PaginatedResponse<Guideline>>('/guidelines');
 
   const [guidelines, setGuidelines] = useState<Guideline[]>([]);
-
-  // map server response to local Guideline model
+  
   useEffect(() => {
-    if (!guidelinesData) return;
-
-    try {
-      const mapped: Guideline[] = guidelinesData.map((g: any) => ({
-        id: g._id,
-        title: g.title,
-        description: g.description,
-        category: g.category,
-        totalEstimatedTime: g.totalEstimatedTime || g.total_time || '',
-        difficulty: g.difficulty || 'Easy',
-        lastUpdated: g.lastUpdated || g.createdAt || new Date().toISOString(),
-        steps: (g.steps || []).map((s: any, idx: number) => ({
-          id: s._id || `${g._id}-step-${idx}`,
-          stepNumber: s.stepNumber || idx + 1,
-          title: s.title || s.name || '',
-          description: s.description || '',
-          requiredDocuments: s.requiredDocuments || s.required_docs,
-          estimatedTime: s.estimatedTime || s.estimated_time,
-          tips: s.tips || undefined,
-        })),
-      }));
-
-      setGuidelines(mapped);
-    } catch (err) {
-      // fallback: set raw data as guidelines when mapping fails
-      setGuidelines(guidelinesData as any[]);
+    if(guidelinesData && !guidelinesLoading && !guidelinesError) {
+      setGuidelines(guidelinesData.data)
     }
-  }, [guidelinesData]);
+  }, [guidelinesData, guidelinesLoading, guidelinesError]);
 
   const authFetch = useAuthFetch();
 
@@ -93,7 +65,7 @@ const Guidelines: React.FC = () => {
   });
 
   const handleEdit = (guidelineId: string) => {
-    const guideline = guidelines.find((g) => g.id === guidelineId);
+    const guideline = guidelines.find((g) => g._id === guidelineId);
     if (guideline) {
       setEditingGuideline(guideline);
       setIsModalOpen(true);
@@ -101,7 +73,7 @@ const Guidelines: React.FC = () => {
   };
 
   const handleDelete = (guidelineId: string) => {
-    const guideline = guidelines.find((g) => g.id === guidelineId);
+    const guideline = guidelines.find((g) => g._id === guidelineId);
     if (guideline) {
       setDeletingGuideline(guideline);
       setIsDeleteModalOpen(true);
@@ -113,7 +85,7 @@ const Guidelines: React.FC = () => {
       if (!deletingGuideline) return;
       try {
         // call API to delete
-        await authFetch(`/guidelines/${deletingGuideline.id}`, {
+        await authFetch(`/guidelines/${deletingGuideline._id}`, {
           method: 'DELETE',
         });
         await refetchGuidelines();
@@ -151,7 +123,6 @@ const Guidelines: React.FC = () => {
 
   const handleBulkDelete = () => {
     if (selectedGuidelines.size === 0) return;
-    // open a shared ConfirmModal for bulk delete
     setIsBulkConfirmOpen(true);
   };
 
@@ -162,8 +133,6 @@ const Guidelines: React.FC = () => {
     setIsBulkDeleting(true);
 
     try {
-      // Call DELETE for each selected guideline. If your backend supports a
-      // batch delete endpoint, replace this with a single call.
       await Promise.all(
         ids.map((id) =>
           authFetch(`/guidelines/${id}`, {
@@ -208,6 +177,7 @@ const Guidelines: React.FC = () => {
       totalEstimatedTime: g.totalEstimatedTime,
       difficulty: g.difficulty,
       steps: g.steps.map((s) => ({
+        stepNumber: s.stepNumber,
         title: s.title,
         description: s.description,
         requiredDocuments: s.requiredDocuments || [],
@@ -219,17 +189,17 @@ const Guidelines: React.FC = () => {
 
   const handleSaveGuideline = async (
     updatedGuideline: Guideline,
-    opts?: { keepOpen?: boolean }
   ) => {
     try {
       const payload = buildGuidelinePayload(updatedGuideline);
-
+      console.log(payload);
+      
       if (
-        updatedGuideline.id &&
-        guidelines.find((g) => g.id === updatedGuideline.id)
+        updatedGuideline._id &&
+        guidelines.find((g) => g._id === updatedGuideline._id)
       ) {
         // Update existing guideline using PUT
-        await authFetch(`/guidelines/${updatedGuideline.id}`, {
+        await authFetch(`/guidelines/${updatedGuideline._id}`, {
           method: 'PUT',
           body: JSON.stringify(payload),
         });
@@ -272,19 +242,6 @@ const Guidelines: React.FC = () => {
     setEditingGuideline(null);
   };
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Easy':
-        return 'bg-green-100 text-green-800';
-      case 'Medium':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Hard':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
   const categories = [
     'Clearances',
     'Permits',
@@ -294,8 +251,7 @@ const Guidelines: React.FC = () => {
   ];
   const difficulties = ['Easy', 'Medium', 'Hard'];
 
-  // Show loading skeleton while loading
-  if (pageLoading) return <FormTablePageSkeleton />;
+  if (guidelinesLoading) return <FormTablePageSkeleton />;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 p-3 sm:p-5 lg:p-8">
