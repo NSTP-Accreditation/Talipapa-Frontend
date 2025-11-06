@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/useToast';
 import { sanitizeName, validateName } from '@/utils/validation';
+import UnifiedBackground from '../components/UnifiedBackground';
 import {
   FileText,
   CheckCircle,
@@ -322,7 +323,7 @@ export default function Trading() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-professional gradient-mesh relative">
+    <UnifiedBackground>
       {/* Breadcrumb */}
       <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
@@ -994,6 +995,6 @@ export default function Trading() {
           </div>
         </div>
       )}
-    </div>
+    </UnifiedBackground>
   );
 }

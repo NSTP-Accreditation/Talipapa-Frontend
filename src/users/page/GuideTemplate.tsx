@@ -9,6 +9,7 @@ import {
   ChevronRight,
   BookOpen,
 } from 'lucide-react';
+import UnifiedBackground from '../components/UnifiedBackground';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { GuideTemplateSkeleton } from '../../components/LoadingSkeletons';
 
@@ -74,7 +75,7 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-professional gradient-mesh relative">
+    <UnifiedBackground>
       {/* Breadcrumb - Seamless with Navbar */}
       <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 sm:py-3">
@@ -268,7 +269,7 @@ const GuideTemplate: React.FC<GuideTemplateProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </UnifiedBackground>
   );
 };
 

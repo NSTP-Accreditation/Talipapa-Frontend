@@ -63,7 +63,7 @@ export default function AboutBarangay() {
       </div>
 
       {/* Main Content */}
-      <div className="bg-gradient-professional gradient-mesh relative py-20">
+      <div className="relative py-20">
         <div className="max-w-7xl mx-auto px-6">
           {/* Header */}
           <div className="text-center mb-8 sm:mb-16 px-4 sm:px-0">

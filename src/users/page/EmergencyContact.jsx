@@ -9,6 +9,7 @@ import {
 } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import UnifiedBackground from '../components/UnifiedBackground';
 import {
   Phone,
   MapPin,
@@ -406,7 +407,7 @@ export default function EmergencyContact() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50">
+    <UnifiedBackground>
       <style>{`
         @keyframes fadeIn {
           from {
@@ -1357,6 +1358,6 @@ function LandslideVideo() {
           </div>
         </div>
       </div>
-    </div>
+    </UnifiedBackground>
   );
 }

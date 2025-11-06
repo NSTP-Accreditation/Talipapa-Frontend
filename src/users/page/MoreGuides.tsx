@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Link } from 'react-router-dom';
+import UnifiedBackground from '../components/UnifiedBackground';
 import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useEffect, useState } from 'react';
 import usePublicFetch from '@/hooks/usePublicFetch';
@@ -52,7 +53,7 @@ export default function MoreGuides() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-professional gradient-mesh relative">
+    <UnifiedBackground>
       {/* Breadcrumb - Seamless with Navbar */}
       <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 sm:py-3">
@@ -140,64 +141,77 @@ export default function MoreGuides() {
           })}
         </div>
 
-        {/* Additional Resources Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-10 lg:mb-12">
-          <div className="bg-white border-2 border-gray-100 rounded-xl sm:rounded-2xl p-6 sm:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg sm:rounded-xl flex items-center justify-center">
-                <span className="text-xl sm:text-2xl">📄</span>
-              </div>
-              <h3 className="text-gray-800 text-lg sm:text-xl lg:text-2xl font-bold">
-                Forms & Templates
-              </h3>
+        {/* Helpful Tips Section */}
+        <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl sm:rounded-2xl p-6 sm:p-8 lg:p-10 mb-8 sm:mb-10 lg:mb-12 shadow-lg">
+          <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md">
+              <span className="text-2xl sm:text-3xl">�</span>
             </div>
-            <p className="text-gray-600 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
-              Download commonly used forms, templates, and printable checklists
-              to speed up your application process.
-            </p>
-            <ul className="space-y-2 sm:space-y-3">
-              <li className="flex items-center gap-2 sm:gap-3 text-gray-700 bg-gray-50 p-2 sm:p-3 rounded-lg text-sm sm:text-base">
-                <span className="text-blue-600">📋</span>
-                <span>Application Form (PDF)</span>
-              </li>
-              <li className="flex items-center gap-2 sm:gap-3 text-gray-700 bg-gray-50 p-2 sm:p-3 rounded-lg text-sm sm:text-base">
-                <span className="text-blue-600">📝</span>
-                <span>Affidavit Template (DOCX)</span>
-              </li>
-              <li className="flex items-center gap-2 sm:gap-3 text-gray-700 bg-gray-50 p-2 sm:p-3 rounded-lg text-sm sm:text-base">
-                <span className="text-blue-600">✅</span>
-                <span>Checklist for Residency (PDF)</span>
-              </li>
-            </ul>
+            <h3 className="text-gray-900 text-xl sm:text-2xl lg:text-3xl font-bold">
+              Helpful Tips for Using These Guides
+            </h3>
           </div>
 
-          <div className="bg-white border-2 border-gray-100 rounded-xl sm:rounded-2xl p-6 sm:p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg sm:rounded-xl flex items-center justify-center">
-                <span className="text-xl sm:text-2xl">❓</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="flex items-start gap-3 bg-white/70 backdrop-blur-sm p-4 sm:p-5 rounded-xl border border-green-200 shadow-sm">
+              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-xl">📖</span>
               </div>
-              <h3 className="text-gray-800 text-lg sm:text-xl lg:text-2xl font-bold">
-                FAQ
-              </h3>
+              <div>
+                <h4 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">
+                  Read Thoroughly
+                </h4>
+                <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">
+                  Follow each step carefully and prepare all required documents
+                  beforehand
+                </p>
+              </div>
             </div>
-            <p className="text-gray-600 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
-              Answers to common questions about requirements, fees, and
-              processing times.
-            </p>
-            <ul className="space-y-2 sm:space-y-3">
-              <li className="flex items-start gap-2 sm:gap-3 text-gray-700 bg-gray-50 p-2 sm:p-3 rounded-lg text-sm sm:text-base">
-                <span className="text-purple-600 flex-shrink-0">💬</span>
-                <span>How long does processing take?</span>
-              </li>
-              <li className="flex items-start gap-2 sm:gap-3 text-gray-700 bg-gray-50 p-2 sm:p-3 rounded-lg text-sm sm:text-base">
-                <span className="text-purple-600 flex-shrink-0">📂</span>
-                <span>What documents are required?</span>
-              </li>
-              <li className="flex items-start gap-2 sm:gap-3 text-gray-700 bg-gray-50 p-2 sm:p-3 rounded-lg text-sm sm:text-base">
-                <span className="text-purple-600 flex-shrink-0">📍</span>
-                <span>Where to submit the application?</span>
-              </li>
-            </ul>
+
+            <div className="flex items-start gap-3 bg-white/70 backdrop-blur-sm p-4 sm:p-5 rounded-xl border border-green-200 shadow-sm">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-xl">⏰</span>
+              </div>
+              <div>
+                <h4 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">
+                  Check Office Hours
+                </h4>
+                <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">
+                  Visit during official hours (Mon-Fri, 8:00 AM - 5:00 PM) to
+                  avoid delays
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 bg-white/70 backdrop-blur-sm p-4 sm:p-5 rounded-xl border border-green-200 shadow-sm">
+              <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-xl">📞</span>
+              </div>
+              <div>
+                <h4 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">
+                  Contact for Questions
+                </h4>
+                <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">
+                  Call the Barangay Hall if you need clarification on
+                  requirements
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 bg-white/70 backdrop-blur-sm p-4 sm:p-5 rounded-xl border border-green-200 shadow-sm">
+              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-xl">✅</span>
+              </div>
+              <div>
+                <h4 className="font-bold text-gray-900 mb-1 text-sm sm:text-base">
+                  Bring Valid ID
+                </h4>
+                <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">
+                  Always bring a government-issued ID and photocopies for
+                  verification
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -216,6 +230,6 @@ export default function MoreGuides() {
           </Link>
         </div>
       </main>
-    </div>
+    </UnifiedBackground>
   );
 }

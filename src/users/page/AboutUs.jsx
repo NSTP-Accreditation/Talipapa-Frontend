@@ -1,4 +1,5 @@
 import AboutBarangay from '../components/AboutBarangay';
+import UnifiedBackground from '../components/UnifiedBackground';
 import { User, MapPin, ExternalLink, Home, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLoadingState } from '../../hooks/useLoadingState';
@@ -16,7 +17,7 @@ const AboutUs = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-professional gradient-mesh relative">
+    <UnifiedBackground>
       {/* Breadcrumb - Seamless with Navbar */}
       <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
@@ -43,7 +44,7 @@ const AboutUs = () => {
           <BarangayMap />
         </div>
       </div>
-    </div>
+    </UnifiedBackground>
   );
 };
 
