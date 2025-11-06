@@ -1162,7 +1162,7 @@ export default function EmergencyContact() {
           </div>
         </section>
       </div>
-    </div>
+    </UnifiedBackground>
   );
 }
 
@@ -1358,6 +1358,6 @@ function LandslideVideo() {
           </div>
         </div>
       </div>
-    </UnifiedBackground>
+    </div>
   );
 }
