@@ -109,6 +109,16 @@ const SwapItem = () => {
       return;
     }
 
+    // Check if sufficient stock is available
+    if (quantity > product.stocks) {
+      showError(
+        `Insufficient stock. Only ${product.stocks} unit(s) available.`,
+        { title: 'Out of Stock' }
+      );
+      setRedeemInProgress(false);
+      return;
+    }
+
     const totalRequiredPoints = quantity * product.requiredPoints;
 
     if (totalRequiredPoints > recordData.points) {
@@ -124,6 +134,7 @@ const SwapItem = () => {
       lastName: recordData.lastName,
       product_id: product._id,
       points: -totalRequiredPoints,
+      quantity: quantity, // Add quantity to request body
     };
 
     try {
@@ -136,6 +147,21 @@ const SwapItem = () => {
         `${data.message}: Current Points: ${recordData.points - totalRequiredPoints}`,
         { title: 'Redemption Successful' }
       );
+
+      // Update product stock in inventory after successful redemption
+      try {
+        await authFetch(`/products/${product._id}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            stocks: product.stocks - quantity,
+          }),
+        });
+      } catch (stockError) {
+        console.error('Failed to update product stock:', stockError);
+        showError('Product redeemed but stock update failed', {
+          title: 'Warning',
+        });
+      }
 
       // Refresh data after successful redemption
       const updatedRecord = await authFetch(
