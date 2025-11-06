@@ -1175,7 +1175,7 @@ function FloodVideo() {
         <iframe
           width="100%"
           height="100%"
-          src="https://www.youtube.com/embed/Wzqrz0cc41k"
+          src="https://www.youtube.com/embed/X7CAJv07RdY"
           title="Flood Safety and Preparedness"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -1218,7 +1218,7 @@ function EarthquakeVideo() {
         <iframe
           width="100%"
           height="100%"
-          src="https://www.youtube.com/embed/BLEPakj1YTY"
+          src="https://www.youtube.com/embed/fnl_-oBQF9M"
           title="Earthquake Safety: Drop, Cover, Hold On"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -1256,7 +1256,7 @@ function TyphoonVideo() {
         <iframe
           width="100%"
           height="100%"
-          src="https://www.youtube.com/embed/sqhpnFjx0cI"
+          src="https://www.youtube.com/embed/mlLm0vyvuTI"
           title="Typhoon Preparedness and Safety"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -1294,7 +1294,7 @@ function FireVideo() {
         <iframe
           width="100%"
           height="100%"
-          src="https://www.youtube.com/embed/Ij6zRDKimPY"
+          src="https://www.youtube.com/embed/b6e5KPVbGkU"
           title="Fire Safety and Prevention"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -1332,7 +1332,7 @@ function LandslideVideo() {
         <iframe
           width="100%"
           height="100%"
-          src="https://www.youtube.com/embed/1LbjWVJU0rQ"
+          src="https://www.youtube.com/embed/UH-SJuSdLDw"
           title="Landslide Safety and Awareness"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
