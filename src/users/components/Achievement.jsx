@@ -6,7 +6,7 @@ export default function Achievements() {
   const achievements = Array.isArray(data) ? data : [];
 
   return (
-    <section className="bg-gradient-professional gradient-mesh relative py-12 sm:py-16 md:py-20 flex justify-center px-4 sm:px-6">
+    <section className="py-12 sm:py-16 md:py-20 flex justify-center px-4 sm:px-6">
       <div className="max-w-6xl w-full">
         {/* Section Header */}
         <header className="text-center mb-10 sm:mb-12 md:mb-16">
