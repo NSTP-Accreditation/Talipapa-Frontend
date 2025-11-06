@@ -1105,7 +1105,7 @@ export default function EmergencyContact() {
           </div>
         </section>
 
-        {/* DISASTER PREPAREDNESS TIPS */}
+        {/* DISASTER PREPAREDNESS TIP */}
         <section id="disaster-tips" className="mb-10 animate-fadeIn">
           <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-200">
             <div className="flex items-start gap-4 mb-8">
