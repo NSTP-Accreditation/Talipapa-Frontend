@@ -51,7 +51,7 @@ export const useAuthFetch = () => {
           credentials: 'include',
         });
 
-        if (response.status === 403) {
+        if (response.status === 401) {
           try {
             const newTokens = await refreshToken();
             token = newTokens?.accessToken;
