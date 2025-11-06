@@ -1,5 +1,6 @@
-import { useCallback } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import { requestCache } from '../../utils/requestCache';
 
 // Types
 interface AuthResponse {
@@ -28,34 +29,51 @@ export const useAuthFetch = () => {
   const apiURL = import.meta.env.VITE_API_URL as string;
   const { user, refreshToken, logout } = useAuth();
 
+  // Use refs to avoid recreating the callback on every token change
+  const userRef = useRef(user);
+  const refreshTokenRef = useRef(refreshToken);
+  const logoutRef = useRef(logout);
+
+  // Keep refs up to date
+  useEffect(() => {
+    userRef.current = user;
+    refreshTokenRef.current = refreshToken;
+    logoutRef.current = logout;
+  }, [user, refreshToken, logout]);
+
   const authFetch = useCallback(
     async <T = any>(
       url: string,
       options: AuthFetchOptions = {}
     ): Promise<T | SuccessResponse> => {
-      // Get token from context OR fallback to localStorage
-      let token = user?.accessToken;
+      // Create cache key for GET requests (skip caching for mutations)
+      const method = options.method?.toUpperCase() || 'GET';
+      const finalUrl = /^https?:\/\//i.test(url) ? url : `${apiURL}${url}`;
+      const shouldCache = method === 'GET';
+      const cacheKey = shouldCache ? `${method}:${finalUrl}` : '';
 
-      if (!token) {
-        token = localStorage.getItem('accessToken') || undefined;
-      }
+      // Wrap the fetch logic in a function for deduplication
+      const fetchFunction = async () => {
+        // Get token from context OR fallback to localStorage
+        let token = userRef.current?.accessToken;
 
-      // If no token, logout (which will redirect to login)
-      if (!token) {
-        logout();
-        return Promise.reject(new Error('Authentication required'));
-      }
+        if (!token) {
+          token = localStorage.getItem('accessToken') || undefined;
+        }
 
-      const isFormData = options.body instanceof FormData;
+        // If no token, logout (which will redirect to login)
+        if (!token) {
+          logoutRef.current();
+          return Promise.reject(new Error('Authentication required'));
+        }
 
-      const headers: HeadersInit = {
-        ...(options.headers || {}),
-        Authorization: `Bearer ${token}`,
-        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
-      };
+        const isFormData = options.body instanceof FormData;
 
-      try {
-        const finalUrl = /^https?:\/\//i.test(url) ? url : `${apiURL}${url}`;
+        const headers: HeadersInit = {
+          ...(options.headers || {}),
+          Authorization: `Bearer ${token}`,
+          ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+        };
 
         let response = await fetch(finalUrl, {
           ...options,
@@ -65,7 +83,7 @@ export const useAuthFetch = () => {
 
         if (response.status === 403) {
           try {
-            const newTokens = await refreshToken();
+            const newTokens = await refreshTokenRef.current();
             token = newTokens?.accessToken;
 
             if (!token) {
@@ -84,7 +102,7 @@ export const useAuthFetch = () => {
               credentials: 'include',
             });
           } catch (refreshErr) {
-            logout();
+            logoutRef.current();
             throw refreshErr;
           }
         }
@@ -114,11 +132,17 @@ export const useAuthFetch = () => {
         }
 
         return data;
-      } catch (error) {
-        throw error;
+      };
+
+      // Use request deduplication for GET requests only
+      if (shouldCache) {
+        return requestCache.dedupe(cacheKey, fetchFunction);
       }
+
+      // For non-GET requests (POST, PUT, DELETE), execute directly
+      return fetchFunction();
     },
-    [apiURL, user?.accessToken, refreshToken, logout]
+    [apiURL] // Only depend on apiURL (which never changes)
   );
 
   return authFetch;

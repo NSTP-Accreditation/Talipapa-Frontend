@@ -2,7 +2,7 @@ import useFetchData from '@/admin/hooks/useFetchData';
 import FarmInventoryCards from './components/FarmInventoryCards';
 import FarmInventoryHeader from './FarmInventoryHeader';
 import FarmInventoryItems from './FarmInventoryItems';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import AddEditFarmItemModal from './components/AddEditFarmItemModal';
 import { FarmItemInterface } from '@/types/global.types';
 import DeleteFarmItemModal from './components/DeleteFarmItemModal';
@@ -10,7 +10,7 @@ import { useRBAC } from '../../../hooks/useRBAC';
 import { Permission } from '../../../types/rbac.types';
 import { ReadOnly } from '../../../components/rbac/Can';
 
-const FarmInventory = () => {
+const FarmInventory = memo(function FarmInventory() {
   // RBAC: Check if user can manage farm inventory
   const { hasPermission } = useRBAC();
   const canManageFarmInventory = hasPermission(
@@ -98,6 +98,6 @@ const FarmInventory = () => {
       </div>
     </div>
   );
-};
+});
 
 export default FarmInventory;

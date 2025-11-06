@@ -1,10 +1,11 @@
 import AboutBarangay from '../components/AboutBarangay';
+import UnifiedBackground from '../components/UnifiedBackground';
 import { User, MapPin, ExternalLink, Home, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useEffect, useState } from 'react';
-import useFetchData from '@/admin/hooks/useFetchData';
+import usePublicFetch from '@/hooks/usePublicFetch';
 
 const AboutUs = () => {
   // Add loading state with 1 second display
@@ -16,7 +17,7 @@ const AboutUs = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-professional gradient-mesh relative">
+    <UnifiedBackground>
       {/* Breadcrumb - Seamless with Navbar */}
       <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
@@ -43,7 +44,7 @@ const AboutUs = () => {
           <BarangayMap />
         </div>
       </div>
-    </div>
+    </UnifiedBackground>
   );
 };
 
@@ -52,7 +53,7 @@ export default AboutUs;
 // BARANGAY  OFFICIALS
 const BarangayOfficials = () => {
   const [officials, setOfficials] = useState([]);
-  const { data, loading, error } = useFetchData(`/officials`);
+  const { data, loading, error } = usePublicFetch(`/officials`);
   useEffect(() => {
     if (data && !loading && !error) {
       setOfficials(data);
@@ -114,9 +115,9 @@ const BarangayOfficials = () => {
                 </p>
 
                 {/* Biography */}
-                {official.bio && official.bio.trim() && (
+                {official.biography && official.biography.trim() && (
                   <p className="text-gray-500 text-xs leading-snug text-center line-clamp-3 px-2">
-                    {official.bio}
+                    {official.biography}
                   </p>
                 )}
               </div>
@@ -162,9 +163,9 @@ const BarangayOfficials = () => {
                 </p>
 
                 {/* Biography */}
-                {official.bio && official.bio.trim() && (
+                {official.biography && official.biography.trim() && (
                   <p className="text-gray-500 text-xs leading-snug text-center line-clamp-3 px-2">
-                    {official.bio}
+                    {official.biography}
                   </p>
                 )}
               </div>
@@ -210,9 +211,9 @@ const BarangayOfficials = () => {
                 </p>
 
                 {/* Biography */}
-                {official.bio && official.bio.trim() && (
+                {official.biography && official.biography.trim() && (
                   <p className="text-gray-500 text-xs leading-snug text-center line-clamp-3 px-2">
-                    {official.bio}
+                    {official.biography}
                   </p>
                 )}
               </div>

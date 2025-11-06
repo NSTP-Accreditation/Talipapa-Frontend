@@ -1,13 +1,19 @@
-import useFetchData from "@/admin/hooks/useFetchData";
-import { ImageInterface } from "@/types/global.types";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import usePublicFetch from '@/hooks/usePublicFetch';
+import { ImageInterface } from '@/types/global.types';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 interface CarouselInterface {
-  title: string,
-  subTitle: string,
-  link: string,
-  order: number,
-  image: ImageInterface
+  title: string;
+  subTitle: string;
+  link: string;
+  order: number;
+  image: ImageInterface;
 }
 
 export interface PageContentInterface {
@@ -36,17 +42,23 @@ interface BrgyInfoContextType {
   refetch: () => void;
 }
 
-const BrgyInfoContext = createContext<BrgyInfoContextType | undefined>(undefined);
+const BrgyInfoContext = createContext<BrgyInfoContextType | undefined>(
+  undefined
+);
 
 export const BrgyInfoProvider = ({ children }: { children: ReactNode }) => {
-  const [pageContent, setPageContent] = useState<PageContentInterface | undefined>(undefined);
-  
+  const [pageContent, setPageContent] = useState<
+    PageContentInterface | undefined
+  >(undefined);
+
   const {
     data,
     loading: dataLoading,
     error,
     refetch,
-  } = useFetchData<PageContentInterface>(`/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`);
+  } = usePublicFetch<PageContentInterface>(
+    `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`
+  );
 
   useEffect(() => {
     if (data && !dataLoading && !error) {
@@ -70,10 +82,10 @@ export const BrgyInfoProvider = ({ children }: { children: ReactNode }) => {
 
 export const useBrgyInfo = () => {
   const context = useContext(BrgyInfoContext);
-  
+
   if (context === undefined) {
-    throw new Error("useBrgyInfo must be used within a BrgyInfoProvider");
+    throw new Error('useBrgyInfo must be used within a BrgyInfoProvider');
   }
-  
+
   return context;
 };

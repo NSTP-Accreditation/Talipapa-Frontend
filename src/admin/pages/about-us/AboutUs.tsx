@@ -31,7 +31,7 @@ export default function AboutBarangayEditable() {
     vision?: string;
     barangayHistory?: string;
     barangayDescription?: string;
-    youtubeVideoUrl?: string;
+    youtubeUrl?: string;
   }>();
 
   // Centralized modal state
@@ -48,7 +48,7 @@ export default function AboutBarangayEditable() {
         vision: data.vision || '',
         barangayHistory: data.barangayHistory || '',
         barangayDescription: data.barangayDescription || '',
-        youtubeVideoUrl: data.youtubeVideoUrl || '',
+        youtubeUrl: data.youtubeUrl || '',
       });
     }
   }, [data, dataLoading, error]);
@@ -109,14 +109,14 @@ export default function AboutBarangayEditable() {
     barangayHistory: string;
     mission: string;
     vision: string;
-    youtubeVideoUrl: string;
+    youtubeUrl: string;
   }) => {
     setIsSaving(true);
     try {
       // Convert YouTube URL to embed format
       const contentToSave = {
         ...updatedContent,
-        youtubeVideoUrl: convertToEmbedUrl(updatedContent.youtubeVideoUrl),
+        youtubeUrl: convertToEmbedUrl(updatedContent.youtubeUrl),
       };
 
       const url = `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`;
@@ -222,14 +222,14 @@ export default function AboutBarangayEditable() {
                 </p>
                 <div className="bg-gray-50 p-3 sm:p-4 rounded-lg border border-gray-200">
                   <p className="text-xs sm:text-sm text-gray-600 break-all font-mono">
-                    {pageContent?.youtubeVideoUrl ||
+                    {pageContent?.youtubeUrl ||
                       'No video URL set (using default)'}
                   </p>
                 </div>
-                {pageContent?.youtubeVideoUrl && (
+                {pageContent?.youtubeUrl && (
                   <div className="aspect-video w-full rounded-lg overflow-hidden shadow-lg">
                     <iframe
-                      src={pageContent.youtubeVideoUrl}
+                      src={pageContent.youtubeUrl}
                       title="Barangay Video Preview"
                       allow="autoplay; encrypted-media"
                       allowFullScreen

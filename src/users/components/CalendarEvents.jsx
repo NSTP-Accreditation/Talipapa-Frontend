@@ -1,4 +1,4 @@
-import useFetchData from '@/admin/hooks/useFetchData';
+import usePublicFetch from '@/hooks/usePublicFetch';
 import { Calendar as CalendarIcon, Clock, MapPin, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
@@ -64,7 +64,9 @@ const EventCard = ({ event }) => {
               className="mr-2 sm:mr-3 text-red-600 flex-shrink-0"
               size={16}
             />
-            <span className="line-clamp-2 leading-normal pb-0.5">{event?.location}</span>
+            <span className="line-clamp-2 leading-normal pb-0.5">
+              {event?.location}
+            </span>
           </div>
         </div>
 
@@ -78,7 +80,7 @@ const EventCard = ({ event }) => {
 
 export default function CalendarEvents() {
   const [dataEvents, setDataEvents] = useState([]);
-  const { data, loading, error } = useFetchData('/news');
+  const { data, loading, error } = usePublicFetch('/news');
 
   useEffect(() => {
     if (data && !loading && !error) {
@@ -87,7 +89,7 @@ export default function CalendarEvents() {
   }, [data, loading, error]);
 
   return (
-    <section className="bg-gradient-professional gradient-mesh relative py-12 sm:py-16 md:py-20 px-4 sm:px-6">
+    <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <header className="text-center mb-10 sm:mb-12 md:mb-16">

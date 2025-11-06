@@ -4,7 +4,9 @@ import React, {
   useState,
   useEffect,
   ReactNode,
+  useMemo,
 } from 'react';
+import { logger } from '@/utils/logger';
 
 interface UserData {
   username: string;
@@ -21,16 +23,30 @@ interface User {
   accessToken: string;
 }
 
-interface AuthContextType {
+// Separate state and actions to reduce unnecessary re-renders
+interface AuthStateType {
   isAuthenticated: boolean;
   user: User | null;
+  loading: boolean;
+}
+
+interface AuthActionsType {
   login: (username: string, password: string) => Promise<boolean>;
   refreshToken: () => Promise<User | null>;
   logout: () => void;
-  loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+// Legacy combined type for backward compatibility
+interface AuthContextType extends AuthStateType, AuthActionsType {}
+
+// Create separate contexts for state and actions
+const AuthStateContext = createContext<AuthStateType | undefined>(undefined);
+const AuthActionsContext = createContext<AuthActionsType | undefined>(
+  undefined
+);
+
+// Legacy context for backward compatibility
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
@@ -51,37 +67,37 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const token = localStorage.getItem('accessToken');
         const storedUser = localStorage.getItem('adminUser');
 
-        console.log('=== 🔍 AUTH DEBUG ===');
-        console.log('API URL:', apiURL);
-        console.log('Is Authenticated:', isAuthenticated);
-        console.log('User in state:', user ? '✅ Yes' : '❌ No');
-        console.log('Token in localStorage:', token ? '✅ Yes' : '❌ No');
-        console.log('User in localStorage:', storedUser ? '✅ Yes' : '❌ No');
+        logger.group('🔍 AUTH DEBUG');
+        logger.debug('API URL:', apiURL);
+        logger.debug('Is Authenticated:', isAuthenticated);
+        logger.debug('User in state:', user ? '✅ Yes' : '❌ No');
+        logger.debug('Token in localStorage:', token ? '✅ Yes' : '❌ No');
+        logger.debug('User in localStorage:', storedUser ? '✅ Yes' : '❌ No');
 
         if (token) {
-          console.log('Token type:', typeof token);
-          console.log('Token length:', token.length);
-          console.log('Token preview:', token.substring(0, 50) + '...');
-          console.log(
+          logger.debug('Token type:', typeof token);
+          logger.debug('Token length:', token.length);
+          logger.debug('Token preview:', token.substring(0, 50) + '...');
+          logger.debug(
             'Token parts:',
             token.split('.').length,
             '(should be 3 for JWT)'
           );
         } else {
-          console.log('❌ NO TOKEN FOUND');
+          logger.debug('❌ NO TOKEN FOUND');
         }
 
         if (storedUser) {
           try {
             const parsed = JSON.parse(storedUser);
-            console.log('Stored user data:', parsed);
+            logger.debug('Stored user data:', parsed);
           } catch (e) {
-            console.error('❌ Failed to parse stored user:', e);
+            logger.error('❌ Failed to parse stored user:', e);
           }
         }
 
         if (user) {
-          console.log('Current user state:', {
+          logger.debug('Current user state:', {
             username: user.userData?.username,
             roles: user.userData?.roles,
             hasToken: !!user.accessToken,
@@ -89,16 +105,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           });
         }
 
-        console.log('==================');
-        console.log('💡 To test a request with token:');
-        console.log(
+        logger.debug('💡 To test a request with token:');
+        logger.debug(
           `fetch('${apiURL}/api/users', { headers: { 'Authorization': 'Bearer ${token?.substring(0, 20)}...' } })`
         );
+        logger.groupEnd();
       };
 
       // Debug helper available in development mode only
       if (process.env.NODE_ENV === 'development') {
-        console.log('Debug helper: window.debugAuth()');
+        logger.info('Debug helper: window.debugAuth()');
       }
     }
   }, [apiURL, isAuthenticated, user]);
@@ -244,19 +260,77 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const value: AuthContextType = {
-    isAuthenticated,
-    user,
-    login,
-    refreshToken,
-    logout,
-    loading,
-    setLoading,
-  };
+  // Memoize state and actions separately to prevent unnecessary re-renders
+  const stateValue: AuthStateType = useMemo(
+    () => ({
+      isAuthenticated,
+      user,
+      loading,
+    }),
+    [isAuthenticated, user, loading]
+  );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const actionsValue: AuthActionsType = useMemo(
+    () => ({
+      login,
+      refreshToken,
+      logout,
+      setLoading,
+    }),
+    [] // Actions never change, so empty deps array
+  );
+
+  // Legacy combined value for backward compatibility
+  const legacyValue: AuthContextType = useMemo(
+    () => ({
+      ...stateValue,
+      ...actionsValue,
+    }),
+    [stateValue, actionsValue]
+  );
+
+  return (
+    <AuthStateContext.Provider value={stateValue}>
+      <AuthActionsContext.Provider value={actionsValue}>
+        <AuthContext.Provider value={legacyValue}>
+          {children}
+        </AuthContext.Provider>
+      </AuthActionsContext.Provider>
+    </AuthStateContext.Provider>
+  );
 };
 
+/**
+ * Hook to access auth state only (isAuthenticated, user, loading)
+ * Use this when you only need to read auth state to avoid unnecessary re-renders
+ * when actions like login/logout are called in other components.
+ */
+export const useAuthState = (): AuthStateType => {
+  const context = useContext(AuthStateContext);
+  if (context === undefined) {
+    throw new Error('useAuthState must be used within an AuthProvider');
+  }
+  return context;
+};
+
+/**
+ * Hook to access auth actions only (login, logout, refreshToken, setLoading)
+ * Use this when you only need to trigger actions without needing the current user state.
+ * This prevents re-renders when the user state changes.
+ */
+export const useAuthActions = (): AuthActionsType => {
+  const context = useContext(AuthActionsContext);
+  if (context === undefined) {
+    throw new Error('useAuthActions must be used within an AuthProvider');
+  }
+  return context;
+};
+
+/**
+ * Legacy hook that provides both state and actions
+ * Use the new useAuthState() and useAuthActions() hooks instead for better performance.
+ * This hook is kept for backward compatibility.
+ */
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {

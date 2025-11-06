@@ -6,13 +6,13 @@ import EditRecordModal from './components/EditRecordModal';
 import RecordFilter from './components/RecordFilter';
 import RecordHeader from './components/RecordHeader';
 import RecordTable from './components/RecordTable';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
 import { useRBAC } from '../../../hooks/useRBAC';
 import { Permission } from '../../../types/rbac.types';
 import { ReadOnly } from '../../../components/rbac/Can';
 
-const Records = () => {
+const Records = memo(function Records() {
   const [originalRecords, setOriginalRecords] = useState<RecordInterface[]>([]);
   const {
     data: recordsData,
@@ -133,6 +133,6 @@ const Records = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Records;

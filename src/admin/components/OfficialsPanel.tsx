@@ -23,7 +23,7 @@ interface Official {
   position: string;
   image?: string | null | ImageInt;
   imageFile: File | null;
-  bio?: string;
+  biography?: string;
 }
 
 export interface ImageInt {
@@ -55,7 +55,7 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
     position: '',
     image: null,
     imageFile: null,
-    bio: '',
+    biography: '',
   });
 
   React.useEffect(() => {
@@ -68,7 +68,7 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
         position: '',
         image: null,
         imageFile: null,
-        bio: '',
+        biography: '',
       });
     }
   }, [official, isOpen]);
@@ -237,9 +237,12 @@ const OfficialModal: React.FC<OfficialModalProps> = ({
                 <span>Biography (Optional)</span>
               </label>
               <textarea
-                value={formData.bio || ''}
+                value={formData.biography || ''}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, bio: e.target.value }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    biography: e.target.value,
+                  }))
                 }
                 rows={4}
                 className="w-full p-3 sm:p-4 border-2 border-gray-200 rounded-xl resize-none focus:outline-none focus:ring-4 focus:ring-green-100 focus:border-green-500 text-sm sm:text-base transition-all"
@@ -418,7 +421,7 @@ export default function OfficialsPanel() {
     const formData = new FormData();
     formData.append('name', officialData.name);
     formData.append('position', officialData.position);
-    formData.append('bio', officialData.bio || '');
+    formData.append('biography', officialData.biography || '');
     if (officialData.imageFile)
       formData.append('image', officialData.imageFile);
 
@@ -552,17 +555,30 @@ export default function OfficialsPanel() {
                 className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden hover:border-green-400 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
               >
                 {/* Official Image */}
-                <div className="relative h-40 sm:h-56 bg-gradient-to-br from-green-500 to-green-600">
+                <div className="relative h-40 sm:h-56 bg-gray-900 overflow-hidden">
                   {official.image ? (
-                    <img
-                      src={
-                        typeof official.image === 'string'
-                          ? official.image
-                          : official.image?.url
-                      }
-                      alt={official.name}
-                      className="w-full h-full object-cover"
-                    />
+                    <>
+                      {/* Blurred background */}
+                      <img
+                        src={
+                          typeof official.image === 'string'
+                            ? official.image
+                            : official.image?.url
+                        }
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-50"
+                      />
+                      {/* Main image */}
+                      <img
+                        src={
+                          typeof official.image === 'string'
+                            ? official.image
+                            : official.image?.url
+                        }
+                        alt={official.name}
+                        className="relative w-full h-full object-contain z-10"
+                      />
+                    </>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <div className="w-20 h-20 sm:w-28 sm:h-28 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -597,9 +613,9 @@ export default function OfficialsPanel() {
                   <p className="text-green-600 font-semibold text-xs sm:text-sm mb-2 sm:mb-3">
                     {official.position}
                   </p>
-                  {official.bio && (
+                  {official.biography && (
                     <p className="text-gray-600 text-xs sm:text-sm leading-relaxed line-clamp-3">
-                      {official.bio}
+                      {official.biography}
                     </p>
                   )}
                 </div>
@@ -635,9 +651,9 @@ export default function OfficialsPanel() {
               Are you sure you want to delete "{deletingOfficial?.name}" ({' '}
               {deletingOfficial?.position})?
             </p>
-            {deletingOfficial?.bio && (
+            {deletingOfficial?.biography && (
               <p className="text-xs text-gray-600 mt-2">
-                {deletingOfficial.bio}
+                {deletingOfficial.biography}
               </p>
             )}
             <p className="text-sm text-red-700 font-semibold mt-3">
