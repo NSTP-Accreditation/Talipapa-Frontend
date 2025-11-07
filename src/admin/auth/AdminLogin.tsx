@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Shield, AlertTriangle, Lock } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { APP_ROUTES } from '../../utils/constants/routes';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../hooks/useToast';
+import { useLoginRateLimiter } from '../../hooks/useLoginRateLimiter';
 
 const AdminLogin: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,20 @@ const AdminLogin: React.FC = () => {
   const location = useLocation();
   const { login, isAuthenticated, loading, setLoading } = useAuth();
   const { success, error } = useToast();
+
+  // Rate limiting hook
+  const {
+    isLocked,
+    remainingAttempts,
+    remainingLockoutSeconds,
+    attemptCount,
+    canAttemptLogin,
+    checkCanLogin,
+    recordLoginAttempt,
+    getLockoutMessage,
+    getRemainingAttemptsMessage,
+    getProgressPercentage,
+  } = useLoginRateLimiter();
 
   // Redirect if already logged in
   useEffect(() => {
@@ -75,6 +90,9 @@ const AdminLogin: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Check rate limiting first - don't show toast if just validation issues
+    const canLogin = checkCanLogin(formData.username);
+
     if (!validateForm()) {
       // Show toast for validation error
       if (errors.username) {
@@ -87,9 +105,22 @@ const AdminLogin: React.FC = () => {
       return;
     }
 
+    // Now check rate limiting after validation passes
+    if (!canLogin) {
+      const message = getLockoutMessage();
+      error(message, {
+        title: '🔒 Account Locked',
+        duration: 5000,
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const loginSuccess = await login(formData.username, formData.password);
+
+      // Record the attempt
+      recordLoginAttempt(formData.username, loginSuccess);
 
       if (loginSuccess) {
         success('Welcome back! 🎉', {
@@ -108,12 +139,42 @@ const AdminLogin: React.FC = () => {
         setErrors({
           submit: 'Invalid username or password',
         });
-        error('Invalid username or password', {
-          title: 'Login Failed',
-          duration: 5000,
-        });
+
+        // Show different error based on remaining attempts (after recording this attempt)
+        const newRemainingAttempts = remainingAttempts - 1;
+
+        if (newRemainingAttempts === 0) {
+          error(`Too many failed attempts. Account has been locked.`, {
+            title: '🔒 Account Locked',
+            duration: 6000,
+          });
+        } else if (newRemainingAttempts === 1) {
+          error(
+            `Invalid credentials. Account will be locked after next failed attempt.`,
+            {
+              title: '⚠️ Final Warning',
+              duration: 6000,
+            }
+          );
+        } else if (newRemainingAttempts <= 3) {
+          error(
+            `Invalid credentials. ${newRemainingAttempts} attempts remaining.`,
+            {
+              title: '⚠️ Login Failed',
+              duration: 5000,
+            }
+          );
+        } else {
+          error('Invalid username or password', {
+            title: 'Login Failed',
+            duration: 5000,
+          });
+        }
       }
     } catch (err) {
+      // Record failed attempt even on network errors
+      recordLoginAttempt(formData.username, false);
+
       setErrors({
         submit: 'Login failed. Please try again.',
       });
@@ -195,7 +256,8 @@ const AdminLogin: React.FC = () => {
                           ? 'border-red-500 focus:border-red-500'
                           : 'border-gray-200 focus:border-[#1a4d2e] hover:border-gray-300'
                       }`}
-                      disabled={loading}
+                      disabled={loading || isLocked}
+                      autoComplete="username"
                     />
                     {errors.username && (
                       <p className="text-xs sm:text-sm text-red-600 mt-2 font-medium">
@@ -226,7 +288,8 @@ const AdminLogin: React.FC = () => {
                             ? 'border-red-500 focus:border-red-500'
                             : 'border-gray-200 focus:border-[#1a4d2e] hover:border-gray-300'
                         }`}
-                        disabled={loading}
+                        disabled={loading || isLocked}
+                        autoComplete="current-password"
                       />
                       {formData.password &&
                         formData.password.trim().length > 0 && (
@@ -254,7 +317,7 @@ const AdminLogin: React.FC = () => {
                   </div>
 
                   {/* Submit Error */}
-                  {errors.submit && (
+                  {errors.submit && !isLocked && (
                     <div className="bg-red-50 border-2 border-red-200 rounded-xl p-3 sm:p-4">
                       <p className="text-xs sm:text-sm text-red-600 font-medium">
                         {errors.submit}
@@ -262,15 +325,93 @@ const AdminLogin: React.FC = () => {
                     </div>
                   )}
 
+                  {/* Rate Limit Warning */}
+                  {attemptCount > 0 && !isLocked && remainingAttempts <= 3 && (
+                    <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-3 sm:p-4">
+                      <div className="flex items-start gap-2 sm:gap-3">
+                        <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <div className="flex-1">
+                          <p className="text-xs sm:text-sm text-yellow-800 font-semibold">
+                            Security Warning
+                          </p>
+                          <p className="text-xs sm:text-sm text-yellow-700 mt-1">
+                            {getRemainingAttemptsMessage()}
+                          </p>
+                          {/* Progress bar */}
+                          <div className="mt-2 w-full bg-yellow-200 rounded-full h-2">
+                            <div
+                              className="bg-yellow-600 h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${getProgressPercentage()}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Lockout Message */}
+                  {isLocked && (
+                    <div className="bg-red-50 border-2 border-red-300 rounded-xl p-4 sm:p-5">
+                      <div className="flex items-start gap-3">
+                        <Lock className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+                        <div className="flex-1">
+                          <p className="text-sm sm:text-base text-red-800 font-bold flex items-center gap-2">
+                            🔒 Account Temporarily Locked
+                          </p>
+                          <p className="text-xs sm:text-sm text-red-700 mt-2">
+                            {getLockoutMessage()}
+                          </p>
+                          {/* Countdown timer */}
+                          <div className="mt-3 flex items-center gap-2">
+                            <Shield className="w-4 h-4 text-red-600" />
+                            <div className="flex-1">
+                              <div className="bg-red-100 rounded-full h-2.5 w-full">
+                                <div
+                                  className="bg-red-600 h-2.5 rounded-full transition-all duration-1000 ease-linear"
+                                  style={{
+                                    width: `${Math.max(0, (remainingLockoutSeconds / 300) * 100)}%`,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            <span className="text-xs font-mono font-bold text-red-700 min-w-[60px] text-right">
+                              {Math.floor(remainingLockoutSeconds / 60)}:
+                              {String(remainingLockoutSeconds % 60).padStart(
+                                2,
+                                '0'
+                              )}
+                            </span>
+                          </div>
+                          <p className="text-xs text-red-600 mt-3 italic">
+                            💡 Too many failed login attempts detected. This is
+                            a security measure to protect your account.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Submit Button */}
                   <div className="pt-2 sm:pt-4">
                     <Button
                       type="submit"
-                      className="w-full h-14 sm:h-16 text-white font-bold rounded-xl text-base sm:text-lg shadow-lg hover:shadow-xl hover:opacity-90 transition-all duration-300"
-                      style={{ backgroundColor: '#1a4d2e' }}
-                      disabled={loading}
+                      className={`w-full h-14 sm:h-16 text-white font-bold rounded-xl text-base sm:text-lg shadow-lg transition-all duration-300 ${
+                        isLocked || !canAttemptLogin
+                          ? 'bg-gray-400 cursor-not-allowed opacity-60'
+                          : 'hover:shadow-xl hover:opacity-90'
+                      }`}
+                      style={{
+                        backgroundColor:
+                          isLocked || !canAttemptLogin ? '#9CA3AF' : '#1a4d2e',
+                      }}
+                      disabled={loading || isLocked || !canAttemptLogin}
                     >
-                      {loading ? (
+                      {isLocked ? (
+                        <div className="flex items-center justify-center space-x-2 sm:space-x-3">
+                          <Lock className="w-5 h-5" />
+                          <span>Account Locked</span>
+                        </div>
+                      ) : loading ? (
                         <div className="flex items-center justify-center space-x-2 sm:space-x-3">
                           <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 border-b-2 border-white"></div>
                           <span>Signing in...</span>
@@ -279,6 +420,14 @@ const AdminLogin: React.FC = () => {
                         'Sign in'
                       )}
                     </Button>
+
+                    {/* Security Info */}
+                    {!isLocked && attemptCount === 0 && (
+                      <p className="text-xs text-gray-500 text-center mt-3 flex items-center justify-center gap-1">
+                        <Shield className="w-3 h-3" />
+                        Protected by anti-brute-force security
+                      </p>
+                    )}
                   </div>
                 </form>
               </div>
