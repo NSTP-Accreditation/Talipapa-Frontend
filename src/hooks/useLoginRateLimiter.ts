@@ -157,9 +157,11 @@ export function useLoginRateLimiter(): UseLoginRateLimiterReturn {
 
     if (remainingLockoutSeconds > 60) {
       const minutes = Math.ceil(remainingLockoutSeconds / 60);
-      return `Account locked. Please try again in ${minutes} minute${minutes > 1 ? 's' : ''}.`;
+      return `Too many failed login attempts. Your account is locked for ${minutes} more minute${minutes > 1 ? 's' : ''}.`;
+    } else if (remainingLockoutSeconds > 0) {
+      return `Too many failed login attempts. Your account is locked for ${remainingLockoutSeconds} more second${remainingLockoutSeconds !== 1 ? 's' : ''}.`;
     } else {
-      return `Account locked. Please try again in ${remainingLockoutSeconds} second${remainingLockoutSeconds !== 1 ? 's' : ''}.`;
+      return `Account lockout expiring. Please wait...`;
     }
   }, [isLocked, remainingLockoutSeconds]);
 
@@ -171,11 +173,13 @@ export function useLoginRateLimiter(): UseLoginRateLimiterReturn {
     if (attemptCount === 0) return '';
 
     if (remainingAttempts === 1) {
-      return '⚠️ Warning: 1 attempt remaining before lockout';
-    } else if (remainingAttempts <= 2) {
-      return `⚠️ Warning: ${remainingAttempts} attempts remaining`;
+      return `🚨 FINAL ATTEMPT: Your account will be locked for 15 minutes if this attempt fails.`;
+    } else if (remainingAttempts === 2) {
+      return `⚠️ WARNING: Only ${remainingAttempts} attempts remaining. Account will be locked for 15 minutes after failed attempts.`;
+    } else if (remainingAttempts === 3) {
+      return `⚠️ CAUTION: ${remainingAttempts} attempts remaining before your account is locked for 15 minutes.`;
     } else {
-      return `${remainingAttempts} attempts remaining`;
+      return `${remainingAttempts} of 5 attempts remaining before lockout.`;
     }
   }, [isLocked, remainingAttempts, attemptCount]);
 

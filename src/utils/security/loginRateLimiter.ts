@@ -54,10 +54,10 @@ interface RateLimitConfig {
 }
 
 const DEFAULT_CONFIG: RateLimitConfig = {
-  maxAttempts: 5, // Lock after 5 failed attempts
-  baseLockoutDuration: 5 * 60 * 1000, // 5 minutes base lockout
-  maxLockoutDuration: 30 * 60 * 1000, // 30 minutes max lockout
-  attemptWindowMs: 15 * 60 * 1000, // 15 minute sliding window
+  maxAttempts: 5, // Lock after 5 failed attempts (synced with backend)
+  baseLockoutDuration: 15 * 60 * 1000, // 15 minutes base lockout (synced with backend)
+  maxLockoutDuration: 60 * 60 * 1000, // 60 minutes max lockout (synced with backend)
+  attemptWindowMs: 15 * 60 * 1000, // 15 minute sliding window (synced with backend)
   delayMultiplier: 2, // Double delay each attempt
   minDelayMs: 1000, // 1 second minimum
   storagePrefix: 'brute_force_',

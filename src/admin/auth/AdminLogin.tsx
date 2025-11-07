@@ -144,31 +144,45 @@ const AdminLogin: React.FC = () => {
         const newRemainingAttempts = remainingAttempts - 1;
 
         if (newRemainingAttempts === 0) {
-          error(`Too many failed attempts. Account has been locked.`, {
-            title: '🔒 Account Locked',
-            duration: 6000,
-          });
+          error(
+            `Too many failed attempts. Your account has been locked for 15 minutes.`,
+            {
+              title: '🔒 Account Locked',
+              duration: 7000,
+            }
+          );
         } else if (newRemainingAttempts === 1) {
           error(
-            `Invalid credentials. Account will be locked after next failed attempt.`,
+            `Invalid credentials. ⚠️ FINAL WARNING: Account will be locked for 15 minutes after the next failed attempt.`,
             {
-              title: '⚠️ Final Warning',
+              title: '🚨 Critical Warning',
+              duration: 8000,
+            }
+          );
+        } else if (newRemainingAttempts === 2) {
+          error(
+            `Invalid credentials. ⚠️ WARNING: Only ${newRemainingAttempts} attempts remaining before 15-minute lockout.`,
+            {
+              title: '⚠️ Security Alert',
               duration: 6000,
             }
           );
         } else if (newRemainingAttempts <= 3) {
           error(
-            `Invalid credentials. ${newRemainingAttempts} attempts remaining.`,
+            `Invalid credentials. ${newRemainingAttempts} attempts remaining before lockout.`,
             {
               title: '⚠️ Login Failed',
               duration: 5000,
             }
           );
         } else {
-          error('Invalid username or password', {
-            title: 'Login Failed',
-            duration: 5000,
-          });
+          error(
+            'Invalid username or password. Please check your credentials.',
+            {
+              title: 'Login Failed',
+              duration: 5000,
+            }
+          );
         }
       }
     } catch (err) {
@@ -327,22 +341,93 @@ const AdminLogin: React.FC = () => {
 
                   {/* Rate Limit Warning */}
                   {attemptCount > 0 && !isLocked && remainingAttempts <= 3 && (
-                    <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-3 sm:p-4">
-                      <div className="flex items-start gap-2 sm:gap-3">
-                        <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <div
+                      className={`rounded-xl p-4 sm:p-5 border-2 transition-all duration-300 ${
+                        remainingAttempts === 1
+                          ? 'bg-red-50 border-red-400'
+                          : 'bg-yellow-50 border-yellow-400'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`p-2 rounded-full ${
+                            remainingAttempts === 1
+                              ? 'bg-red-100'
+                              : 'bg-yellow-100'
+                          }`}
+                        >
+                          <AlertTriangle
+                            className={`w-5 h-5 ${
+                              remainingAttempts === 1
+                                ? 'text-red-600'
+                                : 'text-yellow-600'
+                            } flex-shrink-0`}
+                          />
+                        </div>
                         <div className="flex-1">
-                          <p className="text-xs sm:text-sm text-yellow-800 font-semibold">
-                            Security Warning
+                          <p
+                            className={`text-sm sm:text-base font-bold mb-1 ${
+                              remainingAttempts === 1
+                                ? 'text-red-900'
+                                : 'text-yellow-900'
+                            }`}
+                          >
+                            {remainingAttempts === 1
+                              ? '🚨 Critical Warning'
+                              : '⚠️ Security Alert'}
                           </p>
-                          <p className="text-xs sm:text-sm text-yellow-700 mt-1">
+                          <p
+                            className={`text-xs sm:text-sm ${
+                              remainingAttempts === 1
+                                ? 'text-red-800'
+                                : 'text-yellow-800'
+                            }`}
+                          >
                             {getRemainingAttemptsMessage()}
                           </p>
+                          <p
+                            className={`text-xs mt-2 italic ${
+                              remainingAttempts === 1
+                                ? 'text-red-700'
+                                : 'text-yellow-700'
+                            }`}
+                          >
+                            {remainingAttempts === 1
+                              ? '⏰ Your account will be locked for 15 minutes after the next failed attempt.'
+                              : `⏰ Account will be locked for 15 minutes after ${remainingAttempts} more failed attempts.`}
+                          </p>
                           {/* Progress bar */}
-                          <div className="mt-2 w-full bg-yellow-200 rounded-full h-2">
+                          <div className="mt-3 w-full bg-gray-200 rounded-full h-2.5 shadow-inner">
                             <div
-                              className="bg-yellow-600 h-2 rounded-full transition-all duration-300"
+                              className={`h-2.5 rounded-full transition-all duration-500 ${
+                                remainingAttempts === 1
+                                  ? 'bg-gradient-to-r from-red-500 to-red-600'
+                                  : remainingAttempts === 2
+                                    ? 'bg-gradient-to-r from-orange-500 to-red-500'
+                                    : 'bg-gradient-to-r from-yellow-500 to-orange-500'
+                              }`}
                               style={{ width: `${getProgressPercentage()}%` }}
                             />
+                          </div>
+                          <div className="mt-1.5 flex justify-between text-xs font-medium">
+                            <span
+                              className={
+                                remainingAttempts === 1
+                                  ? 'text-red-700'
+                                  : 'text-yellow-700'
+                              }
+                            >
+                              {5 - remainingAttempts} failed
+                            </span>
+                            <span
+                              className={
+                                remainingAttempts === 1
+                                  ? 'text-red-700'
+                                  : 'text-yellow-700'
+                              }
+                            >
+                              {remainingAttempts} remaining
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -351,41 +436,75 @@ const AdminLogin: React.FC = () => {
 
                   {/* Lockout Message */}
                   {isLocked && (
-                    <div className="bg-red-50 border-2 border-red-300 rounded-xl p-4 sm:p-5">
-                      <div className="flex items-start gap-3">
-                        <Lock className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+                    <div className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-400 rounded-xl p-5 sm:p-6 shadow-lg">
+                      <div className="flex items-start gap-4">
+                        <div className="p-3 bg-red-100 rounded-full shadow-md animate-pulse">
+                          <Lock className="w-7 h-7 text-red-600 flex-shrink-0" />
+                        </div>
                         <div className="flex-1">
-                          <p className="text-sm sm:text-base text-red-800 font-bold flex items-center gap-2">
-                            🔒 Account Temporarily Locked
-                          </p>
-                          <p className="text-xs sm:text-sm text-red-700 mt-2">
-                            {getLockoutMessage()}
-                          </p>
-                          {/* Countdown timer */}
-                          <div className="mt-3 flex items-center gap-2">
-                            <Shield className="w-4 h-4 text-red-600" />
-                            <div className="flex-1">
-                              <div className="bg-red-100 rounded-full h-2.5 w-full">
-                                <div
-                                  className="bg-red-600 h-2.5 rounded-full transition-all duration-1000 ease-linear"
-                                  style={{
-                                    width: `${Math.max(0, (remainingLockoutSeconds / 300) * 100)}%`,
-                                  }}
-                                />
-                              </div>
-                            </div>
-                            <span className="text-xs font-mono font-bold text-red-700 min-w-[60px] text-right">
-                              {Math.floor(remainingLockoutSeconds / 60)}:
-                              {String(remainingLockoutSeconds % 60).padStart(
-                                2,
-                                '0'
-                              )}
-                            </span>
+                          <div className="flex items-center gap-2 mb-2">
+                            <p className="text-base sm:text-lg text-red-900 font-bold">
+                              🔒 Account Temporarily Locked
+                            </p>
                           </div>
-                          <p className="text-xs text-red-600 mt-3 italic">
-                            💡 Too many failed login attempts detected. This is
-                            a security measure to protect your account.
-                          </p>
+
+                          <div className="bg-white/60 rounded-lg p-3 mb-3 border border-red-200">
+                            <p className="text-sm sm:text-base text-red-800 font-semibold">
+                              {getLockoutMessage()}
+                            </p>
+                          </div>
+
+                          {/* Enhanced Countdown Timer */}
+                          <div className="bg-white/80 rounded-lg p-4 border border-red-200 shadow-sm">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <Shield className="w-4 h-4 text-red-600" />
+                                <span className="text-xs sm:text-sm font-semibold text-red-800">
+                                  Time Remaining
+                                </span>
+                              </div>
+                              <span className="text-2xl sm:text-3xl font-mono font-bold text-red-700 tabular-nums">
+                                {Math.floor(remainingLockoutSeconds / 60)}:
+                                {String(remainingLockoutSeconds % 60).padStart(
+                                  2,
+                                  '0'
+                                )}
+                              </span>
+                            </div>
+
+                            <div className="relative bg-red-100 rounded-full h-3 w-full shadow-inner overflow-hidden">
+                              <div
+                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full transition-all duration-1000 ease-linear shadow-md"
+                                style={{
+                                  width: `${Math.max(0, (remainingLockoutSeconds / 900) * 100)}%`,
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Information Box */}
+                          <div className="mt-4 bg-red-900/10 border border-red-300 rounded-lg p-3">
+                            <p className="text-xs sm:text-sm text-red-800 leading-relaxed">
+                              <span className="font-bold">
+                                🛡️ Security Protection Active:
+                              </span>{' '}
+                              Multiple failed login attempts have been detected.
+                              This temporary lockout helps protect your account
+                              from unauthorized access attempts. The lockout
+                              will automatically expire after the countdown
+                              completes.
+                            </p>
+                          </div>
+
+                          {/* Help Text */}
+                          <div className="mt-3 flex items-start gap-2 text-xs text-red-700">
+                            <span>💡</span>
+                            <p className="italic">
+                              If you've forgotten your password or need
+                              immediate access, please contact the system
+                              administrator.
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
