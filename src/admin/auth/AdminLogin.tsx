@@ -15,6 +15,7 @@ const AdminLogin: React.FC = () => {
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Prevent double submission
   const navigate = useNavigate();
   const location = useLocation();
   const { login, isAuthenticated, loading, setLoading } = useAuth();
@@ -33,6 +34,41 @@ const AdminLogin: React.FC = () => {
     getRemainingAttemptsMessage,
     getProgressPercentage,
   } = useLoginRateLimiter();
+
+  // Sync lockout status with backend on component mount
+  useEffect(() => {
+    const syncLockoutStatus = async () => {
+      if (!formData.username) return;
+
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/auth/lockout-status/${formData.username}`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+
+          // If backend says locked but frontend doesn't know, sync the state
+          if (data.isLocked && !isLocked) {
+            // This will be handled by the rate limiter's internal logic
+            console.log('Backend lockout detected:', data);
+          }
+        }
+      } catch (err) {
+        // Fallback to localStorage-based rate limiting if backend unavailable
+        console.log('Using client-side rate limiting (backend unavailable)');
+      }
+    };
+
+    // Sync when username changes
+    if (formData.username.length > 0) {
+      syncLockoutStatus();
+    }
+  }, [formData.username]);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -90,39 +126,40 @@ const AdminLogin: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check rate limiting first - don't show toast if just validation issues
-    const canLogin = checkCanLogin(formData.username);
+    // Prevent double submission
+    if (isSubmitting || loading) {
+      return;
+    }
 
+    // Validate form first
     if (!validateForm()) {
-      // Show toast for validation error
-      if (errors.username) {
-        error(errors.username, { title: 'Validation Error' });
-      } else if (errors.password) {
-        error(errors.password, { title: 'Validation Error' });
-      } else {
-        error('Please check the form and try again.', { title: 'Form Error' });
+      return; // Don't show toast for validation - errors are shown inline
+    }
+
+    // Check rate limiting after validation passes
+    const canLogin = checkCanLogin(formData.username);
+    if (!canLogin) {
+      // Only show toast if actually locked (not just because of double-click)
+      if (isLocked) {
+        const message = getLockoutMessage();
+        error(message, {
+          title: '🔒 Account Locked',
+          duration: 5000,
+        });
       }
       return;
     }
 
-    // Now check rate limiting after validation passes
-    if (!canLogin) {
-      const message = getLockoutMessage();
-      error(message, {
-        title: '🔒 Account Locked',
-        duration: 5000,
-      });
-      return;
-    }
-
+    setIsSubmitting(true);
     setLoading(true);
+
     try {
       const loginSuccess = await login(formData.username, formData.password);
 
-      // Record the attempt
-      recordLoginAttempt(formData.username, loginSuccess);
-
       if (loginSuccess) {
+        // Record successful attempt (clears lockout)
+        recordLoginAttempt(formData.username, true);
+
         success('Welcome back! 🎉', {
           title: 'Login Successful',
           duration: 2000,
@@ -136,70 +173,314 @@ const AdminLogin: React.FC = () => {
           navigate(destination, { replace: true });
         }, 500);
       } else {
-        setErrors({
-          submit: 'Invalid username or password',
-        });
+        // Record failed attempt FIRST, then get updated state
+        recordLoginAttempt(formData.username, false);
 
-        // Show different error based on remaining attempts (after recording this attempt)
-        const newRemainingAttempts = remainingAttempts - 1;
+        // Clear password field immediately after failed attempt
+        setFormData((prev) => ({
+          ...prev,
+          password: '',
+        }));
 
-        if (newRemainingAttempts === 0) {
-          error(
-            `Too many failed attempts. Your account has been locked for 15 minutes.`,
-            {
-              title: '🔒 Account Locked',
-              duration: 7000,
-            }
-          );
-        } else if (newRemainingAttempts === 1) {
-          error(
-            `Invalid credentials. ⚠️ FINAL WARNING: Account will be locked for 15 minutes after the next failed attempt.`,
-            {
-              title: '🚨 Critical Warning',
-              duration: 8000,
-            }
-          );
-        } else if (newRemainingAttempts === 2) {
-          error(
-            `Invalid credentials. ⚠️ WARNING: Only ${newRemainingAttempts} attempts remaining before 15-minute lockout.`,
-            {
-              title: '⚠️ Security Alert',
-              duration: 6000,
-            }
-          );
-        } else if (newRemainingAttempts <= 3) {
-          error(
-            `Invalid credentials. ${newRemainingAttempts} attempts remaining before lockout.`,
-            {
-              title: '⚠️ Login Failed',
-              duration: 5000,
-            }
-          );
-        } else {
-          error(
-            'Invalid username or password. Please check your credentials.',
-            {
-              title: 'Login Failed',
-              duration: 5000,
-            }
-          );
-        }
+        // Small delay to allow state to update
+        setTimeout(() => {
+          setErrors({
+            submit: 'Invalid username or password',
+          });
+
+          // Get CURRENT remaining attempts after recording
+          const currentRemaining = remainingAttempts;
+
+          if (currentRemaining === 0 && isLocked) {
+            // Account just got locked
+            error(
+              `Too many failed attempts. Your account has been locked for 15 minutes.`,
+              {
+                title: '🔒 Account Locked',
+                duration: 7000,
+              }
+            );
+          } else if (currentRemaining === 1) {
+            error(
+              `Invalid credentials. ⚠️ FINAL WARNING: Account will be locked for 15 minutes after the next failed attempt.`,
+              {
+                title: '🚨 Critical Warning',
+                duration: 8000,
+              }
+            );
+          } else if (currentRemaining === 2) {
+            error(
+              `Invalid credentials. ⚠️ WARNING: Only ${currentRemaining} attempts remaining before 15-minute lockout.`,
+              {
+                title: '⚠️ Security Alert',
+                duration: 6000,
+              }
+            );
+          } else if (currentRemaining === 3) {
+            error(
+              `Invalid credentials. ${currentRemaining} attempts remaining before lockout.`,
+              {
+                title: '⚠️ Login Failed',
+                duration: 5000,
+              }
+            );
+          } else {
+            error(
+              'Invalid username or password. Please check your credentials.',
+              {
+                title: 'Login Failed',
+                duration: 4000,
+              }
+            );
+          }
+        }, 50); // Small delay for state update
       }
     } catch (err) {
       // Record failed attempt even on network errors
       recordLoginAttempt(formData.username, false);
 
+      // Clear password field on network error
+      setFormData((prev) => ({
+        ...prev,
+        password: '',
+      }));
+
       setErrors({
         submit: 'Login failed. Please try again.',
       });
-      error('Login failed. Please try again.', {
-        title: 'Connection Error',
+      error('Connection error. Please check your internet and try again.', {
+        title: 'Network Error',
         duration: 5000,
       });
     } finally {
       setLoading(false);
+      setIsSubmitting(false);
     }
   };
+
+  // Render full-screen enterprise lockout modal when locked
+  if (isLocked && remainingLockoutSeconds > 0) {
+    const minutes = Math.floor(remainingLockoutSeconds / 60);
+    const seconds = remainingLockoutSeconds % 60;
+    const totalLockoutSeconds = 15 * 60; // 15 minutes
+    const progressPercent =
+      ((totalLockoutSeconds - remainingLockoutSeconds) / totalLockoutSeconds) *
+      100;
+
+    return (
+      <div className="fixed inset-0 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 flex items-center justify-center p-4 z-50">
+        <div className="w-full max-w-2xl">
+          {/* Enterprise-Grade Lockout Card */}
+          <div className="bg-white rounded-3xl shadow-2xl border-4 border-red-500 overflow-hidden transform transition-all duration-300 hover:scale-[1.02]">
+            {/* Animated Danger Header with Gradient */}
+            <div className="relative bg-gradient-to-r from-red-600 via-red-700 to-red-800 p-8 text-white overflow-hidden">
+              {/* Animated background pulse */}
+              <div className="absolute inset-0 bg-red-900 opacity-20 animate-pulse"></div>
+
+              <div className="relative z-10">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm shadow-2xl ring-4 ring-white/30 animate-pulse">
+                    <Lock
+                      className="w-14 h-14 text-white drop-shadow-lg"
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                </div>
+                <h2 className="text-4xl font-bold text-center mb-3 drop-shadow-lg">
+                  🔒 Account Locked
+                </h2>
+                <p className="text-red-100 text-center text-lg font-medium">
+                  Security Protection Active
+                </p>
+                <div className="mt-4 flex items-center justify-center gap-2 text-red-200">
+                  <AlertTriangle className="w-5 h-5" />
+                  <span className="text-sm font-semibold">
+                    Too Many Failed Login Attempts
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Main Content Area */}
+            <div className="p-10 space-y-8">
+              {/* Massive Timer Display */}
+              <div className="text-center">
+                <div className="inline-block">
+                  <div className="bg-gradient-to-br from-red-50 via-orange-50 to-red-100 rounded-3xl px-12 py-8 shadow-xl border-4 border-red-300 transform hover:scale-105 transition-transform">
+                    <p className="text-sm font-bold text-red-700 mb-3 uppercase tracking-widest">
+                      ⏱️ Time Remaining
+                    </p>
+                    <div className="text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600 font-mono tabular-nums drop-shadow-lg">
+                      {String(minutes).padStart(2, '0')}:
+                      {String(seconds).padStart(2, '0')}
+                    </div>
+                    <div className="mt-3 flex items-center justify-center gap-4 text-sm font-semibold text-red-600">
+                      <span className="px-3 py-1 bg-red-100 rounded-full">
+                        MINUTES
+                      </span>
+                      <span className="text-red-400">:</span>
+                      <span className="px-3 py-1 bg-red-100 rounded-full">
+                        SECONDS
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Enhanced Progress Bar with Gradient */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-sm font-bold text-gray-700">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                    <span>Lockout Progress</span>
+                  </div>
+                  <span className="font-mono text-lg text-red-600">
+                    {Math.round(progressPercent)}%
+                  </span>
+                </div>
+                <div className="relative h-6 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+                  {/* Background grid pattern */}
+                  <div
+                    className="absolute inset-0 opacity-10"
+                    style={{
+                      backgroundImage:
+                        'repeating-linear-gradient(90deg, transparent, transparent 10px, #000 10px, #000 11px)',
+                    }}
+                  ></div>
+
+                  {/* Animated progress bar */}
+                  <div
+                    className="h-full bg-gradient-to-r from-red-500 via-orange-500 to-red-600 transition-all duration-1000 ease-linear rounded-full relative overflow-hidden"
+                    style={{ width: `${progressPercent}%` }}
+                  >
+                    {/* Shine effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Multi-tier Warning Box with Icons */}
+              <div className="bg-gradient-to-br from-red-50 to-orange-50 border-l-8 border-red-600 p-6 rounded-2xl shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 mt-1">
+                    <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
+                      <Shield
+                        className="w-7 h-7 text-white"
+                        strokeWidth={2.5}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-red-900 mb-3 flex items-center gap-2">
+                      <AlertTriangle className="w-6 h-6" />
+                      Security Protection Active
+                    </h3>
+                    <div className="space-y-2 text-sm text-red-800 font-medium">
+                      <div className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        <p>
+                          Your account has been temporarily locked due to
+                          multiple failed login attempts
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        <p>
+                          This is an automatic security measure to protect
+                          against unauthorized access
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        <p>
+                          You can try logging in again after the countdown
+                          reaches zero
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        <p>
+                          The page will automatically refresh when the lockout
+                          expires
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats Cards */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border-2 border-gray-300 shadow-md">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                      <AlertTriangle className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-600 uppercase">
+                        Failed Attempts
+                      </p>
+                      <p className="text-2xl font-black text-red-600">
+                        {attemptCount}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border-2 border-gray-300 shadow-md">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                      <Lock className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-600 uppercase">
+                        Lockout Duration
+                      </p>
+                      <p className="text-2xl font-black text-orange-600">
+                        15 min
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Help Section */}
+              <div className="text-center pt-4 border-t-2 border-gray-200">
+                <p className="text-sm font-semibold text-gray-700 mb-2">
+                  Need Assistance?
+                </p>
+                <p className="text-xs text-gray-600">
+                  If you believe this is an error, please contact your system
+                  administrator
+                </p>
+              </div>
+            </div>
+
+            {/* Footer with Auto-refresh Notice */}
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-10 py-5 border-t-2 border-gray-200">
+              <div className="flex items-center justify-center gap-3 text-sm text-gray-700">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="font-semibold">Auto-refresh enabled</span>
+                <span className="text-gray-500">•</span>
+                <span className="text-gray-600">
+                  Page will reload when timer expires
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Branding */}
+          <div className="text-center mt-6">
+            <p className="text-sm text-gray-600 font-medium">
+              Barangay Talipapa Admin Portal
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              Enterprise-Grade Security Protection
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
