@@ -22,7 +22,6 @@ interface EnvConfig {
   // Role IDs for RBAC
   superAdminRoleId: number;
   adminRoleId: number;
-  staffRoleId: number;
 
   // Runtime flags
   isDevelopment: boolean;
@@ -78,7 +77,6 @@ class EnvironmentConfig {
     const pageContentId = import.meta.env.VITE_PAGE_CONTENT_ID;
     const superAdminRoleId = import.meta.env.VITE_SUPERADMIN;
     const adminRoleId = import.meta.env.VITE_ADMIN;
-    const staffRoleId = import.meta.env.VITE_STAFF;
 
     // Validate required variables
     if (!apiUrl || typeof apiUrl !== 'string') {
@@ -98,11 +96,9 @@ class EnvironmentConfig {
       32562
     );
     const parsedAdminRoleId = this.parseRoleId(adminRoleId, 'VITE_ADMIN', 2);
-    const parsedStaffRoleId = this.parseRoleId(staffRoleId, 'VITE_STAFF', 3);
 
     if (parsedSuperAdminRoleId.error) errors.push(parsedSuperAdminRoleId.error);
     if (parsedAdminRoleId.error) errors.push(parsedAdminRoleId.error);
-    if (parsedStaffRoleId.error) errors.push(parsedStaffRoleId.error);
 
     // If there are validation errors, throw
     if (errors.length > 0) {
@@ -117,7 +113,6 @@ class EnvironmentConfig {
       pageContentId: pageContentId as string,
       superAdminRoleId: parsedSuperAdminRoleId.value!,
       adminRoleId: parsedAdminRoleId.value!,
-      staffRoleId: parsedStaffRoleId.value!,
       isDevelopment: import.meta.env.DEV === true,
       isProduction: import.meta.env.PROD === true,
     };
@@ -194,13 +189,6 @@ class EnvironmentConfig {
    */
   public get adminRoleId(): number {
     return this.getConfig().adminRoleId;
-  }
-
-  /**
-   * Get Staff Role ID
-   */
-  public get staffRoleId(): number {
-    return this.getConfig().staffRoleId;
   }
 
   /**

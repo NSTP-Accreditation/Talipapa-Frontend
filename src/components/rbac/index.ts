@@ -20,7 +20,6 @@ export {
   hasAnyRole,
   isSuperAdmin,
   isAdmin,
-  isStaff,
   getRolePermissions,
   getUserPermissions,
   hasPermission,
@@ -39,14 +38,7 @@ export { useRBAC } from '../../hooks/useRBAC';
 export type { default as UseRBACReturn } from '../../hooks/useRBAC';
 
 // Conditional Rendering Components
-export {
-  Can,
-  SuperAdminOnly,
-  AdminOnly,
-  StaffOnly,
-  NotStaff,
-  ReadOnly,
-} from './Can';
+export { Can, SuperAdminOnly, AdminOnly, ReadOnly } from './Can';
 
 // Error Boundary
 export { RBACErrorBoundary, withRBACErrorBoundary } from './RBACErrorBoundary';

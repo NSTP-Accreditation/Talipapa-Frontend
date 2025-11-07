@@ -49,11 +49,9 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
         const roles = decoded.userInfo.roles;
         const superAdminId = Number(import.meta.env.VITE_SUPERADMIN || 32562);
         const adminId = Number(import.meta.env.VITE_ADMIN || 2);
-        const staffId = Number(import.meta.env.VITE_STAFF || 3);
 
         if (roles.includes(superAdminId)) return 'SuperAdmin';
         if (roles.includes(adminId)) return 'Admin';
-        if (roles.includes(staffId)) return 'Staff';
       }
     }
 
@@ -61,7 +59,6 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
     if (Array.isArray(userData.rolesKeys) && userData.rolesKeys.length > 0) {
       if (userData.rolesKeys.includes('SuperAdmin')) return 'SuperAdmin';
       if (userData.rolesKeys.includes('Admin')) return 'Admin';
-      if (userData.rolesKeys.includes('Staff')) return 'Staff';
       return userData.rolesKeys[0];
     }
 
@@ -70,7 +67,6 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
       const rolesObj = userData.roles;
       if (rolesObj.SuperAdmin) return 'SuperAdmin';
       if (rolesObj.Admin) return 'Admin';
-      if (rolesObj.Staff) return 'Staff';
     }
 
     return 'User';
@@ -86,8 +82,6 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
         return 'from-green-400 to-emerald-500';
       case 'Admin':
         return 'from-blue-400 to-blue-500';
-      case 'Staff':
-        return 'from-orange-400 to-orange-500';
       default:
         return 'from-gray-400 to-gray-500';
     }

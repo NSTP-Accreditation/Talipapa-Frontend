@@ -12,7 +12,6 @@
 export interface UserRoles {
   SuperAdmin?: number;
   Admin?: number;
-  Staff?: number;
 }
 
 /**

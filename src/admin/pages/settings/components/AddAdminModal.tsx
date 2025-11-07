@@ -115,8 +115,7 @@ const AddAdminModal = ({
     }
 
     const payload = { ...newAdmin, roles: {} };
-    const newRoles: { SuperAdmin?: number; Admin?: number; Staff?: number } =
-      {};
+    const newRoles: { SuperAdmin?: number; Admin?: number } = {};
 
     if (newAdmin.roles.includes('SuperAdmin')) {
       newRoles.SuperAdmin = Number(import.meta.env.VITE_SUPERADMIN);
@@ -124,10 +123,6 @@ const AddAdminModal = ({
 
     if (newAdmin.roles.includes('Admin')) {
       newRoles.Admin = Number(import.meta.env.VITE_ADMIN);
-    }
-
-    if (newAdmin.roles.includes('Staff')) {
-      newRoles.Staff = Number(import.meta.env.VITE_STAFF || 3);
     }
 
     payload.roles = newRoles;
@@ -450,12 +445,12 @@ const AddAdminModal = ({
                 <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <p className="text-xs sm:text-sm text-blue-800">
                   <strong className="font-bold">Role Limits:</strong> SuperAdmin
-                  (max 2), Admin (max 2), Staff (unlimited, view-only access)
+                  (max 2), Admin (max 2)
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
                 {
                   name: 'SuperAdmin',
@@ -466,11 +461,6 @@ const AddAdminModal = ({
                   name: 'Admin',
                   description: 'Administrative access',
                   color: 'blue',
-                },
-                {
-                  name: 'Staff',
-                  description: 'View-only access',
-                  color: 'gray',
                 },
               ].map((roleOption) => (
                 <label
