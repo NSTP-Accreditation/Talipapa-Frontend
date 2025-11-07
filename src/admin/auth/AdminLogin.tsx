@@ -35,6 +35,35 @@ const AdminLogin: React.FC = () => {
     getProgressPercentage,
   } = useLoginRateLimiter();
 
+  // Check lockout status for the CURRENT username being typed
+  const [currentUserLocked, setCurrentUserLocked] = useState(false);
+  const [currentUserLockoutSeconds, setCurrentUserLockoutSeconds] = useState(0);
+
+  useEffect(() => {
+    // If username field is not empty, check its specific lockout status
+    if (formData.username.trim()) {
+      const canLogin = checkCanLogin(formData.username);
+      setCurrentUserLocked(!canLogin);
+
+      // If this username is locked, update the countdown for this specific user
+      if (!canLogin && isLocked) {
+        setCurrentUserLockoutSeconds(remainingLockoutSeconds);
+      }
+    } else {
+      // No username typed, use general lockout state
+      setCurrentUserLocked(isLocked);
+      setCurrentUserLockoutSeconds(remainingLockoutSeconds);
+    }
+  }, [formData.username, isLocked, remainingLockoutSeconds, checkCanLogin]);
+
+  // Use the current user's lockout state for rendering
+  const isCurrentlyLocked = formData.username.trim()
+    ? currentUserLocked
+    : isLocked;
+  const currentLockoutSeconds = formData.username.trim()
+    ? currentUserLockoutSeconds
+    : remainingLockoutSeconds;
+
   // Sync lockout status with backend on component mount
   useEffect(() => {
     const syncLockoutStatus = async () => {
@@ -70,17 +99,27 @@ const AdminLogin: React.FC = () => {
     }
   }, [formData.username]);
 
-  // Redirect if already logged in
+  // Redirect if already logged in (BUT NOT if locked out)
   useEffect(() => {
+    // Don't redirect if user is locked out
+    if (isCurrentlyLocked) {
+      return;
+    }
+
     if (isAuthenticated) {
       const from =
         (location.state as any)?.from?.pathname || APP_ROUTES.ADMIN.DASHBOARD;
       navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate, location]);
+  }, [isAuthenticated, navigate, location, isCurrentlyLocked]);
 
   // Show logout success toast if redirected from logout
   useEffect(() => {
+    // Don't show logout toast if locked out
+    if (isCurrentlyLocked) {
+      return;
+    }
+
     if (location.state?.logoutSuccess) {
       success('Logout successful! 👋', {
         title: 'See you later!',
@@ -89,7 +128,7 @@ const AdminLogin: React.FC = () => {
       // prevent showing again if user refreshes
       navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location.state, navigate, success]);
+  }, [location.state, navigate, success, isCurrentlyLocked]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -126,6 +165,16 @@ const AdminLogin: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // CRITICAL: Prevent ANY submission if locked - check FIRST
+    if (isCurrentlyLocked) {
+      const message = getLockoutMessage();
+      error(message, {
+        title: '🔒 Account Locked',
+        duration: 5000,
+      });
+      return;
+    }
+
     // Prevent double submission
     if (isSubmitting || loading) {
       return;
@@ -139,14 +188,12 @@ const AdminLogin: React.FC = () => {
     // Check rate limiting after validation passes
     const canLogin = checkCanLogin(formData.username);
     if (!canLogin) {
-      // Only show toast if actually locked (not just because of double-click)
-      if (isLocked) {
-        const message = getLockoutMessage();
-        error(message, {
-          title: '🔒 Account Locked',
-          duration: 5000,
-        });
-      }
+      // Show lockout message
+      const message = getLockoutMessage();
+      error(message, {
+        title: '🔒 Account Locked',
+        duration: 5000,
+      });
       return;
     }
 
@@ -259,42 +306,50 @@ const AdminLogin: React.FC = () => {
   };
 
   // Render full-screen enterprise lockout modal when locked
-  if (isLocked && remainingLockoutSeconds > 0) {
-    const minutes = Math.floor(remainingLockoutSeconds / 60);
-    const seconds = remainingLockoutSeconds % 60;
+  // This check happens FIRST, before any other rendering logic
+  // Check if the CURRENT username being typed is locked
+  if (isCurrentlyLocked) {
+    const minutes = Math.floor(currentLockoutSeconds / 60);
+    const seconds = currentLockoutSeconds % 60;
     const totalLockoutSeconds = 15 * 60; // 15 minutes
     const progressPercent =
-      ((totalLockoutSeconds - remainingLockoutSeconds) / totalLockoutSeconds) *
-      100;
+      currentLockoutSeconds > 0
+        ? ((totalLockoutSeconds - currentLockoutSeconds) /
+            totalLockoutSeconds) *
+          100
+        : 0;
 
     return (
-      <div className="fixed inset-0 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 flex items-center justify-center p-4 z-50">
-        <div className="w-full max-w-2xl">
+      <div
+        className="fixed inset-0 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 flex items-center justify-center p-3 sm:p-4 md:p-6 z-[10000] overflow-y-auto"
+        style={{ pointerEvents: 'auto' }}
+      >
+        <div className="w-full max-w-[95vw] sm:max-w-md md:max-w-lg lg:max-w-2xl my-auto">
           {/* Enterprise-Grade Lockout Card */}
-          <div className="bg-white rounded-3xl shadow-2xl border-4 border-red-500 overflow-hidden transform transition-all duration-300 hover:scale-[1.02]">
+          <div className="bg-white rounded-xl sm:rounded-2xl md:rounded-3xl shadow-2xl border-2 sm:border-3 md:border-4 border-red-500 overflow-hidden">
             {/* Animated Danger Header with Gradient */}
-            <div className="relative bg-gradient-to-r from-red-600 via-red-700 to-red-800 p-8 text-white overflow-hidden">
+            <div className="relative bg-gradient-to-r from-red-600 via-red-700 to-red-800 p-3 sm:p-5 md:p-8 text-white overflow-hidden">
               {/* Animated background pulse */}
               <div className="absolute inset-0 bg-red-900 opacity-20 animate-pulse"></div>
 
               <div className="relative z-10">
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm shadow-2xl ring-4 ring-white/30 animate-pulse">
+                <div className="flex items-center justify-center mb-2 sm:mb-3 md:mb-4">
+                  <div className="w-14 h-14 sm:w-18 sm:h-18 md:w-24 md:h-24 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm shadow-2xl ring-2 sm:ring-3 md:ring-4 ring-white/30 animate-pulse">
                     <Lock
-                      className="w-14 h-14 text-white drop-shadow-lg"
+                      className="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 text-white drop-shadow-lg"
                       strokeWidth={2.5}
                     />
                   </div>
                 </div>
-                <h2 className="text-4xl font-bold text-center mb-3 drop-shadow-lg">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-1 sm:mb-2 md:mb-3 drop-shadow-lg">
                   🔒 Account Locked
                 </h2>
-                <p className="text-red-100 text-center text-lg font-medium">
+                <p className="text-red-100 text-center text-xs sm:text-sm md:text-base lg:text-lg font-medium">
                   Security Protection Active
                 </p>
-                <div className="mt-4 flex items-center justify-center gap-2 text-red-200">
-                  <AlertTriangle className="w-5 h-5" />
-                  <span className="text-sm font-semibold">
+                <div className="mt-2 sm:mt-3 md:mt-4 flex items-center justify-center gap-1.5 sm:gap-2 text-red-200 flex-wrap">
+                  <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+                  <span className="text-[10px] sm:text-xs md:text-sm font-semibold text-center">
                     Too Many Failed Login Attempts
                   </span>
                 </div>
@@ -302,24 +357,24 @@ const AdminLogin: React.FC = () => {
             </div>
 
             {/* Main Content Area */}
-            <div className="p-10 space-y-8">
+            <div className="p-3 sm:p-5 md:p-8 lg:p-10 space-y-3 sm:space-y-5 md:space-y-8">
               {/* Massive Timer Display */}
               <div className="text-center">
-                <div className="inline-block">
-                  <div className="bg-gradient-to-br from-red-50 via-orange-50 to-red-100 rounded-3xl px-12 py-8 shadow-xl border-4 border-red-300 transform hover:scale-105 transition-transform">
-                    <p className="text-sm font-bold text-red-700 mb-3 uppercase tracking-widest">
+                <div className="w-full">
+                  <div className="bg-gradient-to-br from-red-50 via-orange-50 to-red-100 rounded-xl sm:rounded-2xl md:rounded-3xl px-3 sm:px-6 md:px-12 py-3 sm:py-5 md:py-8 shadow-xl border-2 sm:border-3 md:border-4 border-red-300">
+                    <p className="text-[10px] sm:text-xs md:text-sm font-bold text-red-700 mb-1.5 sm:mb-2 md:mb-3 uppercase tracking-wider sm:tracking-widest">
                       ⏱️ Time Remaining
                     </p>
-                    <div className="text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600 font-mono tabular-nums drop-shadow-lg">
+                    <div className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600 font-mono tabular-nums drop-shadow-lg">
                       {String(minutes).padStart(2, '0')}:
                       {String(seconds).padStart(2, '0')}
                     </div>
-                    <div className="mt-3 flex items-center justify-center gap-4 text-sm font-semibold text-red-600">
-                      <span className="px-3 py-1 bg-red-100 rounded-full">
+                    <div className="mt-1.5 sm:mt-2 md:mt-3 flex items-center justify-center gap-1.5 sm:gap-2 md:gap-4 text-[10px] sm:text-xs md:text-sm font-semibold text-red-600 flex-wrap">
+                      <span className="px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 bg-red-100 rounded-full whitespace-nowrap">
                         MINUTES
                       </span>
                       <span className="text-red-400">:</span>
-                      <span className="px-3 py-1 bg-red-100 rounded-full">
+                      <span className="px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 bg-red-100 rounded-full whitespace-nowrap">
                         SECONDS
                       </span>
                     </div>
@@ -328,17 +383,19 @@ const AdminLogin: React.FC = () => {
               </div>
 
               {/* Enhanced Progress Bar with Gradient */}
-              <div className="space-y-3">
-                <div className="flex justify-between items-center text-sm font-bold text-gray-700">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                    <span>Lockout Progress</span>
+              <div className="space-y-1.5 sm:space-y-2 md:space-y-3">
+                <div className="flex justify-between items-center text-xs sm:text-sm font-bold text-gray-700">
+                  <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2">
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-3 md:h-3 bg-red-500 rounded-full animate-pulse flex-shrink-0"></div>
+                    <span className="text-[10px] sm:text-xs md:text-sm">
+                      Lockout Progress
+                    </span>
                   </div>
-                  <span className="font-mono text-lg text-red-600">
+                  <span className="font-mono text-xs sm:text-sm md:text-lg text-red-600">
                     {Math.round(progressPercent)}%
                   </span>
                 </div>
-                <div className="relative h-6 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+                <div className="relative h-3 sm:h-4 md:h-6 bg-gray-200 rounded-full overflow-hidden shadow-inner">
                   {/* Background grid pattern */}
                   <div
                     className="absolute inset-0 opacity-10"
@@ -360,46 +417,56 @@ const AdminLogin: React.FC = () => {
               </div>
 
               {/* Multi-tier Warning Box with Icons */}
-              <div className="bg-gradient-to-br from-red-50 to-orange-50 border-l-8 border-red-600 p-6 rounded-2xl shadow-lg">
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
+              <div className="bg-gradient-to-br from-red-50 to-orange-50 border-l-3 sm:border-l-4 md:border-l-8 border-red-600 p-2.5 sm:p-3 md:p-6 rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg">
+                <div className="flex items-start gap-1.5 sm:gap-2 md:gap-4">
+                  <div className="flex-shrink-0 mt-0.5">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
                       <Shield
-                        className="w-7 h-7 text-white"
+                        className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white"
                         strokeWidth={2.5}
                       />
                     </div>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-red-900 mb-3 flex items-center gap-2">
-                      <AlertTriangle className="w-6 h-6" />
-                      Security Protection Active
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xs sm:text-sm md:text-lg lg:text-xl font-bold text-red-900 mb-1.5 sm:mb-2 md:mb-3 flex items-center gap-1 sm:gap-1.5 md:gap-2 flex-wrap">
+                      <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 flex-shrink-0" />
+                      <span className="leading-tight">
+                        Security Protection Active
+                      </span>
                     </h3>
-                    <div className="space-y-2 text-sm text-red-800 font-medium">
-                      <div className="flex items-start gap-2">
-                        <span className="text-red-600 font-bold">•</span>
-                        <p>
+                    <div className="space-y-1 sm:space-y-1.5 md:space-y-2 text-[10px] sm:text-xs md:text-sm text-red-800 font-medium">
+                      <div className="flex items-start gap-1 sm:gap-1.5 md:gap-2">
+                        <span className="text-red-600 font-bold flex-shrink-0 leading-tight">
+                          •
+                        </span>
+                        <p className="leading-snug">
                           Your account has been temporarily locked due to
                           multiple failed login attempts
                         </p>
                       </div>
-                      <div className="flex items-start gap-2">
-                        <span className="text-red-600 font-bold">•</span>
-                        <p>
+                      <div className="flex items-start gap-1 sm:gap-1.5 md:gap-2">
+                        <span className="text-red-600 font-bold flex-shrink-0 leading-tight">
+                          •
+                        </span>
+                        <p className="leading-snug">
                           This is an automatic security measure to protect
                           against unauthorized access
                         </p>
                       </div>
-                      <div className="flex items-start gap-2">
-                        <span className="text-red-600 font-bold">•</span>
-                        <p>
+                      <div className="flex items-start gap-1 sm:gap-1.5 md:gap-2">
+                        <span className="text-red-600 font-bold flex-shrink-0 leading-tight">
+                          •
+                        </span>
+                        <p className="leading-snug">
                           You can try logging in again after the countdown
                           reaches zero
                         </p>
                       </div>
-                      <div className="flex items-start gap-2">
-                        <span className="text-red-600 font-bold">•</span>
-                        <p>
+                      <div className="flex items-start gap-1 sm:gap-1.5 md:gap-2">
+                        <span className="text-red-600 font-bold flex-shrink-0 leading-tight">
+                          •
+                        </span>
+                        <p className="leading-snug">
                           The page will automatically refresh when the lockout
                           expires
                         </p>
@@ -410,32 +477,32 @@ const AdminLogin: React.FC = () => {
               </div>
 
               {/* Stats Cards */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border-2 border-gray-300 shadow-md">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
-                      <AlertTriangle className="w-6 h-6 text-white" />
+              <div className="grid grid-cols-2 gap-1.5 sm:gap-2 md:gap-4">
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg sm:rounded-xl p-2 sm:p-3 md:p-5 border border-gray-300 sm:border-2 shadow-md">
+                  <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-red-500 rounded-md sm:rounded-lg flex items-center justify-center flex-shrink-0">
+                      <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white" />
                     </div>
-                    <div>
-                      <p className="text-xs font-semibold text-gray-600 uppercase">
+                    <div className="min-w-0">
+                      <p className="text-[9px] sm:text-[10px] md:text-xs font-semibold text-gray-600 uppercase truncate leading-tight">
                         Failed Attempts
                       </p>
-                      <p className="text-2xl font-black text-red-600">
+                      <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-black text-red-600">
                         {attemptCount}
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border-2 border-gray-300 shadow-md">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-                      <Lock className="w-6 h-6 text-white" />
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg sm:rounded-xl p-2 sm:p-3 md:p-5 border border-gray-300 sm:border-2 shadow-md">
+                  <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-orange-500 rounded-md sm:rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 text-white" />
                     </div>
-                    <div>
-                      <p className="text-xs font-semibold text-gray-600 uppercase">
+                    <div className="min-w-0">
+                      <p className="text-[9px] sm:text-[10px] md:text-xs font-semibold text-gray-600 uppercase truncate leading-tight">
                         Lockout Duration
                       </p>
-                      <p className="text-2xl font-black text-orange-600">
+                      <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-black text-orange-600">
                         15 min
                       </p>
                     </div>
@@ -444,11 +511,11 @@ const AdminLogin: React.FC = () => {
               </div>
 
               {/* Help Section */}
-              <div className="text-center pt-4 border-t-2 border-gray-200">
-                <p className="text-sm font-semibold text-gray-700 mb-2">
+              <div className="text-center pt-2 sm:pt-3 md:pt-4 border-t border-gray-200 sm:border-t-2">
+                <p className="text-[10px] sm:text-xs md:text-sm font-semibold text-gray-700 mb-1 sm:mb-1.5 md:mb-2">
                   Need Assistance?
                 </p>
-                <p className="text-xs text-gray-600">
+                <p className="text-[9px] sm:text-[10px] md:text-xs text-gray-600 leading-snug">
                   If you believe this is an error, please contact your system
                   administrator
                 </p>
@@ -456,12 +523,14 @@ const AdminLogin: React.FC = () => {
             </div>
 
             {/* Footer with Auto-refresh Notice */}
-            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-10 py-5 border-t-2 border-gray-200">
-              <div className="flex items-center justify-center gap-3 text-sm text-gray-700">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="font-semibold">Auto-refresh enabled</span>
-                <span className="text-gray-500">•</span>
-                <span className="text-gray-600">
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-2 sm:px-4 md:px-10 py-2 sm:py-3 md:py-5 border-t border-gray-200 sm:border-t-2">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 md:gap-3 text-[10px] sm:text-xs md:text-sm text-gray-700">
+                <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="font-semibold">Auto-refresh enabled</span>
+                </div>
+                <span className="hidden sm:inline text-gray-500">•</span>
+                <span className="text-gray-600 text-center text-[9px] sm:text-[10px] md:text-xs leading-snug">
                   Page will reload when timer expires
                 </span>
               </div>
@@ -469,11 +538,11 @@ const AdminLogin: React.FC = () => {
           </div>
 
           {/* Branding */}
-          <div className="text-center mt-6">
-            <p className="text-sm text-gray-600 font-medium">
+          <div className="text-center mt-3 sm:mt-4 md:mt-6 px-2">
+            <p className="text-xs sm:text-sm text-gray-600 font-medium">
               Barangay Talipapa Admin Portal
             </p>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-[10px] sm:text-xs text-gray-500 mt-1">
               Enterprise-Grade Security Protection
             </p>
           </div>
@@ -551,7 +620,7 @@ const AdminLogin: React.FC = () => {
                           ? 'border-red-500 focus:border-red-500'
                           : 'border-gray-200 focus:border-[#1a4d2e] hover:border-gray-300'
                       }`}
-                      disabled={loading || isLocked}
+                      disabled={loading || isCurrentlyLocked}
                       autoComplete="username"
                     />
                     {errors.username && (
@@ -583,7 +652,7 @@ const AdminLogin: React.FC = () => {
                             ? 'border-red-500 focus:border-red-500'
                             : 'border-gray-200 focus:border-[#1a4d2e] hover:border-gray-300'
                         }`}
-                        disabled={loading || isLocked}
+                        disabled={loading || isCurrentlyLocked}
                         autoComplete="current-password"
                       />
                       {formData.password &&
@@ -796,17 +865,21 @@ const AdminLogin: React.FC = () => {
                     <Button
                       type="submit"
                       className={`w-full h-14 sm:h-16 text-white font-bold rounded-xl text-base sm:text-lg shadow-lg transition-all duration-300 ${
-                        isLocked || !canAttemptLogin
+                        isCurrentlyLocked || !canAttemptLogin
                           ? 'bg-gray-400 cursor-not-allowed opacity-60'
                           : 'hover:shadow-xl hover:opacity-90'
                       }`}
                       style={{
                         backgroundColor:
-                          isLocked || !canAttemptLogin ? '#9CA3AF' : '#1a4d2e',
+                          isCurrentlyLocked || !canAttemptLogin
+                            ? '#9CA3AF'
+                            : '#1a4d2e',
                       }}
-                      disabled={loading || isLocked || !canAttemptLogin}
+                      disabled={
+                        loading || isCurrentlyLocked || !canAttemptLogin
+                      }
                     >
-                      {isLocked ? (
+                      {isCurrentlyLocked ? (
                         <div className="flex items-center justify-center space-x-2 sm:space-x-3">
                           <Lock className="w-5 h-5" />
                           <span>Account Locked</span>
@@ -822,7 +895,7 @@ const AdminLogin: React.FC = () => {
                     </Button>
 
                     {/* Security Info */}
-                    {!isLocked && attemptCount === 0 && (
+                    {!isCurrentlyLocked && attemptCount === 0 && (
                       <p className="text-xs text-gray-500 text-center mt-3 flex items-center justify-center gap-1">
                         <Shield className="w-3 h-3" />
                         Protected by anti-brute-force security
