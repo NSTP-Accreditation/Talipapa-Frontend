@@ -56,12 +56,10 @@ const EditAdminModal = ({
           const keyLower = String(k).toLowerCase();
           if (keyLower === 'superadmin') return 'SuperAdmin';
           if (keyLower === 'admin') return 'Admin';
-          if (keyLower === 'staff') return 'Staff';
           const v = anyAdmin.roles[k];
           const vStr = String(v).toLowerCase();
           if (vStr === 'superadmin') return 'SuperAdmin';
           if (vStr === 'admin') return 'Admin';
-          if (vStr === 'staff') return 'Staff';
           return k;
         });
       }
@@ -193,8 +191,6 @@ const EditAdminModal = ({
       rolesObj.SuperAdmin = Number(import.meta.env.VITE_SUPERADMIN);
     if (edited.roles.includes('Admin'))
       rolesObj.Admin = Number(import.meta.env.VITE_ADMIN);
-    if (edited.roles.includes('Staff'))
-      rolesObj.Staff = Number(import.meta.env.VITE_STAFF || 3);
     payload.roles = rolesObj;
 
     try {
@@ -369,11 +365,6 @@ const EditAdminModal = ({
                   name: 'Admin',
                   description: 'Administrative access',
                   color: 'blue',
-                },
-                {
-                  name: 'Staff',
-                  description: 'View-only access',
-                  color: 'gray',
                 },
               ].map((roleOption) => (
                 <label
