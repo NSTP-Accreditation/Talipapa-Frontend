@@ -22,7 +22,6 @@ import {
   hasAnyRole,
   isSuperAdmin,
   isAdmin,
-  isStaff,
   getUserPermissions,
   hasPermission,
   hasAnyPermission,
@@ -50,7 +49,6 @@ interface UseRBACReturn {
   hasAnyRole: (roles: UserRole[]) => boolean;
   isSuperAdmin: boolean;
   isAdmin: boolean;
-  isStaff: boolean;
 
   // Permission checking functions
   permissions: Permission[];
@@ -121,7 +119,6 @@ export const useRBAC = (): UseRBACReturn => {
     console.log('Permissions:', userPermissions);
     console.log('Is SuperAdmin:', isSuperAdmin(user));
     console.log('Is Admin:', isAdmin(user));
-    console.log('Is Staff:', isStaff(user));
     console.groupEnd();
   }
 
@@ -138,7 +135,6 @@ export const useRBAC = (): UseRBACReturn => {
     hasAnyRole: (roles: UserRole[]) => hasAnyRole(user, roles),
     isSuperAdmin: isSuperAdmin(user),
     isAdmin: isAdmin(user),
-    isStaff: isStaff(user),
 
     // Permission checking - bound to current user
     permissions: userPermissions,

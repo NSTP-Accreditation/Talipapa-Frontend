@@ -24,24 +24,22 @@ import { decodeJWT } from './jwt.utils';
 const getRoleConfig = () => {
   const superAdminId = Number(import.meta.env.VITE_SUPERADMIN);
   const adminId = Number(import.meta.env.VITE_ADMIN);
-  const staffId = Number(import.meta.env.VITE_STAFF);
 
   // Validate configuration (fail fast if misconfigured)
-  if (!superAdminId || !adminId || !staffId) {
+  if (!superAdminId || !adminId) {
     console.error(
       '[RBAC] CRITICAL: Role IDs not configured in environment variables'
     );
-    console.error('[RBAC] Required: VITE_SUPERADMIN, VITE_ADMIN, VITE_STAFF');
+    console.error('[RBAC] Required: VITE_SUPERADMIN, VITE_ADMIN');
     // Return defaults to prevent app crash, but log error
     return {
       superAdminId: superAdminId || 32562,
       adminId: adminId || 92781,
-      staffId: staffId || 3,
       isConfigured: false,
     };
   }
 
-  return { superAdminId, adminId, staffId, isConfigured: true };
+  return { superAdminId, adminId, isConfigured: true };
 };
 
 // Cache permission results for performance
@@ -136,7 +134,7 @@ export const getUserRole = (user: AuthUser | null): UserRole | null => {
   if (!user?.userData) return null;
 
   // Get role IDs from environment variables
-  const { superAdminId, adminId, staffId, isConfigured } = getRoleConfig();
+  const { superAdminId, adminId, isConfigured } = getRoleConfig();
 
   // Debug logging (controlled by window.__RBAC_DEBUG__)
   const debugEnabled =
@@ -144,7 +142,7 @@ export const getUserRole = (user: AuthUser | null): UserRole | null => {
 
   if (debugEnabled) {
     console.group('🔍 getUserRole Analysis');
-    console.log('Expected Role IDs:', { superAdminId, adminId, staffId });
+    console.log('Expected Role IDs:', { superAdminId, adminId });
     console.log(
       'Configuration Status:',
       isConfigured ? '✅ Valid' : '⚠️ Using fallbacks'
@@ -160,7 +158,7 @@ export const getUserRole = (user: AuthUser | null): UserRole | null => {
     const roleKeys = user.userData.rolesKeys;
     if (debugEnabled) console.log('✓ Found rolesKeys array:', roleKeys);
 
-    // Return first matching role (priority: SuperAdmin > Admin > Staff)
+    // Return first matching role (priority: SuperAdmin > Admin)
     if (roleKeys.includes('SuperAdmin')) {
       if (debugEnabled) console.log('✅ Detected: SUPERADMIN (from rolesKeys)');
       if (debugEnabled) console.groupEnd();
@@ -170,11 +168,6 @@ export const getUserRole = (user: AuthUser | null): UserRole | null => {
       if (debugEnabled) console.log('✅ Detected: ADMIN (from rolesKeys)');
       if (debugEnabled) console.groupEnd();
       return UserRole.ADMIN;
-    }
-    if (roleKeys.includes('Staff')) {
-      if (debugEnabled) console.log('✅ Detected: STAFF (from rolesKeys)');
-      if (debugEnabled) console.groupEnd();
-      return UserRole.STAFF;
     }
   }
 
@@ -195,11 +188,6 @@ export const getUserRole = (user: AuthUser | null): UserRole | null => {
       if (debugEnabled) console.log('✅ Detected: ADMIN (from roles object)');
       if (debugEnabled) console.groupEnd();
       return UserRole.ADMIN;
-    }
-    if (roles.Staff === staffId) {
-      if (debugEnabled) console.log('✅ Detected: STAFF (from roles object)');
-      if (debugEnabled) console.groupEnd();
-      return UserRole.STAFF;
     }
   }
 
@@ -222,11 +210,6 @@ export const getUserRole = (user: AuthUser | null): UserRole | null => {
         if (debugEnabled) console.log('✅ Detected: ADMIN (from JWT)');
         if (debugEnabled) console.groupEnd();
         return UserRole.ADMIN;
-      }
-      if (roleIds.includes(staffId)) {
-        if (debugEnabled) console.log('✅ Detected: STAFF (from JWT)');
-        if (debugEnabled) console.groupEnd();
-        return UserRole.STAFF;
       }
     }
   }
@@ -283,16 +266,6 @@ export const isSuperAdmin = (user: AuthUser | null): boolean => {
  */
 export const isAdmin = (user: AuthUser | null): boolean => {
   return hasRole(user, UserRole.ADMIN);
-};
-
-/**
- * Check if a user is Staff
- *
- * @param user - User object from AuthContext
- * @returns true if user is Staff
- */
-export const isStaff = (user: AuthUser | null): boolean => {
-  return hasRole(user, UserRole.STAFF);
 };
 
 /**
@@ -496,13 +469,13 @@ export const canEditSettings = (user: AuthUser | null): boolean => {
 
 /**
  * Check if user has read-only access
- * Staff members have read-only access
+ * Currently returns false as staff role has been removed
  *
  * @param user - User object from AuthContext
  * @returns true if user has read-only access
  */
 export const isReadOnly = (user: AuthUser | null): boolean => {
-  return isStaff(user);
+  return false;
 };
 
 /**
@@ -516,7 +489,6 @@ export const getRoleDisplayName = (role: UserRole): string => {
   const displayNames: Record<UserRole, string> = {
     [UserRole.SUPERADMIN]: 'Super Administrator',
     [UserRole.ADMIN]: 'Administrator',
-    [UserRole.STAFF]: 'Staff',
   };
   return displayNames[role] || role;
 };
@@ -531,7 +503,6 @@ export const getRoleBadgeColor = (role: UserRole): string => {
   const colors: Record<UserRole, string> = {
     [UserRole.SUPERADMIN]: 'bg-purple-100 text-purple-800 border-purple-200',
     [UserRole.ADMIN]: 'bg-blue-100 text-blue-800 border-blue-200',
-    [UserRole.STAFF]: 'bg-gray-100 text-gray-800 border-gray-200',
   };
   return colors[role] || 'bg-gray-100 text-gray-800 border-gray-200';
 };

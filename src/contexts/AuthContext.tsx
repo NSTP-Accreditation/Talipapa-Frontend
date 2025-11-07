@@ -13,7 +13,6 @@ interface UserData {
   roles?: {
     SuperAdmin?: number;
     Admin?: number;
-    Staff?: number;
   };
   rolesKeys?: string[];
 }

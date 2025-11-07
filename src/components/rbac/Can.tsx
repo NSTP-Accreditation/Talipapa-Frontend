@@ -161,44 +161,6 @@ export const AdminOnly: React.FC<{
 };
 
 /**
- * StaffOnly Component
- * Renders content only for Staff role (view-only users)
- *
- * @example
- * ```tsx
- * <StaffOnly>
- *   <ViewOnlyMessage />
- * </StaffOnly>
- * ```
- */
-export const StaffOnly: React.FC<{
-  children: ReactNode;
-  fallback?: ReactNode;
-}> = ({ children, fallback = null }) => {
-  const { isStaff } = useRBAC();
-  return <>{isStaff ? children : fallback}</>;
-};
-
-/**
- * NotStaff Component
- * Renders content for everyone EXCEPT Staff (i.e., admins who can edit)
- *
- * @example
- * ```tsx
- * <NotStaff>
- *   <EditButton />
- * </NotStaff>
- * ```
- */
-export const NotStaff: React.FC<{
-  children: ReactNode;
-  fallback?: ReactNode;
-}> = ({ children, fallback = null }) => {
-  const { isStaff } = useRBAC();
-  return <>{!isStaff ? children : fallback}</>;
-};
-
-/**
  * ReadOnly Component
  * Shows a read-only message or alternative UI for users without edit permissions
  *

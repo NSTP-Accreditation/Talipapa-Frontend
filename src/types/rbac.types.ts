@@ -2,19 +2,17 @@
  * Role-Based Access Control (RBAC) Type Definitions
  *
  * This file defines the core types for the RBAC system.
- * Roles are hierarchical: SuperAdmin > Admin > Staff
+ * Roles are hierarchical: SuperAdmin > Admin
  */
 
 /**
  * Available user roles in the system
  * - SUPERADMIN: Full system access, can manage all users and settings
  * - ADMIN: Limited system access, cannot manage admin accounts
- * - STAFF: View-only access, can only read data
  */
 export enum UserRole {
   SUPERADMIN = 'SuperAdmin',
   ADMIN = 'Admin',
-  STAFF = 'Staff',
 }
 
 /**
@@ -98,15 +96,6 @@ export enum Permission {
  *   - Farm Inventory: VIEW ONLY (no add/edit/delete)
  *   - Activity Logs: NO ACCESS (not visible)
  *   - Settings: NO ACCESS (not visible)
- * - Staff:
- *   - Records: NO ACCESS (not visible)
- *   - Trading: NO ACCESS (not visible)
- *   - Green Pages: VIEW ONLY (no add/edit/delete)
- *   - Home Editables: NO ACCESS (not visible)
- *   - Inventory: NO ACCESS (not visible)
- *   - Farm Inventory: NO ACCESS (not visible)
- *   - Activity Logs: NO ACCESS (not visible)
- *   - Settings: NO ACCESS (not visible)
  *
  * To add new permissions:
  * 1. Add the permission to the Permission enum above
@@ -169,16 +158,6 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     // Reports & Analytics (keep for dashboard/exports)
     Permission.VIEW_REPORTS,
     Permission.EXPORT_DATA,
-  ],
-
-  [UserRole.STAFF]: [
-    // Staff has very limited access - only Green Pages view-only
-
-    // Green Pages - VIEW ONLY (no MANAGE_GREEN_PAGES)
-    Permission.VIEW_GREEN_PAGES,
-
-    // All other sections: NO ACCESS
-    // (Staff cannot see Records, Trading, Home Editables, Inventory, Farm Inventory, Activity Logs, Settings)
   ],
 };
 

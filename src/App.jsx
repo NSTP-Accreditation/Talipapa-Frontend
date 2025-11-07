@@ -168,7 +168,7 @@ function App() {
                       }
                     />
 
-                    {/* Green Pages Route - SuperAdmin & Admin FULL, Staff VIEW */}
+                    {/* Green Pages Route - SuperAdmin & Admin */}
                     <Route
                       path="green-pages"
                       element={
