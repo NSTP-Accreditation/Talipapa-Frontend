@@ -8,7 +8,7 @@ import {
 import { Leaf } from 'lucide-react';
 import SkillStaffModal from './components/SkillStaffModal';
 
-interface Skill {
+export interface Skill {
   _id?: string;
   name: string;
   short: string;

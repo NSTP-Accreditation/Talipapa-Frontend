@@ -10,7 +10,7 @@ import {
   Contact,
   SquarePen,
 } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useToast } from '@/hooks/useToast';
 import { createPortal } from 'react-dom';
 import {
@@ -34,6 +34,7 @@ import {
 import { Input } from '../../../components/ui/input';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
 import { Farm } from './components/MapDropdown';
+import SkillMapTab from './SkillMapTab';
 
 interface DataItem {
   name: string;
@@ -42,9 +43,11 @@ interface DataItem {
 }
 
 interface StatisticsTabProps {
-  memberEachFarmData: DataItem[];
-  skillsCountData: DataItem[];
-  agesInAllFarmData: DataItem[];
+  farmsData: { success: boolean; data: Farm[] } | undefined;
+  staffData: any
+  // memberEachFarmData: DataItem[];
+  // skillsCountData: DataItem[];
+  // agesInAllFarmData: DataItem[];
   refetchFarms: () => Promise<Farm[]>;
 }
 
@@ -100,9 +103,10 @@ const ResponsiveBar = ({
 );
 
 const StatisticsTab: React.FC<StatisticsTabProps> = ({
-  memberEachFarmData,
-  skillsCountData,
-  agesInAllFarmData,
+  farmsData,
+  staffData,
+  // skillsCountData,
+  // agesInAllFarmData,
   refetchFarms,
 }) => {
   // Modal state for Add Farm
@@ -122,6 +126,63 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
   const authFetch = useAuthFetch();
   const toast = useToast();
 
+  const memberEachFarm = useMemo(() => {
+    if (!farmsData || !Array.isArray(farmsData.data)) return [];
+    return farmsData.data.map((f: any) => ({
+      name: f.name,
+      value: f.staff.length || 0,
+      color: '#34D399',
+    }));
+  }, [farmsData]);
+
+  const skillsCountData = useMemo(() => {
+  if (!staffData || !Array.isArray(staffData.data)) return [];
+
+  const skillCountMap: Record<string, { name: string; count: number }> = {};
+    staffData.data.forEach(staff => {
+      staff?.skills?.forEach(skill => {
+        if (!skill?.name) return;
+        if (!skillCountMap[skill.name]) {
+          skillCountMap[skill.name] = { ...skill, count: 1 };
+        } else {
+          skillCountMap[skill.name].count += 1;
+        }
+      });
+    });
+
+    return Object.values(skillCountMap).map(skill => ({
+      name: skill.name,
+      value: skill. count,
+      color: "#34D399",
+    }));
+  }, [staffData]);
+
+  const ageDistributionData = useMemo(() => {
+    if (!farmsData || !Array.isArray(farmsData.data)) return [];
+    const allStaffs = farmsData.data.flatMap(farm => farm.staff).filter((staff, index, self) => index === self.findIndex(s => s._id === staff._id));
+
+    const ageGroups = [
+      "18-25 years old",
+      "26-35 years old",
+      "36-45 years old",
+      "46-55 years old",
+      "Above 55 years old",
+    ];
+
+    const ageGroupCount: Record<string, number> = {};
+
+    allStaffs.forEach((staff: any) => {
+      const ageGroup = staff.age || "Unknown";
+      ageGroupCount[ageGroup] = (ageGroupCount[ageGroup] || 0) + 1;
+    });
+    
+    return ageGroups.map((group) => ({
+      name: group,
+      value: ageGroupCount[group] || 0,
+      color: "#34D399",
+    }));
+  }, [farmsData])
+  
   const openAddFarm = () => {
     setNewFarm({
       name: '',
@@ -233,7 +294,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                 Total Farms
               </p>
               <p className="text-white text-xl sm:text-2xl md:text-3xl font-bold">
-                {memberEachFarmData.length}
+                {memberEachFarm.length}
               </p>
             </div>
             <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-3 sm:p-4 rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
@@ -249,7 +310,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                 Age Groups
               </p>
               <p className="text-white text-xl sm:text-2xl md:text-3xl font-bold">
-                {agesInAllFarmData.length}
+                {ageDistributionData.length}
               </p>
             </div>
           </div>
@@ -270,7 +331,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
             </div>
             <div className="bg-white/50 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-lg sm:rounded-xl">
               <ResponsiveBar
-                data={memberEachFarmData}
+                data={memberEachFarm}
                 height={window.innerWidth < 768 ? 280 : 350}
                 angle={window.innerWidth < 768 ? -45 : -15}
               />
@@ -316,7 +377,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
             </div>
             <div className="bg-white/50 backdrop-blur-sm p-2 sm:p-3 md:p-4 rounded-lg sm:rounded-xl">
               <ResponsiveBar
-                data={agesInAllFarmData}
+                data={ageDistributionData}
                 height={window.innerWidth < 768 ? 280 : 350}
                 angle={0}
               />

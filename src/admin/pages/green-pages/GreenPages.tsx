@@ -77,17 +77,6 @@ const GreenPages: React.FC = () => {
     ];
   }, [staffData]);
 
-  const formatContact = (contact?: string | null) => {
-    if (!contact) return null;
-    const digits = contact.replace(/\D/g, '');
-    if (!digits) return null;
-    if (digits.startsWith('639') && digits.length >= 11)
-      return '0' + digits.slice(2);
-    if (digits.startsWith('09') && digits.length === 11) return digits;
-    if (digits.length === 10 && digits.startsWith('9')) return '0' + digits;
-    return digits;
-  };
-
   if(farmsDataLoading) {
     return <p>Farm Loading</p>
   }
@@ -115,6 +104,7 @@ const GreenPages: React.FC = () => {
             farmsData={farmsData}
             selectedFarm={selectedFarm}
             setSelectedFarm={setSelectedFarm}
+            refetchFarms={refetchFarms}
           />
         </div>
 

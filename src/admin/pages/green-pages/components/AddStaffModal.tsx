@@ -27,6 +27,7 @@ interface AddStaffModalProps {
   isOpen: boolean;
   onClose: () => void;
   refetchStaff: (fetchUrl?: string) => Promise<any>;
+  refetchFarms: (fetchUrl?: string) => Promise<any>;
   farmsData: { success: boolean; data: Farm[] } | undefined;
 }
 
@@ -34,6 +35,7 @@ const AddStaffModal = ({
   isOpen,
   onClose,
   refetchStaff,
+  refetchFarms,
   farmsData
 } : AddStaffModalProps ) => {
   const toast = useToast();
@@ -69,6 +71,7 @@ const AddStaffModal = ({
       toast.success(result.message);
       onClose();
       refetchStaff();
+      refetchFarms();
     } catch (err: any) {
       toast.error(err?.message || 'Failed to add staff');
     }

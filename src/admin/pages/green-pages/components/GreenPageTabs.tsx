@@ -3,6 +3,7 @@ import MapDropdown, { Farm } from './MapDropdown';
 import StaffTab from '../StaffTab';
 import SkillMapTab from '../SkillMapTab';
 import useFetchData from '@/admin/hooks/useFetchData';
+import StatisticsTab from '../StatisticsTab';
 
 interface Skill {
   _id: string;
@@ -26,12 +27,14 @@ type GreenPageTabsProps = {
   farmsData: { success: boolean; data: Farm[] } | undefined;
   selectedFarm: Farm | null;
   setSelectedFarm: Dispatch<SetStateAction<Farm | null>>;
+  refetchFarms: () => Promise<Farm[]>
 };
 
 const GreenPageTabs = ({
   farmsData,
   selectedFarm,
   setSelectedFarm,
+  refetchFarms
 }: GreenPageTabsProps) => {
   const [activeTab, setActiveTab] = useState<
     'mapDropdown' | 'staff' | 'skillMap' | 'statistics'
@@ -105,6 +108,7 @@ const GreenPageTabs = ({
           staffLoading={staffLoading}
           staffError={staffError}
           refetchStaff={refetchStaff}
+          refetchFarms={refetchFarms}
           selectedFarm={selectedFarm}
           farmsData={farmsData}
         />
@@ -117,14 +121,16 @@ const GreenPageTabs = ({
         />
       )}
 
-      {/* {activeTab === 'statistics' && (
+      {activeTab === 'statistics' && (
         <StatisticsTab
-          memberEachFarmData={memberEachFarmData}
-          skillsCountData={skillsCountData}
-          agesInAllFarmData={agesInAllFarmData}
+          farmsData={farmsData}
+          staffData={staffData}
+          // memberEachFarmData={memberEachFarmData}
+          // skillsCountData={skillsCountData}
+          // agesInAllFarmData={agesInAllFarmData}
           refetchFarms={refetchFarms}
         />
-      )} */}
+      )}
     </div>
   );
 };

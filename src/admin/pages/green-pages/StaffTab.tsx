@@ -17,11 +17,12 @@ interface StaffTabProps {
   staffLoading: boolean;
   staffError: string | null;
   refetchStaff: (fetchUrl?: string) => Promise<any>;
+  refetchFarms: (fetchUrl?: string) => Promise<any>;
   farmsData: { success: boolean; data: Farm[] } | undefined;
   selectedFarm: Farm | null;
 }
 
-const StaffTab = ({ staffData, staffLoading, staffError, refetchStaff, farmsData, selectedFarm }: StaffTabProps) => {
+const StaffTab = ({ staffData, staffLoading, staffError, refetchStaff, refetchFarms, farmsData, selectedFarm }: StaffTabProps) => {
   if (!selectedFarm) return <p>No farm selected</p>;
 
   const [openAddStaffModal, setOpenAddStaffModal] = useState(false);
@@ -148,7 +149,7 @@ const StaffTab = ({ staffData, staffLoading, staffError, refetchStaff, farmsData
                         Contact Number
                       </p>
                       <p className="text-xs sm:text-sm font-bold text-gray-900">
-                        {staff.contactNumber} || 'No Contact Provided'
+                        {staff.contactNumber || 'No Contact Provided'}
                       </p>
                     </div>
 
@@ -181,6 +182,7 @@ const StaffTab = ({ staffData, staffLoading, staffError, refetchStaff, farmsData
         isOpen={openAddStaffModal}
         onClose={() => setOpenAddStaffModal(false)}
         refetchStaff={refetchStaff}
+        refetchFarms={refetchFarms}
         farmsData={farmsData}
       />
     </>

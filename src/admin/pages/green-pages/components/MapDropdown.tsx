@@ -25,6 +25,7 @@ export interface Farm {
   memberCount: number;
   location: Location;
   image?: ImageInt;
+  staff: any
 }
 
 interface MapDropdownProps {
