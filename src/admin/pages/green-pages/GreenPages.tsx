@@ -1,19 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useToast } from '@/hooks/useToast';
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardTitle,
-} from '../../../components/ui/card';
-import { Sprout, Users, TrendingUp } from 'lucide-react';
-import LeafletMap from './LeafletMap';
-import MapDropdown, { Farm } from './MapDropdown';
-import ProfileTab from './StaffTab';
-import SkillMapTab from './SkillMapTab';
-import StatisticsTab from './StatisticsTab';
-import AddStaffModal from './AddStaffModal';
-import SkillStaffModal from './SkillStaffModal';
+import { Farm } from './components/MapDropdown';
 import useFetchData from '../../hooks/useFetchData';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
 import GreenPageHeader from './components/GreenPageHeader';
@@ -40,7 +27,6 @@ const GreenPages: React.FC = () => {
     refetch: refetchStaff,
   } = useFetchData('/staff');
 
-  
   const [selectedFarm, setSelectedFarm] = useState<Farm | null>(null);
 
   // Skill modal
@@ -102,21 +88,6 @@ const GreenPages: React.FC = () => {
     return digits;
   };
 
-  const handleSkillClick = async (skill: any) => {
-    setSkillModalOpen(true);
-    setSkillLoading(true);
-    try {
-      // Try fetching staff for this skill (best-effort)
-      const res = await authFetch(`/staff?skill=${skill._id}`);
-      // assume res is array
-      setSkillStaff(res || []);
-    } catch (err: any) {
-      toast.error(err?.message || 'Failed to load staff for skill');
-      setSkillStaff([]);
-    }
-    setSkillLoading(false);
-  };
-
   if(farmsDataLoading) {
     return <p>Farm Loading</p>
   }
@@ -147,13 +118,7 @@ const GreenPages: React.FC = () => {
           />
         </div>
 
-        <SkillStaffModal
-          isOpen={skillModalOpen}
-          onClose={() => setSkillModalOpen(false)}
-          skillLoading={skillLoading}
-          staffList={skillStaff}
-          formatContact={formatContact}
-        />
+        
       </div>
     </div>
   );

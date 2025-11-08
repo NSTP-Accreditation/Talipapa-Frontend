@@ -5,17 +5,16 @@ import { Users, X } from 'lucide-react';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  skillLoading?: boolean;
+  staffLoading?: boolean;
   staffList?: any[];
-  formatContact?: (s?: string | null) => string | null;
+  // formatContact?: (s?: string | null) => string | null;
 }
 
 const SkillStaffModal: React.FC<Props> = ({
   isOpen,
   onClose,
-  skillLoading,
   staffList = [],
-  formatContact,
+  staffLoading
 }) => {
   if (!isOpen) return null;
 
@@ -58,7 +57,7 @@ const SkillStaffModal: React.FC<Props> = ({
         </div>
 
         <div className="p-4 sm:p-6 max-h-[60vh] overflow-y-auto bg-gradient-to-br from-gray-50 to-white">
-          {skillLoading ? (
+          {staffLoading ? (
             <div className="text-center py-8">
               <div className="w-12 h-12 border-4 border-green-200 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
               <p className="text-gray-500 font-medium">Loading staff...</p>
@@ -102,9 +101,7 @@ const SkillStaffModal: React.FC<Props> = ({
                         Contact
                       </div>
                       <div className="text-sm font-bold text-gray-900 whitespace-nowrap">
-                        {formatContact
-                          ? (formatContact(s.contact_number) ?? 'No contact')
-                          : (s.contact_number ?? 'No contact')}
+                        {s.contactNumber ?? 'No contact'}
                       </div>
                     </div>
                   </div>

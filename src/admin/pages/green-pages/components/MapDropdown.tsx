@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardContent,
   CardTitle,
-} from '../../../components/ui/card';
+} from '../../../../components/ui/card';
 import { MapPin, Leaf } from 'lucide-react';
 import LeafletMap from './LeafletMap';
 import { ImageInt } from '@/admin/components/OfficialsPanel';

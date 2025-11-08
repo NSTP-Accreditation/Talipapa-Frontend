@@ -33,7 +33,7 @@ import {
 } from 'recharts';
 import { Input } from '../../../components/ui/input';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
-import { Farm } from './MapDropdown';
+import { Farm } from './components/MapDropdown';
 
 interface DataItem {
   name: string;

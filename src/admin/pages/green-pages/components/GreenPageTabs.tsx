@@ -1,6 +1,26 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import MapDropdown, { Farm } from "../MapDropdown";
-import StaffTab from "../StaffTab";
+import { Dispatch, SetStateAction, useState } from 'react';
+import MapDropdown, { Farm } from './MapDropdown';
+import StaffTab from '../StaffTab';
+import SkillMapTab from '../SkillMapTab';
+import useFetchData from '@/admin/hooks/useFetchData';
+
+interface Skill {
+  _id: string;
+  name: string;
+  short?: string;
+  type?: string;
+}
+
+interface Staff {
+  _id?: string;
+  name: string;
+  age?: string;
+  gender?: string;
+  emailAddress?: string;
+  position: string[];
+  skills: Skill[];
+  contactNumber?: string;
+}
 
 type GreenPageTabsProps = {
   farmsData: { success: boolean; data: Farm[] } | undefined;
@@ -8,10 +28,23 @@ type GreenPageTabsProps = {
   setSelectedFarm: Dispatch<SetStateAction<Farm | null>>;
 };
 
-const GreenPageTabs = ({ farmsData, selectedFarm, setSelectedFarm } : GreenPageTabsProps) => {
+const GreenPageTabs = ({
+  farmsData,
+  selectedFarm,
+  setSelectedFarm,
+}: GreenPageTabsProps) => {
   const [activeTab, setActiveTab] = useState<
     'mapDropdown' | 'staff' | 'skillMap' | 'statistics'
   >('mapDropdown');
+
+  const {
+    data: staffData,
+    loading: staffLoading,
+    error: staffError,
+    refetch: refetchStaff,
+  } = useFetchData<{ success: boolean; message: string; data: Staff[] }>(
+    `/staff/farm/${selectedFarm?._id}`
+  );
 
   return (
     <div className="lg:col-span-2">
@@ -67,14 +100,24 @@ const GreenPageTabs = ({ farmsData, selectedFarm, setSelectedFarm } : GreenPageT
       )}
 
       {activeTab === 'staff' && (
-        <StaffTab selectedFarm={selectedFarm} farmsData={farmsData}/>
+        <StaffTab
+          staffData={staffData}
+          staffLoading={staffLoading}
+          staffError={staffError}
+          refetchStaff={refetchStaff}
+          selectedFarm={selectedFarm}
+          farmsData={farmsData}
+        />
       )}
 
-      {/* {activeTab === 'skillMap' && (
-        <SkillMapTab staffSkills={flatSkills} onSkillClick={handleSkillClick} />
+      {activeTab === 'skillMap' && (
+        <SkillMapTab 
+          staffData={staffData} 
+          staffLoading={staffLoading} 
+        />
       )}
 
-      {activeTab === 'statistics' && (
+      {/* {activeTab === 'statistics' && (
         <StatisticsTab
           memberEachFarmData={memberEachFarmData}
           skillsCountData={skillsCountData}

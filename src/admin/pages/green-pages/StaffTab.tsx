@@ -6,45 +6,26 @@ import {
   CardTitle,
 } from '../../../components/ui/card';
 import { Users, Leaf } from 'lucide-react';
-import { Farm } from './MapDropdown';
+import { Farm } from './components/MapDropdown';
 import useFetchData from '@/admin/hooks/useFetchData';
-import AddStaffModal from './AddStaffModal';
+import AddStaffModal from './components/AddStaffModal';
 
-interface Skill {
-  _id: string;
-  name: string;
-  short?: string;
-  type?: string;
-}
 
-interface Staff {
-  _id?: string;
-  name: string;
-  age?: string;
-  gender?: string;
-  emailAddress?: string;
-  position: string[];
-  skills: Skill[];
-  contactNumber?: string;
-}
 
 interface StaffTabProps {
+  staffData: any;
+  staffLoading: boolean;
+  staffError: string | null;
+  refetchStaff: (fetchUrl?: string) => Promise<any>;
   farmsData: { success: boolean; data: Farm[] } | undefined;
   selectedFarm: Farm | null;
 }
 
-const StaffTab = ({ farmsData, selectedFarm }: StaffTabProps) => {
+const StaffTab = ({ staffData, staffLoading, staffError, refetchStaff, farmsData, selectedFarm }: StaffTabProps) => {
   if (!selectedFarm) return <p>No farm selected</p>;
 
   const [openAddStaffModal, setOpenAddStaffModal] = useState(false);
 
-  const {
-    data: staffData,
-    loading: staffLoading,
-    error: staffError,
-    refetch: refetchStaff,
-  } = useFetchData<{ success: boolean, message: string, data: Staff[]}>(`/staff/farm/${selectedFarm._id}`);
-  
   if(staffLoading) {
     return <p>Loading Staff</p>
   }
@@ -201,14 +182,6 @@ const StaffTab = ({ farmsData, selectedFarm }: StaffTabProps) => {
         onClose={() => setOpenAddStaffModal(false)}
         refetchStaff={refetchStaff}
         farmsData={farmsData}
-        // onSubmit={handleSubmitStaff}
-        // staffForm={staffForm}
-        // handleStaffFormChange={handleStaffFormChange}
-        // contactRest={contactRest}
-        // setContactRest={setContactRest}
-        // skillsData={skillsData?.data || []}
-        // farmsData={farmsData?.data || []}
-        // isSubmitting={isSubmitting}
       />
     </>
   );

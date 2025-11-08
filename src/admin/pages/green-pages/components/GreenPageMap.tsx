@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
-import LeafletMap from '../LeafletMap';
-import { Farm } from '../MapDropdown';
+import LeafletMap from './LeafletMap';
+import { Farm } from './MapDropdown';
 import { Dispatch, SetStateAction } from 'react';
 
 type GreenPageMapProps = {
