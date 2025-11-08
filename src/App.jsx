@@ -111,7 +111,7 @@ function App() {
                   /> */}
 
                   {/* Green Pages Route */}
-                  {/* <Route path="green-pages" element={<GreenPages />} /> */}
+                  <Route path="green-pages" element={<GreenPages />} />
 
                   {/* Home Editables Routes */}
                   <Route path="about" element={<AboutUsAdmin />} />

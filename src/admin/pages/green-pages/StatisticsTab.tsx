@@ -110,7 +110,8 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
   const [isSubmittingFarm, setIsSubmittingFarm] = useState(false);
   const [newFarm, setNewFarm] = useState({
     name: '',
-    location: '',
+    latitude: '',
+    longitude: '',
     size: '',
     age: '',
     farmType: '',
@@ -124,7 +125,8 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
   const openAddFarm = () => {
     setNewFarm({
       name: '',
-      location: '',
+      latitude: '',
+      longitude: '',
       size: '',
       age: '',
       farmType: '',
@@ -136,29 +138,14 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
   };
 
   const closeAddFarm = () => setIsAddFarmOpen(false);
-
-  function extractLatLong(url) {
-    // Regex to match both sets of coordinates: @latitude,longitude and 3dlatitude!4dlongitude
-    const regex = /[-+]?\d{1,2}\.\d+,\s*[-+]?\d{1,3}\.\d+/g;
-    const match = url.match(regex);
-
-    if (match && match.length > 0) {
-      const [lat, lng] = match[0]
-        .split(',')
-        .map((val) => parseFloat(val.trim()));
-      return { lat, lng };
-    } else {
-      return null;
-    }
-  }
-
+  
   const handleCreateFarm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmittingFarm) return;
 
     // Basic validation - do this BEFORE setting isSubmitting
-    if (!newFarm.name || !newFarm.location) {
-      toast.error('Farm name and location are required', {
+    if (!newFarm.name || !newFarm.latitude || !newFarm.longitude) {
+      toast.error('Farm name, latitude, and longitude are required', {
         title: 'Validation',
       });
       return;
@@ -171,31 +158,20 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
       return;
     }
 
-    const mapLoc = extractLatLong(newFarm.location);
-
-    if (!mapLoc || !mapLoc.lat || !mapLoc.lng) {
-      toast.error(
-        'Invalid location format. Please provide a valid Google Maps URL',
-        {
-          title: 'Validation',
-        }
-      );
-      return;
-    }
-
     setIsSubmittingFarm(true);
 
     try {
       const formData = new FormData();
 
-      formData.append('location', JSON.stringify(mapLoc));
+      formData.append('latitude', newFarm.latitude);
+      formData.append('longitude', newFarm.longitude);
       formData.append('name', newFarm.name);
       formData.append('size', newFarm.size);
       formData.append('age', newFarm.age);
       formData.append('farmType', newFarm.farmType);
       formData.append('address', newFarm.address);
       formData.append('description', newFarm.description);
-      formData.append('image', newFarm.image);
+      formData.append('farmImage', newFarm.image);
 
       await authFetch('/farms', {
         method: 'POST',
@@ -412,15 +388,31 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                   <div>
                     <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
                       <MapPin className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
-                      Location <span className="text-red-500">*</span>
+                      Latitude <span className="text-red-500">*</span>
                     </label>
                     <Input
                       required
-                      value={newFarm.location}
+                      value={newFarm.latitude}
                       onChange={(e) =>
-                        setNewFarm({ ...newFarm, location: e.target.value })
+                        setNewFarm({ ...newFarm, latitude: e.target.value })
                       }
-                      placeholder="Google Map Location"
+                      placeholder="Farm latitude"
+                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
+                      <MapPin className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
+                      Longitude <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      required
+                      value={newFarm.longitude}
+                      onChange={(e) =>
+                        setNewFarm({ ...newFarm, longitude: e.target.value })
+                      }
+                      placeholder="Farm Longitude"
                       className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
                     />
                   </div>

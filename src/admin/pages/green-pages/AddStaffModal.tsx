@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Users,
@@ -10,35 +10,74 @@ import {
   X,
   MapPin,
 } from 'lucide-react';
-import { sanitizeName, validateName } from '@/utils/validation';
+import { sanitizeName } from '@/utils/validation';
 import { useToast } from '@/hooks/useToast';
+import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
+import useFetchData from '@/admin/hooks/useFetchData';
+import { Farm } from './MapDropdown';
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (e: React.FormEvent) => Promise<void> | void;
-  staffForm: any;
-  handleStaffFormChange: (field: string, value: string | string[]) => void;
-  contactRest: string;
-  setContactRest: (s: string) => void;
-  skillsData: any[];
-  farmsData: any[];
-  isSubmitting: boolean;
+interface Skill {
+  _id: string;
+  name: string;
+  short: string;
+  type: string;
 }
 
-const AddStaffModal: React.FC<Props> = ({
+interface AddStaffModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  refetchStaff: (fetchUrl?: string) => Promise<any>;
+  farmsData: { success: boolean; data: Farm[] } | undefined;
+}
+
+const AddStaffModal = ({
   isOpen,
   onClose,
-  onSubmit,
-  staffForm,
-  handleStaffFormChange,
-  contactRest,
-  setContactRest,
-  skillsData,
-  farmsData,
-  isSubmitting,
-}) => {
-  const { error: showError } = useToast();
+  refetchStaff,
+  farmsData
+} : AddStaffModalProps ) => {
+  const toast = useToast();
+  const [ isSubmitting, setIsSubmitting ] = useState(false);
+  const authFetch = useAuthFetch();
+  
+  const { data: skillsData, loading: skillsLoading } = useFetchData<{ success: boolean, message: boolean, data: Skill[]}>('/skills');
+
+  const [contactRest, setContactRest] = useState('');
+  const [staffForm, setStaffForm] = useState({
+    name: '',
+    position: '',
+    age: '',
+    gender: '',
+    emailAddress: '',
+    contactNumber: '',
+    skills: [],
+    assignedFarm: [],
+  });
+
+  const handleSubmitStaff = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    const staffPayload = {...staffForm, position: staffForm.position.trim().split(',')}
+    
+    try {
+      const result = await authFetch('/staff', {
+        method: 'POST',
+        body: JSON.stringify(staffPayload),
+      });
+      toast.success(result.message);
+      onClose();
+      refetchStaff();
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to add staff');
+    }
+    setIsSubmitting(false);
+  };
+
+  const handleStaffFormChange = (field: string, value: any) => {
+    setStaffForm((prev: any) => ({ ...prev, [field]: value }));
+  };
 
   if (!isOpen) return null;
 
@@ -80,7 +119,7 @@ const AddStaffModal: React.FC<Props> = ({
 
         {/* Modal Body - Scrollable */}
         <form
-          onSubmit={onSubmit}
+          onSubmit={handleSubmitStaff}
           className="overflow-y-auto max-h-[calc(90vh-200px)]"
         >
           <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
@@ -108,17 +147,6 @@ const AddStaffModal: React.FC<Props> = ({
                     onChange={(e) => {
                       const filtered = sanitizeName(e.target.value);
                       handleStaffFormChange('name', filtered);
-                    }}
-                    onBlur={() => {
-                      if (!staffForm.name) return;
-                      const { valid, message } = validateName(
-                        staffForm.name as string,
-                        true
-                      );
-                      if (!valid)
-                        showError(message || 'Invalid name', {
-                          title: 'Validation',
-                        });
                     }}
                     className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-green-500 focus:ring-2 sm:focus:ring-4 focus:ring-green-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
                     placeholder="Enter full name"
@@ -198,7 +226,7 @@ const AddStaffModal: React.FC<Props> = ({
                 </label>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 max-h-48 sm:max-h-60 overflow-y-auto p-2 border border-gray-200 rounded-lg bg-gray-50">
-                  {skillsData.map((skill) => (
+                  {skillsData?.data?.map((skill) => (
                     <div
                       key={skill._id}
                       className="flex items-center space-x-2 p-1.5 sm:p-2 hover:bg-white rounded-md transition-colors"
@@ -230,7 +258,7 @@ const AddStaffModal: React.FC<Props> = ({
                     </div>
                   ))}
 
-                  {skillsData.length === 0 && (
+                  {skillsData?.data?.length === 0 && (
                     <div className="col-span-2 text-center py-3 sm:py-4 text-gray-500 text-xs sm:text-sm">
                       No skills available
                     </div>
@@ -246,7 +274,7 @@ const AddStaffModal: React.FC<Props> = ({
                 </label>
 
                 <div className="grid grid-cols-1 gap-2 sm:gap-3 max-h-48 sm:max-h-60 overflow-y-auto p-2 border border-gray-200 rounded-lg bg-gray-50">
-                  {farmsData.map((farm) => (
+                  {farmsData.data.map((farm) => (
                     <div
                       key={farm._id}
                       className="flex items-center space-x-2 p-1.5 sm:p-2 hover:bg-white rounded-md transition-colors"
@@ -255,16 +283,16 @@ const AddStaffModal: React.FC<Props> = ({
                         type="checkbox"
                         id={`farm-${farm._id}`}
                         checked={
-                          staffForm.assigned_farm?.includes(farm._id) || false
+                          staffForm.assignedFarm?.includes(farm._id) || false
                         }
                         onChange={(e) => {
                           const isChecked = e.target.checked;
                           const updatedFarms = isChecked
-                            ? [...(staffForm.assigned_farm || []), farm._id]
-                            : (staffForm.assigned_farm || []).filter(
+                            ? [...(staffForm.assignedFarm || []), farm._id]
+                            : (staffForm.assignedFarm || []).filter(
                                 (id) => id !== farm._id
                               );
-                          handleStaffFormChange('assigned_farm', updatedFarms);
+                          handleStaffFormChange('assignedFarm', updatedFarms);
                         }}
                         className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2"
                       />
@@ -283,7 +311,7 @@ const AddStaffModal: React.FC<Props> = ({
                     </div>
                   ))}
 
-                  {farmsData.length === 0 && (
+                  {farmsData.data.length === 0 && (
                     <div className="text-center py-3 sm:py-4 text-gray-500 text-xs sm:text-sm">
                       No farms available
                     </div>
@@ -311,9 +339,9 @@ const AddStaffModal: React.FC<Props> = ({
                   </label>
                   <input
                     type="email"
-                    value={staffForm.email_address}
+                    value={staffForm.emailAddress}
                     onChange={(e) =>
-                      handleStaffFormChange('email_address', e.target.value)
+                      handleStaffFormChange('emailAddress', e.target.value)
                     }
                     className="w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-200 sm:border-2 rounded-lg sm:rounded-xl focus:border-blue-500 focus:ring-2 sm:focus:ring-4 focus:ring-blue-500/20 transition-all outline-none text-gray-900 font-medium text-sm sm:text-base"
                     placeholder="email@example.com"
@@ -338,7 +366,7 @@ const AddStaffModal: React.FC<Props> = ({
                         const limited = digitsOnly.slice(0, 9);
                         setContactRest(limited);
                         handleStaffFormChange(
-                          'contact_number',
+                          'contactNumber',
                           limited ? `09${limited}` : ''
                         );
                       }}

@@ -69,7 +69,6 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
       map.setView(defaultCenter, selectedFarm ? 13 : 12);
     }
   }, [farmsData, selectedFarm]);
-
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <MapContainer
