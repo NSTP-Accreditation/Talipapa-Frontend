@@ -97,8 +97,8 @@ const AddAdminModal = ({
         return 'Maximum of 2 SuperAdmin accounts allowed. Please remove an existing SuperAdmin first.';
       }
 
-      if (newAdmin.roles.includes('Admin') && adminCount >= 2) {
-        return 'Maximum of 2 Admin accounts allowed. Please remove an existing Admin first.';
+      if (newAdmin.roles.includes('Admin') && adminCount >= 1) {
+        return 'Maximum of 1 Admin account allowed. Please remove the existing Admin first.';
       }
     }
 
@@ -445,7 +445,7 @@ const AddAdminModal = ({
                 <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <p className="text-xs sm:text-sm text-blue-800">
                   <strong className="font-bold">Role Limits:</strong> SuperAdmin
-                  (max 2), Admin (max 2)
+                  (max 2), Admin (max 1)
                 </p>
               </div>
             </div>
