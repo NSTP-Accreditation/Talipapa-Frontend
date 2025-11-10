@@ -24,14 +24,14 @@ interface RoleProtectedRouteProps {
   permissions?: Permission[];
   /** Require all permissions instead of just one */
   requireAll?: boolean;
-  /** Custom redirect path (defaults to /admin/dashboard) */
+  /** Custom redirect path (defaults to /admin) */
   redirectTo?: string;
 }
 
 /**
  * RoleProtectedRoute - Protects routes based on RBAC permissions
  *
- * Redirects users to dashboard if they lack required permissions.
+ * Redirects users to admin index if they lack required permissions.
  * Shows a brief "Access Denied" message before redirect.
  */
 const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
@@ -39,7 +39,7 @@ const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
   permission,
   permissions,
   requireAll = false,
-  redirectTo = '/admin/dashboard',
+  redirectTo = '/admin',
 }) => {
   const { isAuthenticated, loading } = useAuth();
   const { hasPermission, hasAnyPermission, hasAllPermissions } = useRBAC();
@@ -110,7 +110,7 @@ const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({
           </p>
           <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
-            <span>Redirecting to dashboard...</span>
+            <span>Redirecting...</span>
           </div>
         </div>
       </div>

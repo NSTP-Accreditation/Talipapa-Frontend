@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useRBAC } from '../../hooks/useRBAC';
 import { Permission } from '../../types/rbac.types';
 import { APP_ROUTES } from '../../utils/constants/routes';
@@ -13,27 +13,36 @@ import { APP_ROUTES } from '../../utils/constants/routes';
  */
 const AdminRedirect = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { hasPermission } = useRBAC();
 
   useEffect(() => {
+    // Determine the target route based on permissions
+    let targetRoute = '';
+
     // Check if user can view dashboard (SuperAdmin)
     if (hasPermission(Permission.VIEW_REPORTS)) {
-      navigate(APP_ROUTES.ADMIN.DASHBOARD, { replace: true });
+      targetRoute = APP_ROUTES.ADMIN.DASHBOARD;
     }
     // Otherwise redirect to first Home Editable section
     else if (hasPermission(Permission.VIEW_GUIDELINES)) {
-      navigate(APP_ROUTES.ADMIN.BASE + '/guidelines', { replace: true });
+      targetRoute = APP_ROUTES.ADMIN.BASE + '/guidelines';
     } else if (hasPermission(Permission.VIEW_NEWS)) {
-      navigate(APP_ROUTES.ADMIN.NEWS, { replace: true });
+      targetRoute = APP_ROUTES.ADMIN.NEWS;
     } else if (hasPermission(Permission.VIEW_CONTENT)) {
-      navigate(APP_ROUTES.ADMIN.CAROUSEL, { replace: true });
+      targetRoute = APP_ROUTES.ADMIN.CAROUSEL;
     } else if (hasPermission(Permission.VIEW_ACHIEVEMENTS)) {
-      navigate(APP_ROUTES.ADMIN.ABOUT + '/achievements', { replace: true });
+      targetRoute = APP_ROUTES.ADMIN.ABOUT + '/achievements';
     } else {
       // Fallback - should not happen if RBAC is configured correctly
-      navigate(APP_ROUTES.ADMIN.ABOUT, { replace: true });
+      targetRoute = APP_ROUTES.ADMIN.ABOUT;
     }
-  }, [navigate, hasPermission]);
+
+    // Only navigate if we're not already at the target
+    if (location.pathname !== targetRoute) {
+      navigate(targetRoute, { replace: true });
+    }
+  }, [navigate, location.pathname, hasPermission]);
 
   // Show loading state while redirecting
   return (

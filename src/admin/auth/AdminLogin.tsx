@@ -108,7 +108,7 @@ const AdminLogin: React.FC = () => {
 
     if (isAuthenticated) {
       const from =
-        (location.state as any)?.from?.pathname || APP_ROUTES.ADMIN.DASHBOARD;
+        (location.state as any)?.from?.pathname || APP_ROUTES.ADMIN.BASE;
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, navigate, location, isCurrentlyLocked]);
@@ -213,7 +213,7 @@ const AdminLogin: React.FC = () => {
         });
 
         const destination =
-          (location.state as any)?.from?.pathname || APP_ROUTES.ADMIN.DASHBOARD;
+          (location.state as any)?.from?.pathname || APP_ROUTES.ADMIN.BASE;
 
         // Small delay to show the success toast
         setTimeout(() => {
