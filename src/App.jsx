@@ -10,6 +10,7 @@ import { AuthProvider } from './contexts/AuthContext';
 
 // ADMIN EXPORT HERE - Lazy loaded for better performance
 const AdminLayout = lazy(() => import('@/admin/layout/AdminLayout'));
+const AdminRedirect = lazy(() => import('@/admin/components/AdminRedirect'));
 const Dashboard = lazy(() => import('@/admin/pages/dashboard/Dashboard'));
 const TradingStatistics = lazy(
   () => import('@/admin/pages/trading-statistics/TradingStatistics')
@@ -92,9 +93,20 @@ function App() {
                       </ProtectedRoute>
                     }
                   >
-                    {/* Main Routes - Dashboard accessible to all authenticated users */}
-                    <Route index element={<Dashboard />} />
-                    <Route path="dashboard" element={<Dashboard />} />
+                    {/* Index Route - Redirects based on user role */}
+                    <Route index element={<AdminRedirect />} />
+
+                    {/* Dashboard Route - SuperAdmin ONLY */}
+                    <Route
+                      path="dashboard"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_REPORTS}
+                        >
+                          <Dashboard />
+                        </RoleProtectedRoute>
+                      }
+                    />
 
                     {/* Trading Routes - SuperAdmin ONLY (MANAGE_TRADING permission) */}
                     <Route

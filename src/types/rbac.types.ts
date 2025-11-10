@@ -89,7 +89,7 @@ export enum Permission {
  * - SuperAdmin: Full access to everything
  * - Admin:
  *   - Home Editables ONLY: FULL ACCESS (Guidelines, News, Carousel, About Us, Achievements, Talipapa Natin)
- *   - All other sections: NO ACCESS
+ *   - All other sections: NO ACCESS (including Dashboard)
  *
  * To add new permissions:
  * 1. Add the permission to the Permission enum above
@@ -121,8 +121,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.VIEW_ACHIEVEMENTS,
     Permission.MANAGE_ACHIEVEMENTS,
 
-    // Reports & Analytics (for dashboard only)
-    Permission.VIEW_REPORTS,
+    // Dashboard: NO ACCESS (removed VIEW_REPORTS)
   ],
 };
 

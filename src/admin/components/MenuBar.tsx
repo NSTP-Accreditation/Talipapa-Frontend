@@ -73,7 +73,7 @@ const MenuBar: React.FC<MenuBarProps> = ({
       icon: <LayoutDashboard className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Dashboard',
       href: APP_ROUTES.ADMIN.DASHBOARD,
-      // Dashboard visible to all authenticated users
+      permission: Permission.VIEW_REPORTS,
     },
     {
       icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />,
