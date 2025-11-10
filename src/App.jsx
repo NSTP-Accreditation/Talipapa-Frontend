@@ -10,6 +10,7 @@ import { AuthProvider } from './contexts/AuthContext';
 
 // ADMIN EXPORT HERE - Lazy loaded for better performance
 const AdminLayout = lazy(() => import('@/admin/layout/AdminLayout'));
+const AdminRedirect = lazy(() => import('@/admin/components/AdminRedirect'));
 const Dashboard = lazy(() => import('@/admin/pages/dashboard/Dashboard'));
 const TradingStatistics = lazy(
   () => import('@/admin/pages/trading-statistics/TradingStatistics')
@@ -92,9 +93,20 @@ function App() {
                       </ProtectedRoute>
                     }
                   >
-                    {/* Main Routes - Dashboard accessible to all authenticated users */}
-                    <Route index element={<Dashboard />} />
-                    <Route path="dashboard" element={<Dashboard />} />
+                    {/* Index Route - Redirects based on user role */}
+                    <Route index element={<AdminRedirect />} />
+
+                    {/* Dashboard Route - SuperAdmin ONLY */}
+                    <Route
+                      path="dashboard"
+                      element={
+                        <RoleProtectedRoute
+                          permission={Permission.VIEW_REPORTS}
+                        >
+                          <Dashboard />
+                        </RoleProtectedRoute>
+                      }
+                    />
 
                     {/* Trading Routes - SuperAdmin ONLY (MANAGE_TRADING permission) */}
                     <Route
@@ -168,7 +180,7 @@ function App() {
                       }
                     />
 
-                    {/* Green Pages Route - SuperAdmin & Admin */}
+                    {/* Green Pages Route - SuperAdmin ONLY */}
                     <Route
                       path="green-pages"
                       element={
@@ -180,7 +192,7 @@ function App() {
                       }
                     />
 
-                    {/* Home Editables Routes - SuperAdmin & Admin ONLY */}
+                    {/* Home Editables Routes - SuperAdmin & Admin have full access */}
                     <Route
                       path="about"
                       element={
@@ -233,7 +245,7 @@ function App() {
                     {/* Forms Route (Admin version) - Disabled: Forms.tsx doesn't exist */}
                     {/* <Route path="forms" element={<Forms />} /> */}
 
-                    {/* Guidelines Route (Admin version) - SuperAdmin & Admin ONLY */}
+                    {/* Guidelines Route (Admin version) - SuperAdmin & Admin have full access */}
                     <Route
                       path="guidelines"
                       element={
@@ -245,7 +257,7 @@ function App() {
                       }
                     />
 
-                    {/* Inventory Route - SuperAdmin FULL, Admin VIEW */}
+                    {/* Inventory Route - SuperAdmin ONLY */}
                     <Route
                       path="inventory"
                       element={
@@ -257,7 +269,7 @@ function App() {
                       }
                     />
 
-                    {/* Farm Inventory Route - SuperAdmin FULL, Admin VIEW */}
+                    {/* Farm Inventory Route - SuperAdmin ONLY */}
                     <Route
                       path="farm-inventory"
                       element={
@@ -328,7 +340,7 @@ function App() {
                       }
                     />
 
-                    {/* Records Routes - SuperAdmin FULL, Admin VIEW */}
+                    {/* Records Routes - SuperAdmin ONLY */}
                     <Route
                       path="records"
                       element={

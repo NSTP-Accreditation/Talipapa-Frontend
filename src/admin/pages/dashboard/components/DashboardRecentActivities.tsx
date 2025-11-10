@@ -2,6 +2,8 @@ import useFetchData from '@/admin/hooks/useFetchData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import dayjs from 'dayjs';
 import { Activity } from 'lucide-react';
+import { useRBAC } from '@/hooks/useRBAC';
+import { Permission } from '@/types/rbac.types';
 
 interface LogsApiResponse {
   success: boolean;
@@ -35,12 +37,18 @@ interface LogEntry {
 }
 
 const DashboardRecentActivities = () => {
+  const { hasPermission } = useRBAC();
+  const canViewLogs = hasPermission(Permission.VIEW_ACTIVITY_LOGS);
+
   const {
     data: recentActivities,
     loading: recentActivitiesLoading,
     error: recentActivitiesErr,
     refetch,
-  } = useFetchData<LogsApiResponse>(`/logs?limit=5`);
+  } = useFetchData<LogsApiResponse>(canViewLogs ? `/logs?limit=5` : null);
+
+  // Don't render if user doesn't have permission
+  if (!canViewLogs) return null;
 
   if (!recentActivities) return null;
 

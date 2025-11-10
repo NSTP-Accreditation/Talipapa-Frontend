@@ -88,14 +88,8 @@ export enum Permission {
  * Updated Access Rules:
  * - SuperAdmin: Full access to everything
  * - Admin:
- *   - Records: VIEW ONLY (no add/edit/delete)
- *   - Trading: NO ACCESS (not visible)
- *   - Green Pages: FULL ACCESS
- *   - Home Editables: FULL ACCESS (Guidelines, News, Carousel, About Us, Achievements, Talipapa Natin)
- *   - Inventory: VIEW ONLY (no add/edit/delete)
- *   - Farm Inventory: VIEW ONLY (no add/edit/delete)
- *   - Activity Logs: NO ACCESS (not visible)
- *   - Settings: NO ACCESS (not visible)
+ *   - Home Editables ONLY: FULL ACCESS (Guidelines, News, Carousel, About Us, Achievements, Talipapa Natin)
+ *   - All other sections: NO ACCESS (including Dashboard)
  *
  * To add new permissions:
  * 1. Add the permission to the Permission enum above
@@ -109,22 +103,6 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   ],
 
   [UserRole.ADMIN]: [
-    // User Management (cannot manage admins)
-    Permission.VIEW_USERS,
-    Permission.CREATE_USERS,
-    Permission.EDIT_USERS,
-    Permission.DELETE_USERS,
-
-    // Records - VIEW ONLY (no MANAGE_RECORDS)
-    Permission.VIEW_RECORDS,
-
-    // Trading Operations - NO ACCESS (removed all trading permissions)
-    // (Admin cannot see or access Trading section)
-
-    // Green Pages - FULL ACCESS
-    Permission.VIEW_GREEN_PAGES,
-    Permission.MANAGE_GREEN_PAGES,
-
     // Home Editables - FULL ACCESS
     Permission.VIEW_CONTENT,
     Permission.CREATE_CONTENT,
@@ -143,21 +121,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.VIEW_ACHIEVEMENTS,
     Permission.MANAGE_ACHIEVEMENTS,
 
-    // Inventory - VIEW ONLY (no MANAGE_INVENTORY)
-    Permission.VIEW_INVENTORY,
-
-    // Farm Inventory - VIEW ONLY (no MANAGE_FARM_INVENTORY)
-    Permission.VIEW_FARM_INVENTORY,
-
-    // Activity Logs - NO ACCESS (removed)
-    // (Admin cannot see Activity Logs)
-
-    // Settings - NO ACCESS (removed)
-    // (Admin cannot see Settings)
-
-    // Reports & Analytics (keep for dashboard/exports)
-    Permission.VIEW_REPORTS,
-    Permission.EXPORT_DATA,
+    // Dashboard: NO ACCESS (removed VIEW_REPORTS)
   ],
 };
 

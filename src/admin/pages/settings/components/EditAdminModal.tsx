@@ -165,9 +165,9 @@ const EditAdminModal = ({
         );
       }
 
-      if (edited.roles.includes('Admin') && adminCount >= 2) {
+      if (edited.roles.includes('Admin') && adminCount >= 1) {
         return error(
-          'Maximum of 2 Admin accounts allowed. Please remove an existing Admin first.'
+          'Maximum of 1 Admin account allowed. Please remove the existing Admin first.'
         );
       }
     } catch (fetchErr) {
