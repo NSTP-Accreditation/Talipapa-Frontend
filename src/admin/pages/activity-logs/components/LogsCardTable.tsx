@@ -5,8 +5,15 @@ interface LogsTableProps {
   logs: LogInterface[];
 }
 
-export const LogsCardTable = ({ logs } : LogsTableProps) => {
-  const headers = ['Performed By', 'Action', 'Title', 'Description', 'Category', 'Timestamp'];
+export const LogsCardTable = ({ logs }: LogsTableProps) => {
+  const headers = [
+    'Performed By',
+    'Action',
+    'Title',
+    'Description',
+    'Category',
+    'Timestamp',
+  ];
 
   return (
     <div className="hidden md:block overflow-x-auto bg-white rounded-xl sm:rounded-2xl shadow-lg border-2 border-gray-200">
@@ -36,10 +43,16 @@ export const LogsCardTable = ({ logs } : LogsTableProps) => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   {log.action}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm" title={log.title}>
+                <td
+                  className="px-6 py-4 whitespace-nowrap text-sm"
+                  title={log.title}
+                >
                   <div className="max-w-xs truncate">{log.title}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm" title={log.description}>
+                <td
+                  className="px-6 py-4 whitespace-nowrap text-sm"
+                  title={log.description}
+                >
                   <div className="max-w-xs truncate">{log.description}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -52,7 +65,10 @@ export const LogsCardTable = ({ logs } : LogsTableProps) => {
             ))
           ) : (
             <tr>
-              <td colSpan={headers.length} className="text-center py-12 text-gray-400 text-sm">
+              <td
+                colSpan={headers.length}
+                className="text-center py-12 text-gray-400 text-sm"
+              >
                 No activity logs found.
               </td>
             </tr>

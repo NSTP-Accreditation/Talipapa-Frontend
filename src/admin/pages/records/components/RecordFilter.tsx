@@ -156,7 +156,7 @@ const RecordFilter = ({
         loadingShownRef.current = false;
       }
     }, 700),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [recordsData]
   );
 

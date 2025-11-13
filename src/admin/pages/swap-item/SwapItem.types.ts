@@ -1,7 +1,10 @@
-import { ProductInterface, RecordInterface } from "@/types/global.types";
+import { ProductInterface, RecordInterface } from '@/types/global.types';
 
 export interface RecordInformationProps {
-  recordData: Pick<RecordInterface, '_id' | 'lastName' | 'address' | 'contact_number' | 'points'>
+  recordData: Pick<
+    RecordInterface,
+    '_id' | 'firstName' | 'lastName' | 'address' | 'contact_number' | 'points'
+  >;
   findProducts: () => void;
 }
 
@@ -12,7 +15,6 @@ export interface AvailableProductsProps {
   onRedeem: (product: ProductInterface) => void;
   redeemInProgress: boolean;
 }
-
 
 export interface AvailableProductCardProps {
   product: ProductInterface;

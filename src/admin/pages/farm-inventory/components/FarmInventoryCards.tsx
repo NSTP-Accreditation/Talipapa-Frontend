@@ -1,16 +1,29 @@
 import { Card, CardContent } from '@/components/ui';
 import { FarmItemInterface } from '@/types/global.types';
-import { AlertTriangle, Apple, Leaf, Sprout, Trees, TrendingUp, X } from 'lucide-react';
+import {
+  AlertTriangle,
+  Apple,
+  Leaf,
+  Sprout,
+  Trees,
+  TrendingUp,
+  X,
+} from 'lucide-react';
 import { useMemo } from 'react';
 
 type FarmInventoryCardsProps = {
-  farmItemsData: FarmItemInterface[]
-} 
+  farmItemsData: FarmItemInterface[];
+};
 
-const FarmInventoryCards = ({ farmItemsData } : FarmInventoryCardsProps ) => {
-
-  const lowStockCount = useMemo(() => farmItemsData?.filter(item => item.stocks <= 5)?.length, [farmItemsData]);
-  const outOfStockCount = useMemo(() => farmItemsData?.filter(item => item.stocks === 0)?.length, [farmItemsData]);
+const FarmInventoryCards = ({ farmItemsData }: FarmInventoryCardsProps) => {
+  const lowStockCount = useMemo(
+    () => farmItemsData?.filter((item) => item.stocks <= 5)?.length,
+    [farmItemsData]
+  );
+  const outOfStockCount = useMemo(
+    () => farmItemsData?.filter((item) => item.stocks === 0)?.length,
+    [farmItemsData]
+  );
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {

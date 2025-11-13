@@ -6,9 +6,9 @@ interface LoadingErrorStateProps {
   error: string | null;
 }
 
-export const LogLoadingState: React.FC<LoadingErrorStateProps> = ({ 
-  loading, 
-  error 
+export const LogLoadingState: React.FC<LoadingErrorStateProps> = ({
+  loading,
+  error,
 }) => {
   if (loading) return <ResponsiveSkeleton page="activitylogs" />;
 

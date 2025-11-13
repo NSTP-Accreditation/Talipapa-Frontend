@@ -52,7 +52,7 @@ const EditEstablishmentModal = ({
       });
 
       console.log(res);
-      
+
       // refresh
       await refetchRecords();
       setEditItem(null);

@@ -1,10 +1,10 @@
 export interface PaginationInterface<T> {
   count: number;
   currentPage: number;
-  data: T[],
+  data: T[];
   hasNextPage: boolean;
   hasPrevPage: boolean;
   sort: string;
   total: number;
-  totalPage: number
+  totalPage: number;
 }

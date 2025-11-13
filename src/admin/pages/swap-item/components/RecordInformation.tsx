@@ -1,11 +1,10 @@
-import { formatName, formatPoints } from "@/utils/formatter";
-import { RecordInformationProps } from "../SwapItem.types";
+import { formatName, formatPoints } from '@/utils/formatter';
+import { RecordInformationProps } from '../SwapItem.types';
 
 const RecordInformation = ({
   recordData,
   findProducts,
 }: RecordInformationProps) => {
-  
   const confirmRecord = async () => {
     await findProducts();
   };

@@ -10,22 +10,27 @@
 ## 🧪 Test the Lockout UI (Frontend Only)
 
 ### Step 1: Start Dev Server
+
 ```bash
 cd /home/josh/Talipapa-Frontend
 npm run dev
 ```
 
 ### Step 2: Open Admin Login
+
 Navigate to: `http://localhost:5173/admin/login`
 
 ### Step 3: Trigger Lockout
+
 1. Enter any username (e.g., "admin")
 2. Enter wrong password
 3. Click "Sign In"
 4. Repeat 5 times
 
 ### Step 4: See the Magic ✨
+
 **You should now see:**
+
 - 🎨 Full-screen lockout modal (covers entire page)
 - ⏱️ MASSIVE countdown timer (14:59, 14:58, etc.)
 - 📊 Animated progress bar (0% → 100%)
@@ -34,11 +39,13 @@ Navigate to: `http://localhost:5173/admin/login`
 - 💬 Security warnings and instructions
 
 ### Step 5: Test Persistence
+
 1. While locked out, press F5 to refresh
 2. **Expected:** Lockout modal STILL visible
 3. **Expected:** Timer continues from where it left off
 
 ### Step 6: Test Auto-Unlock
+
 1. Wait for timer to reach 00:00 (or reduce lockout time in code for testing)
 2. **Expected:** Modal disappears
 3. **Expected:** Can login again
@@ -84,11 +91,13 @@ router.get('/lockout-status/:username', async (req, res) => {
 ```
 
 ### 2. Test Backend
+
 ```bash
 curl http://localhost:5000/api/auth/lockout-status/testuser
 ```
 
 Expected response:
+
 ```json
 {
   "isLocked": false,
@@ -98,12 +107,15 @@ Expected response:
 ```
 
 ### 3. Enable CORS
+
 ```javascript
 // server.js
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  })
+);
 ```
 
 ---
@@ -111,6 +123,7 @@ app.use(cors({
 ## 🎯 What You'll See
 
 ### Before Lockout (Attempts 1-5):
+
 ```
 ┌────────────────────────┐
 │  Barangay Logo         │
@@ -128,6 +141,7 @@ Attempt 5: "🚨 FINAL WARNING: Next fail = 15min lockout"
 ```
 
 ### After Lockout (Attempt 6):
+
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 █████████████████████████████████████████████████
@@ -185,6 +199,7 @@ const baseLockoutDuration = 1 * 60 * 1000; // 1 minute
 ## 📋 Checklist
 
 ### Frontend (Already Done ✅)
+
 - [x] Full-screen lockout modal
 - [x] Massive countdown timer (8xl font)
 - [x] Animated progress bar
@@ -196,6 +211,7 @@ const baseLockoutDuration = 1 * 60 * 1000; // 1 minute
 - [x] Double-submission prevention
 
 ### Backend (Your Task)
+
 - [ ] Add `/auth/lockout-status/:username` endpoint
 - [ ] Test with cURL/Postman
 - [ ] Configure CORS

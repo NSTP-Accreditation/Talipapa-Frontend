@@ -16,13 +16,22 @@ export default function AchievementCard({
 }: Props) {
   return (
     <div className="group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
-      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="relative h-48 overflow-hidden bg-gray-900">
         {item.image ? (
-          <img
-            src={item.image.url}
-            alt={item.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
+          <>
+            {/* Blurred background */}
+            <img
+              src={item.image.url}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-50"
+            />
+            {/* Main image */}
+            <img
+              src={item.image.url}
+              alt={item.title}
+              className="relative w-full h-full object-contain z-10 group-hover:scale-105 transition-transform duration-500"
+            />
+          </>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100">
             <Trophy className="w-20 h-20 text-green-600" />

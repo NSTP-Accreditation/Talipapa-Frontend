@@ -1,14 +1,14 @@
 export interface RecordInterface {
-  _id: string
-  firstName: string
-  middleName?: string
-  lastName: string
-  age: string
-  address: string
-  contact_number: string
-  points: number
-  createdAt: string
-  updatedAt: string
+  _id: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  age: string;
+  address: string;
+  contact_number: string;
+  points: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ProductInterface {
@@ -35,10 +35,15 @@ export interface FarmItemInterface {
   _id: string;
   name: string;
   description: string;
-  mainCategory: "Agricultural";
-  subCategory: "Vegetables" | "Herbal Plants" | "Fruits" | "Seedlings" | "Trees";
+  mainCategory: 'Agricultural';
+  subCategory:
+    | 'Vegetables'
+    | 'Herbal Plants'
+    | 'Fruits'
+    | 'Seedlings'
+    | 'Trees';
   stocks: number;
-  unit: "kg" | "pieces" | "bundles" | "sacks" | "pots";
+  unit: 'kg' | 'pieces' | 'bundles' | 'sacks' | 'pots';
   image: ImageInterface;
   farmOrigin?: string;
   lastRestocked?: Date;
@@ -51,9 +56,8 @@ export interface ImageInterface {
   mimetype: string;
   originalName: string;
   size: number;
-  url: string
+  url: string;
 }
-
 
 export interface LogInterface {
   _id: string;
@@ -68,7 +72,6 @@ export interface LogInterface {
   targetName?: string;
   created_at: string;
 }
-
 
 export interface LogsApiResponse {
   success: boolean;

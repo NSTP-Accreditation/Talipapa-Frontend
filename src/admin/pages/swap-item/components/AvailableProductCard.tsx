@@ -7,7 +7,6 @@ const AvailableProductCard = ({
   onRedeem,
   redeemInProgress,
 }: AvailableProductCardProps) => {
-
   return (
     <div
       className="px-4 sm:px-6 py-4 sm:py-6 rounded-lg text-white shadow-md"

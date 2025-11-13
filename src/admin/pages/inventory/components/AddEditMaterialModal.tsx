@@ -171,7 +171,9 @@ const AddEditMaterialModal = memo(
         await refetchMaterial();
         success(response?.message || 'Material created', { title: 'Success' });
       } catch (error: any) {
-        showError(error?.message || 'Failed to create Material', { title: 'Error' });
+        showError(error?.message || 'Failed to create Material', {
+          title: 'Error',
+        });
       }
     };
 
@@ -190,7 +192,9 @@ const AddEditMaterialModal = memo(
         await refetchMaterial();
         success(response.message || 'Material updated', { title: 'Success' });
       } catch (error: any) {
-        showError(error?.message || 'Failed to update material', { title: 'Error' });
+        showError(error?.message || 'Failed to update material', {
+          title: 'Error',
+        });
       }
     };
 

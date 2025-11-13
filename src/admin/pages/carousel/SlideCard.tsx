@@ -45,25 +45,31 @@ const SlideCard: React.FC<SlideCardProps> = ({
   return (
     <div className="group bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-green-300 shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 h-full flex flex-col relative">
       {/* Order Badge */}
-      <div className="absolute top-4 left-4 z-10 px-3.5 py-2 bg-gradient-to-br from-green-500 to-green-600 backdrop-blur-sm rounded-xl shadow-xl border-2 border-white">
+      <div className="absolute top-4 left-4 z-20 px-3.5 py-2 bg-gradient-to-br from-green-500 to-green-600 backdrop-blur-sm rounded-xl shadow-xl border-2 border-white">
         <span className="text-sm font-black text-white drop-shadow-sm">
           #{idx + 1}
         </span>
       </div>
 
       {/* Image Section */}
-      <div className="relative h-64 overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50 to-green-100">
+      <div className="relative h-64 overflow-hidden bg-gray-900">
         {slide.image?.url ? (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+            {/* Blurred background */}
+            <img
+              src={slide.image.url}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-50"
+            />
+            {/* Main image */}
             <img
               src={slide.image.url}
               alt={slide.title}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              className="relative w-full h-full object-contain z-[5] group-hover:scale-105 transition-transform duration-700"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-70 group-hover:opacity-100 transition-opacity duration-300 z-[8]"></div>
             {/* Shimmer effect on hover */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 z-[9]"></div>
           </>
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-4">
