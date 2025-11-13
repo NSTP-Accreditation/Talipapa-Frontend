@@ -3,7 +3,7 @@ import { Users } from 'lucide-react';
 import { TradingStatisticsProps } from '../TradingStatistics.types';
 import dayjs from 'dayjs';
 
-const RecentTradingTransaction = ({ logsData } : TradingStatisticsProps ) => {
+const RecentTradingTransaction = ({ logsData }: TradingStatisticsProps) => {
   return (
     <Card className="border-2 border-[#1b4c2e]/20 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg sm:rounded-xl overflow-hidden">
       <CardHeader className="bg-gradient-to-r from-[#1b4c2e] to-[#2d6b47] text-white pb-4 sm:pb-6">
@@ -62,9 +62,9 @@ const RecentTradingTransaction = ({ logsData } : TradingStatisticsProps ) => {
                     <span className="inline-flex items-center px-2 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs sm:text-sm font-bold bg-gradient-to-r from-[#1b4c2e]/20 to-[#1b4c2e]/10 text-[#1b4c2e] border border-[#1b4c2e]/30 whitespace-nowrap">
                       {log?.details?.pointsDeducted
                         ? log?.details?.pointsDeducted
-                        : log?.details?.pointsAdded 
-                        ? log?.details?.pointsAdded
-                        : log?.details?.newPoints}
+                        : log?.details?.pointsAdded
+                          ? log?.details?.pointsAdded
+                          : log?.details?.newPoints}
                     </span>
                   </td>
                 </tr>

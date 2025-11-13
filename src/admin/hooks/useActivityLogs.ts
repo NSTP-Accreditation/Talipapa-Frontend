@@ -32,7 +32,9 @@ export const useActivityLogs = () => {
         log.title.toLowerCase().includes(searchLower) ||
         log.description.toLowerCase().includes(searchLower) ||
         log.action.toLowerCase().includes(searchLower) ||
-        (log.performedBy?.username?.toLowerCase() ?? '').includes(searchLower) ||
+        (log.performedBy?.username?.toLowerCase() ?? '').includes(
+          searchLower
+        ) ||
         (log.category?.toLowerCase() ?? '').includes(searchLower);
 
       return matchesCategory && matchesSearch;
@@ -40,9 +42,13 @@ export const useActivityLogs = () => {
 
     return filtered.sort((a, b) => {
       if (sort === 'asc') {
-        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        return (
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
       }
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      return (
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
     });
   }, [data, category, search, sort]);
 

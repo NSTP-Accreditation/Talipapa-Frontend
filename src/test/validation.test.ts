@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { sanitizeName, validateName, validateAddress } from '../utils/validation';
+import {
+  sanitizeName,
+  validateName,
+  validateAddress,
+} from '../utils/validation';
 
 describe('Validation Utilities', () => {
   describe('sanitizeName', () => {
