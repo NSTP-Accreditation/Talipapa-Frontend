@@ -24,7 +24,7 @@ This guide explains how the frontend keeps establishment records in sync with th
 
 - `GET /establishment` → Use `useFetchData('/establishment')` to list
 - `POST /establishment` → Create and backend will return `record_id`. UI will show the assigned record id in success message.
-- `PATCH /establishment/:id` → Update; the frontend uses `_id` for this.
+- `PATCH /establishment/:id` → Update; the frontend uses `_id` for this. Note: editing by `record_id` is not supported by default and will cause a server error; the UI will now prevent updates on records with no `_id` and ask you to refresh.
 - `DELETE /establishment/:id` → Delete; the frontend uses `_id` if available; if not, it falls back to `record_id`.
 
 ## Tips and Notes

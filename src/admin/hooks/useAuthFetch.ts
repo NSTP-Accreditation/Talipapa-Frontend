@@ -116,7 +116,19 @@ export const useAuthFetch = () => {
           !contentType?.includes('application/json')
         ) {
           if (!response.ok) {
-            throw new Error(`Request failed with status ${response.status}`);
+            // Attempt to read text body for non-JSON errors to give better messages
+            let textBody: string | null = null;
+            try {
+              textBody = await response.text();
+            } catch (err) {
+              // ignore
+            }
+
+            throw new Error(
+              textBody && textBody.trim()
+                ? `Request failed with status ${response.status}: ${textBody}`
+                : `Request failed with status ${response.status}`
+            );
           }
 
           return { message: 'Success' } as SuccessResponse;
