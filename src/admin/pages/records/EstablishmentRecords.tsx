@@ -14,8 +14,11 @@ import {
   Store,
   FileText,
   Filter,
+  RefreshCw,
+  Loader2,
 } from 'lucide-react';
 import ExcelExportButton from '@/components/ui/ExcelExportButton';
+import { getNextRecordIdFromList } from '@/utils/recordIdUtils';
 import useFetchData from '../../hooks/useFetchData';
 import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
@@ -41,6 +44,22 @@ const EstablishmentRecords: React.FC = () => {
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null);
+
+  // Helper: relative time string for last synced badge
+  const timeAgo = (d: Date | null) => {
+    if (!d) return '';
+    const s = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (s < 5) return 'Just Now';
+    if (s < 60) return `${s}s`;
+    const m = Math.floor(s / 60);
+    if (m < 60) return `${m}m`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h`;
+    const days = Math.floor(h / 24);
+    return `${days}d`;
+  };
   const [editItem, setEditItem] = useState<any | null>(null);
   const [deleteItem, setDeleteItem] = useState<any | null>(null);
   const [form, setForm] = useState({
@@ -53,6 +72,18 @@ const EstablishmentRecords: React.FC = () => {
 
   // Ensure we only show establishment records even if backend returns mixed data
   const records: any[] = Array.isArray(data) ? data : [];
+  const searchVal = searchTerm.trim().toLowerCase();
+  const filteredRecords = records.filter((r: any) => {
+    if (!searchVal) return true;
+    const id = (r.record_id || r._id || '').toString().toLowerCase();
+    const name = (r.name || '').toString().toLowerCase();
+    return id.includes(searchVal) || name.includes(searchVal);
+  });
+
+  // Compute next record id from existing record_ids (best-effort)
+  const nextRecordId = getNextRecordIdFromList(
+    records.map((r: any) => r.record_id)
+  );
 
   const openAddModal = () => {
     setForm({
@@ -91,11 +122,14 @@ const EstablishmentRecords: React.FC = () => {
         ...form,
         contactNumber: form.contactNumber ? `09${form.contactNumber}` : '',
       };
-      await authFetch('/establishment', {
+      const data = await authFetch('/establishment', {
         method: 'POST',
         body: JSON.stringify(payload),
       });
-      success('Establishment record created.', { title: 'Success' });
+      success(
+        `Establishment record created. ID: ${data?.record_id || data?._id || ''}`,
+        { title: 'Success' }
+      );
       setIsAddModalOpen(false);
       refetch && refetch();
     } catch (err: any) {
@@ -103,6 +137,39 @@ const EstablishmentRecords: React.FC = () => {
     } finally {
       setIsCreating(false);
     }
+  };
+
+  // Helper: find an establishment by record id
+  const findByRecordId = (recordId: string) =>
+    records.find(
+      (r: any) => (r.record_id || r._id || '').toString() === recordId
+    );
+
+  // Helper: delete an establishment by record id (client-side find -> server call)
+  const deleteByRecordId = async (recordId: string) => {
+    const found = findByRecordId(recordId);
+    if (!found) {
+      showError('No establishment found with that Record ID');
+      return;
+    }
+
+    try {
+      await authFetch(`/establishment/${found._id}`, { method: 'DELETE' });
+      success('Establishment deleted', { title: 'Deleted' });
+      await refetch?.();
+    } catch (err: any) {
+      showError(err?.message || 'Failed to delete establishment');
+    }
+  };
+
+  // Helper: open edit modal using record id
+  const openEditByRecordId = (recordId: string) => {
+    const found = findByRecordId(recordId);
+    if (!found) {
+      showError('No establishment found with that Record ID');
+      return;
+    }
+    setEditItem(found);
   };
 
   if (loading) return <ResponsiveSkeleton page="records" />;
@@ -155,20 +222,40 @@ const EstablishmentRecords: React.FC = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full lg:w-auto">
-                {canManageRecords && (
-                  <Button
-                    onClick={openAddModal}
-                    className="px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base flex items-center justify-center gap-2 rounded-xl font-bold shadow-md hover:shadow-xl transition-all min-h-[44px]"
-                  >
-                    <span className="text-lg sm:text-xl">+</span>
-                    <span>Add Establishment</span>
-                  </Button>
-                )}
+                {/* Grouped toolbar */}
+                <div className="flex items-center gap-1 bg-white/60 ring-1 ring-gray-100 rounded-2xl p-1 shadow-sm">
+                  {canManageRecords && (
+                    <Button
+                      onClick={openAddModal}
+                      className="flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-sm sm:text-base rounded-xl font-bold shadow-md hover:shadow-xl transition-all min-h-[44px]"
+                      title="Add Establishment"
+                    >
+                      <span className="text-lg sm:text-xl">+</span>
+                      <span className="hidden sm:inline">
+                        Add Establishment
+                      </span>
+                    </Button>
+                  )}
 
-                <ExcelExportButton
-                  records={records || []}
-                  recordType="establishment"
-                />
+                  {/* removed placeholder - sync moved to search area */}
+
+                  <div className="pl-0">
+                    <ExcelExportButton
+                      records={records || []}
+                      recordType="establishment"
+                      className="px-3 sm:px-4"
+                    />
+                  </div>
+                </div>
+
+                {nextRecordId && (
+                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm font-semibold text-gray-700">
+                    Next ID:{' '}
+                    <span className="font-mono text-green-700">
+                      {nextRecordId}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -180,13 +267,87 @@ const EstablishmentRecords: React.FC = () => {
             <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <Search className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
             </div>
-            <Input
-              type="text"
-              placeholder="Search by Record ID or Business Name..."
-              className="w-full rounded-xl border-2 border-gray-300 py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base bg-gradient-to-r from-white to-gray-50"
-              value={searchTerm}
-              onChange={(e: any) => setSearchTerm(e.target.value)}
-            />
+            <div className="flex items-center gap-3">
+              <div className="flex-1 relative">
+                <Input
+                  type="text"
+                  placeholder="Search by Record ID or Business Name..."
+                  className="w-full rounded-xl border-2 border-gray-300 py-2.5 sm:py-3 pl-10 sm:pl-12 pr-16 sm:pr-20 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base bg-gradient-to-r from-white to-gray-50"
+                  value={searchTerm}
+                  onChange={(e: any) => setSearchTerm(e.target.value)}
+                />
+              </div>
+
+              {/* Sync button moved here for strategic placement */}
+              <div className="flex items-center gap-2">
+                {canManageRecords && (
+                  <Button
+                    type="button"
+                    onClick={async () => {
+                      if (isSyncing) return;
+                      setIsSyncing(true);
+                      try {
+                        const updated = await refetch?.();
+                        const count = Array.isArray(updated)
+                          ? updated.length
+                          : records.length;
+                        setLastSyncedAt(new Date());
+                        success(`Synced ${count} establishments`, {
+                          title: 'Sync Complete',
+                        });
+                      } catch (err: any) {
+                        showError(
+                          err?.message || 'Failed to sync establishments'
+                        );
+                      } finally {
+                        setIsSyncing(false);
+                      }
+                    }}
+                    aria-label={
+                      isSyncing
+                        ? 'Syncing establishments'
+                        : 'Sync establishments'
+                    }
+                    title={
+                      lastSyncedAt
+                        ? `Last synced: ${lastSyncedAt.toLocaleString()}`
+                        : isSyncing
+                          ? 'Syncing establishments'
+                          : 'Sync establishments'
+                    }
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-green-600 to-green-700 text-white shadow-md hover:shadow-lg transition-all min-h-[44px] focus:outline-none focus:ring-2 focus:ring-green-300"
+                    disabled={isSyncing}
+                  >
+                    {isSyncing ? (
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                    ) : (
+                      <RefreshCw className="w-4 h-4 text-white" />
+                    )}
+                    <span className="hidden sm:inline text-sm font-semibold">
+                      Sync
+                    </span>
+                  </Button>
+                )}
+
+                {lastSyncedAt && (
+                  <div
+                    className="hidden sm:flex items-center gap-2 px-2 py-1 rounded-full bg-green-50 border border-green-100 text-xs text-green-700 font-medium"
+                    title={lastSyncedAt.toLocaleString()}
+                    aria-live="polite"
+                  >
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        Date.now() - lastSyncedAt.getTime() < 5 * 60 * 1000
+                          ? 'bg-green-500 animate-pulse'
+                          : 'bg-gray-300'
+                      }`}
+                      aria-hidden="true"
+                    />
+                    <span>{timeAgo(lastSyncedAt)}</span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -215,8 +376,8 @@ const EstablishmentRecords: React.FC = () => {
               </thead>
 
               <tbody className="divide-y divide-gray-200">
-                {records.length > 0 ? (
-                  records.map((r: any, index: number) => (
+                {filteredRecords.length > 0 ? (
+                  filteredRecords.map((r: any, index: number) => (
                     <tr
                       key={r._id || index}
                       className="hover:bg-green-50 transition-colors duration-150"
@@ -344,6 +505,15 @@ const EstablishmentRecords: React.FC = () => {
                   </button>
                 </div>
               </div>
+
+              {nextRecordId && (
+                <div className="p-3 sm:p-4 bg-gray-50 border-t border-gray-100 flex items-center gap-3">
+                  <div className="text-xs text-gray-600">Next Record ID</div>
+                  <div className="font-mono bg-green-50 text-green-800 px-3 py-1 rounded-lg border border-green-100 text-sm">
+                    {nextRecordId}
+                  </div>
+                </div>
+              )}
 
               <div className="p-4 sm:p-8 space-y-4 sm:space-y-6 overflow-y-auto flex-1 bg-gradient-to-br from-gray-50 to-white">
                 {/* Business Information Section */}

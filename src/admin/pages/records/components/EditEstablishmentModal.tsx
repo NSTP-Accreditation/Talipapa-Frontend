@@ -36,6 +36,18 @@ const EditEstablishmentModal = ({
     }
 
     try {
+      // Ensure we have a backend primary id; PATCH expects the backend's _id
+      if (!editItem._id) {
+        // Helpful error instead of firing a request with a non-mongo id (e.g. record_id)
+        showError(
+          'Unable to update this establishment because a backend id is missing. Try refreshing records and try again.',
+          { title: 'Invalid Record' }
+        );
+        // Make sure UI has latest data
+        await refetchRecords();
+        setIsUpdating(false);
+        return;
+      }
       const payload = {
         name: editItem.name,
         type: editItem.type,
