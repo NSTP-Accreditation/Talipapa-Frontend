@@ -25,7 +25,9 @@ const DeleteEstablishmentModal = ({
     if (isDeleting || !deleteItem) return;
     setIsDeleting(true);
     try {
-      await authFetch(`/establishment/${deleteItem._id}`, {
+      // Delete by backend primary ID if available, otherwise try to find by record_id
+      const idToDelete = deleteItem._id || deleteItem.record_id;
+      await authFetch(`/establishment/${idToDelete}`, {
         method: 'DELETE',
       });
       await refetchRecords();
@@ -47,7 +49,10 @@ const DeleteEstablishmentModal = ({
       description={
         <div>
           <p className="text-sm text-gray-700">
-            Record ID: <span className="font-semibold">{deleteItem._id}</span>
+            Record ID:{' '}
+            <span className="font-semibold">
+              {deleteItem.record_id || deleteItem._id}
+            </span>
           </p>
           <p className="text-xs text-yellow-700 mt-2">
             Warning: This will permanently delete this establishment record.

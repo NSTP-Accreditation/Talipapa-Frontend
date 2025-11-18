@@ -16,6 +16,7 @@ import {
   Filter,
 } from 'lucide-react';
 import ExcelExportButton from '@/components/ui/ExcelExportButton';
+import { getNextRecordIdFromList } from '@/utils/recordIdUtils';
 import useFetchData from '../../hooks/useFetchData';
 import { ResponsiveSkeleton } from '../../../components/ResponsiveSkeleton';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
@@ -53,6 +54,18 @@ const EstablishmentRecords: React.FC = () => {
 
   // Ensure we only show establishment records even if backend returns mixed data
   const records: any[] = Array.isArray(data) ? data : [];
+  const searchVal = searchTerm.trim().toLowerCase();
+  const filteredRecords = records.filter((r: any) => {
+    if (!searchVal) return true;
+    const id = (r.record_id || r._id || '').toString().toLowerCase();
+    const name = (r.name || '').toString().toLowerCase();
+    return id.includes(searchVal) || name.includes(searchVal);
+  });
+
+  // Compute next record id from existing record_ids (best-effort)
+  const nextRecordId = getNextRecordIdFromList(
+    records.map((r: any) => r.record_id)
+  );
 
   const openAddModal = () => {
     setForm({
@@ -91,11 +104,14 @@ const EstablishmentRecords: React.FC = () => {
         ...form,
         contactNumber: form.contactNumber ? `09${form.contactNumber}` : '',
       };
-      await authFetch('/establishment', {
+      const data = await authFetch('/establishment', {
         method: 'POST',
         body: JSON.stringify(payload),
       });
-      success('Establishment record created.', { title: 'Success' });
+      success(
+        `Establishment record created. ID: ${data?.record_id || data?._id || ''}`,
+        { title: 'Success' }
+      );
       setIsAddModalOpen(false);
       refetch && refetch();
     } catch (err: any) {
@@ -103,6 +119,39 @@ const EstablishmentRecords: React.FC = () => {
     } finally {
       setIsCreating(false);
     }
+  };
+
+  // Helper: find an establishment by record id
+  const findByRecordId = (recordId: string) =>
+    records.find(
+      (r: any) => (r.record_id || r._id || '').toString() === recordId
+    );
+
+  // Helper: delete an establishment by record id (client-side find -> server call)
+  const deleteByRecordId = async (recordId: string) => {
+    const found = findByRecordId(recordId);
+    if (!found) {
+      showError('No establishment found with that Record ID');
+      return;
+    }
+
+    try {
+      await authFetch(`/establishment/${found._id}`, { method: 'DELETE' });
+      success('Establishment deleted', { title: 'Deleted' });
+      await refetch?.();
+    } catch (err: any) {
+      showError(err?.message || 'Failed to delete establishment');
+    }
+  };
+
+  // Helper: open edit modal using record id
+  const openEditByRecordId = (recordId: string) => {
+    const found = findByRecordId(recordId);
+    if (!found) {
+      showError('No establishment found with that Record ID');
+      return;
+    }
+    setEditItem(found);
   };
 
   if (loading) return <ResponsiveSkeleton page="records" />;
@@ -165,6 +214,35 @@ const EstablishmentRecords: React.FC = () => {
                   </Button>
                 )}
 
+                {nextRecordId && (
+                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm font-semibold text-gray-700">
+                    Next ID:{' '}
+                    <span className="font-mono text-green-700">
+                      {nextRecordId}
+                    </span>
+                  </div>
+                )}
+
+                {/* Sync button - refetches latest establishments */}
+                <Button
+                  onClick={async () => {
+                    try {
+                      const updated = await refetch?.();
+                      success(
+                        `Synced ${Array.isArray(updated) ? updated.length : records.length} establishments`,
+                        { title: 'Sync Complete' }
+                      );
+                    } catch (err: any) {
+                      showError(
+                        err?.message || 'Failed to sync establishments'
+                      );
+                    }
+                  }}
+                  className="px-4 sm:px-5 py-2.5 sm:py-3 bg-white border border-gray-200 text-sm sm:text-base flex items-center justify-center gap-2 rounded-xl font-semibold shadow-sm hover:shadow-md transition-all min-h-[44px]"
+                >
+                  Sync
+                </Button>
+
                 <ExcelExportButton
                   records={records || []}
                   recordType="establishment"
@@ -215,8 +293,8 @@ const EstablishmentRecords: React.FC = () => {
               </thead>
 
               <tbody className="divide-y divide-gray-200">
-                {records.length > 0 ? (
-                  records.map((r: any, index: number) => (
+                {filteredRecords.length > 0 ? (
+                  filteredRecords.map((r: any, index: number) => (
                     <tr
                       key={r._id || index}
                       className="hover:bg-green-50 transition-colors duration-150"
@@ -344,6 +422,15 @@ const EstablishmentRecords: React.FC = () => {
                   </button>
                 </div>
               </div>
+
+              {nextRecordId && (
+                <div className="p-3 sm:p-4 bg-gray-50 border-t border-gray-100 flex items-center gap-3">
+                  <div className="text-xs text-gray-600">Next Record ID</div>
+                  <div className="font-mono bg-green-50 text-green-800 px-3 py-1 rounded-lg border border-green-100 text-sm">
+                    {nextRecordId}
+                  </div>
+                </div>
+              )}
 
               <div className="p-4 sm:p-8 space-y-4 sm:space-y-6 overflow-y-auto flex-1 bg-gradient-to-br from-gray-50 to-white">
                 {/* Business Information Section */}
