@@ -8,6 +8,7 @@ import {
   GuidelinesPageSkeleton,
   HomePageSkeleton,
   AboutUsPageSkeleton,
+  AdminAboutUsSkeleton,
   InventoryPageSkeleton,
   NewsEventsPageSkeleton,
   AchievementsPageSkeleton,
@@ -72,6 +73,9 @@ export const ResponsiveSkeleton: React.FC<{ page?: string }> = ({ page }) => {
     case 'aboutus':
     case 'about-us':
       return <AboutUsPageSkeleton />;
+    case 'aboutus-admin':
+    case 'about-us-admin':
+      return <AdminAboutUsSkeleton />;
     case 'inventory':
       return <InventoryPageSkeleton />;
     case 'news':

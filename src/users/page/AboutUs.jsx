@@ -1,10 +1,11 @@
 import AboutBarangay from '../components/AboutBarangay';
+import UnifiedBackground from '../components/UnifiedBackground';
 import { User, MapPin, ExternalLink, Home, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 import { useEffect, useState } from 'react';
-import useFetchData from '@/admin/hooks/useFetchData';
+import usePublicFetch from '@/hooks/usePublicFetch';
 
 const AboutUs = () => {
   // Add loading state with 1 second display
@@ -16,7 +17,7 @@ const AboutUs = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-professional gradient-mesh relative">
+    <UnifiedBackground>
       {/* Breadcrumb - Seamless with Navbar */}
       <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-t border-green-700/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
@@ -43,7 +44,7 @@ const AboutUs = () => {
           <BarangayMap />
         </div>
       </div>
-    </div>
+    </UnifiedBackground>
   );
 };
 
@@ -52,7 +53,7 @@ export default AboutUs;
 // BARANGAY  OFFICIALS
 const BarangayOfficials = () => {
   const [officials, setOfficials] = useState([]);
-  const { data, loading, error } = useFetchData(`/officials`);
+  const { data, loading, error } = usePublicFetch(`/officials`);
   useEffect(() => {
     if (data && !loading && !error) {
       setOfficials(data);
@@ -66,10 +67,10 @@ const BarangayOfficials = () => {
         <div className="inline-block p-3 sm:p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-full mb-4 sm:mb-6 shadow-lg">
           <span className="text-3xl sm:text-5xl">👥</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-3 sm:mb-4">
+        <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-3 sm:mb-4 leading-normal">
           Barangay Officials
         </h2>
-        <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto px-4">
+        <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto px-4 leading-normal">
           Meet the dedicated leaders serving our community with passion and
           integrity
         </p>
@@ -80,14 +81,14 @@ const BarangayOfficials = () => {
           {officials.slice(0, 1).map((official, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl p-5 sm:p-8 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden w-[160px] h-[180px] sm:w-[240px] sm:h-[240px] md:w-[250px] md:h-[250px] group"
+              className="bg-white rounded-2xl p-5 sm:p-8 flex flex-col items-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden w-[160px] sm:w-[240px] md:w-[250px] group"
             >
               {/* Hover Gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-              <div className="relative z-10 flex flex-col items-center w-full h-full justify-center">
+              <div className="relative z-10 flex flex-col items-center w-full">
                 {/* Avatar */}
-                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-3 sm:mb-5 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
+                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-3 sm:mb-4 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
                   {official.image ? (
                     <img
                       src={
@@ -104,14 +105,21 @@ const BarangayOfficials = () => {
                 </div>
 
                 {/* Name */}
-                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 leading-tight text-center group-hover:text-green-700 transition-colors">
+                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-1 sm:mb-2 leading-normal text-center group-hover:text-green-700 transition-colors">
                   {official.name}
                 </h3>
 
                 {/* Position */}
-                <p className="text-gray-600 text-xs sm:text-sm leading-tight text-center flex-grow flex items-center font-medium">
+                <p className="text-gray-600 text-xs sm:text-sm leading-tight text-center font-medium mb-2">
                   {official.position}
                 </p>
+
+                {/* Biography */}
+                {official.biography && official.biography.trim() && (
+                  <p className="text-gray-500 text-xs leading-snug text-center line-clamp-3 px-2">
+                    {official.biography}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -121,14 +129,14 @@ const BarangayOfficials = () => {
           {officials.slice(1, 3).map((official, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl p-5 sm:p-8 flex flex-col items-center justify-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden w-[160px] h-[180px] sm:w-[240px] sm:h-[240px] md:w-[250px] md:h-[250px] group"
+              className="bg-white rounded-2xl p-5 sm:p-8 flex flex-col items-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden w-[160px] sm:w-[240px] md:w-[250px] group"
             >
               {/* Hover Gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-              <div className="relative z-10 flex flex-col items-center w-full h-full justify-center">
+              <div className="relative z-10 flex flex-col items-center w-full">
                 {/* Avatar */}
-                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-3 sm:mb-5 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
+                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-3 sm:mb-4 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
                   {official.image ? (
                     <img
                       src={
@@ -145,14 +153,21 @@ const BarangayOfficials = () => {
                 </div>
 
                 {/* Name */}
-                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 leading-tight text-center group-hover:text-green-700 transition-colors">
+                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-1 sm:mb-2 leading-normal text-center group-hover:text-green-700 transition-colors">
                   {official.name}
                 </h3>
 
                 {/* Position */}
-                <p className="text-gray-600 text-xs sm:text-sm leading-tight text-center flex-grow flex items-center font-medium">
+                <p className="text-gray-600 text-xs sm:text-sm leading-tight text-center font-medium mb-2">
                   {official.position}
                 </p>
+
+                {/* Biography */}
+                {official.biography && official.biography.trim() && (
+                  <p className="text-gray-500 text-xs leading-snug text-center line-clamp-3 px-2">
+                    {official.biography}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -162,14 +177,14 @@ const BarangayOfficials = () => {
           {officials.slice(3).map((official, index) => (
             <div
               key={index + 3}
-              className="bg-white rounded-2xl p-5 sm:p-8 flex flex-col items-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden group w-[160px] h-[180px] sm:w-[240px] sm:h-[240px]"
+              className="bg-white rounded-2xl p-5 sm:p-8 flex flex-col items-center text-center shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-2 border-gray-100 relative overflow-hidden group w-[160px] min-h-[180px] sm:w-[240px] sm:min-h-[240px]"
             >
               {/* Hover Gradient */}
               <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-              <div className="relative z-10 flex flex-col items-center w-full h-full justify-center">
+              <div className="relative z-10 flex flex-col items-center w-full">
                 {/* Avatar */}
-                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-3 sm:mb-5 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
+                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center mb-3 sm:mb-4 flex-shrink-0 shadow-md group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 overflow-hidden">
                   {official.image ? (
                     <img
                       src={
@@ -186,14 +201,21 @@ const BarangayOfficials = () => {
                 </div>
 
                 {/* Name */}
-                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-2 sm:mb-3 leading-tight text-center group-hover:text-green-700 transition-colors">
+                <h3 className="font-bold text-sm sm:text-base text-gray-800 mb-1 sm:mb-2 leading-normal text-center group-hover:text-green-700 transition-colors">
                   {official.name}
                 </h3>
 
                 {/* Position */}
-                <p className="text-gray-600 text-xs sm:text-sm leading-tight text-center flex-grow flex items-center font-medium">
+                <p className="text-gray-600 text-xs sm:text-sm leading-tight text-center font-medium mb-2">
                   {official.position}
                 </p>
+
+                {/* Biography */}
+                {official.biography && official.biography.trim() && (
+                  <p className="text-gray-500 text-xs leading-snug text-center line-clamp-3 px-2">
+                    {official.biography}
+                  </p>
+                )}
               </div>
             </div>
           ))}
@@ -222,10 +244,10 @@ const BarangayMap = () => {
         <div className="inline-block p-3 sm:p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-full mb-4 sm:mb-6 shadow-lg">
           <span className="text-3xl sm:text-5xl">📍</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-3 sm:mb-4">
+        <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-green-700 to-green-900 bg-clip-text text-transparent mb-3 sm:mb-4 leading-normal">
           Find Our Barangay
         </h2>
-        <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto px-4">
+        <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto px-4 leading-normal">
           Visit us at our office or explore our location on the map below
         </p>
       </div>

@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../../components/utils';
 import { APP_ROUTES } from '../../utils/constants/routes';
 import { useAuth } from '../../contexts/AuthContext';
+import { useRBAC } from '../../hooks/useRBAC';
+import { Permission } from '../../types/rbac.types';
 import {
   LayoutDashboard,
   TrendingUp,
@@ -22,6 +24,8 @@ import {
   Recycle,
   Sprout,
   RotateCwSquare,
+  Building,
+  MapPin,
 } from 'lucide-react';
 import useFetchData from '../hooks/useFetchData';
 
@@ -38,6 +42,9 @@ interface MenuItem {
   onClick?: () => void;
   isActive?: boolean;
   submenu?: MenuItem[];
+  // RBAC: Permission requirements for menu items
+  permission?: Permission;
+  permissions?: Permission[];
 }
 
 const MenuBar: React.FC<MenuBarProps> = ({
@@ -53,36 +60,76 @@ const MenuBar: React.FC<MenuBarProps> = ({
     `/pageContent/${import.meta.env.VITE_PAGE_CONTENT_ID}`
   );
 
+  // RBAC: Get permission checking functions
+  const {
+    hasPermission,
+    hasAnyPermission,
+    userRoleDisplay,
+    userRoleBadgeColor,
+  } = useRBAC();
+
   const menuItems: MenuItem[] = [
     {
       icon: <LayoutDashboard className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Dashboard',
       href: APP_ROUTES.ADMIN.DASHBOARD,
+      permission: Permission.VIEW_REPORTS,
     },
     {
       icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />,
-      label: 'Resident Records',
+      label: 'Records',
       href: APP_ROUTES.ADMIN.RESOURCES,
+      permission: Permission.VIEW_RECORDS,
+      submenu: [
+        {
+          icon: <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
+          label: 'Resident',
+          href: APP_ROUTES.ADMIN.RESOURCES,
+          permission: Permission.VIEW_RECORDS,
+        },
+        {
+          icon: <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
+          label: 'Non Resident',
+          href: APP_ROUTES.ADMIN.RESOURCES + '/non-resident',
+          permission: Permission.VIEW_RECORDS,
+        },
+        {
+          icon: <Building className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
+          label: 'Establishment',
+          href: APP_ROUTES.ADMIN.RESOURCES + '/establishment',
+          permission: Permission.VIEW_RECORDS,
+        },
+      ],
     },
     {
       icon: <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Trading',
       href: APP_ROUTES.ADMIN.TRADING,
+      permission: Permission.VIEW_TRADING,
       submenu: [
         {
           icon: <Coins className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Earn Points',
           href: APP_ROUTES.ADMIN.TRADING + '/earn-points',
+          permission: Permission.VIEW_TRADING,
         },
         {
           icon: <FileBarChart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Statistics',
           href: APP_ROUTES.ADMIN.TRADING + '/statistics',
+          permission: Permission.VIEW_TRADING,
         },
         {
           icon: <ArrowRightLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Swap item',
           href: APP_ROUTES.ADMIN.TRADING + '/swap-item',
+          permission: Permission.VIEW_TRADING,
+        },
+        {
+          icon: <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
+          label: 'Geotag Locations',
+          href: APP_ROUTES.ADMIN.TRADING + '/locations',
+          permission: Permission.VIEW_TRADING,
         },
       ],
     },
@@ -90,41 +137,49 @@ const MenuBar: React.FC<MenuBarProps> = ({
       icon: <Sprout className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Green Pages',
       href: APP_ROUTES.ADMIN.BASE + '/green-pages',
+      permission: Permission.VIEW_GREEN_PAGES,
     },
     {
       icon: <Home className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Home Editables',
       href: APP_ROUTES.ADMIN.ABOUT,
+      permission: Permission.VIEW_CONTENT,
       submenu: [
         {
           icon: <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Guidelines',
           href: APP_ROUTES.ADMIN.BASE + '/guidelines',
+          permission: Permission.VIEW_GUIDELINES,
         },
         {
           icon: <Newspaper className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'News',
           href: APP_ROUTES.ADMIN.NEWS,
+          permission: Permission.VIEW_NEWS,
         },
         {
           icon: <RotateCwSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Carousel',
           href: APP_ROUTES.ADMIN.CAROUSEL,
+          permission: Permission.VIEW_CONTENT,
         },
         {
           icon: <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'About Us',
           href: APP_ROUTES.ADMIN.ABOUT,
+          permission: Permission.VIEW_CONTENT,
         },
         {
           icon: <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Achievements',
           href: APP_ROUTES.ADMIN.ABOUT + '/achievements',
+          permission: Permission.VIEW_ACHIEVEMENTS,
         },
         {
           icon: <Recycle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />,
           label: 'Talipapa Natin',
           href: APP_ROUTES.ADMIN.TALIPAPANATIN,
+          permission: Permission.VIEW_CONTENT,
         },
       ],
     },
@@ -132,23 +187,72 @@ const MenuBar: React.FC<MenuBarProps> = ({
       icon: <Package className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Inventory',
       href: APP_ROUTES.ADMIN.INVENTORY,
+      permission: Permission.VIEW_INVENTORY,
     },
     {
       icon: <Sprout className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Farm Inventory',
       href: APP_ROUTES.ADMIN.FARM_INVENTORY,
+      permission: Permission.VIEW_FARM_INVENTORY,
     },
     {
       icon: <FileText className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Activity Logs',
       href: APP_ROUTES.ADMIN.ACTIVITYLOGS,
+      permission: Permission.VIEW_ACTIVITY_LOGS,
     },
     {
       icon: <Settings className="w-4 h-4 sm:w-5 sm:h-5" />,
       label: 'Settings',
       href: APP_ROUTES.ADMIN.SETTINGS,
+      permission: Permission.VIEW_SETTINGS,
     },
   ];
+
+  /**
+   * RBAC: Filter menu items based on user permissions
+   */
+  const canAccessMenuItem = (item: MenuItem): boolean => {
+    // If no permission required, item is accessible
+    if (!item.permission && !item.permissions) {
+      return true;
+    }
+
+    // Check single permission
+    if (item.permission && !hasPermission(item.permission)) {
+      return false;
+    }
+
+    // Check multiple permissions (user needs at least one)
+    if (item.permissions && !hasAnyPermission(item.permissions)) {
+      return false;
+    }
+
+    return true;
+  };
+
+  /**
+   * RBAC: Get accessible menu items (filtered by permissions)
+   */
+  const getAccessibleMenuItems = (): MenuItem[] => {
+    return menuItems
+      .filter(canAccessMenuItem)
+      .map((item) => {
+        // If item has submenu, filter it too
+        if (item.submenu) {
+          const accessibleSubmenu = item.submenu.filter(canAccessMenuItem);
+          // Only show parent if it has accessible submenu items
+          if (accessibleSubmenu.length === 0) {
+            return null;
+          }
+          return { ...item, submenu: accessibleSubmenu };
+        }
+        return item;
+      })
+      .filter((item): item is MenuItem => item !== null);
+  };
+
+  const accessibleMenuItems = getAccessibleMenuItems();
 
   const toggleExpanded = (label: string) => {
     setExpandedItems((prev) =>
@@ -157,27 +261,46 @@ const MenuBar: React.FC<MenuBarProps> = ({
         : [...prev, label]
     );
   };
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  const isMobileViewport = () => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return window.matchMedia('(max-width: 639px)').matches;
+    } catch (err) {
+      return window.innerWidth <= 640;
+    }
+  };
 
   const handleItemClick = (item: MenuItem) => {
     if (item.submenu) {
       toggleExpanded(item.label);
     } else if (item.onClick) {
-      item.onClick();
+      // prevent double taps
+      setIsNavigating(true);
+      try {
+        item.onClick();
+      } finally {
+        if (onClose && isMobileViewport()) onClose();
+        // keep navigating state briefly to avoid double clicks
+        setTimeout(() => setIsNavigating(false), 600);
+      }
     } else if (item.href) {
+      setIsNavigating(true);
       navigate(item.href);
+      if (onClose && isMobileViewport()) onClose();
+      setTimeout(() => setIsNavigating(false), 600);
     }
   };
 
-  const handleLogout = async () => {
-    await logout(); // this calls the context logout()
-
-    // delay the navigation slightly so your toast can show
-    setTimeout(() => {
-      navigate('/admin/login', {
-        state: { logoutSuccess: true },
-        replace: true,
-      });
-    }, 100);
+  const handleLogout = () => {
+    setIsNavigating(true);
+    try {
+      logout();
+    } finally {
+      if (onClose && isMobileViewport()) onClose();
+      setTimeout(() => setIsNavigating(false), 600);
+    }
   };
 
   return (
@@ -197,11 +320,18 @@ const MenuBar: React.FC<MenuBarProps> = ({
           isOpen ? 'ml-0' : '-ml-[270px] sm:ml-0',
           className
         )}
+        style={{ willChange: 'transform, opacity' }}
       >
+        {/* navigation blocker while navigating to prevent double taps */}
+        {isNavigating && (
+          <div className="absolute inset-0 z-[600] flex items-center justify-center bg-black/10">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-t-transparent border-white/90" />
+          </div>
+        )}
         {/* Header */}
-        <div className="px-4 py-4 sm:px-6 sm:py-6 bg-gradient-to-r from-green-950 to-green-900">
-          <div className="flex items-center justify-center space-x-2 sm:space-x-3">
-            <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-white/30">
+        <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-b border-green-700/30 shadow-xl">
+          <div className="flex items-center justify-center space-x-2 sm:space-x-3 px-4 py-[20px] sm:px-6 sm:py-[26px] lg:px-10 lg:py-[32px]">
+            <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ring-1 ring-white/30 backdrop-blur-sm">
               <img
                 src={data?.image?.url ? data.image.url : '/brgy talipapa.png'}
                 alt="Barangay Talipapa Logo"
@@ -219,12 +349,9 @@ const MenuBar: React.FC<MenuBarProps> = ({
           </div>
         </div>
 
-        {/* Separator Line */}
-        <div className="border-t border-green-700/30 mx-4 sm:mx-6 mb-2"></div>
-
-        {/* Navigation Items */}
+        {/* Navigation Items - RBAC Filtered */}
         <nav className="flex-1 px-3 sm:px-4 py-3 sm:py-5 space-y-1.5 sm:space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-green-600 scrollbar-track-transparent">
-          {menuItems.map((item, index) => (
+          {accessibleMenuItems.map((item, index) => (
             <div key={index}>
               <button
                 onClick={() => handleItemClick(item)}
@@ -270,7 +397,15 @@ const MenuBar: React.FC<MenuBarProps> = ({
                         />
                       )}
                       <button
-                        onClick={() => navigate(subItem.href!)}
+                        onClick={() => {
+                          setIsNavigating(true);
+                          try {
+                            navigate(subItem.href!);
+                            if (onClose && isMobileViewport()) onClose();
+                          } finally {
+                            setTimeout(() => setIsNavigating(false), 600);
+                          }
+                        }}
                         className={cn(
                           'w-full flex items-center space-x-2.5 sm:space-x-3 pr-3 py-2.5 sm:pr-4 sm:py-3 text-left transition-all duration-300 ease-in-out text-sm sm:text-base rounded-xl',
                           'hover:shadow-md hover:bg-white/15 hover:text-white hover:font-semibold',

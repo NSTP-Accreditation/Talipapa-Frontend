@@ -10,7 +10,7 @@ export default function MissionVision() {
   const error = null;
 
   return (
-    <section className="bg-gradient-to-br from-green-50 to-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 flex flex-col items-center">
+    <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 flex flex-col items-center">
       {/* Header */}
       <header className="max-w-3xl text-center mb-8 sm:mb-12 md:mb-16">
         <div className="inline-block p-3 sm:p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-full mb-4 sm:mb-6 shadow-lg">

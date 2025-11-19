@@ -2,6 +2,7 @@ import Carousel from '../components/Carousel';
 import MissionVision from '../components/MissionVision';
 import Achievements from '../components/Achievement';
 import CalendarEvents from '../components/CalendarEvents';
+import UnifiedBackground from '../components/UnifiedBackground';
 import { useLoadingState } from '../../hooks/useLoadingState';
 import { ResponsiveSkeleton } from '../../components/ResponsiveSkeleton';
 
@@ -15,12 +16,12 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-professional gradient-mesh relative">
+    <UnifiedBackground>
       <Carousel />
       <MissionVision />
       <CalendarEvents />
       <Achievements />
-    </div>
+    </UnifiedBackground>
   );
 };
 

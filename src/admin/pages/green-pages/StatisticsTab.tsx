@@ -4,7 +4,6 @@ import {
   BarChart3,
   X,
   MapPin,
-  Phone,
   Users as UsersIcon,
   Sprout,
   HopOff,
@@ -20,6 +19,8 @@ import {
   CardContent,
   CardTitle,
 } from '../../../components/ui/card';
+import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
+import { LocationMapPicker } from './LocationMapPicker';
 import {
   BarChart,
   Bar,
@@ -33,7 +34,7 @@ import {
 } from 'recharts';
 import { Input } from '../../../components/ui/input';
 import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
-import { Farm } from '../GreenPages';
+import { Farm } from './MapDropdown';
 
 interface DataItem {
   name: string;
@@ -110,7 +111,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
   const [isSubmittingFarm, setIsSubmittingFarm] = useState(false);
   const [newFarm, setNewFarm] = useState({
     name: '',
-    location: '',
+    location: null as { lat: number; lng: number } | null,
     size: '',
     age: '',
     farmType: '',
@@ -124,7 +125,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
   const openAddFarm = () => {
     setNewFarm({
       name: '',
-      location: '',
+      location: null,
       size: '',
       age: '',
       farmType: '',
@@ -137,32 +138,28 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
 
   const closeAddFarm = () => setIsAddFarmOpen(false);
 
-  function extractLatLong(url) {
-    // Regex to match both sets of coordinates: @latitude,longitude and 3dlatitude!4dlongitude
-    const regex = /[-+]?\d{1,2}\.\d+,\s*[-+]?\d{1,3}\.\d+/g;
-    const match = url.match(regex);
-
-    if (match && match.length > 0) {
-      const [lat, lng] = match[0]
-        .split(',')
-        .map((val) => parseFloat(val.trim()));
-      return { lat, lng };
-    } else {
-      return null;
-    }
-  }
-
   const handleCreateFarm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmittingFarm) return;
-    // Basic validation
+
+    // Basic validation - do this BEFORE setting isSubmitting
     if (!newFarm.name || !newFarm.location) {
       toast.error('Farm name and location are required', {
         title: 'Validation',
       });
       return;
     }
-    setIsSubmittingFarm(true);
+
+    if (!newFarm.address) {
+      toast.error(
+        'Please select a location on the map to auto-fill the address',
+        {
+          title: 'Validation',
+        }
+      );
+      return;
+    }
+
     if (!newFarm.image || !newFarm.description) {
       toast.error('Image and Description are required!', {
         title: 'Validation',
@@ -170,12 +167,12 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
       return;
     }
 
-    const mapLoc = extractLatLong(newFarm.location);
+    setIsSubmittingFarm(true);
 
     try {
       const formData = new FormData();
 
-      formData.append('location', JSON.stringify(mapLoc));
+      formData.append('location', JSON.stringify(newFarm.location));
       formData.append('name', newFarm.name);
       formData.append('size', newFarm.size);
       formData.append('age', newFarm.age);
@@ -184,20 +181,21 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
       formData.append('description', newFarm.description);
       formData.append('image', newFarm.image);
 
-      try {
-        const res = await authFetch('/farms', {
-          method: 'POST',
-          body: formData,
-        });
+      await authFetch('/farms', {
+        method: 'POST',
+        body: formData,
+      });
 
-        refetchFarms();
-      } catch (error) {
-        console.log(error);
-      }
-    } catch (err) {
-      console.error(err);
+      toast.success('Farm added successfully!', { title: 'Success' });
+      closeAddFarm();
+      refetchFarms();
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to add farm', {
+        title: 'Error',
+      });
+    } finally {
+      setIsSubmittingFarm(false);
     }
-    setIsSubmittingFarm(false);
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -339,7 +337,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
       {isAddFarmOpen &&
         createPortal(
           <div
-            className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn"
+            className="fixed inset-0 z-[1003] flex items-center justify-center bg-black/70 backdrop-blur-md p-2 sm:p-4 animate-fadeIn overflow-y-auto"
             role="dialog"
             aria-modal="true"
             onClick={(e) => {
@@ -348,7 +346,7 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
           >
             <form
               onSubmit={handleCreateFarm}
-              className="w-full max-w-xs sm:max-w-2xl md:max-w-3xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[95vh] flex flex-col animate-slideUp"
+              className="w-full max-w-4xl lg:max-w-5xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden my-4 flex flex-col max-h-[95vh] animate-slideUp"
             >
               <div className="relative p-4 sm:p-6 md:p-8 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 sm:w-64 sm:h-64 bg-white/10 rounded-full -mr-16 sm:-mr-32 -mt-16 sm:-mt-32"></div>
@@ -377,8 +375,9 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                 </div>
               </div>
 
-              <div className="p-3 sm:p-4 md:p-6 overflow-y-auto">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="p-3 sm:p-4 md:p-6 overflow-y-auto flex-1">
+                <div className="space-y-4 sm:space-y-6">
+                  {/* Farm Name */}
                   <div>
                     <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
                       <HopOff className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
@@ -395,88 +394,114 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                     />
                   </div>
 
+                  {/* Interactive Map Location Picker */}
                   <div>
-                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
+                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-2">
                       <MapPin className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
-                      Location <span className="text-red-500">*</span>
+                      Farm Location <span className="text-red-500">*</span>
                     </label>
-                    <Input
-                      required
+                    <LocationMapPicker
                       value={newFarm.location}
-                      onChange={(e) =>
-                        setNewFarm({ ...newFarm, location: e.target.value })
+                      onChange={(location) =>
+                        setNewFarm({ ...newFarm, location })
                       }
-                      placeholder="Google Map Location"
-                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                      onAddressUpdate={(address) =>
+                        setNewFarm({ ...newFarm, address })
+                      }
+                      height="450px"
                     />
                   </div>
 
-                  <div>
-                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
-                      <Contact className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
-                      Size <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      required
-                      value={newFarm.size}
-                      onChange={(e) =>
-                        setNewFarm({ ...newFarm, size: e.target.value })
-                      }
-                      placeholder="Size"
-                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
-                      <UsersIcon className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
-                      Age <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      required
-                      value={newFarm.age}
-                      onChange={(e) =>
-                        setNewFarm({ ...newFarm, age: e.target.value })
-                      }
-                      placeholder="Age"
-                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
-                      <Contact className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
-                      Farm Type <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      required
-                      value={newFarm.farmType}
-                      onChange={(e) =>
-                        setNewFarm({ ...newFarm, farmType: e.target.value })
-                      }
-                      placeholder="Farm Type"
-                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
-                    />
-                  </div>
-
+                  {/* Address Field with Autocomplete */}
                   <div>
                     <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
                       <MapPin className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
                       Address <span className="text-red-500">*</span>
                     </label>
-                    <Input
+                    <AddressAutocomplete
                       required
                       value={newFarm.address}
-                      onChange={(e) =>
-                        setNewFarm({ ...newFarm, address: e.target.value })
+                      onChange={(value) =>
+                        setNewFarm({ ...newFarm, address: value })
                       }
-                      placeholder="Address"
-                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                      onSelect={(suggestion) => {
+                        // Update location when address is manually selected
+                        const lat = parseFloat(suggestion.lat);
+                        const lng = parseFloat(suggestion.lon);
+                        if (!isNaN(lat) && !isNaN(lng)) {
+                          setNewFarm({
+                            ...newFarm,
+                            address: suggestion.display_name,
+                            location: { lat, lng },
+                          });
+                        }
+                      }}
+                      placeholder="Address (auto-filled from map or type to search)"
+                      className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl hover:border-gray-400 text-sm sm:text-base"
+                      maxLength={200}
+                      countryCode="ph"
                     />
+                    <p className="mt-1 text-xs text-gray-500">
+                      This field is auto-filled when you select a location on
+                      the map, or you can type to search and select an address
+                      manually
+                    </p>
                   </div>
 
-                  <div className="sm:col-span-2 flex items-center gap-3 sm:gap-5">
-                    <label className="cursor-pointer bg-[#1b4c2e] text-white px-3 py-2 sm:px-4 sm:py-2 rounded-md hover:bg-[#2d6b42] transition-colors inline-block text-xs sm:text-sm">
+                  {/* Farm Details Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <div>
+                      <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
+                        <Contact className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
+                        Size <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        required
+                        value={newFarm.size}
+                        onChange={(e) =>
+                          setNewFarm({ ...newFarm, size: e.target.value })
+                        }
+                        placeholder="e.g., 2 hectares"
+                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
+                        <UsersIcon className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
+                        Age <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        required
+                        value={newFarm.age}
+                        onChange={(e) =>
+                          setNewFarm({ ...newFarm, age: e.target.value })
+                        }
+                        placeholder="e.g., 5 years"
+                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
+                        <Contact className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
+                        Farm Type <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        required
+                        value={newFarm.farmType}
+                        onChange={(e) =>
+                          setNewFarm({ ...newFarm, farmType: e.target.value })
+                        }
+                        placeholder="e.g., Vegetable, Livestock, Mixed"
+                        className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 text-sm sm:text-base"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Image Upload */}
+                  <div className="flex items-center gap-3 sm:gap-5">
+                    <label className="cursor-pointer bg-[#1b4c2e] text-white px-3 py-2 sm:px-4 sm:py-2 rounded-md hover:bg-[#2d6b42] transition-colors inline-block text-xs sm:text-sm font-semibold shadow-md hover:shadow-lg">
                       Choose Image
                       <input
                         required
@@ -488,11 +513,12 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                     </label>
 
                     <p className="text-xs sm:text-sm text-gray-600 truncate flex-1">
-                      File: {newFarm?.image?.name || 'No file selected'}
+                      {newFarm?.image?.name || 'No file selected'}
                     </p>
                   </div>
 
-                  <div className="sm:col-span-2">
+                  {/* Description */}
+                  <div>
                     <label className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold text-gray-700 mb-1">
                       <SquarePen className="inline w-3 h-3 sm:w-4 sm:h-4 mr-0.5 sm:mr-1 text-green-600" />
                       Description <span className="text-red-500">*</span>
@@ -504,21 +530,23 @@ const StatisticsTab: React.FC<StatisticsTabProps> = ({
                         setNewFarm({ ...newFarm, description: e.target.value })
                       }
                       className="w-full border-2 border-gray-300 rounded-lg sm:rounded-xl px-3 py-2 sm:px-4 sm:py-3 focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all outline-none text-gray-800 font-medium hover:border-gray-400 resize-none h-20 sm:h-28 text-sm sm:text-base"
-                      placeholder="Short description or notes"
+                      placeholder="Describe the farm, its features, crops, or activities..."
                     />
-                    {/* Info Note */}
-                    <div className="bg-green-50 border border-green-200 sm:border-2 rounded-lg sm:rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3 mt-2 sm:mt-3">
-                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-white text-xs font-bold">i</span>
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-xs sm:text-sm text-green-800 font-medium">
-                          <span className="font-bold">Note:</span> Fields marked
-                          with <span className="text-red-500 font-bold">*</span>{' '}
-                          are required. Please ensure all information is
-                          accurate before submitting.
-                        </p>
-                      </div>
+                  </div>
+
+                  {/* Info Note */}
+                  <div className="bg-green-50 border border-green-200 sm:border-2 rounded-lg sm:rounded-xl p-3 sm:p-4 flex items-start gap-2 sm:gap-3">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-xs font-bold">i</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs sm:text-sm text-green-800 font-medium">
+                        <span className="font-bold">How it works:</span> Click
+                        on the map to select the farm location. The address will
+                        be automatically populated. You can also manually edit
+                        or search for an address, which will update the map
+                        location accordingly.
+                      </p>
                     </div>
                   </div>
                 </div>
