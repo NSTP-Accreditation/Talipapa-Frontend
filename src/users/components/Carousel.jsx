@@ -169,7 +169,7 @@ export default function Carousel() {
       {/* Full-width gradient overlay at bottom with elegant text */}
       <div className="absolute inset-x-0 bottom-0 z-10 pointer-events-none">
         {/* Gradient background that fades from bottom to top */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent h-64 sm:h-72 md:h-86"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent h-64 sm:h-72 md:h-96"></div>
 
         {/* Text content */}
         <div
