@@ -296,7 +296,7 @@ export default function Trading() {
           : typeof window !== 'undefined'
             ? window.location.origin
             : '';
-      const url = new URL('/api/records/public/find', apiURL);
+      const url = new URL('/records/public/find', apiURL);
       url.searchParams.append('lastName', lastName);
 
       // If recordId is provided, add it as a query parameter (not route param)
