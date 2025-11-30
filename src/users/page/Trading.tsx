@@ -31,6 +31,7 @@ import {
   Users,
   Globe,
   Heart,
+  AlertCircle,
 } from 'lucide-react';
 import { useLoadingState } from '@/hooks/useLoadingState';
 import { TradingPageSkeleton } from '@/components/LoadingSkeletons';
@@ -210,9 +211,8 @@ export default function Trading() {
   const [recordId, setRecordId] = useState('');
   const [lastName, setLastName] = useState('');
   const [recordData, setRecordData] = useState<Record | undefined>();
-  const [multipleRecords, setMultipleRecords] = useState<Record[]>([]);
-  const [showMultipleRecordsModal, setShowMultipleRecordsModal] =
-    useState(false);
+  const [showDisambiguationModal, setShowDisambiguationModal] = useState(false);
+  const [multipleRecordsCount, setMultipleRecordsCount] = useState(0);
 
   const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
     lastName || (recordId ? `BT-${recordId}` : 'User')
@@ -222,7 +222,7 @@ export default function Trading() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setShowRecordModal(false);
-        setShowMultipleRecordsModal(false);
+        setShowDisambiguationModal(false);
         setDropdownOpen(false);
       }
     };
@@ -318,21 +318,11 @@ export default function Trading() {
       // Handle error responses (404, 409, etc.)
       if (!res.ok) {
         // Check if this is a 409 (multiple records) with requiresDisambiguation
-        if (
-          res.status === 409 &&
-          data.requiresDisambiguation &&
-          data.matchingRecords
-        ) {
-          // Multiple records found
-          setMultipleRecords(data.matchingRecords);
-          setShowMultipleRecordsModal(true);
-          success(
-            data.message ||
-              `Found ${data.matchingRecords.length} records with last name "${lastName}". Please select one or provide a Record ID for specific lookup.`,
-            {
-              title: 'Multiple Records Found',
-            }
-          );
+        if (res.status === 409 && data.requiresDisambiguation) {
+          // SECURITY FIX: Backend no longer returns personal data
+          // Show disambiguation modal asking for Record ID
+          setMultipleRecordsCount(data.count || 0);
+          setShowDisambiguationModal(true);
           return;
         }
 
@@ -358,12 +348,6 @@ export default function Trading() {
         }
       );
     }
-  };
-
-  const selectRecord = (record: Record) => {
-    setRecordData(record);
-    setShowMultipleRecordsModal(false);
-    setShowRecordModal(true);
   };
 
   if (isLoading) {
@@ -1017,73 +1001,68 @@ export default function Trading() {
         </Card>
       </main>
 
-      {/* Multiple Records Modal */}
-      {showMultipleRecordsModal && (
+      {/* Disambiguation Modal - SECURITY FIX: Ask for Record ID instead of showing all records */}
+      {showDisambiguationModal && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setShowMultipleRecordsModal(false)}
+            onClick={() => setShowDisambiguationModal(false)}
           />
-          <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
-            <div className="p-4 sm:p-6 bg-gradient-to-r from-green-600 to-green-600 text-white">
-              <h3 className="text-lg sm:text-xl font-bold">
-                Multiple Records Found
-              </h3>
-              <p className="text-green-100 text-sm mt-1">
-                {multipleRecords.length} records found with last name "
-                {lastName}". Please select one:
-              </p>
-            </div>
-
-            <div className="p-4 sm:p-6 overflow-y-auto max-h-[60vh]">
-              <div className="space-y-3">
-                {multipleRecords.map((record) => (
-                  <button
-                    key={record._id}
-                    onClick={() => selectRecord(record)}
-                    className="w-full p-4 bg-white border-2 border-gray-200 rounded-xl hover:border-green-500 hover:shadow-md transition-all text-left"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-lg overflow-hidden bg-green-100 flex-shrink-0">
-                        <img
-                          src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
-                            `${record.firstName} ${record.lastName}`
-                          )}&background=2f855a&color=fff&size=128`}
-                          alt="Avatar"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-gray-900">
-                          {record.firstName} {record.lastName}
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          ID: {record._id}
-                        </div>
-                        {record.address && (
-                          <div className="text-sm text-gray-600">
-                            Address: {record.address}
-                          </div>
-                        )}
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <div className="text-2xl font-bold text-green-600">
-                          {record.points}
-                        </div>
-                        <div className="text-xs text-gray-600">POINTS</div>
-                      </div>
-                    </div>
-                  </button>
-                ))}
+          <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+            <div className="p-4 sm:p-6 bg-gradient-to-r from-amber-500 to-amber-600 text-white">
+              <div className="flex items-center gap-3">
+                <AlertCircle className="w-8 h-8 flex-shrink-0" />
+                <div>
+                  <h3 className="text-lg sm:text-xl font-bold">
+                    Record ID Required
+                  </h3>
+                  <p className="text-amber-100 text-sm mt-1">
+                    Multiple records found
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="p-4 sm:p-6 border-t border-gray-200">
+            <div className="p-4 sm:p-6">
+              <div className="space-y-4">
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    We found{' '}
+                    <span className="font-bold">{multipleRecordsCount}</span>{' '}
+                    people with the last name "
+                    <span className="font-bold">{lastName}</span>" in our
+                    system.
+                  </p>
+                  <p className="text-sm text-gray-700 leading-relaxed mt-2">
+                    For privacy and security reasons, please provide your{' '}
+                    <span className="font-bold">Record ID</span> (e.g., BT-0001)
+                    along with your last name to view your specific record.
+                  </p>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-start gap-2">
+                    <FileText className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-bold text-gray-900">
+                        How to find your Record ID:
+                      </p>
+                      <p className="text-sm text-gray-700 mt-1">
+                        Your Record ID was provided when you registered. It
+                        starts with "BT-" followed by 4 digits (e.g., BT-0001).
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 sm:p-6 border-t border-gray-200 bg-gray-50">
               <Button
-                onClick={() => setShowMultipleRecordsModal(false)}
-                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 h-10 sm:h-12 text-sm sm:text-base"
+                onClick={() => setShowDisambiguationModal(false)}
+                className="w-full bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 h-10 sm:h-12 text-sm sm:text-base"
               >
-                Cancel
+                Got it, I'll provide my Record ID
               </Button>
             </div>
           </div>
