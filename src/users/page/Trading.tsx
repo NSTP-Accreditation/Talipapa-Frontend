@@ -36,7 +36,7 @@ import { useLoadingState } from '@/hooks/useLoadingState';
 import { TradingPageSkeleton } from '@/components/LoadingSkeletons';
 import ResponsiveSkeleton from '@/components/ResponsiveSkeleton';
 import usePublicFetch from '@/hooks/usePublicFetch';
-import { useAuthFetch } from '@/admin/hooks/useAuthFetch';
+// public fetch will be used for unauthenticated record checks
 
 const programCategories = [
   {
@@ -150,7 +150,7 @@ interface Material {
 
 export default function Trading() {
   const { isLoading } = useLoadingState(1000);
-  const authFetch = useAuthFetch();
+  // no authFetch needed on public trading page for record lookup
   const {
     data: productsData,
     loading: productsDataLoading,
@@ -284,8 +284,31 @@ export default function Trading() {
       return;
     }
     try {
-      const fullId = `BT-${recordId}`;
-      const record = await authFetch(`/records/${fullId}?lastName=${lastName}`);
+      // Build public API URL: /api/records/public/find?lastName=... and optionally record_id
+      const rawApiUrl = import.meta.env.VITE_API_URL as string | undefined;
+      const apiURL = rawApiUrl && rawApiUrl.trim().length > 0 ? rawApiUrl : (typeof window !== 'undefined' ? window.location.origin : '');
+      const url = new URL('/records/public/find', apiURL);
+      url.searchParams.append('lastName', lastName);
+
+      if (recordId) {
+        // include full BT- prefix for record_id param
+        const fullId = `BT-${recordId}`;
+        url.searchParams.append('record_id', fullId);
+      }
+
+      const res = await fetch(url.toString(), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || `Request failed with status ${res.status}`);
+      }
+
+      const record = await res.json();
 
       setRecordData(record);
       setShowRecordModal(true);
@@ -864,7 +887,8 @@ export default function Trading() {
                 <Button
                   onClick={showRecord}
                   type="button"
-                  disabled={!recordId || !lastName}
+                  // Allow searching by last name alone; recordId is optional
+                  disabled={!lastName}
                   className="w-full h-10 sm:h-12 font-bold bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 text-white rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 active:scale-95 text-sm sm:text-base"
                 >
                   <Gift className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
