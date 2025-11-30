@@ -1,11 +1,28 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { sanitizeName, validateName } from '@/utils/validation';
-import { Recycle, CheckCircle2, Award, Scale, TrendingUp } from 'lucide-react';
+import {
+  Recycle,
+  CheckCircle2,
+  Award,
+  Scale,
+  TrendingUp,
+  AlertCircle,
+} from 'lucide-react';
 import { useAuthFetch } from '../../hooks/useAuthFetch';
 import { useToast } from '@/hooks/useToast';
 import { FormTablePageSkeleton } from '../../../components/LoadingSkeletons';
 import useFetchData from '../../hooks/useFetchData';
 import { MaterialInterface } from '@/types/global.types';
+
+interface MatchingRecord {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  middleName: string;
+  address: string;
+  contact_number: string;
+  points: number;
+}
 
 export default function App() {
   const {
@@ -20,6 +37,8 @@ export default function App() {
   const [isLastNameValid, setIsLastNameValid] = useState(false);
   const [weights, setWeights] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [matchingRecords, setMatchingRecords] = useState<MatchingRecord[]>([]);
+  const [showDisambiguation, setShowDisambiguation] = useState(false);
   const authFetch = useAuthFetch();
   const { success, error: toastError } = useToast();
 
@@ -89,13 +108,52 @@ export default function App() {
     setIsSubmitting(true);
 
     try {
+      // First, search for the record by lastName (and optionally recordId)
+      const searchUrl = recordIdRest
+        ? `/records/find/BT-${recordIdRest}?lastName=${lastName}`
+        : `/records/find?lastName=${lastName}`;
+
+      let recordToUpdate;
+
+      try {
+        recordToUpdate = await authFetch(searchUrl);
+
+        // Check if disambiguation is required
+        if (recordToUpdate.requiresDisambiguation) {
+          setMatchingRecords(recordToUpdate.matchingRecords);
+          setShowDisambiguation(true);
+          setIsSubmitting(false);
+          toastError(recordToUpdate.message, {
+            title: 'Multiple Records Found',
+          });
+          return;
+        }
+      } catch (searchError: any) {
+        // Handle disambiguation error (409 status)
+        if (
+          searchError.message &&
+          searchError.message.includes('Multiple records found')
+        ) {
+          toastError(
+            'Multiple records found with this last name. Please provide a Record ID.',
+            {
+              title: 'Disambiguation Required',
+            }
+          );
+          setIsSubmitting(false);
+          return;
+        }
+        throw searchError;
+      }
+
+      // Now update the record with points
       const requestBody = {
         points: totalPoints,
         materials: materialsWithValue,
         lastName,
       };
 
-      const result = await authFetch(`/records/BT-${recordIdRest}`, {
+      const result = await authFetch(`/records/${recordToUpdate._id}`, {
         method: 'PATCH',
         body: JSON.stringify(requestBody),
       });
@@ -108,6 +166,8 @@ export default function App() {
       // Reset form after success
       setRecordIdRest('');
       setLastName('');
+      setShowDisambiguation(false);
+      setMatchingRecords([]);
       const resetWeights: { [key: string]: string } = {};
       materialsData?.forEach((material) => {
         resetWeights[material._id] = '';
@@ -120,6 +180,16 @@ export default function App() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSelectRecord = (record: MatchingRecord) => {
+    // Extract the numeric part from the record ID (e.g., "BT-0001" -> "0001")
+    const idParts = record._id.split('-');
+    if (idParts.length > 1) {
+      setRecordIdRest(idParts[1]);
+    }
+    setShowDisambiguation(false);
+    setMatchingRecords([]);
   };
 
   // Show loading skeleton while loading
@@ -200,6 +270,55 @@ export default function App() {
           </div>
         </div>
 
+        {/* Disambiguation Modal */}
+        {showDisambiguation && matchingRecords.length > 0 && (
+          <div className="bg-white rounded-2xl border-2 border-yellow-200 shadow-lg p-4 sm:p-6">
+            <div className="flex items-start gap-3 mb-4">
+              <AlertCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Multiple Records Found
+                </h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  We found {matchingRecords.length} records with the last name "
+                  {lastName}". Please select the correct one or provide a Record
+                  ID above.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {matchingRecords.map((record) => (
+                <button
+                  key={record._id}
+                  onClick={() => handleSelectRecord(record)}
+                  className="w-full text-left p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all"
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="font-semibold text-gray-900">
+                        {record._id} - {record.firstName} {record.middleName}{' '}
+                        {record.lastName}
+                      </div>
+                      <div className="text-sm text-gray-600 mt-1">
+                        {record.address}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        Contact: {record.contact_number}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-semibold text-green-600">
+                        {record.points} points
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Full width card form */}
         <form
           className="bg-white rounded-2xl border border-gray-200 shadow-lg p-4 sm:p-8 w-full mx-auto"
@@ -214,7 +333,8 @@ export default function App() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="block group">
                 <label className="text-sm font-medium text-gray-700 mb-2 block">
-                  Record ID
+                  Record ID{' '}
+                  <span className="text-gray-500 font-normal">(Optional)</span>
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 select-none font-medium text-sm sm:text-base">
@@ -230,18 +350,16 @@ export default function App() {
                     }}
                     className="w-full pl-10 sm:pl-12 pr-3 py-2.5 border-2 border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base"
                     placeholder="0001"
-                    required
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-1.5">
-                  Format:{' '}
-                  <span className="font-medium text-gray-700">BT-0001</span> (4
-                  digits only)
+                  Optional. Required only if multiple people share the same last
+                  name.
                 </p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-2 block">
-                  Last Name
+                  Last Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   required
