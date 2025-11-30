@@ -210,6 +210,9 @@ export default function Trading() {
   const [recordId, setRecordId] = useState('');
   const [lastName, setLastName] = useState('');
   const [recordData, setRecordData] = useState<Record | undefined>();
+  const [multipleRecords, setMultipleRecords] = useState<Record[]>([]);
+  const [showMultipleRecordsModal, setShowMultipleRecordsModal] =
+    useState(false);
 
   const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
     lastName || (recordId ? `BT-${recordId}` : 'User')
@@ -219,6 +222,7 @@ export default function Trading() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setShowRecordModal(false);
+        setShowMultipleRecordsModal(false);
         setDropdownOpen(false);
       }
     };
@@ -286,8 +290,13 @@ export default function Trading() {
     try {
       // Build public API URL: /api/records/public/find?lastName=... and optionally record_id
       const rawApiUrl = import.meta.env.VITE_API_URL as string | undefined;
-      const apiURL = rawApiUrl && rawApiUrl.trim().length > 0 ? rawApiUrl : (typeof window !== 'undefined' ? window.location.origin : '');
-      const url = new URL('/records/public/find', apiURL);
+      const apiURL =
+        rawApiUrl && rawApiUrl.trim().length > 0
+          ? rawApiUrl
+          : typeof window !== 'undefined'
+            ? window.location.origin
+            : '';
+      const url = new URL('/api/records/public/find', apiURL);
       url.searchParams.append('lastName', lastName);
 
       if (recordId) {
@@ -308,13 +317,27 @@ export default function Trading() {
         throw new Error(errText || `Request failed with status ${res.status}`);
       }
 
-      const record = await res.json();
+      const data = await res.json();
 
-      setRecordData(record);
-      setShowRecordModal(true);
-      success('Your points have been successfully retrieved.', {
-        title: 'Record found!',
-      });
+      // Check if response is an array (multiple records) or single record
+      if (Array.isArray(data)) {
+        // Multiple records found
+        setMultipleRecords(data);
+        setShowMultipleRecordsModal(true);
+        success(
+          `Found ${data.length} records with last name "${lastName}". Please select one or provide a Record ID for specific lookup.`,
+          {
+            title: 'Multiple Records Found',
+          }
+        );
+      } else {
+        // Single record found
+        setRecordData(data);
+        setShowRecordModal(true);
+        success('Your points have been successfully retrieved.', {
+          title: 'Record found!',
+        });
+      }
     } catch (error: any) {
       showError(
         error?.message || 'Please double-check your Record ID and Last Name.',
@@ -323,6 +346,12 @@ export default function Trading() {
         }
       );
     }
+  };
+
+  const selectRecord = (record: Record) => {
+    setRecordData(record);
+    setShowMultipleRecordsModal(false);
+    setShowRecordModal(true);
   };
 
   if (isLoading) {
@@ -794,15 +823,58 @@ export default function Trading() {
                   Check Your Record Points
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600 font-medium">
-                  Enter your details to view your recycling achievements
+                  Enter your last name (required) and optionally your Record ID
+                  for specific lookup
                 </p>
               </div>
 
               <div className="space-y-4 sm:space-y-6">
                 <div>
                   <label className="text-xs sm:text-sm font-bold text-gray-800 flex items-center gap-2 mb-2">
+                    <Users className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                    Last Name <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => {
+                      const raw = e.target.value || '';
+                      const sanitized = sanitizeName(raw);
+                      if (sanitized !== raw) {
+                        showError(
+                          'Only letters, spaces, apostrophes and hyphens are allowed in names',
+                          { title: 'Validation' }
+                        );
+                      }
+                      setLastName(sanitized);
+                    }}
+                    onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => {
+                      const pasted = e.clipboardData.getData('text');
+                      const sanitized = sanitizeName(pasted);
+                      if (sanitized !== pasted) {
+                        e.preventDefault();
+                        showError(
+                          'Pasted content contains invalid characters. Only letters, spaces, apostrophes and hyphens are allowed.',
+                          { title: 'Validation' }
+                        );
+                      }
+                    }}
+                    onBlur={() => {
+                      const { valid, message } = validateName(lastName, true);
+                      if (!valid) showError(message || 'Invalid last name');
+                    }}
+                    placeholder="Enter your last name"
+                    className="h-10 sm:h-12 px-3 sm:px-4 rounded-lg sm:rounded-xl border-2 border-gray-300 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all text-sm sm:text-base"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs sm:text-sm font-bold text-gray-800 flex items-center gap-2 mb-2">
                     <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                    Record ID
+                    Record ID{' '}
+                    <span className="text-gray-400 font-normal">
+                      (Optional)
+                    </span>
                   </label>
 
                   {/* Input group with fixed BT- prefix */}
@@ -838,49 +910,14 @@ export default function Trading() {
                         const limited = digitsOnly.slice(0, 4);
                         setRecordId(limited);
                       }}
-                      placeholder="0001"
+                      placeholder="0001 (optional for specific lookup)"
                       className="h-10 sm:h-12 pl-12 sm:pl-14 px-3 sm:px-4 rounded-lg sm:rounded-xl border-2 border-gray-300 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all text-sm sm:text-base"
                     />
                   </div>
-                </div>
-
-                <div>
-                  <label className="text-xs sm:text-sm font-bold text-gray-800 flex items-center gap-2 mb-2">
-                    <Users className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                    Last Name
-                  </label>
-                  <Input
-                    type="text"
-                    value={lastName}
-                    onChange={(e) => {
-                      const raw = e.target.value || '';
-                      const sanitized = sanitizeName(raw);
-                      if (sanitized !== raw) {
-                        showError(
-                          'Only letters, spaces, apostrophes and hyphens are allowed in names',
-                          { title: 'Validation' }
-                        );
-                      }
-                      setLastName(sanitized);
-                    }}
-                    onPaste={(e: React.ClipboardEvent<HTMLInputElement>) => {
-                      const pasted = e.clipboardData.getData('text');
-                      const sanitized = sanitizeName(pasted);
-                      if (sanitized !== pasted) {
-                        e.preventDefault();
-                        showError(
-                          'Pasted content contains invalid characters. Only letters, spaces, apostrophes and hyphens are allowed.',
-                          { title: 'Validation' }
-                        );
-                      }
-                    }}
-                    onBlur={() => {
-                      const { valid, message } = validateName(lastName, true);
-                      if (!valid) showError(message || 'Invalid last name');
-                    }}
-                    placeholder="Enter your last name"
-                    className="h-10 sm:h-12 px-3 sm:px-4 rounded-lg sm:rounded-xl border-2 border-gray-300 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all text-sm sm:text-base"
-                  />
+                  <p className="text-xs text-gray-500 mt-2">
+                    If multiple people share the same last name, provide Record
+                    ID to view a specific record
+                  </p>
                 </div>
 
                 {/* toasts replace inline messages */}
@@ -968,7 +1005,78 @@ export default function Trading() {
         </Card>
       </main>
 
-      {/* Record Modal */}
+      {/* Multiple Records Modal */}
+      {showMultipleRecordsModal && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowMultipleRecordsModal(false)}
+          />
+          <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+            <div className="p-4 sm:p-6 bg-gradient-to-r from-green-600 to-green-600 text-white">
+              <h3 className="text-lg sm:text-xl font-bold">
+                Multiple Records Found
+              </h3>
+              <p className="text-green-100 text-sm mt-1">
+                {multipleRecords.length} records found with last name "
+                {lastName}". Please select one:
+              </p>
+            </div>
+
+            <div className="p-4 sm:p-6 overflow-y-auto max-h-[60vh]">
+              <div className="space-y-3">
+                {multipleRecords.map((record) => (
+                  <button
+                    key={record._id}
+                    onClick={() => selectRecord(record)}
+                    className="w-full p-4 bg-white border-2 border-gray-200 rounded-xl hover:border-green-500 hover:shadow-md transition-all text-left"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-lg overflow-hidden bg-green-100 flex-shrink-0">
+                        <img
+                          src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                            `${record.firstName} ${record.lastName}`
+                          )}&background=2f855a&color=fff&size=128`}
+                          alt="Avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-gray-900">
+                          {record.firstName} {record.lastName}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          ID: {record._id}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Address: {record.address}
+                        </div>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <div className="text-2xl font-bold text-green-600">
+                          {record.points}
+                        </div>
+                        <div className="text-xs text-gray-600">POINTS</div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-4 sm:p-6 border-t border-gray-200">
+              <Button
+                onClick={() => setShowMultipleRecordsModal(false)}
+                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 h-10 sm:h-12 text-sm sm:text-base"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Single Record Modal */}
       {showRecordModal && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
           <div
