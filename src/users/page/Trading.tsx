@@ -121,12 +121,12 @@ interface Record {
   firstName: string;
   lastName: string;
   middleName?: string;
-  age: string;
-  address: string;
+  age?: string;
+  address?: string;
   points: number;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
 }
 
 interface Product {
@@ -299,8 +299,9 @@ export default function Trading() {
       const url = new URL('/api/records/public/find', apiURL);
       url.searchParams.append('lastName', lastName);
 
-      if (recordId) {
-        // include full BT- prefix for record_id param
+      // If recordId is provided, add it as a query parameter (not route param)
+      if (recordId && recordId.trim() !== '') {
+        // Include full BT- prefix for record_id param
         const fullId = `BT-${recordId}`;
         url.searchParams.append('record_id', fullId);
       }
@@ -312,32 +313,43 @@ export default function Trading() {
         },
       });
 
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(errText || `Request failed with status ${res.status}`);
-      }
-
       const data = await res.json();
 
-      // Check if response is an array (multiple records) or single record
-      if (Array.isArray(data)) {
-        // Multiple records found
-        setMultipleRecords(data);
-        setShowMultipleRecordsModal(true);
-        success(
-          `Found ${data.length} records with last name "${lastName}". Please select one or provide a Record ID for specific lookup.`,
-          {
-            title: 'Multiple Records Found',
-          }
+      // Handle error responses (404, 409, etc.)
+      if (!res.ok) {
+        // Check if this is a 409 (multiple records) with requiresDisambiguation
+        if (
+          res.status === 409 &&
+          data.requiresDisambiguation &&
+          data.matchingRecords
+        ) {
+          // Multiple records found
+          setMultipleRecords(data.matchingRecords);
+          setShowMultipleRecordsModal(true);
+          success(
+            data.message ||
+              `Found ${data.matchingRecords.length} records with last name "${lastName}". Please select one or provide a Record ID for specific lookup.`,
+            {
+              title: 'Multiple Records Found',
+            }
+          );
+          return;
+        }
+
+        // Other errors (404, 400, etc.)
+        throw new Error(
+          data.message ||
+            data.error ||
+            `Request failed with status ${res.status}`
         );
-      } else {
-        // Single record found
-        setRecordData(data);
-        setShowRecordModal(true);
-        success('Your points have been successfully retrieved.', {
-          title: 'Record found!',
-        });
       }
+
+      // Single record found (200 OK)
+      setRecordData(data);
+      setShowRecordModal(true);
+      success('Your points have been successfully retrieved.', {
+        title: 'Record found!',
+      });
     } catch (error: any) {
       showError(
         error?.message || 'Please double-check your Record ID and Last Name.',
@@ -936,7 +948,7 @@ export default function Trading() {
           </Card>
         </div>
 
-        {/* TaliPanahATIN Program */}
+        {/* TaliPaPaNatin Program */}
         <Card className="shadow-xl mt-12 sm:mt-16 lg:mt-20 bg-white rounded-2xl sm:rounded-3xl border border-gray-200 overflow-hidden">
           <CardHeader className="text-center p-6 sm:p-8 lg:p-12 bg-gradient-to-br from-green-700 to-green-800 text-white">
             <Leaf className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mx-auto mb-3 sm:mb-4 text-green-200" />
@@ -1048,9 +1060,11 @@ export default function Trading() {
                         <div className="text-sm text-gray-600">
                           ID: {record._id}
                         </div>
-                        <div className="text-sm text-gray-600">
-                          Address: {record.address}
-                        </div>
+                        {record.address && (
+                          <div className="text-sm text-gray-600">
+                            Address: {record.address}
+                          </div>
+                        )}
                       </div>
                       <div className="text-right flex-shrink-0">
                         <div className="text-2xl font-bold text-green-600">
