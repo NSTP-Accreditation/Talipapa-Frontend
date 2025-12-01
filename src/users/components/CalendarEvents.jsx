@@ -136,7 +136,7 @@ export default function CalendarEvents() {
                 •
               </span>
               <span className="text-green-700 font-semibold bg-white px-4 py-2 rounded-lg shadow-sm text-center">
-                📞 Call: (02) 8123-4567
+                📞 Call: (0917-558-6735)
               </span>
             </div>
           </div>
